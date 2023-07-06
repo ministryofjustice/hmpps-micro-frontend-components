@@ -1,15 +1,23 @@
-import { type RequestHandler, Router } from 'express'
+import { Router } from 'express'
+import checkAvailableComponent, { AVAILABLE_COMPONENTS } from '../middleware/checkAvailableComponent'
 
-import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes(): Router {
   const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', (req, res, next) => {
-    res.render('pages/index')
+  router.get('/', (req, res, next) => {
+    res.render('pages/index', { components: AVAILABLE_COMPONENTS })
+  })
+
+  router.get('/preview/:component', checkAvailableComponent, (req, res, next) => {
+    const { component } = req.params
+    res.render('pages/componentPreview', {
+      component,
+    })
+  })
+
+  router.get('/component/:component', checkAvailableComponent, (req, res, next) => {
+    const { component } = req.params
+    res.render(`components/${component}`)
   })
 
   return router

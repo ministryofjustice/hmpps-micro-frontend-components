@@ -5,7 +5,14 @@
 
 {% block content %}
 
-  <h1>This site is under construction...</h1>
-  <p>Please check back later when there is content to view.</p>
-
+  <h1>Front end components</h1>
+  <p>This service makes front end components available to be incorporated into your project using the server side includes.</p>
+  <p>Available components: </p>
+  <ul class="govuk-list govuk-list--bullet">
+      {% for component in components %}
+         <li>
+            <a class="govuk-link" href="/preview/{{ component }}">{{ component}}</a>
+        </li>
+      {% endfor %}
+  </ul>
 {% endblock %}
