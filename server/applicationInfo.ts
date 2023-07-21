@@ -1,13 +1,9 @@
+// eslint-disable import/no-unresolved,global-require
 import fs from 'fs'
-import path from 'path'
-import config from './config'
 
-const { buildNumber, gitRef } = config
+const packageData = JSON.parse(fs.readFileSync('./package.json').toString())
+const buildNumber = fs.existsSync('./build-info.json')
+  ? JSON.parse(fs.readFileSync('./build-info.json').toString()).buildNumber
+  : packageData.version
 
-export type ApplicationInfo = { applicationName: string; buildNumber: string; gitRef: string; gitShortHash: string }
-
-export default (): ApplicationInfo => {
-  const packageJson = path.join(__dirname, '../../package.json')
-  const { name: applicationName } = JSON.parse(fs.readFileSync(packageJson).toString())
-  return { applicationName, buildNumber, gitRef, gitShortHash: gitRef.substring(0, 7) }
-}
+export default { buildNumber, packageData }

@@ -31,6 +31,10 @@ interface StreamRequest {
   errorLogger?: (e: UnsanitisedError) => void
 }
 
+export function RestClientBuilder(name: string, config: ApiConfig) {
+  return (token: string): RestClient => new RestClient(name, config, token)
+}
+
 export default class RestClient {
   agent: Agent
 
@@ -46,7 +50,7 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
+  async get<T>({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<T> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
     try {
       const result = await superagent
