@@ -11,7 +11,7 @@
   <ul class="govuk-list govuk-list--bullet">
       {% for component in components %}
          <li>
-            <a class="govuk-link" href="/preview/{{ component }}">{{ component}}</a>
+            <a class="govuk-link" href="/{{ component }}?preview=true">{{ component}}</a>
         </li>
       {% endfor %}
   </ul>

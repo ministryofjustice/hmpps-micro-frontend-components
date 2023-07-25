@@ -13,10 +13,10 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('GET /component/footer', () => {
+describe('GET /footer', () => {
   it('should render a link to the open government licence', () => {
     return request(app)
-      .get('/component/footer')
+      .get('/footer')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
