@@ -58,6 +58,13 @@ Or run tests with the cypress UI:
 
 `npm run int-test-ui`
 
+## Viewing components
+Components should be kept to the minimum that is required to be pulled into the parent application.
+
+This would not usually include styles and scripts that will be available as standard in moj applications.
+
+To view the component in an application setting, with the css and styles of a gds application, add `?preview=true` query parameter to the url.
+
 ## Change log
 
 A changelog for the service is available [here](./CHANGELOG.md)
