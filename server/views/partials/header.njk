@@ -17,8 +17,8 @@
       <ul class="hmpps-header__navigation">
         {% if caseLoads.length > 1 %}
           <li class="hmpps-header__navigation__item">
-            <img class="hmpps-header__link__icon" src="/assets/images/location.svg" aria-hidden="true" alt="" />
-            <a data-qa="changeCaseLoad" class="hmpps-header__link" href="{{ changeCaseLoadLink }}" data-test="manage-account-link" target="_blank" rel="noopener noreferrer">
+            <img class="hmpps-header__link__icon govuk-!-padding-right-2" src="/assets/images/location.svg" aria-hidden="true" alt="" />
+            <a data-qa="changeCaseLoad" class="hmpps-header__link" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
               <span data-qa=header-active-case-load>{{ activeCaseLoad.description }}</span>
             </a>
           </li>
