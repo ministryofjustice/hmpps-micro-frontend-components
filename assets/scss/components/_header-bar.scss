@@ -86,19 +86,22 @@
     }
 
     &__item {
+      display: flex;
       @include govuk-font(19);
       margin-bottom: govuk-spacing(1);
       text-align: right;
+      min-height: 45px;
 
       @include govuk-media-query($from: tablet) {
-        @include govuk-responsive-margin(4, 'right');
-        @include govuk-responsive-padding(4, 'right');
+        @include govuk-responsive-margin(4, 'left');
+        @include govuk-responsive-padding(4, 'left');
         margin-bottom: 0;
-        border-right: 1px solid govuk-colour('white');
+        border-left: 1px solid govuk-colour('white');
       }
 
       a {
         display: inline-block;
+        margin: auto 0;
       }
 
       &:last-child {
