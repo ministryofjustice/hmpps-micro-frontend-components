@@ -93,8 +93,8 @@
       min-height: 45px;
 
       @include govuk-media-query($from: tablet) {
-        @include govuk-responsive-margin(4, 'left');
-        @include govuk-responsive-padding(4, 'left');
+        @include govuk-responsive-margin(3, 'left');
+        @include govuk-responsive-padding(3, 'left');
         margin-bottom: 0;
         border-left: 1px solid govuk-colour('white');
       }
