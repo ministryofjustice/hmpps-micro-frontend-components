@@ -22,6 +22,7 @@ export default function setUpWebSession(): Router {
 
   const router = express.Router()
   router.use((req, res, next) => {
+    console.log(req.query.sessionServiceName?.toString() || 'undefined-session-name')
     sessionBuilder(req.query.sessionServiceName?.toString() || 'undefined-session-name')(req, res, next)
   })
 
