@@ -18,7 +18,7 @@ export default function setUpWebSession(): Router {
     },
   }
 
-  const sessionBuilder = hmppsSessionBuilder(client, options)
+  const sessionBuilder = hmppsSessionBuilder(client, options, logger)
 
   const router = express.Router()
   router.use((req, res, next) => {

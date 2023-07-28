@@ -18,6 +18,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
     }
 
     req.session.returnTo = req.originalUrl
+    logger.info(`authorisationMiddleware: token = ${res.locals?.user?.token}`)
     return res.redirect('/sign-in')
   })
 }

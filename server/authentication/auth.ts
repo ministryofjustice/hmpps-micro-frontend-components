@@ -5,6 +5,7 @@ import type { RequestHandler } from 'express'
 import config from '../config'
 import generateOauthClientToken from './clientCredentials'
 import type { TokenVerifier } from '../data/tokenVerification'
+import logger from '../../logger'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -20,10 +21,12 @@ export type AuthenticationMiddleware = (tokenVerifier: TokenVerifier) => Request
 
 const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
   return async (req, res, next) => {
-    if (req.isAuthenticated() && (await verifyToken(req))) {
+    const isAuthenticated = req.isAuthenticated()
+    if (isAuthenticated && (await verifyToken(req))) {
       return next()
     }
     req.session.returnTo = req.originalUrl
+    logger.info(`authenticationMiddleware: isAuthenticated = ${isAuthenticated}`)
     return res.redirect('/sign-in')
   }
 }
