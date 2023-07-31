@@ -1,15 +1,23 @@
 import express, { Router, type Request } from 'express'
 import cookie from 'cookie'
 import signature from 'cookie-signature'
+import superagent from 'superagent'
 import config from '../config'
 import logger from '../../logger'
 
 const COOKIE_NAME = 'connect.sid'
 export default function getToken(): Router {
   const router = express.Router()
-  router.use((req, res, next) => {
+  router.use(async (req, res, next) => {
     const cookieValue = getSessionCookie(req)
-    logger.debug('COOKIE VALUE: ', JSON.stringify(cookieValue))
+    logger.debug('COOKIE VALUE: ', cookieValue)
+    logger.debug('SERVICE NAME: ', req.query.sessionServiceName)
+    const token = await superagent.get(
+      `${config.apis.session.url}/sessions/${cookieValue}/${req.query.sessionServiceName}`,
+    )
+
+    logger.debug('TOKEN RESPONSE: ', token)
+
     next()
   })
   return router
