@@ -5,21 +5,19 @@ import createError from 'http-errors'
 import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 
-import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
-import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import type { Services } from './services'
 import populateClientToken from './middleware/populateClientToken'
+import getToken from './middleware/getToken'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -31,12 +29,13 @@ export default function createApp(services: Services): express.Application {
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
-  app.use(setUpWebSession())
+  // app.use(setUpWebSession())
+  app.use(getToken())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app, path)
-  app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  // app.use(setUpAuthentication())
+  // app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(populateClientToken())
   app.use(setUpCurrentUser(services))
