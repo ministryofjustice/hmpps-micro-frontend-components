@@ -12,11 +12,12 @@ export default function getToken(): Router {
     const cookieValue = getSessionCookie(req)
     logger.debug('COOKIE VALUE: ', cookieValue)
     logger.debug('SERVICE NAME: ', req.query.sessionServiceName)
-    const token = await superagent.get(
+    const result = await superagent.get(
       `${config.apis.session.url}/sessions/${cookieValue}/${req.query.sessionServiceName}`,
     )
 
-    logger.debug('TOKEN RESPONSE: ', token)
+    logger.debug('TOKEN RESPONSE: ', result.body)
+    res.locals.user = result.body.passport.user
 
     next()
   })
