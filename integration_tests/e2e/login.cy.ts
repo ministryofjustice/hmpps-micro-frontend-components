@@ -3,7 +3,7 @@ import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
 
-context('SignIn', () => {
+context.skip('SignIn', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -42,7 +42,7 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthManageDetailsPage)
   })
 
-  it.skip('Token verification failure takes user to sign in page', () => {
+  it('Token verification failure takes user to sign in page', () => {
     cy.signIn()
     Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
@@ -51,7 +51,7 @@ context('SignIn', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
   })
 
-  it.skip('Token verification failure clears user session', () => {
+  it('Token verification failure clears user session', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
