@@ -18,6 +18,7 @@ import routes from './routes'
 import type { Services } from './services'
 import populateClientToken from './middleware/populateClientToken'
 import getToken from './middleware/getToken'
+import setUpWebSession from './middleware/setUpWebSession'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -29,7 +30,7 @@ export default function createApp(services: Services): express.Application {
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())
   app.use(setUpWebSecurity())
-  // app.use(setUpWebSession())
+  app.use(setUpWebSession())
   app.use(getToken())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
