@@ -9,17 +9,22 @@ const COOKIE_NAME = 'connect.sid'
 export default function getToken(): Router {
   const router = express.Router()
   router.use(async (req, res, next) => {
-    const cookieValue = getSessionCookie(req)
-    logger.debug('COOKIE VALUE: ', cookieValue)
-    logger.debug('SERVICE NAME: ', req.query.sessionServiceName)
-    const result = await superagent.get(
-      `${config.apis.session.url}/sessions/${cookieValue}/${req.query.sessionServiceName}`,
-    )
+    try {
+      const cookieValue = getSessionCookie(req)
+      logger.debug('COOKIE VALUE: ', cookieValue)
+      logger.debug('SERVICE NAME: ', req.query.sessionServiceName)
+      const result = await superagent.get(
+        `${config.apis.session.url}/sessions/${cookieValue}/${req.query.sessionServiceName}`,
+      )
 
-    logger.debug('TOKEN RESPONSE: ', result.body)
-    res.locals.user = result.body.passport.user
+      logger.debug('TOKEN RESPONSE: ', result.body)
+      res.locals.user = result.body.passport.user
 
-    next()
+      next()
+    } catch (err) {
+      logger.error('TOKEN RETRIEVAL ERROR', err)
+      next(err)
+    }
   })
   return router
 }
