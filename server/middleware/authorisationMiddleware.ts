@@ -11,7 +11,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
 
       if (authorisedRoles.length && !roles.some(role => authorisedRoles.includes(role))) {
         logger.error('User is not authorised to access this')
-        return res.redirect('/authError')
+        return res.redirect('/develop/authError')
       }
 
       return next()
@@ -19,6 +19,6 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
 
     req.session.returnTo = req.originalUrl
     logger.info(`authorisationMiddleware: token = ${res.locals?.user?.token}`)
-    return res.redirect('/sign-in')
+    return res.redirect('/develop/sign-in')
   })
 }

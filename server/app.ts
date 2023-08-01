@@ -36,8 +36,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
 
-  app.use('/', output(services))
   app.use('/develop', routes(services))
+  app.use('/', output(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

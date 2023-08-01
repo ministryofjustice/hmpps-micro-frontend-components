@@ -14,24 +14,24 @@ export default function setUpAuth(): Router {
   router.use(passport.session())
   router.use(flash())
 
-  router.get('/autherror', (req, res) => {
+  router.get('/develop/autherror', (req, res) => {
     res.status(401)
     return res.render('autherror')
   })
 
-  router.get('/sign-in', passport.authenticate('oauth2'))
+  router.get('/develop/sign-in', passport.authenticate('oauth2'))
 
-  router.get('/sign-in/callback', (req, res, next) =>
+  router.get('/develop/sign-in/callback', (req, res, next) =>
     passport.authenticate('oauth2', {
-      successReturnToOrRedirect: req.session.returnTo || '/',
-      failureRedirect: '/autherror',
+      successReturnToOrRedirect: req.session.returnTo || '/develop',
+      failureRedirect: '/develop/autherror',
     })(req, res, next),
   )
 
   const authUrl = config.apis.hmppsAuth.externalUrl
-  const authSignOutUrl = `${authUrl}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.domain}`
+  const authSignOutUrl = `${authUrl}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.domain}/develop`
 
-  router.use('/sign-out', (req, res, next) => {
+  router.use('/develop/sign-out', (req, res, next) => {
     if (req.user) {
       req.logout(err => {
         if (err) return next(err)
@@ -40,7 +40,7 @@ export default function setUpAuth(): Router {
     } else res.redirect(authSignOutUrl)
   })
 
-  router.use('/account-details', (req, res) => {
+  router.use('/develop/account-details', (req, res) => {
     res.redirect(`${authUrl}/account-details`)
   })
 
