@@ -2,6 +2,7 @@ import UserService from './userService'
 import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
 import { prisonApiClientMock } from '../../tests/mocks/prisonApiClientMock'
 import { CaseLoad } from '../interfaces/caseLoad'
+import CentralSessionClient from '../data/centralSessionClient'
 
 jest.mock('../data/hmppsAuthClient')
 
@@ -9,6 +10,7 @@ const token = 'some token'
 
 describe('User service', () => {
   let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
+  let centralSessionClient: jest.Mocked<CentralSessionClient>
   let userService: UserService
   let expectedCaseLoads: CaseLoad[]
 
@@ -24,6 +26,7 @@ describe('User service', () => {
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
+        () => centralSessionClient,
       )
     })
     it('Retrieves and formats user name', async () => {

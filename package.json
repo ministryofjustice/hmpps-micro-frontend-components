@@ -92,7 +92,6 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^1.8.0",
-    "@ministryofjustice/hmpps-central-session": "^1.0.7",
     "@types/cookie": "^0.5.1",
     "agentkeepalive": "^4.3.0",
     "applicationinsights": "^2.7.0",

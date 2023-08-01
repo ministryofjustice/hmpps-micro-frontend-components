@@ -1,28 +1,23 @@
 import express, { Router, type Request } from 'express'
 import cookie from 'cookie'
 import signature from 'cookie-signature'
-import superagent from 'superagent'
 import config from '../config'
 import logger from '../../logger'
+import { Services } from '../services'
 
 const COOKIE_NAME = 'connect.sid'
-export default function getToken(): Router {
+export default function getUserPassport({ userService }: Services): Router {
   const router = express.Router()
   router.use(async (req, res, next) => {
     try {
-      const cookieValue = getSessionCookie(req)
-      logger.debug('COOKIE VALUE: ', cookieValue)
-      logger.debug('SERVICE NAME: ', req.query.sessionServiceName)
-      const result = await superagent.get(
-        `${config.apis.session.url}/sessions/${cookieValue}/${req.query.sessionServiceName}`,
-      )
-
-      logger.debug('TOKEN RESPONSE: ', result.body)
-      res.locals.user = result.body.passport.user
+      const serviceName = String(req.query.sessionServiceName)
+      const sid = getSessionCookie(req)
+      const result = await userService.getCentralUserPassport(sid, serviceName)
+      res.locals.user = result.passport.user
 
       next()
     } catch (err) {
-      logger.error('TOKEN RETRIEVAL ERROR', err)
+      logger.error('PASSPORT RETRIEVAL ERROR', err)
       next(err)
     }
   })

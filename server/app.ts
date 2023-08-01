@@ -13,8 +13,8 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 
-import routes from './routes'
-import output from './routes/output'
+import developRoutes from './routes/developRoutes'
+import componentRoutes from './routes/componentRoutes'
 import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
@@ -36,8 +36,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
 
-  app.use('/develop', routes(services))
-  app.use('/', output(services))
+  app.use('/develop', developRoutes(services))
+  app.use('/', componentRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
