@@ -5,21 +5,19 @@ import createError from 'http-errors'
 import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 
-import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
-import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
-import setUpWebSession from './middleware/setUpWebSession'
 
-import routes from './routes'
+import developRoutes from './routes/developRoutes'
+import componentRoutes from './routes/componentRoutes'
 import type { Services } from './services'
-import populateClientToken from './middleware/populateClientToken'
+import setUpWebSession from './middleware/setUpWebSession'
+import setUpAuthentication from './middleware/setUpAuthentication'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -36,12 +34,10 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
   app.use(setUpCsrf())
-  app.use(populateClientToken())
-  app.use(setUpCurrentUser(services))
 
-  app.use(routes(services))
+  app.use('/develop', developRoutes(services))
+  app.use('/', componentRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

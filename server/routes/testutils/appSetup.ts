@@ -3,10 +3,9 @@ import cookieSession from 'cookie-session'
 import createError from 'http-errors'
 
 import path from 'path'
-import routes from '../index'
+import developRoutes from '../developRoutes'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
-import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 
 export const user = {
@@ -38,7 +37,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(routes(services))
+  app.use(developRoutes(services))
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
 
@@ -54,6 +53,5 @@ export function appWithAllRoutes({
   services?: Partial<Services>
   userSupplier?: () => Express.User
 }): Express {
-  auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier)
 }

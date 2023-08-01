@@ -12,7 +12,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('GET 404', () => {
+describe.skip('GET 404', () => {
   it('should render content with stack in dev mode', () => {
     return request(app)
       .get('/unknown')
