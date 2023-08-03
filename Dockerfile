@@ -23,7 +23,7 @@ RUN apt-get update && \
         apt-get autoremove -y && \
         rm -rf /var/lib/apt/lists/*
 
-# Stage: build assets
+# Stage: build component_assets
 FROM base as build
 
 ARG BUILD_NUMBER=1_0_0
@@ -40,7 +40,7 @@ RUN npm run build
 
 RUN npm prune --no-audit --omit=dev
 
-# Stage: copy production assets and dependencies
+# Stage: copy production component_assets and dependencies
 FROM base
 
 COPY --from=build --chown=appuser:appgroup \
@@ -49,7 +49,7 @@ COPY --from=build --chown=appuser:appgroup \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
-        /app/assets ./assets
+        /app/component_assets ./component_assets
 
 COPY --from=build --chown=appuser:appgroup \
         /app/dist ./dist

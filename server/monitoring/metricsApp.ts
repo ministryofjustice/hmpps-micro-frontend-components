@@ -7,7 +7,7 @@ const metricsMiddleware = promBundle({
   httpDurationMetricName: 'http_server_requests_seconds',
   includeMethod: true,
   includePath: true,
-  normalizePath: [['^/assets/.+$', '/assets/#assetPath']],
+  normalizePath: [['^/component_assets/.+$', '/component_assets/#assetPath']],
 })
 
 function metricsPort(): number {

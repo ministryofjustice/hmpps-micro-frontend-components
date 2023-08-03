@@ -9,7 +9,7 @@ const production = process.env.NODE_ENV === 'production'
 export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
   app.set('view engine', 'njk')
 
-  app.locals.asset_path = '/assets/'
+  app.locals.asset_path = '/component_assets/'
   app.locals.applicationName = 'Frontend Components'
 
   // Cachebusting version string
