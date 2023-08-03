@@ -117,7 +117,7 @@ dist
 
 
 
-component_assets/stylesheets/*.css
+component/assets/stylesheets/*.css
 .idea
 .vscode
 dist/

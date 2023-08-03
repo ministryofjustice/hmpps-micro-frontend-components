@@ -1,6 +1,6 @@
 node_modules
 public
-component_assets
+component/assets
 cypress.json
 reporter-config.json
 dist/

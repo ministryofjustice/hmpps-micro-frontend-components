@@ -1,5 +1,5 @@
 $govuk-global-styles: true;
-$path: "/component_assets/images/";
+$path: "/component/assets/images/";
 
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
@@ -8,4 +8,4 @@ $govuk-page-width: $moj-page-width;
 @import 'moj/all';
 
 @import './components/header-bar';
-@import 'component_assets/scss/local';
+@import 'component/assets/scss/local';

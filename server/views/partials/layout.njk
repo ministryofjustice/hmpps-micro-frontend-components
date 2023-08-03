@@ -2,10 +2,10 @@
 
 {% block head %}
   <!--[if lt IE 9]>
-  <script src="/component_assets/js/html5shiv-3.7.3.min.js"></script>
+  <script src="/component/assets/js/html5shiv-3.7.3.min.js"></script>
   <![endif]-->
 
-  <script src="/component_assets/js/jquery.min.js"></script>
+  <script src="/component/assets/js/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
           integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
           nonce="{{ cspNonce }}"
@@ -26,7 +26,7 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the
   <body>, to avoid blocking the initial render. #}
-  <script src="/component_assets/govuk/all.js"></script>
-  <script src="/component_assets/govukFrontendInit.js"></script>
-  <script src="/component_assets/moj/all.js"></script>
+  <script src="/component/assets/govuk/all.js"></script>
+  <script src="/component/assets/govukFrontendInit.js"></script>
+  <script src="/component/assets/moj/all.js"></script>
 {% endblock %}
