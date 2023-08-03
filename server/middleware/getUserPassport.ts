@@ -18,7 +18,7 @@ export default function getUserPassport({ userService }: Services): Router {
       next()
     } catch (err) {
       logger.error('PASSPORT RETRIEVAL ERROR', err)
-      res.status(401).send('Not authorised to access resource')
+      next(err)
     }
   })
   return router
