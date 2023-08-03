@@ -49,7 +49,7 @@ COPY --from=build --chown=appuser:appgroup \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
-        /app/assets ./assets
+        /app/component/assets ./component/assets
 
 COPY --from=build --chown=appuser:appgroup \
         /app/dist ./dist
