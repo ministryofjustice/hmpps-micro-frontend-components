@@ -11,7 +11,7 @@ const timeoutSpec = config.apis.hmppsAuth.timeout
 const hmppsAuthUrl = config.apis.hmppsAuth.url
 
 function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagent.Response> {
-  const clientToken = generateOauthClientToken(
+  const systemToken = generateOauthClientToken(
     config.apis.hmppsAuth.systemClientId,
     config.apis.hmppsAuth.systemClientSecret,
   )
@@ -25,7 +25,7 @@ function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagen
 
   return superagent
     .post(`${hmppsAuthUrl}/oauth/token`)
-    .set('Authorization', clientToken)
+    .set('Authorization', systemToken)
     .set('content-type', 'application/x-www-form-urlencoded')
     .send(grantRequest)
     .timeout(timeoutSpec)
