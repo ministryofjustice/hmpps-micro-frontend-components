@@ -2,14 +2,14 @@ import { RequestHandler } from 'express'
 import logger from '../../logger'
 import { dataAccess } from '../data'
 
-export default function populateClientToken(): RequestHandler {
+export default function populateSystemToken(): RequestHandler {
   return async (req, res, next) => {
     try {
-      const { systemToken } = dataAccess
+      const { getSystemToken } = dataAccess
       if (res.locals.user) {
-        const clientToken = await systemToken(res.locals.user.username)
-        if (clientToken) {
-          res.locals.clientToken = clientToken
+        const systemToken = await getSystemToken(res.locals.user.username)
+        if (systemToken) {
+          res.locals.systemToken = systemToken
         } else {
           logger.info('No client token available')
         }

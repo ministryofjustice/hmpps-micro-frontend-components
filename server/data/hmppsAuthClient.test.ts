@@ -14,11 +14,11 @@ const token = { access_token: 'token-1', expires_in: 300 }
 
 describe('hmppsAuthClient', () => {
   let fakeHmppsAuthApi: nock.Scope
-  let systemToken: (u?: string) => Promise<string>
+  let getSystemToken: (u?: string) => Promise<string>
 
   beforeEach(() => {
     fakeHmppsAuthApi = nock(config.apis.hmppsAuth.url)
-    systemToken = systemTokenBuilder(tokenStore)
+    getSystemToken = systemTokenBuilder(tokenStore)
   })
 
   afterEach(() => {
@@ -67,12 +67,12 @@ describe('hmppsAuthClient', () => {
   describe('getSystemClientToken', () => {
     it('should instantiate the redis client', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
-      await systemToken(username)
+      await getSystemToken(username)
     })
 
     it('should return token from redis if one exists', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
-      const output = await systemToken(username)
+      const output = await getSystemToken(username)
       expect(output).toEqual(token.access_token)
     })
 
@@ -85,7 +85,7 @@ describe('hmppsAuthClient', () => {
         .matchHeader('Content-Type', 'application/x-www-form-urlencoded')
         .reply(200, token)
 
-      const output = await systemToken(username)
+      const output = await getSystemToken(username)
 
       expect(output).toEqual(token.access_token)
       expect(tokenStore.setToken).toBeCalledWith('Bob', token.access_token, 240)
@@ -100,7 +100,7 @@ describe('hmppsAuthClient', () => {
         .matchHeader('Content-Type', 'application/x-www-form-urlencoded')
         .reply(200, token)
 
-      const output = await systemToken()
+      const output = await getSystemToken()
 
       expect(output).toEqual(token.access_token)
       expect(tokenStore.setToken).toBeCalledWith('%ANONYMOUS%', token.access_token, 240)

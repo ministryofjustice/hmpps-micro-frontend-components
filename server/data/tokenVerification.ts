@@ -4,7 +4,7 @@ import getSanitisedError from '../sanitisedError'
 import config from '../config'
 import logger from '../../logger'
 
-function getApiClientToken(token: string) {
+export function isTokenValid(token: string) {
   return superagent
     .post(`${config.apis.tokenVerification.url}/token/verify`)
     .auth(token, { type: 'bearer' })
@@ -31,7 +31,7 @@ const tokenVerifier: TokenVerifier = async request => {
 
   logger.debug(`token request for user "${user.username}'`)
 
-  const result = await getApiClientToken(user.token)
+  const result = await isTokenValid(user.token)
   if (result) {
     request.verified = true
   }

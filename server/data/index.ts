@@ -39,7 +39,7 @@ export const dataAccess = {
     config.apis.session,
     CentralSessionClient,
   ),
-  systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
+  getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
 }
 
 export type DataAccess = typeof dataAccess
