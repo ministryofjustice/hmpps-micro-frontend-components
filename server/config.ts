@@ -30,6 +30,7 @@ export interface ApiConfig {
 }
 
 export default {
+  ingressUrl: get('INGRESS_URL', 'localhost', requiredInProduction),
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   production,
