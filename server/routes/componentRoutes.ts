@@ -30,6 +30,7 @@ export default function componentRoutes(services: Services): Router {
           caseLoads,
           activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
           changeCaseLoadLink: `${config.apis.dpsHomePageUrl}/change-caseload`,
+          ingressUrl: config.ingressUrl,
         },
         (_, html) => {
           res.header('Content-Type', 'application/json')
