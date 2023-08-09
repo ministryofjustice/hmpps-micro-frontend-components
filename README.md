@@ -1,76 +1,20 @@
-# Frontend Components
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-micro-frontend-components)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-micro-frontend-components "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-micro-frontend-components/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-micro-frontend-components)
-
 # Description
 
-This project is used to provide reusable components that will be injected via the micro-frontend strategy detailed here <https://dsdmoj.atlassian.net/wiki/spaces/ALIGN/pages/4338286593/Micro-Frontend+Strategy>
+This project provides front-end components to be injected into HMPPS applications.
 
-## Running the app
-The easiest way to run the app is to use docker compose to create the service and all dependencies. 
+The application allows access to the components via two paths. The `/{component}` level and `/develop/{component}`.
 
-`docker-compose pull`
+The root level component contains the minimum requirements of the component to be incorporated into other applications. It is authed via a user token sent through on the `x-user-token` header and returns a json payload containing a stringified html block.
 
-`docker-compose up`
+The `/develop/` path displays the component in an HTML page including the required blocks and assets for display. This is to be used for development of components and is authed via `hmpps-auth` as the other applications are.
 
-### Dependencies
-The app requires: 
-* hmpps-auth - for authentication
-* redis - session store and token caching
+## Available components
+* Header
+* Footer
 
-### Running the app for development
+## Contents
 
-To start the main services excluding the example typescript template app: 
-
-`docker-compose up --scale=app=0`
-
-Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v9.x`
-
-Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
-
-And then, to build the assets and start the app with nodemon:
-
-`npm run start:dev`
-
-### Run linter
-
-`npm run lint`
-
-### Run tests
-
-`npm run test`
-
-### Running integration tests
-
-For local running, start a test db, redis, and wiremock instance by:
-
-`docker-compose -f docker-compose-test.yml up`
-
-Then run the server in test mode by:
-
-`npm run start-feature` (or `npm run start-feature:dev` to run with nodemon)
-
-And then either, run tests in headless mode with:
-
-`npm run int-test`
- 
-Or run tests with the cypress UI:
-
-`npm run int-test-ui`
-
-## Viewing components
-Components should be kept to the minimum that is required to be pulled into the parent application.
-
-This would not usually include styles and scripts that will be available as standard in moj applications.
-
-To view the component in an application setting, with the css and styles of a gds application, add `?preview=true` query parameter to the url.
-
-## Change log
-
-A changelog for the service is available [here](./CHANGELOG.md)
-
-
-## Dependency Checks
-
-The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
-If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+1. [Incorporating components](readme/incorporating.md)
+2. [Building and Running](readme/building_and_running.md)
+3. [Testing](readme/testing.md)
+4. [Maintenance](readme/maintenance.md)
