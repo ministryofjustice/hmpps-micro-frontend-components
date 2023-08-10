@@ -14,7 +14,6 @@ import TokenStore from './tokenStore'
 import config, { ApiConfig } from '../config'
 import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
 import PrisonApiClient from './prisonApiClient'
-import CentralSessionClient from './centralSessionClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -34,11 +33,6 @@ export const dataAccess = {
     HmppsAuthClient,
   ),
   prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiClient),
-  centralSessionClientBuilder: restClientBuilder<CentralSessionClient>(
-    'Central Session API',
-    config.apis.session,
-    CentralSessionClient,
-  ),
   getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
 }
 
