@@ -9,6 +9,6 @@ export default class PrisonApiClient {
   }
 
   async getUserCaseLoads(): Promise<CaseLoad[]> {
-    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' })
+    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads' })
   }
 }
