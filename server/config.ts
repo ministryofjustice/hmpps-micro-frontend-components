@@ -69,14 +69,6 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
-    session: {
-      url: get('SESSION_API_URL', 'http://localhost:8100', requiredInProduction),
-      timeout: {
-        response: Number(get('SESSION_API_URL_RESPONSE', 5000)),
-        deadline: Number(get('SESSION_API_URL_DEADLINE', 5000)),
-      },
-      agent: new AgentConfig(Number(get('SESSION_API_URL_DEADLINE', 20000))),
-    },
     prisonApi: {
       url: get('PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
