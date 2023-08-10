@@ -24,7 +24,7 @@ afterEach(() => {
 describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads?allCaseloads=true').reply(200, [])
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [])
       tokenVerificationApi.post('/token/verify').reply(200, { active: true, username: 'TEST_USER' })
       authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
     })
@@ -75,7 +75,7 @@ describe('GET /header', () => {
     })
 
     it('should display case load link if user has multiple caseloads', () => {
-      prisonApi.get('/api/users/me/caseLoads?allCaseloads=true').reply(200, [
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
         {
           caseLoadId: 'LEI',
           description: 'Leeds',
@@ -103,7 +103,7 @@ describe('GET /header', () => {
     })
 
     it('should not display case load link if user has one caseload', () => {
-      prisonApi.get('/api/users/me/caseLoads?allCaseloads=true').reply(200, [
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
         {
           caseLoadId: 'LEI',
           description: 'Leeds',
