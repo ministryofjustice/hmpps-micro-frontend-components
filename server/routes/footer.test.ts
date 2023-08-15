@@ -1,16 +1,26 @@
-import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
+import { NextFunction, Request } from 'express'
 import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
 
+jest.mock('express-jwt', () => ({
+  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers['x-user-token'] !== 'token') {
+      const error = new Error()
+      error.name = 'UnauthorizedError'
+      return next(error)
+    }
+    req.auth = { user_name: 'USER1', name: 'User One', auth_source: 'nomis', authorities: [] }
+    return next()
+  },
+}))
+
 let app: Express.Application
-let tokenVerificationApi: nock.Scope
 let authApi: nock.Scope
 beforeEach(() => {
-  tokenVerificationApi = nock(config.apis.tokenVerification.url)
   authApi = nock(config.apis.hmppsAuth.url)
 
   app = createApp(services())
@@ -22,7 +32,6 @@ afterEach(() => {
 
 describe('GET /footer', () => {
   it('should render a link to the open government licence', () => {
-    tokenVerificationApi.post('/token/verify').reply(200, { active: true, username: 'TEST_USER' })
     authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
 
     return request(app)
@@ -39,11 +48,6 @@ describe('GET /footer', () => {
 
   describe('auth', () => {
     it('should send 401 if no token provided', () => {
-      return request(app).get('/footer').expect(401)
-    })
-
-    it('should send 401 if token not valid', () => {
-      tokenVerificationApi.post('/token/verify').reply(200, { active: false })
       return request(app).get('/footer').expect(401)
     })
   })
