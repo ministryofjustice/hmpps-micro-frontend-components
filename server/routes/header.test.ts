@@ -1,17 +1,29 @@
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
+import { NextFunction, Request } from 'express'
 import { services } from '../services'
 import config from '../config'
 import createApp from '../app'
 
+jest.mock('express-jwt', () => ({
+  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers['x-user-token'] !== 'token') {
+      const error = new Error()
+      error.name = 'UnauthorizedError'
+      return next(error)
+    }
+    req.auth = { user_name: 'USER1', name: 'User One', auth_source: 'nomis', authorities: [] }
+    return next()
+  },
+}))
+
 let app: Express.Application
 let prisonApi: nock.Scope
-let tokenVerificationApi: nock.Scope
 let authApi: nock.Scope
+
 beforeEach(() => {
   prisonApi = nock(config.apis.prisonApi.url)
-  tokenVerificationApi = nock(config.apis.tokenVerification.url)
   authApi = nock(config.apis.hmppsAuth.url)
 
   app = createApp(services())
@@ -25,7 +37,6 @@ describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
       prisonApi.get('/api/users/me/caseLoads').reply(200, [])
-      tokenVerificationApi.post('/token/verify').reply(200, { active: true, username: 'TEST_USER' })
       authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
     })
 
@@ -70,7 +81,6 @@ describe('GET /header', () => {
 
   describe('case load switcher', () => {
     beforeEach(() => {
-      tokenVerificationApi.post('/token/verify').reply(200, { active: true, username: 'TEST_USER' })
       authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
     })
 
@@ -126,11 +136,6 @@ describe('GET /header', () => {
 
   describe('auth', () => {
     it('should send 401 if no token provided', () => {
-      return request(app).get('/header').expect(401)
-    })
-
-    it('should send 401 if token not valid', () => {
-      tokenVerificationApi.post('/token/verify').reply(200, { active: false })
       return request(app).get('/header').expect(401)
     })
   })

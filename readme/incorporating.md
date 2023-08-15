@@ -11,7 +11,9 @@ Code samples have been provided for examples. Your requirements may differ.
 
 Add environment variables to the `values-{env}.yaml` files for `COMPONENT_API_URL`. Populate with the following values:
 
-* dev - https://hmpps-micro-frontend-components-dev.hmpps.service.justice.gov.uk
+* dev - https://frontend-components-dev.hmpps.service.justice.gov.uk
+* preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk
+* prod - https://frontend-components.hmpps.service.justice.gov.uk
 
 add a block for the component library in the apis section of config.ts.
 
@@ -33,7 +35,7 @@ async getComponent(component: 'header' | 'footer', userToken: string): Promise<C
 }
 ```
 
-The components api will return stringified html along with links to any css and javascript filed required for the component.
+The components api will return stringified html along with links to any css and javascript files required for the component.
 
 Add a call for these components for each page that requires them. As the header and footer will likely be used on all pages, it is recommended to add a middleware function to call the endpoints and make available to the view using res.locals.
 
@@ -72,8 +74,8 @@ These values should be used in the layout.njk file with a basic fallback header 
 ```
 ```typescript
 {% block footer %}
-  {% if footer %}
-    {{ footer | safe }}
+  {% if feComponents.footer %}
+    {{ feComponents.footer | safe }}
   {% else %}
     {{ govukFooter({}) }}
   {% endif %}

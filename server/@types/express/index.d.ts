@@ -20,6 +20,7 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
+      auth?: { user_name: string; name: string; auth_source: string; authorities: string[] }
     }
   }
 }
