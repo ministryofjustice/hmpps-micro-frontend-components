@@ -8,12 +8,18 @@ import createApp from '../app'
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['x-user-token'] !== 'token') {
+    const token = req.headers['x-user-token']
+    if (token !== 'token' && token !== 'external-token') {
       const error = new Error()
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = { user_name: 'USER1', name: 'User One', auth_source: 'nomis', authorities: [] }
+    req.auth = {
+      user_name: 'USER1',
+      name: 'User One',
+      auth_source: token === 'token' ? 'nomis' : 'auth',
+      authorities: [],
+    }
     return next()
   },
 }))
@@ -130,6 +136,26 @@ describe('GET /header', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           expect($(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`).length).toEqual(0)
+        })
+    })
+  })
+
+  describe('non-prison user', () => {
+    it('should only render sign out link', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'external-token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const $ = cheerio.load(JSON.parse(res.text).html)
+          expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
+
+          const manageDetailsLink = $('a[href="/account-details"]')
+          expect(manageDetailsLink.length).toEqual(0)
+
+          const caseloadSwitcher = $(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`)
+          expect(caseloadSwitcher.length).toEqual(0)
         })
     })
   })

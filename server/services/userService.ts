@@ -1,8 +1,8 @@
 import { convertToTitleCase } from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { RestClientBuilder } from '../data'
-import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { CaseLoad } from '../interfaces/caseLoad'
+import PrisonApiClient from '../data/prisonApiClient'
 
 interface UserDetails {
   name: string

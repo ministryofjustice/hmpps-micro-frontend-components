@@ -15,6 +15,7 @@
 
     <nav aria-label="Account navigation">
       <ul class="connect-dps-common-header__navigation">
+          {% if isPrisonUser === true %}
         {% if caseLoads.length > 1 %}
           <li class="connect-dps-common-header__navigation__item">
             <img class="connect-dps-common-header__link__icon govuk-!-padding-right-3" src="{{ ingressUrl }}/assets/images/location.svg" aria-hidden="true" alt="" />
@@ -31,6 +32,7 @@
               <span class="connect-dps-common-header__link__sub-text">Manage your details</span>
             </a>
           </li>
+        {% endif %}
         {% endif %}
 
         <li class="connect-dps-common-header__navigation__item">
