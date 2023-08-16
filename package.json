@@ -94,7 +94,7 @@
     "@ministryofjustice/frontend": "^1.8.0",
     "@types/cookie": "^0.5.1",
     "agentkeepalive": "^4.3.0",
-    "applicationinsights": "^2.7.0",
+    "applicationinsights": "^2.7.3",
     "body-parser": "^1.20.2",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -149,7 +149,7 @@
     "audit-ci": "^6.6.1",
     "concurrently": "^8.2.0",
     "cookie-session": "^2.0.0",
-    "cypress": "^12.16.0",
+    "cypress": "^12.17.4",
     "cypress-multi-reporters": "^1.6.3",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
@@ -177,6 +177,9 @@
     "typescript": "^5.1.6"
   },
   "overrides": {
-    "semver": "^7.5.3"
+    "semver": "^7.5.3",
+    "cypress": {
+      "@cypress/request": "^3.0.0"
+    }
   }
 }
