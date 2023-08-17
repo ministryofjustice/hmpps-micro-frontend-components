@@ -1,21 +1,19 @@
 import { Router } from 'express'
 import { Services } from '../services'
-import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import setUpCurrentUser from '../middleware/setUpCurrentUser'
-import populateSystemToken from '../middleware/populateSystemToken'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
 import { AVAILABLE_COMPONENTS } from '../@types/AvailableComponent'
 import auth from '../authentication/auth'
 import tokenVerifier from '../data/tokenVerification'
+import componentsController from '../controllers/componentsController'
+import populateCurrentUser from '../middleware/populateCurrentUser'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
+  const controller = componentsController(services)
 
   router.use(authorisationMiddleware())
   router.use(auth.authenticationMiddleware(tokenVerifier))
-  router.use(setUpCurrentUser(services))
-  router.use(populateSystemToken())
 
   router.get('/', (req, res, next) => {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
@@ -23,16 +21,11 @@ export default function developRoutes(services: Services): Router {
 
   router.get(
     '/header',
+    populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const { systemToken } = res.locals
-      const caseLoads = await services.userService.getUserCaseLoads(systemToken)
+      const viewModel = await controller.getHeaderViewModel(res)
 
-      return res.render('pages/componentPreview', {
-        caseLoads,
-        activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
-        changeCaseLoadLink: `${config.apis.dpsHomePageUrl}/change-caseload`,
-        component: 'header',
-      })
+      return res.render('pages/componentPreview', { ...viewModel })
     }),
   )
 

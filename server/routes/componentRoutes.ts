@@ -4,10 +4,12 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import setUpCurrentUser from '../middleware/setUpCurrentUser'
+import populateCurrentUser from '../middleware/populateCurrentUser'
+import componentsController from '../controllers/componentsController'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
+  const controller = componentsController(services)
 
   const requestIsAuthenticated = () => {
     return expressjwt({
@@ -24,29 +26,17 @@ export default function componentRoutes(services: Services): Router {
   }
 
   router.use(requestIsAuthenticated())
-  router.use(setUpCurrentUser(services))
 
   router.get(
     '/header',
+    populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const { token } = res.locals.user
+      const viewModel = await controller.getHeaderViewModel(res)
 
-      const caseLoads = await services.userService.getUserCaseLoads(token)
-      res.render(
-        'components/header',
-        {
-          caseLoads,
-          activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
-          changeCaseLoadLink: `${config.apis.dpsHomePageUrl}/change-caseload`,
-          ingressUrl: config.ingressUrl,
-        },
-        (_, html) => {
-          res.header('Content-Type', 'application/json')
-          res.send(
-            JSON.stringify({ html, css: [`${config.ingressUrl}/assets/stylesheets/header.css`], javascript: [] }),
-          )
-        },
-      )
+      res.render('components/header', viewModel, (_, html) => {
+        res.header('Content-Type', 'application/json')
+        res.send(JSON.stringify({ html, css: [`${config.ingressUrl}/assets/stylesheets/header.css`], javascript: [] }))
+      })
     }),
   )
 

@@ -96,7 +96,10 @@
         @include govuk-responsive-margin(3, 'left');
         @include govuk-responsive-padding(3, 'left');
         margin-bottom: 0;
-        border-left: 1px solid govuk-colour('white');
+
+        &:not(:only-of-type) {
+          border-left: 1px solid govuk-colour('white');
+        }
       }
 
       a {

@@ -6,11 +6,11 @@ export default function populateCurrentUser(userService: UserService): RequestHa
   return async (req, res, next) => {
     // expressjwt middleware puts user object on req.auth
     if (!res.locals.user && req.auth) {
-      res.locals.user = req.auth
+      res.locals.user = { ...req.auth, authSource: req.auth.auth_source }
     }
 
     try {
-      if (res.locals.user) {
+      if (res.locals.user.authSource === 'nomis') {
         const token = res.locals.user.token ?? (req.headers['x-user-token'] as string)
         const user = await userService.getUser(token)
         if (user) {

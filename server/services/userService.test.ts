@@ -2,6 +2,7 @@ import UserService from './userService'
 import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
 import { prisonApiClientMock } from '../../tests/mocks/prisonApiClientMock'
 import { CaseLoad } from '../interfaces/caseLoad'
+import PrisonApiClient from '../data/prisonApiClient'
 
 jest.mock('../data/hmppsAuthClient')
 
@@ -17,7 +18,7 @@ describe('User service', () => {
       hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
       hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
 
-      const prisonApiClient = prisonApiClientMock()
+      const prisonApiClient = prisonApiClientMock() as undefined as PrisonApiClient
       expectedCaseLoads = [{ caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' }]
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
 
