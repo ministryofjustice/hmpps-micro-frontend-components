@@ -66,7 +66,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          const manageDetailsLink = $('a[href="/account-details"]')
+          const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
           expect(manageDetailsLink.text()).toContain('T. User')
           expect(manageDetailsLink.text()).toContain('Manage your details')
         })
@@ -151,7 +151,7 @@ describe('GET /header', () => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
 
-          const manageDetailsLink = $('a[href="/account-details"]')
+          const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
           expect(manageDetailsLink.length).toEqual(0)
 
           const caseloadSwitcher = $(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`)

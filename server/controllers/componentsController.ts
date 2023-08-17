@@ -22,6 +22,7 @@ export default (services: Services): { getHeaderViewModel: (res: Response) => Pr
       isPrisonUser,
       activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
       changeCaseLoadLink: `${config.apis.dpsHomePageUrl}/change-caseload`,
+      manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       component: 'header',
     }
   },
