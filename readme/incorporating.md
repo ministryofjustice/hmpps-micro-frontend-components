@@ -15,7 +15,15 @@ Add environment variables to the `values-{env}.yaml` files for `COMPONENT_API_UR
 * preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk
 * prod - https://frontend-components.hmpps.service.justice.gov.uk
 
-add a block for the component library in the apis section of config.ts.
+You can also add this to your `.env` file with the `dev` url 
+
+Add a block for the component library in the `apis` section of `config.ts`, for example:
+
+```typescript
+    frontendComponents: {
+      url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
+    },
+```
 
 Add a Component Client and Service and include methods to call the components library. This call requires the user token to be passed in on the `x-user-token` header.
 
@@ -123,10 +131,10 @@ export default function setUpWebSecurity(): Router {
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const imgSrc = ["'self'", 'data:']
 
-  if (config.apis.component.url) {
-    scriptSrc.push(config.apis.component.url)
-    styleSrc.push(config.apis.component.url)
-    imgSrc.push(config.apis.component.url)
+  if (config.apis.frontendComponents.url) {
+    scriptSrc.push(config.apis.frontendComponents.url)
+    styleSrc.push(config.apis.frontendComponents.url)
+    imgSrc.push(config.apis.frontendComponents.url)
   }
 
   router.use(
