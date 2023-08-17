@@ -31,7 +31,7 @@ export default function componentRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getHeaderViewModel(res)
+      const viewModel = await controller.getHeaderViewModel(res.locals.user)
 
       res.render('components/header', viewModel, (_, html) => {
         res.header('Content-Type', 'application/json')

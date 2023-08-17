@@ -23,7 +23,7 @@ export default function developRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getHeaderViewModel(res)
+      const viewModel = await controller.getHeaderViewModel(res.locals.user)
 
       return res.render('pages/componentPreview', { ...viewModel })
     }),
