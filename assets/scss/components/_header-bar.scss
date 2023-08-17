@@ -11,7 +11,7 @@
   }
 
   &__logo {
-    @include govuk-responsive-margin(2, 'right');
+    @include govuk-responsive-margin(3, 'right');
     position: relative;
     top: -2px;
     fill: govuk-colour('white');
@@ -48,6 +48,7 @@
     &:active {
       color: govuk-colour('white');
       text-decoration: none;
+      font-weight: normal;
     }
 
     &:hover {
@@ -87,7 +88,7 @@
 
     &__item {
       display: flex;
-      @include govuk-font(19);
+      @include govuk-font(16);
       margin-bottom: govuk-spacing(1);
       text-align: right;
       min-height: 45px;
@@ -111,6 +112,8 @@
         margin-right: 0;
         border-right: 0;
         padding-right: 0;
+
+        @include govuk-font(19);
       }
     }
   }
