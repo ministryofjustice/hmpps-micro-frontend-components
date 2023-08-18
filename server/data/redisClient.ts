@@ -24,6 +24,10 @@ export const createRedisClient = (): RedisClient => {
     },
   })
 
+  if (process.env.NODE_ENV === 'test') {
+    client.unref()
+  }
+
   client.on('error', (e: Error) => logger.error('Redis client error', e))
 
   return client
