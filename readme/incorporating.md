@@ -30,8 +30,8 @@ Add a Component Client and Service and include methods to call the components li
 ```typescript
 interface Component {
   html: string
-  css?: string[]
-  javascript?: string[]
+  css: string[]
+  javascript: string[]
 }
 ```
 ```typescript
@@ -154,3 +154,14 @@ export default function setUpWebSecurity(): Router {
   return router
 }
 ```
+
+### Header sign out link
+
+
+The header sign out link direct to  '{your-application}/sign-out'. This works on the assumption that the application has followed the redirect pattern that the hmpps-template-typescript project has.
+See: https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/server/middleware/setUpAuthentication.ts#L34
+
+
+### Fallbacks
+
+Appropriate fallback components should be included within the application. For the header we recommend the basic black bar including the icon, header and sign out link. 
