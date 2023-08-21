@@ -130,11 +130,13 @@ export default function setUpWebSecurity(): Router {
   const scriptSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const imgSrc = ["'self'", 'data:']
+  const fontSrc = ["'self'"]
 
   if (config.apis.frontendComponents.url) {
     scriptSrc.push(config.apis.frontendComponents.url)
     styleSrc.push(config.apis.frontendComponents.url)
     imgSrc.push(config.apis.frontendComponents.url)
+    fontSrc.push(config.apis.frontendComponents.url)
   }
 
   router.use(
@@ -144,7 +146,7 @@ export default function setUpWebSecurity(): Router {
           defaultSrc: ["'self'"],
           scriptSrc,
           styleSrc,
-          fontSrc: ["'self'"],
+          fontSrc,
           imgSrc,
         },
       },
