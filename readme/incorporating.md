@@ -30,8 +30,8 @@ Add a Component Client and Service and include methods to call the components li
 ```typescript
 interface Component {
   html: string
-  css?: string[]
-  javascript?: string[]
+  css: string[]
+  javascript: string[]
 }
 ```
 ```typescript
@@ -130,11 +130,13 @@ export default function setUpWebSecurity(): Router {
   const scriptSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const imgSrc = ["'self'", 'data:']
+  const fontSrc = ["'self'"]
 
   if (config.apis.frontendComponents.url) {
     scriptSrc.push(config.apis.frontendComponents.url)
     styleSrc.push(config.apis.frontendComponents.url)
     imgSrc.push(config.apis.frontendComponents.url)
+    fontSrc.push(config.apis.frontendComponents.url)
   }
 
   router.use(
@@ -144,7 +146,7 @@ export default function setUpWebSecurity(): Router {
           defaultSrc: ["'self'"],
           scriptSrc,
           styleSrc,
-          fontSrc: ["'self'"],
+          fontSrc,
           imgSrc,
         },
       },
@@ -154,3 +156,14 @@ export default function setUpWebSecurity(): Router {
   return router
 }
 ```
+
+### Header sign out link
+
+
+The header sign out link direct to  '{your-application}/sign-out'. This works on the assumption that the application has followed the redirect pattern that the hmpps-template-typescript project has.
+See: https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/server/middleware/setUpAuthentication.ts#L34
+
+
+### Fallbacks
+
+Appropriate fallback components should be included within the application. For the header we recommend the basic black bar including the icon, header and sign out link. 
