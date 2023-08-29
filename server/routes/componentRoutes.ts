@@ -31,6 +31,10 @@ export default function componentRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
+      if (req.headers['x-use-latest'] === 'true') {
+        return res.send('latest')
+      }
+
       const viewModel = await controller.getHeaderViewModel(res.locals.user)
 
       res.render('components/header', viewModel, (_, html) => {
