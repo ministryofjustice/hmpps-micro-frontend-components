@@ -18,6 +18,7 @@ import componentRoutes from './routes/componentRoutes'
 import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
+import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -32,6 +33,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+  setUpEnvironmentName(app)
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
