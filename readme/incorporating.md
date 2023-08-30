@@ -69,7 +69,9 @@ export default function getFrontendComponents({ componentService }: Services): R
   }
 }
 ```
-These values should be used in the layout.njk file with a basic fallback header kept within the application
+These values should be used in the `layout.njk` file within your application.
+
+**Note**: the `header.njk` and `footer.njk` templates used in the following code fragments are fallback HTML in case the component service is unavailable or the API call fails for some reason. These templates should be copied from the `_fallbacks` directory in this repo, and configuration added as described in the Fallbacks section at the end of this document.
 
 ```typescript
 {% block header %}
@@ -85,7 +87,7 @@ These values should be used in the layout.njk file with a basic fallback header 
   {% if feComponents.footer %}
     {{ feComponents.footer | safe }}
   {% else %}
-    {{ govukFooter({}) }}
+    {% include "./footer.njk" %}
   {% endif %}
 {% endblock %}
 ```
@@ -166,4 +168,39 @@ See: https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/se
 
 ### Fallbacks
 
-Appropriate fallback components should be included within the application. For the header we recommend the basic black bar including the icon, header and sign out link. 
+Appropriate fallback components should be included within the application. For the header and footer, templates are provided in the `_fallbacks` directory of this repo to copy and paste into your application, along with `scss` stylesheets.
+
+Place the `header.njk` and `footer.njk` files into your `/server/views/partials` directory, overwriting the existing `header.njk` file if applicable.
+
+Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/components` directory, overwriting the existing `_header-bar.scss` file if applicable, and update your `/assets/scss/application.scss` file to include these stylesheets, i.e.
+
+```scss
+@import './components/header-bar';
+@import './components/footer';
+```
+
+The header component and fallback header include an environment 'badge' to display the name of the deployed environment 
+(e.g. DEV, PRE-PRODUCTION). In order to support this in the fallback header, copy the `setUpEnvironmentName.ts.txt` file 
+from the `_fallbacks` directory into your `/server/middleware` directory, removing the `.txt` extension, and add the 
+following line to your `/server/app.ts`, immediately before the `nunjucksSetup` line: 
+
+```typescript
+  setUpEnvironmentName(app)
+```
+
+Then add an environment variable to the `values-{env}.yaml` files for `ENVIRONMENT_NAME` and populate with the following values:
+
+* dev - DEV
+* preprod - PRE-PRODUCTION
+
+And include this in your `/server/config.ts` as:
+
+```typescript
+  environmentName: get('ENVIRONMENT_NAME', '')
+```
+
+You can also add the `ENVIRONMENT_NAME` variable to your `.env` file to show the badge when running locally.
+
+
+
+An example of using these components, including the fallbacks, can be found in https://github.com/ministryofjustice/hmpps-digital-prison-services

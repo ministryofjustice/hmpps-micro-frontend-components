@@ -13,6 +13,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     DPS_HOME_PAGE_URL: "https://digital-dev.prison.service.justice.gov.uk"
     PRISON_API_URL: "https://api-dev.prison.service.justice.gov.uk"
+    ENVIRONMENT_NAME: DEV
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
