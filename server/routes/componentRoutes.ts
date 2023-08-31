@@ -5,7 +5,7 @@ import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController from '../controllers/componentsController'
+import componentsController, { isPrisonUser } from '../controllers/componentsController'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -40,12 +40,16 @@ export default function componentRoutes(services: Services): Router {
     }),
   )
 
-  router.get('/footer', (req, res, next) => {
-    res.render('components/footer', {}, (_, html) => {
-      res.header('Content-Type', 'application/json')
-      res.send(JSON.stringify({ html, css: [], javascript: [] }))
-    })
-  })
+  router.get(
+    '/footer',
+    populateCurrentUser(services.userService),
+    asyncMiddleware(async (req, res, next) => {
+      res.render('components/footer', { isPrisonUser: isPrisonUser(res.locals.user) }, (_, html) => {
+        res.header('Content-Type', 'application/json')
+        res.send(JSON.stringify({ html, css: [], javascript: [] }))
+      })
+    }),
+  )
 
   router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {
