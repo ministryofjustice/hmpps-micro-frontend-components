@@ -15,15 +15,18 @@ export interface User {
   authSource: 'nomis' | 'auth'
 }
 
+export const isPrisonUser = (user: User): boolean => {
+  return user.authSource === 'nomis'
+}
+
 export default (services: Services): { getHeaderViewModel: (user: User) => Promise<HeaderViewModel> } => ({
   async getHeaderViewModel(user) {
-    const { token, authSource } = user
+    const { token } = user
 
-    const isPrisonUser = authSource === 'nomis'
-    const caseLoads = isPrisonUser ? await services.userService.getUserCaseLoads(token) : []
+    const caseLoads = isPrisonUser(user) ? await services.userService.getUserCaseLoads(token) : []
     return {
       caseLoads,
-      isPrisonUser,
+      isPrisonUser: isPrisonUser(user),
       activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
       changeCaseLoadLink: `${config.apis.dpsHomePageUrl}/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,

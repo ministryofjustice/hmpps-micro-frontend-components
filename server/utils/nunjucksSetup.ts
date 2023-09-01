@@ -3,6 +3,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
 import { initialiseName } from './utils'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -11,6 +12,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Frontend Components'
+  app.locals.config = config
 
   // Cachebusting version string
   if (production) {
