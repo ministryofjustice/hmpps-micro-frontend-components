@@ -25,8 +25,9 @@ Add a block for the component library in the `apis` section of `config.ts`, for 
     },
 ```
 
-Add a Component Client and Service and include methods to call the components library. This call requires the user token to be passed in on the `x-user-token` header.
+Add a Component model, API client and service, and include methods to call the components library. The API call requires the user token to be passed in on the `x-user-token` header.
 
+Model:
 ```typescript
 interface Component {
   html: string
@@ -34,6 +35,7 @@ interface Component {
   javascript: string[]
 }
 ```
+ApiClient method:
 ```typescript
 async getComponent(component: 'header' | 'footer', userToken: string): Promise<Component> {
     return this.restClient.get<Component>({
@@ -70,7 +72,7 @@ export default function getFrontendComponents({ componentService }: Services): R
   }
 }
 ```
-Then enable this middleware for all GET routes in your `app.js` config, just before `app.use(routes(services))` using:
+Then enable this middleware for all GET routes in your `app.ts` config, just before `app.use(routes(services))` using:
 
 ```typescript
 app.get('*', getFrontendComponents(services))
