@@ -11,9 +11,11 @@ generic-service:
     INGRESS_URL: "https://frontend-components-preprod.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
-    DPS_HOME_PAGE_URL: "https://digital-preprod.prison.service.justice.gov.uk"
+    DIGITAL_PRISON_SERVICE_URL: "https://digital-preprod.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support-preprod.hmpps.service.justice.gov.uk/feedback-and-support"
     PRISON_API_URL: "https://api-preprod.prison.service.justice.gov.uk"
+    CONTENTFUL_HOST: "https://graphql.contentful.com"
+    DPS_URL: "https://dps-preprod.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION
 
 generic-prometheus-alerts:

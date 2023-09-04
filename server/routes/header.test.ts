@@ -114,7 +114,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`).text().trim()).toEqual('Leeds')
+          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).text().trim()).toEqual('Leeds')
         })
     })
 
@@ -135,7 +135,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`).length).toEqual(0)
+          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
         })
     })
   })
@@ -154,7 +154,7 @@ describe('GET /header', () => {
           const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
           expect(manageDetailsLink.length).toEqual(0)
 
-          const caseloadSwitcher = $(`a[href="${config.apis.dpsHomePageUrl}/change-caseload"]`)
+          const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
         })
     })

@@ -1,5 +1,6 @@
 import { UserService } from '../services'
 import componentsController from './componentsController'
+import ContentfulService from '../services/contentfulService'
 
 const userServiceMock = {
   getUser: () => ({ name: 'User', activeCaseLoadId: 'LEI' }),
@@ -14,7 +15,14 @@ const userServiceMock = {
   ],
 } as undefined as UserService
 
-const controller = componentsController({ userService: userServiceMock })
+const contentfulServiceMock = {
+  getManagedPages: () => [
+    { href: 'url1', text: 'text1' },
+    { href: 'url2', text: 'text2' },
+  ],
+} as undefined as ContentfulService
+
+const controller = componentsController({ userService: userServiceMock, contentfulService: contentfulServiceMock })
 
 describe('getHeaderViewModel', () => {
   it('should return the HeaderViewModel', async () => {
@@ -53,6 +61,20 @@ describe('getHeaderViewModel', () => {
       ingressUrl: 'localhost',
       isPrisonUser: false,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
+    })
+  })
+
+  describe('getFooterViewModel', () => {
+    it('should return the FooterViewModel', async () => {
+      const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
+      expect(output).toEqual({
+        managedPages: [
+          { href: 'url1', text: 'text1' },
+          { href: 'url2', text: 'text2' },
+        ],
+        isPrisonUser: true,
+        component: 'footer',
+      })
     })
   })
 })
