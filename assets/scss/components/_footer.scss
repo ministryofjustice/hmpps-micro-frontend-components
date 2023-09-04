@@ -1,5 +1,10 @@
-.govuk-footer {
+.connect-dps-common-footer {
+  @include govuk-font($size: 16);
+
+  border-top: 1px solid $govuk-border-colour;
   padding: 45px 0 30px 0;
+  color: $govuk-text-colour;
+  background: $govuk-canvas-background-colour;
 
   a {
     text-underline-offset: .23em;
@@ -24,4 +29,32 @@
     border-top: 1px solid govuk-colour('dark-grey');
     padding-top: 25px;
   }
+
+  &__inline-list {
+    margin-top: 0;
+    margin-bottom: govuk-spacing(3);
+    padding: 0;
+  }
+
+
+  &__inline-list-item {
+    display: inline-block;
+    margin-right: govuk-spacing(3);
+    margin-bottom: govuk-spacing(1);
+  }
+
+  &__link {
+    @include govuk-link-common;
+    @include govuk-link-style-text;
+
+    // alphagov/govuk_template includes a specific a:link:focus selector
+    // designed to make unvisited links a slightly darker blue when focussed, so
+    // we need to override the text colour for that combination of selectors.
+    @include _govuk-compatibility(govuk_template) {
+      &:link:focus {
+        @include govuk-text-colour;
+      }
+    }
+  }
+
 }
