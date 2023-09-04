@@ -11,9 +11,11 @@ generic-service:
     INGRESS_URL: "https://frontend-components.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
-    DPS_HOME_PAGE_URL: "https://digital.prison.service.justice.gov.uk"
+    DIGITAL_PRISON_SERVICE_URL: "https://digital.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support.hmpps.service.justice.gov.uk/feedback-and-support"
     PRISON_API_URL: "https://api.prison.service.justice.gov.uk"
+    DPS_URL: "https://dps.prison.service.justice.gov.uk"
+    CONTENTFUL_HOST: "https://graphql.contentful.com"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service

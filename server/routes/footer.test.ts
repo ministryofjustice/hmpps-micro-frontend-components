@@ -5,6 +5,7 @@ import { NextFunction, Request } from 'express'
 import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
+import ContentfulService from '../services/contentfulService'
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
@@ -18,12 +19,20 @@ jest.mock('express-jwt', () => ({
   },
 }))
 
+const contentfulServiceMock = {
+  getManagedPages: () => [
+    { href: 'url1', text: 'text1' },
+    { href: 'url2', text: 'text2' },
+  ],
+} as undefined as ContentfulService
+
 let app: Express.Application
 let authApi: nock.Scope
+
 beforeEach(() => {
   authApi = nock(config.apis.hmppsAuth.url)
 
-  app = createApp(services())
+  app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
 
 afterEach(() => {
@@ -31,7 +40,7 @@ afterEach(() => {
 })
 
 describe('GET /footer', () => {
-  it('should render a link to the open government licence', () => {
+  it('should render a link to the feedback survey', () => {
     authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
 
     return request(app)
@@ -41,8 +50,8 @@ describe('GET /footer', () => {
       .expect('Content-Type', /json/)
       .expect(res => {
         const $ = cheerio.load(JSON.parse(res.text).html)
-        const oglLink = $('a[href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"]')
-        expect(oglLink.text()).toContain('Open Government Licence v3.0')
+        const feedbackLink = $('a[href="https://eu.surveymonkey.com/r/FRZYGVQ?source=[source_value]"]')
+        expect(feedbackLink.text()).toContain('Feedback')
       })
   })
 

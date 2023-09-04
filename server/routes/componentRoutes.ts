@@ -1,11 +1,11 @@
-import { NextFunction, Request, Router, Response } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import jwksRsa from 'jwks-rsa'
 import { expressjwt, GetVerificationKey } from 'express-jwt'
 import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController, { isPrisonUser } from '../controllers/componentsController'
+import componentsController from '../controllers/componentsController'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -44,9 +44,11 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      res.render('components/footer', { isPrisonUser: isPrisonUser(res.locals.user) }, (_, html) => {
+      const viewModel = await controller.getFooterViewModel(res.locals.user)
+
+      res.render('components/footer', viewModel, (_, html) => {
         res.header('Content-Type', 'application/json')
-        res.send(JSON.stringify({ html, css: [], javascript: [] }))
+        res.send(JSON.stringify({ html, css: [`${config.ingressUrl}/assets/stylesheets/footer.css`], javascript: [] }))
       })
     }),
   )

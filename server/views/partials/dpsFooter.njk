@@ -1,2 +1,29 @@
-{% from "govuk/components/footer/macro.njk" import govukFooter -%}
-{{ govukFooter({}) }}
+<footer class="connect-dps-common-footer" role="contentinfo">
+    <div class="govuk-width-container ">
+        <div class="connect-dps-common-footer__info">
+            <div class="connect-dps-common-footer__help">
+                <h2>Get help with DPS</h2>
+                <p>Call 0800 917 5148 or #6598 from inside an establishment.</p>
+            </div>
+        </div>
+        <div class="connect-dps-common-footer__support-links">
+            <h2 class="govuk-visually-hidden">Support links</h2>
+
+            <ul class="connect-dps-common-footer__inline-list">
+                <li class="connect-dps-common-footer__inline-list-item">
+                    <a class="connect-dps-common-footer__link" href="https://eu.surveymonkey.com/r/FRZYGVQ?source=[source_value]" target='_blank' referrerpolicy='no-referrer' rel='noopener'>
+                        Feedback
+                    </a>
+                </li>
+
+                {% for page in managedPages %}
+                    <li class="connect-dps-common-footer__inline-list-item">
+                        <a class="connect-dps-common-footer__link" href="{{ page.href }}">
+                            {{ page.text }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</footer>

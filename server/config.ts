@@ -77,9 +77,15 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
-    dpsHomePageUrl: get('DPS_HOME_PAGE_URL', 'http://localhost:3001', requiredInProduction),
+    digitalPrisonServiceUrl: get('DIGITAL_PRISON_SERVICE_URL', 'http://localhost:3001', requiredInProduction),
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
+  dpsUrl: get('DPS_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  contentful: {
+    host: get('CONTENTFUL_HOST', ''),
+    spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
+    accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
+  },
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
