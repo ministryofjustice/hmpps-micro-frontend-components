@@ -26,6 +26,25 @@ export const isPrisonUser = (user: User): boolean => {
   return user.authSource === 'nomis'
 }
 
+const defaultFooterLinks: ManagedPageLink[] = [
+  {
+    href: `${config.dpsUrl}/accessibility-statement`,
+    text: 'Accessibility statement',
+  },
+  {
+    href: `${config.dpsUrl}/terms-and-conditions`,
+    text: 'Terms and conditions',
+  },
+  {
+    href: `${config.dpsUrl}/privacy-policy`,
+    text: 'Privacy policy',
+  },
+  {
+    href: `${config.dpsUrl}/cookies-policy`,
+    text: 'Cookies policy',
+  },
+]
+
 export default (
   services: Services,
 ): {
@@ -47,7 +66,12 @@ export default (
     }
   },
   async getFooterViewModel(user: User) {
-    const managedPages = await services.contentfulService.getManagedPages()
+    let managedPages: ManagedPageLink[] = defaultFooterLinks
+
+    if (config.contentfulFooterLinksEnabled) {
+      managedPages = await services.contentfulService.getManagedPages()
+    }
+
     return {
       managedPages,
       isPrisonUser: isPrisonUser(user),

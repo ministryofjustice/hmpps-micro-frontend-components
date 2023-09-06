@@ -1,6 +1,7 @@
 import { UserService } from '../services'
 import componentsController from './componentsController'
 import ContentfulService from '../services/contentfulService'
+import config from '../config'
 
 const userServiceMock = {
   getUser: () => ({ name: 'User', activeCaseLoadId: 'LEI' }),
@@ -63,18 +64,46 @@ describe('getHeaderViewModel', () => {
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
     })
   })
+})
 
-  describe('getFooterViewModel', () => {
-    it('should return the FooterViewModel', async () => {
-      const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
-      expect(output).toEqual({
-        managedPages: [
-          { href: 'url1', text: 'text1' },
-          { href: 'url2', text: 'text2' },
-        ],
-        isPrisonUser: true,
-        component: 'footer',
-      })
+describe('getFooterViewModel', () => {
+  it('should return the FooterViewModel with links from contentful if flag is true', async () => {
+    config.contentfulFooterLinksEnabled = true
+    const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
+    expect(output).toEqual({
+      managedPages: [
+        { href: 'url1', text: 'text1' },
+        { href: 'url2', text: 'text2' },
+      ],
+      isPrisonUser: true,
+      component: 'footer',
+    })
+  })
+
+  it('should return the FooterViewModel with default links if flag is false', async () => {
+    config.contentfulFooterLinksEnabled = false
+    const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
+    expect(output).toEqual({
+      managedPages: [
+        {
+          href: `${config.dpsUrl}/accessibility-statement`,
+          text: 'Accessibility statement',
+        },
+        {
+          href: `${config.dpsUrl}/terms-and-conditions`,
+          text: 'Terms and conditions',
+        },
+        {
+          href: `${config.dpsUrl}/privacy-policy`,
+          text: 'Privacy policy',
+        },
+        {
+          href: `${config.dpsUrl}/cookies-policy`,
+          text: 'Cookies policy',
+        },
+      ],
+      isPrisonUser: true,
+      component: 'footer',
     })
   })
 })

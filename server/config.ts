@@ -87,5 +87,6 @@ export default {
     spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
     accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
   },
+  contentfulFooterLinksEnabled: get('CONTENTFUL_FOOTER_LINKS_ENABLED', 'false', requiredInProduction) === 'true',
   environmentName: get('ENVIRONMENT_NAME', ''),
 }
