@@ -29,19 +29,19 @@ export const isPrisonUser = (user: User): boolean => {
 const defaultFooterLinks: ManagedPageLink[] = [
   {
     href: `${config.dpsUrl}/accessibility-statement`,
-    text: 'Accessibility statementx',
+    text: 'Accessibility statement',
   },
   {
     href: `${config.dpsUrl}/terms-and-conditions`,
-    text: 'Terms and conditionsx',
+    text: 'Terms and conditions',
   },
   {
     href: `${config.dpsUrl}/privacy-policy`,
-    text: 'Privacy policyx',
+    text: 'Privacy policy',
   },
   {
     href: `${config.dpsUrl}/cookies-policy`,
-    text: 'Cookies policyx',
+    text: 'Cookies policy',
   },
 ]
 
