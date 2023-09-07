@@ -44,7 +44,7 @@ SYSTEM_CLIENT_ID=
 SYSTEM_CLIENT_SECRET=
 TOKEN_VERIFICATION_ENABLED=true
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-PRISON_API_URL=https://api-dev.prison.service.justice.gov.uk
+PRISON_API_URL=https://prison-api-dev.prison.service.justice.gov.uk
 TOKEN_VERIFICATION_API_URL=https://token-verification-api-dev.prison.service.justice.gov.uk
 ```
 </details>

@@ -13,7 +13,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     DIGITAL_PRISON_SERVICE_URL: "https://digital-dev.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support-dev.hmpps.service.justice.gov.uk/feedback-and-support"
-    PRISON_API_URL: "https://api-dev.prison.service.justice.gov.uk"
+    PRISON_API_URL: "https://prison-api-dev.prison.service.justice.gov.uk"
     CONTENTFUL_HOST: "https://graphql.contentful.com"
     DPS_URL: "https://dps-dev.prison.service.justice.gov.uk"
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
