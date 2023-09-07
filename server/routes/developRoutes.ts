@@ -29,9 +29,14 @@ export default function developRoutes(services: Services): Router {
     }),
   )
 
-  router.get('/footer', (req, res, next) => {
-    return res.render('pages/componentPreview', { component: 'footer' })
-  })
+  router.get(
+    '/footer',
+    populateCurrentUser(services.userService),
+    asyncMiddleware(async (req, res, next) => {
+      const viewModel = await controller.getFooterViewModel(res.locals.user)
+      return res.render('pages/componentPreview', { component: 'footer', ...viewModel })
+    }),
+  )
 
   return router
 }
