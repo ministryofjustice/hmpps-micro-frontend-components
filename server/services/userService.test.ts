@@ -3,6 +3,7 @@ import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
 import { prisonApiClientMock } from '../../tests/mocks/prisonApiClientMock'
 import { CaseLoad } from '../interfaces/caseLoad'
 import PrisonApiClient from '../data/prisonApiClient'
+import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 
 jest.mock('../data/hmppsAuthClient')
 
@@ -27,20 +28,33 @@ describe('User service', () => {
         () => prisonApiClient,
       )
     })
-    it('Retrieves and formats user name', async () => {
-      const result = await userService.getUser(token)
-      expect(result.displayName).toEqual('John Smith')
+    describe('with no token data', () => {
+      it('Retrieves and formats user name', async () => {
+        const result = await userService.getUser(token)
+        expect(hmppsAuthClient.getUser).toBeCalledTimes(1)
+        expect(result.displayName).toEqual('John Smith')
+      })
     })
 
-    it('Retrieves case loads', async () => {
-      const result = await userService.getUserCaseLoads(token)
-      expect(result).toEqual(expectedCaseLoads)
+    describe('with token data', () => {
+      it('Retrieves and formats user name', async () => {
+        const result = await userService.getUser(token, getTokenDataMock())
+        expect(hmppsAuthClient.getUser).toBeCalledTimes(0)
+        expect(result).toEqual({ displayName: 'Token User', name: 'Token User', roles: ['ROLE_PF_STD_PRISON'] })
+      })
     })
 
     it('Propagates error', async () => {
       hmppsAuthClient.getUser.mockRejectedValue(new Error('some error'))
 
       await expect(userService.getUser(token)).rejects.toEqual(new Error('some error'))
+    })
+  })
+
+  describe('getUserCaseLoads', () => {
+    it('Retrieves case loads', async () => {
+      const result = await userService.getUserCaseLoads(token)
+      expect(result).toEqual(expectedCaseLoads)
     })
   })
 })
