@@ -47,12 +47,6 @@ export default class HmppsAuthClient {
     logger.info(`Getting user details: calling HMPPS Auth`)
     return this.restClient.get({ path: '/api/user/me' }) as Promise<User>
   }
-
-  getUserRoles(): Promise<string[]> {
-    return this.restClient
-      .get({ path: '/api/user/me/roles' })
-      .then(roles => (<UserRole[]>roles).map(role => role.roleCode))
-  }
 }
 
 export const systemTokenBuilder =

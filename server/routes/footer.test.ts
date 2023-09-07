@@ -6,6 +6,7 @@ import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
 import ContentfulService from '../services/contentfulService'
+import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +15,7 @@ jest.mock('express-jwt', () => ({
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = { user_name: 'USER1', name: 'User One', auth_source: 'nomis', authorities: [] }
+    req.auth = getTokenDataMock()
     return next()
   },
 }))

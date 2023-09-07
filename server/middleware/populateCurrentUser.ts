@@ -12,7 +12,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     try {
       if (res.locals.user.authSource === 'nomis') {
         const token = res.locals.user.token ?? (req.headers['x-user-token'] as string)
-        const user = await userService.getUser(token)
+        const user = await userService.getUser(token, req.auth)
         if (user) {
           res.locals.user = { ...user, ...res.locals.user, token }
         } else {

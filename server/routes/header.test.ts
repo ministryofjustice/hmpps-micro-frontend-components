@@ -5,6 +5,7 @@ import { NextFunction, Request } from 'express'
 import { services } from '../services'
 import config from '../config'
 import createApp from '../app'
+import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
@@ -14,12 +15,7 @@ jest.mock('express-jwt', () => ({
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = {
-      user_name: 'USER1',
-      name: 'User One',
-      auth_source: token === 'token' ? 'nomis' : 'auth',
-      authorities: [],
-    }
+    req.auth = getTokenDataMock({ auth_source: token === 'token' ? 'nomis' : 'auth' })
     return next()
   },
 }))
@@ -58,7 +54,7 @@ describe('GET /header', () => {
         })
     })
 
-    it('should render user management link', () => {
+    it('should render user management link using data from token', () => {
       return request(app)
         .get('/header')
         .set('x-user-token', 'token')

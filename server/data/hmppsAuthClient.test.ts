@@ -46,24 +46,6 @@ describe('hmppsAuthClient', () => {
     })
   })
 
-  describe('getUserRoles', () => {
-    it('should return data from api', async () => {
-      fakeHmppsAuthApi
-        .get('/api/user/me/roles')
-        .matchHeader('authorization', `Bearer ${token.access_token}`)
-        .reply(200, [{ roleCode: 'role1' }, { roleCode: 'role2' }])
-
-      const hmppsAuthClient = restClientBuilder(
-        'HMPPS Auth Client',
-        config.apis.hmppsAuth,
-        HmppsAuthClient,
-      )(token.access_token)
-
-      const output = await hmppsAuthClient.getUserRoles()
-      expect(output).toEqual(['role1', 'role2'])
-    })
-  })
-
   describe('getSystemClientToken', () => {
     it('should instantiate the redis client', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
