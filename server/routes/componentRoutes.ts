@@ -7,12 +7,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import componentsController from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
-
-interface Component {
-  html: string
-  css: string[]
-  javascript: string[]
-}
+import Component from '../@types/Component'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
