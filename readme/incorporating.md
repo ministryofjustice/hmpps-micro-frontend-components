@@ -27,6 +27,8 @@ Add a block for the component library in the `apis` section of `config.ts`, for 
 
 Add a Component model, API client and service, and include methods to call the components library. The API call requires the user token to be passed in on the `x-user-token` header.
 
+Components can be requested individually via e.g. `{api}/header` or multiple can be requested at once using e.g. `{api}/components?component=header&component=footer`
+
 Model:
 ```typescript
 interface Component {
@@ -37,9 +39,12 @@ interface Component {
 ```
 ApiClient method:
 ```typescript
-async getComponent(component: 'header' | 'footer', userToken: string): Promise<Component> {
-    return this.restClient.get<Component>({
-      path: `/${component}`,
+type AvailableComponent = 'header' | 'footer'
+async getComponents<T extends AvailableComponent[]>(
+  components: T, userToken: string): Promise<Record<T[number], Component>> {
+    return this.restClient.get({
+      path: `/components`,
+      query: `component=${components.join('&component=')}`,
       headers: { 'x-user-token': userToken },
     })
 }
@@ -48,16 +53,14 @@ async getComponent(component: 'header' | 'footer', userToken: string): Promise<C
 The components api will return stringified html along with links to any css and javascript files required for the component.
 
 Add a call for these components for each page that requires them. As the header and footer will likely be used on all pages, 
-it is recommended to add a middleware function to call the endpoints and make available to the view using `res.locals`.
+it is recommended to add a middleware function to call the endpoint and make available to the view using `res.locals`.
 
 ```typescript
 export default function getFrontendComponents({ componentService }: Services): RequestHandler {
   return async (req, res, next) => {
     try {
-      const [header, footer] = await Promise.all([
-        componentService.getComponent('header', res.locals.user.token),
-        componentService.getComponent('footer', res.locals.user.token),
-      ])
+      const { header, footer } = await componentService.getComponents(['header', 'footer'], res.locals.user.token)
+      
       res.locals.feComponents = {
         header: header.html,
         footer: footer.html,

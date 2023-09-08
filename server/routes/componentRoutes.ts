@@ -6,6 +6,13 @@ import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import componentsController from '../controllers/componentsController'
+import { AvailableComponent } from '../@types/AvailableComponent'
+
+interface Component {
+  html: string
+  css: string[]
+  javascript: string[]
+}
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -27,16 +34,39 @@ export default function componentRoutes(services: Services): Router {
 
   router.use(requestIsAuthenticated())
 
+  async function getHeaderResponseBody(res: Response): Promise<Component> {
+    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+
+    return new Promise(resolve => {
+      res.render('components/header', viewModel, (_, html) => {
+        resolve({
+          html,
+          css: [`${config.ingressUrl}/assets/stylesheets/header.css`],
+          javascript: [],
+        })
+      })
+    })
+  }
+
+  async function getFooterResponseBody(res: Response): Promise<Component> {
+    const viewModel = await controller.getFooterViewModel(res.locals.user)
+    return new Promise(resolve => {
+      res.render('components/footer', viewModel, (_, html) => {
+        resolve({
+          html,
+          css: [`${config.ingressUrl}/assets/stylesheets/footer.css`],
+          javascript: [],
+        })
+      })
+    })
+  }
+
   router.get(
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getHeaderViewModel(res.locals.user)
-
-      res.render('components/header', viewModel, (_, html) => {
-        res.header('Content-Type', 'application/json')
-        res.send(JSON.stringify({ html, css: [`${config.ingressUrl}/assets/stylesheets/header.css`], javascript: [] }))
-      })
+      const response = await getHeaderResponseBody(res)
+      res.send(response)
     }),
   )
 
@@ -44,12 +74,39 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getFooterViewModel(res.locals.user)
+      const response = await getFooterResponseBody(res)
+      res.send(response)
+    }),
+  )
 
-      res.render('components/footer', viewModel, (_, html) => {
-        res.header('Content-Type', 'application/json')
-        res.send(JSON.stringify({ html, css: [`${config.ingressUrl}/assets/stylesheets/footer.css`], javascript: [] }))
-      })
+  router.get(
+    '/components',
+    populateCurrentUser(services.userService),
+    asyncMiddleware(async (req, res, next) => {
+      const componentMethods: Record<AvailableComponent, (r: Response) => Promise<Component>> = {
+        header: getHeaderResponseBody,
+        footer: getFooterResponseBody,
+      }
+
+      const componentsRequested = [req.query.component]
+        .flat()
+        .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
+
+      const renders = await Promise.all(
+        componentsRequested.map(component => componentMethods[component as AvailableComponent](res)),
+      )
+
+      const responseBody = componentsRequested.reduce<Partial<Record<AvailableComponent, Component>>>(
+        (output, componentName, index) => {
+          return {
+            ...output,
+            [componentName]: renders[index],
+          }
+        },
+        {},
+      )
+
+      res.send(responseBody)
     }),
   )
 
