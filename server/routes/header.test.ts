@@ -50,7 +50,9 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($('a[href="/"]').text()).toContain('Digital Prison Services')
+          expect(
+            $('a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]').text(),
+          ).toContain('Digital Prison Services')
         })
     })
 

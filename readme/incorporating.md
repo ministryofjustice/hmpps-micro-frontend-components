@@ -193,6 +193,17 @@ Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/co
 @import './components/footer';
 ```
 
+The fallback header includes a link to the DPS homepage which uses a config property created from an environment variable
+to ensure it works for each deployed environment (dev, pre-production and production):
+
+```html
+<a class="hmpps-header__link hmpps-header__link--no-underline hmpps-header__title__service-name" href="{{ config.apis.digitalPrisonServiceUrl }}">
+```
+
+You will need to use your own existing config property and environment variable that points to
+the DPS homepage (e.g. for Production, `https://digital.prison.service.justice.gov.uk`)
+or create new ones for this purpose.
+
 The header component and fallback header include an environment 'badge' to display the name of the deployed environment 
 (e.g. DEV, PRE-PRODUCTION). In order to support this in the fallback header, copy the `setUpEnvironmentName.ts.txt` file 
 from the `_fallbacks` directory into your `/server/middleware` directory, removing the `.txt` extension, and add the 
@@ -235,7 +246,33 @@ Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/co
 @import './components/footer';
 ```
 
-The header component and fallback header include an environment 'badge' to display the name of the deployed environment
+The fallback header for prison services (`dpsHeader.njk`) includes a link to the DPS homepage, and the fallback header 
+for external services (`externalHeader.njk`) includes a link to the HMPPS Auth homepage.
+
+These links use config properties created from environment variables to ensure it works for each deployed environment (dev, pre-production and production).
+
+For `dpsHeader.njk` it is:
+
+```html
+<a class="hmpps-header__link hmpps-header__link--no-underline hmpps-header__title__service-name" href="{{ config.apis.digitalPrisonServiceUrl }}">
+```
+
+For `externalHeader.njk` there are 2:
+
+```html
+<a class="hmpps-header__link hmpps-header__title__organisation-name" href="{{ config.apis.hmppsAuth.url }}">
+```
+
+```html
+<a class="hmpps-header__link hmpps-header__title__service-name" href="{{ config.apis.hmppsAuth.url }}">Digital Services</a>
+```
+
+You will need to use your own existing config properties and environment variables that point to 
+the DPS homepage (e.g. for Production, `https://digital.prison.service.justice.gov.uk`) and
+the HMPPS Auth homepage (e.g. for Production, `https://sign-in.hmpps.service.justice.gov.uk/auth`)
+or create new ones for this purpose.
+
+The header component and fallback headers include an environment 'badge' to display the name of the deployed environment
 (e.g. DEV, PRE-PRODUCTION). In order to support this in the fallback header, copy the `setUpEnvironmentName.ts.txt` file
 from the `_fallbacks` directory into your `/server/middleware` directory, removing the `.txt` extension, and add the
 following line to your `/server/app.ts`, immediately before the `nunjucksSetup` line:
