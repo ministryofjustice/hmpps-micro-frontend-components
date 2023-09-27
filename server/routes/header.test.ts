@@ -2,6 +2,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
 import { NextFunction, Request } from 'express'
+import { createRedisClient } from '../data/redisClient'
 import { services } from '../services'
 import config from '../config'
 import createApp from '../app'
@@ -22,16 +23,24 @@ jest.mock('express-jwt', () => ({
 
 let app: Express.Application
 let prisonApi: nock.Scope
-let authApi: nock.Scope
 
-beforeEach(() => {
+const redisClient = createRedisClient()
+async function ensureConnected() {
+  if (!redisClient.isOpen) {
+    await redisClient.connect()
+  }
+}
+beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
-  authApi = nock(config.apis.hmppsAuth.url)
+
+  await ensureConnected()
+  redisClient.del('TOKEN_USER')
 
   app = createApp(services())
 })
 
 afterEach(() => {
+  nock.cleanAll()
   jest.resetAllMocks()
 })
 
@@ -39,7 +48,6 @@ describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
       prisonApi.get('/api/users/me/caseLoads').reply(200, [])
-      authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
     })
 
     it('should render digital prison services title', () => {
@@ -82,12 +90,7 @@ describe('GET /header', () => {
         })
     })
   })
-
   describe('case load switcher', () => {
-    beforeEach(() => {
-      authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-    })
-
     it('should display case load link if user has multiple caseloads', () => {
       prisonApi.get('/api/users/me/caseLoads').reply(200, [
         {
@@ -135,6 +138,90 @@ describe('GET /header', () => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
         })
+    })
+
+    describe('caching', () => {
+      it('should use cached caseloads the second time if 1 active caseload', async () => {
+        prisonApi.get('/api/users/me/caseLoads').reply(200, [
+          {
+            caseLoadId: 'LEI',
+            description: 'Leeds',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: true,
+          },
+        ])
+        prisonApi.get('/api/users/me/caseLoads').reply(200, [
+          {
+            caseLoadId: 'LEI',
+            description: 'Leeds',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: true,
+          },
+          {
+            caseLoadId: 'DEE',
+            description: 'Deerbolt',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: false,
+          },
+        ])
+        // make first call with 1 active caseload
+        await request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/)
+
+        return request(app)
+          .get('/header')
+          .set('x-user-token', 'token')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .expect(res => {
+            const $ = cheerio.load(JSON.parse(res.text).html)
+            // using 1 active caseload from first request
+            expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+          })
+      })
+
+      it('should not use cached caseloads the second time if 2 active caseloads', async () => {
+        prisonApi.get('/api/users/me/caseLoads').reply(200, [
+          {
+            caseLoadId: 'LEI',
+            description: 'Leeds',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: true,
+          },
+          {
+            caseLoadId: 'DEE',
+            description: 'Deerbolt',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: false,
+          },
+        ])
+        prisonApi.get('/api/users/me/caseLoads').reply(200, [
+          {
+            caseLoadId: 'LEI',
+            description: 'Leeds',
+            type: '',
+            caseloadFunction: '',
+            currentlyActive: true,
+          },
+        ])
+        // make first call with 2 active caseloads
+        await request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/)
+
+        return request(app)
+          .get('/header')
+          .set('x-user-token', 'token')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .expect(res => {
+            const $ = cheerio.load(JSON.parse(res.text).html)
+            // using the value from second request
+            expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+          })
+      })
     })
   })
 

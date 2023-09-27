@@ -6,6 +6,7 @@ import logger from '../../logger'
 import config from '../config'
 import generateOauthClientToken from '../authentication/clientCredentials'
 import RestClient from './restClient'
+import { AuthUser } from '../@types/Users'
 
 const timeoutSpec = config.apis.hmppsAuth.timeout
 const hmppsAuthUrl = config.apis.hmppsAuth.url
@@ -31,11 +32,6 @@ function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagen
     .timeout(timeoutSpec)
 }
 
-export interface User {
-  name: string
-  activeCaseLoadId: string
-}
-
 export interface UserRole {
   roleCode: string
 }
@@ -43,9 +39,9 @@ export interface UserRole {
 export default class HmppsAuthClient {
   constructor(private readonly restClient: RestClient) {}
 
-  getUser(): Promise<User> {
+  getUser(): Promise<AuthUser> {
     logger.info(`Getting user details: calling HMPPS Auth`)
-    return this.restClient.get({ path: '/api/user/me' }) as Promise<User>
+    return this.restClient.get({ path: '/api/user/me' }) as Promise<AuthUser>
   }
 }
 

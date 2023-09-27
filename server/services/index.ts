@@ -3,11 +3,12 @@ import { dataAccess } from '../data'
 import UserService from './userService'
 import ContentfulService from './contentfulService'
 import config from '../config'
+import { createRedisClient } from '../data/redisClient'
 
 export const services = () => {
   const { hmppsAuthClientBuilder, prisonApiClientBuilder } = dataAccess
 
-  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
+  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder, createRedisClient())
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),

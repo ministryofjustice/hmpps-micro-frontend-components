@@ -2,6 +2,7 @@ import { UserService } from '../services'
 import componentsController from './componentsController'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
+import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 
 const userServiceMock = {
   getUser: () => ({ name: 'User', activeCaseLoadId: 'LEI' }),
@@ -24,10 +25,10 @@ const contentfulServiceMock = {
 } as undefined as ContentfulService
 
 const controller = componentsController({ userService: userServiceMock, contentfulService: contentfulServiceMock })
-
+const defaultTokenData = getTokenDataMock()
 describe('getHeaderViewModel', () => {
   it('should return the HeaderViewModel', async () => {
-    const output = await controller.getHeaderViewModel({ authSource: 'nomis', token: 'token' })
+    const output = await controller.getHeaderViewModel({ ...defaultTokenData, authSource: 'nomis', token: 'token' })
     expect(output).toEqual({
       activeCaseLoad: {
         caseLoadId: 'LEI',
@@ -54,7 +55,7 @@ describe('getHeaderViewModel', () => {
   })
 
   it('should return empty caseload information if not a nomis user', async () => {
-    const output = await controller.getHeaderViewModel({ authSource: 'auth', token: 'token' })
+    const output = await controller.getHeaderViewModel({ ...defaultTokenData, authSource: 'auth', token: 'token' })
     expect(output).toEqual({
       caseLoads: [],
       changeCaseLoadLink: 'http://localhost:3001/change-caseload',
@@ -69,7 +70,7 @@ describe('getHeaderViewModel', () => {
 describe('getFooterViewModel', () => {
   it('should return the FooterViewModel with links from contentful if flag is true', async () => {
     config.contentfulFooterLinksEnabled = true
-    const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
+    const output = await controller.getFooterViewModel({ ...defaultTokenData, authSource: 'nomis', token: 'token' })
     expect(output).toEqual({
       managedPages: [
         { href: 'url1', text: 'text1' },
@@ -82,7 +83,7 @@ describe('getFooterViewModel', () => {
 
   it('should return the FooterViewModel with default links if flag is false', async () => {
     config.contentfulFooterLinksEnabled = false
-    const output = await controller.getFooterViewModel({ authSource: 'nomis', token: 'token' })
+    const output = await controller.getFooterViewModel({ ...defaultTokenData, authSource: 'nomis', token: 'token' })
     expect(output).toEqual({
       managedPages: [
         {
