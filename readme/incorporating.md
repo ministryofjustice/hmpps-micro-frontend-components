@@ -110,7 +110,7 @@ The following code should be used in the `layout.njk` file within your applicati
 The js and css values should be incorporated into the head block of the layout:
 
 ```typescript
-{% if feComponents.jsInclude %}
+{% if feComponents.jsIncludes %}
     {% for js in feComponents.jsIncludes %}
       <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
     {% endfor %}
