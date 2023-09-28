@@ -43,16 +43,14 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  async function getFooterResponseBody(res: Response, latestFeatures: boolean): Promise<Component> {
+  async function getFooterResponseBody(res: Response): Promise<Component> {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     return new Promise(resolve => {
-      const jsArray = latestFeatures ? [`${config.ingressUrl}/assets/js/footer.js`] : []
-
       res.render('components/footer', viewModel, (_, html) => {
         resolve({
           html,
           css: [`${config.ingressUrl}/assets/stylesheets/footer.css`],
-          javascript: jsArray,
+          javascript: [],
         })
       })
     })
@@ -71,7 +69,7 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res, req.headers['x-use-latest-features'] === 'true')
+      const response = await getFooterResponseBody(res)
       res.send(response)
     }),
   )
@@ -80,20 +78,17 @@ export default function componentRoutes(services: Services): Router {
     '/components',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const componentMethods: Record<AvailableComponent, (r: Response, latestFeatures: boolean) => Promise<Component>> =
-        {
-          header: getHeaderResponseBody,
-          footer: getFooterResponseBody,
-        }
+      const componentMethods: Record<AvailableComponent, (r: Response) => Promise<Component>> = {
+        header: getHeaderResponseBody,
+        footer: getFooterResponseBody,
+      }
 
       const componentsRequested = [req.query.component]
         .flat()
         .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
       const renders = await Promise.all(
-        componentsRequested.map(component =>
-          componentMethods[component as AvailableComponent](res, req.headers['x-use-latest-features'] === 'true'),
-        ),
+        componentsRequested.map(component => componentMethods[component as AvailableComponent](res)),
       )
 
       const responseBody = componentsRequested.reduce<Partial<Record<AvailableComponent, Component>>>(
