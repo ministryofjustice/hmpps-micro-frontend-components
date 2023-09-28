@@ -3,7 +3,7 @@
 
 ## Incorporating components
 
-This guide assumes that you are importing into an Express application written TypeScript based on the [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) template project.
+This guide assumes that you are importing into an Express application written in TypeScript based on the [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) project.
 
 Code samples have been provided for examples. Your requirements may differ.
 
@@ -176,9 +176,15 @@ export default function setUpWebSecurity(): Router {
 
 ### Header sign out link
 
-
 The header sign out link direct to  '{your-application}/sign-out'. This works on the assumption that the application has followed the redirect pattern that the hmpps-template-typescript project has.
-See: https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/server/middleware/setUpAuthentication.ts#L34
+See [setUpAuthentication.ts#L34](https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/server/middleware/setUpAuthentication.ts#L34).
+
+**Note**: If your application was copied from the typescript template before August 2021 then it is entirely likely
+that your sign out link will be '/logout' instead.  In which case it will have to be changed to '/sign-out'.  See
+restricted patients [PR#234](https://github.com/ministryofjustice/hmpps-restricted-patients/pull/234) for an example PR.
+If you decide to change '/login' to '/sign-in' at the same time
+([PR#235](https://github.com/ministryofjustice/hmpps-restricted-patients/pull/235)) then your client in HMPPS Auth will
+also need to be changed to include the new callback url.
 
 ### Fallbacks (services with prison only users)
 
