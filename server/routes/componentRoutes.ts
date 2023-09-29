@@ -8,6 +8,7 @@ import populateCurrentUser from '../middleware/populateCurrentUser'
 import componentsController from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
+import { queryParamToEncodedString } from '../utils/utils'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -29,8 +30,14 @@ export default function componentRoutes(services: Services): Router {
 
   router.use(requestIsAuthenticated())
 
-  async function getHeaderResponseBody(res: Response): Promise<Component> {
-    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+  async function getHeaderResponseBody(req: Request, res: Response): Promise<Component> {
+    const { redirectUri, clientId } = req.query
+
+    const viewModel = await controller.getHeaderViewModel(
+      res.locals.user,
+      queryParamToEncodedString(redirectUri),
+      queryParamToEncodedString(clientId),
+    )
 
     return new Promise(resolve => {
       res.render('components/header', viewModel, (_, html) => {
@@ -43,7 +50,7 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  async function getFooterResponseBody(res: Response): Promise<Component> {
+  async function getFooterResponseBody(req: Request, res: Response): Promise<Component> {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     return new Promise(resolve => {
       res.render('components/footer', viewModel, (_, html) => {
@@ -60,7 +67,7 @@ export default function componentRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getHeaderResponseBody(res)
+      const response = await getHeaderResponseBody(req, res)
       res.send(response)
     }),
   )
@@ -69,7 +76,7 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res)
+      const response = await getFooterResponseBody(req, res)
       res.send(response)
     }),
   )
@@ -78,7 +85,7 @@ export default function componentRoutes(services: Services): Router {
     '/components',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const componentMethods: Record<AvailableComponent, (r: Response) => Promise<Component>> = {
+      const componentMethods: Record<AvailableComponent, (rq: Request, rs: Response) => Promise<Component>> = {
         header: getHeaderResponseBody,
         footer: getFooterResponseBody,
       }
@@ -88,7 +95,7 @@ export default function componentRoutes(services: Services): Router {
         .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
       const renders = await Promise.all(
-        componentsRequested.map(component => componentMethods[component as AvailableComponent](res)),
+        componentsRequested.map(component => componentMethods[component as AvailableComponent](req, res)),
       )
 
       const responseBody = componentsRequested.reduce<Partial<Record<AvailableComponent, Component>>>(

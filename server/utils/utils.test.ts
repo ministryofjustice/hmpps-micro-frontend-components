@@ -1,4 +1,5 @@
-import { convertToTitleCase, initialiseName } from './utils'
+import { ParsedQs } from 'qs'
+import { convertToTitleCase, initialiseName, queryParamToEncodedString } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -26,5 +27,19 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
+  })
+})
+
+describe('query param to string', () => {
+  it.each([
+    [null, null, null],
+    ['Empty string', '', ''],
+    ['String', 'robert', 'robert'],
+    ['Encoded string', 'http://robert?james&smith', 'http%3A%2F%2Frobert%3Fjames%26smith'],
+    ['String array', ['Robert', 'James'], null],
+    ['ParsedQs', { key: 'Robert James Smith' }, null],
+    ['ParsedQs array', [{ key: 'Robert James Smith' }, { key2: 'Robert James Smith' }], null],
+  ])('%s initialiseName(%s, %s)', (_: string, a: string | string[] | ParsedQs | ParsedQs[], expected: string) => {
+    expect(queryParamToEncodedString(a)).toEqual(expected)
   })
 })

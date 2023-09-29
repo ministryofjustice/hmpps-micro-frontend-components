@@ -27,7 +27,7 @@ const controller = componentsController({ userService: userServiceMock, contentf
 
 describe('getHeaderViewModel', () => {
   it('should return the HeaderViewModel', async () => {
-    const output = await controller.getHeaderViewModel({ authSource: 'nomis', token: 'token' })
+    const output = await controller.getHeaderViewModel({ authSource: 'nomis', token: 'token' }, null, null)
     expect(output).toEqual({
       activeCaseLoad: {
         caseLoadId: 'LEI',
@@ -54,7 +54,7 @@ describe('getHeaderViewModel', () => {
   })
 
   it('should return empty caseload information if not a nomis user', async () => {
-    const output = await controller.getHeaderViewModel({ authSource: 'auth', token: 'token' })
+    const output = await controller.getHeaderViewModel({ authSource: 'auth', token: 'token' }, null, null)
     expect(output).toEqual({
       caseLoads: [],
       changeCaseLoadLink: 'http://localhost:3001/change-caseload',
@@ -63,6 +63,13 @@ describe('getHeaderViewModel', () => {
       isPrisonUser: false,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
     })
+  })
+
+  it('should add parameters to manage details if passed through', async () => {
+    const output = await controller.getHeaderViewModel({ authSource: 'auth', token: 'token' }, 'localhost', 'billybob')
+    expect(output.manageDetailsLink).toEqual(
+      'http://localhost:9090/auth/account-details?redirect_uri=localhost&client_id=billybob',
+    )
   })
 })
 

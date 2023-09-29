@@ -1,3 +1,5 @@
+import { ParsedQs } from 'qs'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -21,3 +23,6 @@ export const initialiseName = (fullName?: string): string | null => {
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
+
+export const queryParamToEncodedString = (param: string | string[] | ParsedQs | ParsedQs[]): string =>
+  typeof param === 'string' ? encodeURIComponent(param) : null

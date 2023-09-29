@@ -7,6 +7,7 @@ import auth from '../authentication/auth'
 import tokenVerifier from '../data/tokenVerification'
 import componentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
+import { queryParamToEncodedString } from '../utils/utils'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
@@ -23,7 +24,12 @@ export default function developRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getHeaderViewModel(res.locals.user)
+      const { redirectUri, clientId } = req.query
+      const viewModel = await controller.getHeaderViewModel(
+        res.locals.user,
+        queryParamToEncodedString(redirectUri),
+        queryParamToEncodedString(clientId),
+      )
 
       return res.render('pages/componentPreview', { ...viewModel })
     }),
