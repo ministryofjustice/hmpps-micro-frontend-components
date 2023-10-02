@@ -87,7 +87,7 @@ describe('getFooterViewModel', () => {
       managedPages: [
         {
           href: `${config.dpsUrl}/accessibility-statement`,
-          text: 'Accessibility statement',
+          text: 'Accessibility',
         },
         {
           href: `${config.dpsUrl}/terms-and-conditions`,
