@@ -138,8 +138,49 @@ describe('GET /header', () => {
     })
   })
 
-  describe.skip('non-prison user', () => {
-    it('should only render sign out link', () => {
+  describe('non-prison user', () => {
+    it('should render external title', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'external-token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const $ = cheerio.load(JSON.parse(res.text).html)
+          expect(
+            $(
+              `a[class="connect-dps-external-header__link connect-dps-external-header__title__service-name"][href="${config.apis.hmppsAuth.url}"]`,
+            ).text(),
+          ).toContain('Digital Services')
+
+          expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
+
+          const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
+          expect(manageDetailsLink.length).toEqual(1)
+          expect(manageDetailsLink.text()).toContain('T. User')
+          expect(manageDetailsLink.text()).toContain('Manage your details')
+
+          const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
+          expect(caseloadSwitcher.length).toEqual(0)
+        })
+    })
+
+    it('should render manage details block', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'external-token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const $ = cheerio.load(JSON.parse(res.text).html)
+          const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
+          expect(manageDetailsLink.length).toEqual(1)
+          expect(manageDetailsLink.text()).toContain('T. User')
+          expect(manageDetailsLink.text()).toContain('Manage your details')
+        })
+    })
+
+    it('should render sign out', () => {
       return request(app)
         .get('/header')
         .set('x-user-token', 'external-token')
@@ -148,9 +189,17 @@ describe('GET /header', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
+        })
+    })
 
-          const manageDetailsLink = $(`a[href="${config.apis.hmppsAuth.url}/account-details"]`)
-          expect(manageDetailsLink.length).toEqual(0)
+    it('should not render caseload switcher', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'external-token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const $ = cheerio.load(JSON.parse(res.text).html)
 
           const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
