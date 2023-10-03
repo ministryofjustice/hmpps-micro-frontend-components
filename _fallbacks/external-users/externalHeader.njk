@@ -14,12 +14,10 @@
       <a class="fallback-dps-header__link fallback-dps-header__title__service-name" href="{{ config.apis.hmppsAuth.url }}">Digital Services</a>
 
       {% if environmentName %}
-        <div class="govuk-phase-banner">
           {{ govukTag({
             text: environmentName,
             classes: environmentNameColour
           }) }}
-        </div>
       {% endif %}
     </div>
 

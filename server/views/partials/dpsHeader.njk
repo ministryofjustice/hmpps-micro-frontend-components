@@ -20,12 +20,10 @@
       </a>
 
       {% if environmentName %}
-        <div class="govuk-phase-banner">
           {{ govukTag({
             text: environmentName,
             classes: environmentNameColour
           }) }}
-        </div>
       {% endif %}
     </div>
 
