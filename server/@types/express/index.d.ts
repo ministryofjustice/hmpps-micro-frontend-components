@@ -8,22 +8,6 @@ declare module 'express-session' {
   }
 }
 
-export interface TokenData {
-  sub: string
-  user_name: string
-  auth_source: 'nomis' | 'auth' | 'delius' | 'azuread'
-  iss: string
-  authorities: string[]
-  client_id: string
-  user_uuid: string
-  grant_type: string
-  user_id: string
-  scope: string[]
-  name: string
-  exp: number
-  jti: string
-}
-
 export declare global {
   namespace Express {
     interface User {

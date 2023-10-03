@@ -2,6 +2,7 @@ import config from '../config'
 import { Services } from '../services'
 import { CaseLoad } from '../interfaces/caseLoad'
 import { ManagedPageLink } from '../interfaces/managedPage'
+import { isApiUser, User } from '../@types/Users'
 
 export interface HeaderViewModel {
   caseLoads: CaseLoad[]
@@ -15,11 +16,6 @@ export interface FooterViewModel {
   isPrisonUser: boolean
   managedPages: ManagedPageLink[]
   component: string
-}
-
-export interface User {
-  token: string
-  authSource: 'nomis' | 'auth'
 }
 
 export const isPrisonUser = (user: User): boolean => {
@@ -53,8 +49,9 @@ export default (
 } => ({
   async getHeaderViewModel(user) {
     const { token } = user
+    const username = isApiUser(user) ? user.user_name : user.username
 
-    const caseLoads = isPrisonUser(user) ? await services.userService.getUserCaseLoads(token) : []
+    const caseLoads = isPrisonUser(user) ? await services.userService.getUserCaseLoads(token, username) : []
     return {
       caseLoads,
       isPrisonUser: isPrisonUser(user),
