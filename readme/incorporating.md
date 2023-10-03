@@ -25,6 +25,8 @@ Add a block for the component library in the `apis` section of `config.ts`, for 
     },
 ```
 
+Make sure that you also have access to the Digital Prison Services url to enable global search form submission.
+
 Add a Component model, API client and service, and include methods to call the components library. The API call requires the user token to be passed in on the `x-user-token` header.
 
 Components can be requested individually via e.g. `{api}/header` or multiple can be requested at once using e.g. `{api}/components?component=header&component=footer`
@@ -124,7 +126,9 @@ The js and css values should be incorporated into the head block of the layout:
 {% endif %}
 ```
 
-Web security needs to be updated to allow access to the syles and scripts from the components application.
+Web security needs to be updated to allow access to the syles and scripts from the components application. 
+
+NOTE: you will also need to include the Digital Prison Services url in the formAction list to enable global search to work.
 
 ```typescript
 export default function setUpWebSecurity(): Router {
@@ -148,12 +152,14 @@ export default function setUpWebSecurity(): Router {
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const imgSrc = ["'self'", 'data:']
   const fontSrc = ["'self'"]
+  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl}`]
 
   if (config.apis.frontendComponents.url) {
     scriptSrc.push(config.apis.frontendComponents.url)
     styleSrc.push(config.apis.frontendComponents.url)
     imgSrc.push(config.apis.frontendComponents.url)
     fontSrc.push(config.apis.frontendComponents.url)
+    formAction.push(config.apis.digitalPrisonService.url)
   }
 
   router.use(
@@ -165,6 +171,7 @@ export default function setUpWebSecurity(): Router {
           styleSrc,
           fontSrc,
           imgSrc,
+          formAction
         },
       },
       crossOriginEmbedderPolicy: true,

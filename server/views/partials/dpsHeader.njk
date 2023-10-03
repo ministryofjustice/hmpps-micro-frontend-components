@@ -1,4 +1,8 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 <header class="connect-dps-common-header govuk-!-display-none-print" role="banner">
   <div class="connect-dps-common-header__container">
     <div class="connect-dps-common-header__title">
@@ -54,3 +58,32 @@
     </nav>
   </div>
 </header>
+{% if latestFeatures %}
+  <div class="govuk-width-container">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Search for a prisoner</h2>
+    <p class="govuk-body govuk-hint">Leave blank to view all results for selected residential location</p>
+    <form action='{{ config.apis.digitalPrisonServiceUrl }}/prisoner-search'>
+      {{ govukInput({
+        id: "keywords",
+        name: "keywords",
+        label: {
+          text: "Name or prison number"
+        }
+      }) }}
+
+      {{ govukSelect({
+        id: "location",
+        name: "location",
+        label: {
+          text: "Residential location"
+        },
+        items: locationOptions
+      }) }}
+
+      {{ govukButton({
+        text: "Search",
+        type: "submit"
+      }) }}
+    </form>
+  </div>
+{% endif %}
