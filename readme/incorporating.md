@@ -128,7 +128,7 @@ The js and css values should be incorporated into the head block of the layout:
 
 Web security needs to be updated to allow access to the syles and scripts from the components application. 
 
-NOTE: you will also need to include the Digital Prison Services url in the formAction list to enable global search to work.
+NOTE: you will also need to include the Digital Prison Services url in the formAction list to enable the global search form to be submitted.
 
 ```typescript
 export default function setUpWebSecurity(): Router {
@@ -152,14 +152,13 @@ export default function setUpWebSecurity(): Router {
   const styleSrc = ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`]
   const imgSrc = ["'self'", 'data:']
   const fontSrc = ["'self'"]
-  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl}`]
+  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.digitalPrisonServiceUrl}`]
 
   if (config.apis.frontendComponents.url) {
     scriptSrc.push(config.apis.frontendComponents.url)
     styleSrc.push(config.apis.frontendComponents.url)
     imgSrc.push(config.apis.frontendComponents.url)
     fontSrc.push(config.apis.frontendComponents.url)
-    formAction.push(config.apis.digitalPrisonService.url)
   }
 
   router.use(
