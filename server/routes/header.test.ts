@@ -7,6 +7,7 @@ import { services } from '../services'
 import config from '../config'
 import createApp from '../app'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
+import { API_ERROR_LIMIT } from '../services/userService'
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
@@ -290,6 +291,44 @@ describe('GET /header', () => {
 
           const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
+        })
+    })
+  })
+
+  describe('circuit breaker', () => {
+    it(`should stop hitting prison api after ${API_ERROR_LIMIT} failures`, async () => {
+      prisonApi.get('/api/users/me/caseLoads').times(API_ERROR_LIMIT).replyWithError('error')
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
+        {
+          caseLoadId: 'LEI',
+          description: 'Leeds',
+          type: '',
+          caseloadFunction: '',
+          currentlyActive: true,
+        },
+        {
+          caseLoadId: 'DEE',
+          description: 'Deerbolt',
+          type: '',
+          caseloadFunction: '',
+          currentlyActive: false,
+        },
+      ])
+
+      await Promise.all(
+        [...Array(API_ERROR_LIMIT)].map(() =>
+          request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/),
+        ),
+      )
+
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const $ = cheerio.load(JSON.parse(res.text).html)
+          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
         })
     })
   })

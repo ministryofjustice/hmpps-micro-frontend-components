@@ -1,4 +1,4 @@
-import UserService from './userService'
+import UserService, { API_COOL_OFF_MINUTES, API_ERROR_LIMIT } from './userService'
 import HmppsAuthClient from '../data/hmppsAuthClient'
 import { prisonApiClientMock } from '../../tests/mocks/prisonApiClientMock'
 import { CaseLoad } from '../interfaces/caseLoad'
@@ -95,6 +95,49 @@ describe('User service', () => {
       const result = await userService.getUserCaseLoads(token, 'username')
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(0)
       expect(result).toEqual(cachedVal)
+    })
+
+    it('Gets from api if cache fails', async () => {
+      redisClient.get.mockRejectedValueOnce('FAIL')
+      const result = await userService.getUserCaseLoads(token, 'username')
+      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+      expect(result).toEqual(expectedCaseLoads)
+    })
+
+    it('Returns empty list if redis and api fails', async () => {
+      redisClient.get.mockRejectedValueOnce('FAIL')
+      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+        throw new Error('API FAIL')
+      })
+      const result = await userService.getUserCaseLoads(token, 'username')
+      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+      expect(result).toEqual([])
+    })
+
+    it(`Sets circuit breaker if api fails ${API_ERROR_LIMIT} times`, async () => {
+      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+        throw new Error('API FAIL')
+      })
+      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserCaseLoads(token, 'username')))
+
+      const result = await userService.getUserCaseLoads(token, 'username')
+      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
+      expect(result).toEqual([])
+    })
+
+    it(`Unsets circuit breaker after ${API_COOL_OFF_MINUTES} minutes`, async () => {
+      jest.useFakeTimers()
+      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+        throw new Error('API FAIL')
+      })
+      await Promise.all([...Array(API_ERROR_LIMIT)].map(i => userService.getUserCaseLoads(token, 'username')))
+
+      jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
+
+      await userService.getUserCaseLoads(token, 'username')
+      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
+
+      jest.useRealTimers()
     })
 
     it('Stores response in cache if user has 1 caseload', async () => {
