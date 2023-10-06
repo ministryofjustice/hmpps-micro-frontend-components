@@ -61,10 +61,6 @@ export default class RestClient {
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
         .query(query)
         .auth(this.token, { type: 'bearer' })
         .set(headers)

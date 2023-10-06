@@ -130,7 +130,7 @@ describe('User service', () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      await Promise.all([...Array(API_ERROR_LIMIT)].map(i => userService.getUserCaseLoads(token, 'username')))
+      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserCaseLoads(token, 'username')))
 
       jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
 
