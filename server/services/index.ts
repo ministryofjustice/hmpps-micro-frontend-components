@@ -6,7 +6,7 @@ import config from '../config'
 import { createRedisClient } from '../data/redisClient'
 
 export const services = () => {
-  const { hmppsAuthClientBuilder, prisonApiClientBuilder } = dataAccess
+  const { hmppsAuthClientBuilder, prisonApiClientBuilder, applicationInfo } = dataAccess
 
   const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder, createRedisClient())
 
@@ -27,6 +27,7 @@ export const services = () => {
   const contentfulService = new ContentfulService(apolloClient)
 
   return {
+    applicationInfo,
     userService,
     contentfulService,
   }
