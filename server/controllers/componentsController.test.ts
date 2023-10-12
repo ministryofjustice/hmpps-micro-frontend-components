@@ -51,6 +51,7 @@ describe('getHeaderViewModel', () => {
       ingressUrl: 'localhost',
       isPrisonUser: true,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
+      dpsSearchLink: 'http://localhost:3001/prisoner-search',
     })
   })
 
@@ -63,6 +64,7 @@ describe('getHeaderViewModel', () => {
       ingressUrl: 'localhost',
       isPrisonUser: false,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
+      dpsSearchLink: 'http://localhost:3001/prisoner-search',
     })
   })
 })

@@ -226,6 +226,39 @@ describe('GET /header', () => {
     })
   })
 
+  describe('search', () => {
+    it('should not display search by default', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'token')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const response = JSON.parse(res.text)
+          const $ = cheerio.load(response.html)
+          expect($('.connect-dps-common-header__navigation__item').length).toEqual(0)
+          expect($('#connect-dps-common-header-search-menu').length).toEqual(0)
+          expect(response.javascript).toEqual([])
+        })
+    })
+
+    it('should display search if latest features enabled ', () => {
+      return request(app)
+        .get('/header')
+        .set('x-user-token', 'token')
+        .set('x-use-latest-features', 'true')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const response = JSON.parse(res.text)
+          const $ = cheerio.load(response.html)
+          expect($('.connect-dps-common-header__navigation__item').length).toEqual(1)
+          expect($('#connect-dps-common-header-search-menu').length).toEqual(1)
+          expect(response.javascript).toEqual(['localhost/assets/js/header.js'])
+        })
+    })
+  })
+
   describe('non-prison user', () => {
     it('should render external title', () => {
       return request(app)
