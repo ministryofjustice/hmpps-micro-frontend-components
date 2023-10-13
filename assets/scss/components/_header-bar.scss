@@ -20,6 +20,7 @@
   }
 
   &__title {
+    display: flex;
     &__organisation-name {
       @include govuk-responsive-margin(2, 'right');
       @include govuk-font($size: 24, $weight: 'bold');
@@ -34,6 +35,10 @@
       @include govuk-media-query($from: desktop) {
         display: inline-block;
       }
+    }
+
+    .govuk-tag {
+      margin: auto 0
     }
   }
 
