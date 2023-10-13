@@ -1,6 +1,6 @@
 .connect-dps-common-header {
-  @include govuk-responsive-padding(3, 'top');
-  @include govuk-responsive-padding(3, 'bottom');
+  [hidden] { display: none !important; }
+
   background-color: govuk-colour('black');
   color: govuk-colour('white');
 
@@ -16,13 +16,10 @@
     position: relative;
     top: -2px;
     fill: govuk-colour('white');
+    padding: 20px 0;
   }
 
   &__title {
-    @include govuk-responsive-padding(3, 'right');
-    display: flex;
-    align-items: center;
-
     &__organisation-name {
       @include govuk-responsive-margin(2, 'right');
       @include govuk-font($size: 24, $weight: 'bold');
@@ -74,18 +71,38 @@
     }
   }
 
+  &__button-width-container {
+    position: relative;
+  }
+
+  &__button-container {
+
+    @include govuk-media-query($from: tablet) {
+      position: absolute;
+      right: 0;
+      top: -70px;
+      background-color: govuk-colour('black');
+    }
+  }
+
   &__navigation {
+    height: 70px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
     list-style: none;
     margin: 0;
     padding: 0;
+    flex-direction: row;
+    align-items: center;
+  }
 
-    @include govuk-media-query($from: tablet) {
-      flex-direction: row;
-      align-items: center;
-    }
+  &__navigation-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-direction: row;
+    align-items: center;
+
 
     &__item {
       display: flex;
@@ -105,7 +122,6 @@
       }
 
       a {
-        display: inline-block;
         margin: auto 0;
       }
 
@@ -117,6 +133,141 @@
         @include govuk-font(19);
       }
     }
+  }
+
+  &__search-menu-toggle,
+  &__search-menu-link {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    color: govuk-colour("white") !important;
+    background: govuk-colour("blue");
+    border: none;
+    cursor: pointer;
+    @include govuk-responsive-margin(3, 'left');
+
+    &:hover {
+      color: govuk-colour("mid-grey") !important;
+
+      &:after {
+        background: govuk-colour("mid-grey");
+        content: "";
+        height: 3px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        top: auto;
+        width: 100%
+      }
+    }
+
+    svg {
+      margin: auto;
+    }
+
+    &__close-icon {
+      display: none;
+      font-size: 36px;
+      color: govuk-colour('black');
+      font-weight: normal;
+      line-height: 22px;
+      text-align: center;
+      pointer-events: none;
+    }
+  }
+
+  &__search-menu-toggle-open {
+    background: govuk-colour("light-grey");
+    &:hover {
+      color: govuk-colour('dark-grey');
+      &:after {
+        content: none;
+      }
+    }
+    .connect-dps-common-header__search-menu-toggle__close-icon {
+      display: block;
+    }
+    .connect-dps-common-header__search-toggle-button-icon {
+      display: none;
+    }
+  }
+
+  &__search-menu-link {
+    display: flex;
+  }
+
+  &__search-menu {
+    padding: 30px 0 60px 0;
+    background: govuk-colour("light-grey");
+  }
+
+  &__search-input-wrapper {
+    display: table;
+    width: 100%;
+    background: govuk-colour('white');
+    margin-bottom: 30px;
+  }
+
+  &__search-item {
+    position: relative;
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  &__search-menu-input {
+    font-family: "GDS Transport", arial, sans-serif;
+    font-weight: 400;
+    font-size: 19px;
+    padding: 7px;
+    height: 50px;
+    margin: 0;
+    width: 100%;
+    border: 2px solid govuk-colour('black');
+    border-right-width: 0;
+    background: govuk-colour('white');
+
+    &:focus {
+      outline: 3px solid govuk-colour('yellow');
+      outline-offset: 0;
+      box-shadow: inset 0 0 0 2px;
+    }
+  }
+
+  &__search-menu-submit-wrapper {
+    width: 1%
+  }
+
+  &__search-item {
+    position: relative;
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  &__search-menu-submit-btn {
+    width: 50px;
+    height: 50px;
+    background-color: govuk-colour('blue');
+    color: govuk-colour('white');
+    cursor: pointer;
+    outline: 2px solid transparent;
+    position: relative;
+    outline-offset: 0;
+    text-indent: -5000px;
+    border: 0;
+
+    &:hover {
+      background-color: #207dce;
+    }
+  }
+
+  &__icon {
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 15px;
+    left: 15px;
   }
 
   @media print {

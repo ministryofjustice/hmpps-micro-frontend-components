@@ -1,11 +1,8 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 <header class="connect-dps-common-header govuk-!-display-none-print" role="banner">
-  <div class="connect-dps-common-header__container">
-    <div class="connect-dps-common-header__title">
+  <div class="govuk-clearfix">
+    <div class="govuk-width-container connect-dps-common-header__title">
       <a class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name" href="{{ config.apis.digitalPrisonServiceUrl }}">
         <svg role="presentation" focusable="false" class="connect-dps-common-header__logo" xmlns="http://www.w3.org/2000/svg" width="41" height="30" viewBox="0 0 41 30">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M7.54677 9.20065C8.64351 9.65301 9.88802 9.13584 10.3347 8.05183C10.7839 6.97073 10.27 5.71374 9.17342 5.26352C8.09836 4.82212 6.84843 5.34938 6.40124 6.4349C5.95404 7.515 6.47121 8.76014 7.54677 9.20065Z"/>
@@ -31,30 +28,100 @@
       {% endif %}
     </div>
 
-    <nav aria-label="Account navigation">
-      <ul class="connect-dps-common-header__navigation">
-        {% if caseLoads.length > 1 %}
-          <li class="connect-dps-common-header__navigation__item">
-            <img class="connect-dps-common-header__link__icon govuk-!-padding-right-3" src="{{ ingressUrl }}/assets/images/location.svg" aria-hidden="true" alt="" />
-            <a data-qa="changeCaseLoad" class="connect-dps-common-header__link" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
-              <span data-qa=header-active-case-load>{{ activeCaseLoad.description }}</span>
-            </a>
-          </li>
-        {% endif %}
+    <nav aria-labelledby="connect-dps-common-navigation-heading">
+      <h2 id="connect-dps-common-navigation-heading" class="govuk-visually-hidden">
+        DPS navigation menu
+      </h2>
+      <div class="govuk-width-container connect-dps-common-header__button-width-container">
+        <div class="connect-dps-common-header__button-container">
+          <div class="connect-dps-common-header__navigation">
+            <ul class="connect-dps-common-header__navigation-list">
+              {% if caseLoads.length > 1 %}
+                <li class="connect-dps-common-header__navigation-list__item">
+                  <img class="connect-dps-common-header__link__icon govuk-!-padding-right-3" src="{{ ingressUrl }}/assets/images/location.svg" aria-hidden="true" alt="" />
+                  <a data-qa="changeCaseLoad" class="connect-dps-common-header__link" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
+                    <span data-qa=header-active-case-load>{{ activeCaseLoad.description }}</span>
+                  </a>
+                </li>
+              {% endif %}
 
-        {% if user %}
-          <li class="connect-dps-common-header__navigation__item">
-            <a data-qa="manageDetails" class="connect-dps-common-header__link" href="{{ manageDetailsLink }}" data-test="manage-account-link" referrerpolicy="no-referrer-when-downgrade">
-              <span data-qa=header-user-name>{{ user.displayName | initialiseName }}</span>
-              <span class="connect-dps-common-header__link__sub-text">Manage your details</span>
-            </a>
-          </li>
-        {% endif %}
+              {% if user %}
+                <li class="connect-dps-common-header__navigation-list__item">
+                  <a data-qa="manageDetails" class="connect-dps-common-header__link" href="{{ manageDetailsLink }}" data-test="manage-account-link" referrerpolicy="no-referrer-when-downgrade">
+                    <span data-qa=header-user-name>{{ user.displayName | initialiseName }}</span>
+                    <span class="connect-dps-common-header__link__sub-text">Manage your details</span>
+                  </a>
+                </li>
+              {% endif %}
 
-        <li class="connect-dps-common-header__navigation__item">
-          <a data-qa="signOut" class="connect-dps-common-header__link" href="/sign-out">Sign out</a>
-        </li>
-      </ul>
+              <li class="connect-dps-common-header__navigation-list__item">
+                <a data-qa="signOut" class="connect-dps-common-header__link" href="/sign-out">Sign out</a>
+              </li>
+            </ul>
+
+            {%  if latestFeatures %}
+              <div class="connect-dps-common-header__navigation__item">
+                <button class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" aria-label="Hide search menu" data-text-for-show="Show search menu" data-text-for-hide="Hide search manu" hidden="hidden" type="button">
+                  <span class="govuk-visually-hidden"> Search for prisoner</span>
+
+                  <svg class="connect-dps-common-header__search-toggle-button-icon" width="32" height="32" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="currentColor" stroke-width="3"></circle>
+                    <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="currentColor" stroke-width="3"></line>
+                  </svg>
+
+                  <span aria-hidden="true" class="connect-dps-common-header__search-menu-toggle__close-icon" focusable="false"> × </span>
+                </button>
+
+                <a class="connect-dps-common-header__search-menu-link" href="{{ dpsSearchLink }}">
+                  <span class="govuk-visually-hidden"> Search for prisoner</span>
+                  <svg class="connect-dps-common-header__search-item-link-icon" width="32" height="32" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="currentColor" stroke-width="3"></circle>
+                    <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="currentColor" stroke-width="3"></line>
+                  </svg>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      {%  if latestFeatures %}
+        <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__search-menu" hidden="hidden">
+          <div class="govuk-width-container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                <form action="{{ dpsSearchLink }}">
+                  <h3 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--m" for="connect-dps-common-header-prisoner-search">
+                      Search for a prisoner
+                    </label>
+                  </h3>
+                  <div id="connect-dps-common-header-prisoner-search-hint" class="govuk-hint">
+                    Enter a prisoner's name or prison number
+                  </div>
+                  <div class="connect-dps-common-header__search-input-wrapper">
+                    <input enterkeyhint="search" id="connect-dps-common-header-prisoner-search" class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-input" name="keywords" title="Search for a prisoner" type="search" aria-describedby="connect-dps-common-header-prisoner-search-hint">
+                    <div class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-submit-wrapper">
+                      <button class="connect-dps-common-header__search-menu-submit-btn" type="submit" enterkeyhint="search">
+                        Search for a prisoner
+                        <svg class="connect-dps-common-header__icon" width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                          <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="currentColor" stroke-width="3"></circle>
+                          <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="currentColor" stroke-width="3"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                </form>
+                <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ activeCaseLoad.description }}</a>.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% endif %}
     </nav>
+
   </div>
 </header>

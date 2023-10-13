@@ -60,6 +60,7 @@ export default (
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       component: 'header',
       ingressUrl: config.ingressUrl,
+      dpsSearchLink: `${config.apis.digitalPrisonServiceUrl}/prisoner-search`,
     }
   },
   async getFooterViewModel(user: User) {

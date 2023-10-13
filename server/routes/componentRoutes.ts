@@ -31,13 +31,14 @@ export default function componentRoutes(services: Services): Router {
 
   async function getHeaderResponseBody(res: Response, latestFeatures: boolean): Promise<Component> {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    const javascript = latestFeatures ? [`${config.ingressUrl}/assets/js/header.js`] : []
 
     return new Promise(resolve => {
       res.render('components/header', { ...viewModel, latestFeatures }, (_, html) => {
         resolve({
           html,
           css: [`${config.ingressUrl}/assets/stylesheets/header.css`],
-          javascript: [],
+          javascript,
         })
       })
     })
