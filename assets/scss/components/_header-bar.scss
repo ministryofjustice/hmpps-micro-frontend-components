@@ -207,6 +207,22 @@
       text-align: center;
       pointer-events: none;
     }
+
+    &.connect-dps-common-header__toggle-open {
+      background: govuk-colour("light-grey");
+      &:hover {
+        color: govuk-colour('dark-grey');
+        &:after {
+          content: none;
+        }
+      }
+      .connect-dps-common-header__search-menu-toggle__close-icon {
+        display: block;
+      }
+      .connect-dps-common-header__search-toggle-button-icon {
+        display: none;
+      }
+    }
   }
 
   a:focus {
@@ -220,6 +236,8 @@
     background: govuk-colour('light-grey');
     a {
       font-weight: 700;
+      display: block;
+      margin-bottom: 15px;
     }
   }
 
@@ -261,31 +279,33 @@
       }
     }
 
-  }
+    &.connect-dps-common-header__toggle-open {
+      background: govuk-colour("light-grey");
+      color: govuk-colour("blue") !important;
+      font-weight: 700;
+      >span {
+        &:before {
+          webkit-transform: translateY(-0%) rotate(225deg) scale(1);
+          -ms-transform: translateY(-0%) rotate(225deg) scale(1);
+          transform: translateY(-0%) rotate(225deg) scale(1);
+          border-bottom: 2px solid govuk-colour('blue');
+          border-right: 2px solid govuk-colour('blue');
+        }
 
-  .connect-dps-common-header__user-menu-toggle-open {
-    >span {
-      &:before {
-        webkit-transform: translateY(-0%) rotate(225deg) scale(1);
-        -ms-transform: translateY(-0%) rotate(225deg) scale(1);
-        transform: translateY(-0%) rotate(225deg) scale(1);
+        &:after {
+          background: govuk-colour("blue");
+          content: "";
+          height: 3px;
+          position: absolute;
+          bottom: 0;
+          left: 15px;
+          right: 15px;
+          top: auto;
+        }
       }
-    }
-  }
-
-  .connect-dps-common-header__search-menu-toggle-open {
-    background: govuk-colour("light-grey");
-    &:hover {
-      color: govuk-colour('dark-grey');
-      &:after {
-        content: none;
+      &:hover {
+        color: govuk-colour('dark-grey') !important;
       }
-    }
-    .connect-dps-common-header__search-menu-toggle__close-icon {
-      display: block;
-    }
-    .connect-dps-common-header__search-toggle-button-icon {
-      display: none;
     }
   }
 
