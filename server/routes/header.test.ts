@@ -252,8 +252,9 @@ describe('GET /header', () => {
         .expect(res => {
           const response = JSON.parse(res.text)
           const $ = cheerio.load(response.html)
-          expect($('.connect-dps-common-header__navigation__item').length).toEqual(1)
+          expect($('.connect-dps-common-header__navigation__item').length).toEqual(3)
           expect($('#connect-dps-common-header-search-menu').length).toEqual(1)
+          expect($('#connect-dps-common-header-user-menu').length).toEqual(1)
           expect(response.javascript).toEqual(['localhost/assets/js/header.js'])
         })
     })

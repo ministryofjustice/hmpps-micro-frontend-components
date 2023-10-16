@@ -3,35 +3,45 @@ function initHeader() {
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('.connect-dps-common-header__search-menu')
 
+  const userToggle = document.querySelector('.connect-dps-common-header__user-menu-toggle')
+  const userMenu = document.querySelector('#connect-dps-common-header-user-menu')
+
   if (searchToggle) {
-    hideLink()
+    hideFallbackLinks()
 
     searchToggle.removeAttribute('hidden')
     searchToggle.setAttribute('aria-expanded', 'false')
+    userToggle.removeAttribute('hidden')
+    userToggle.setAttribute('aria-expanded', 'false')
 
     searchToggle.addEventListener('click', function (event) {
-      toggleSearchMenu(searchToggle, searchMenu)
+      toggleMenu(searchToggle, searchMenu, 'connect-dps-common-header__search-menu-toggle-open')
+    })
+    userToggle.addEventListener('click', function (event) {
+      toggleMenu(userToggle, userMenu, 'connect-dps-common-header__user-menu-toggle-open')
     })
   }
 }
 
-function toggleSearchMenu(searchToggle, searchMenu) {
-  const isOpen = !searchMenu.getAttribute('hidden')
+function toggleMenu(toggle, menu, toggleClass) {
+  const isOpen = !menu.getAttribute('hidden')
 
   if (isOpen) {
-    searchMenu.setAttribute('hidden', 'hidden')
-    searchToggle.classList.remove('connect-dps-common-header__search-menu-toggle-open')
-    searchToggle.setAttribute('aria-expanded', 'false')
-    searchToggle.setAttribute('aria-label', searchToggle.dataset.textForShow)
+    menu.setAttribute('hidden', 'hidden')
+    toggle.classList.remove(toggleClass)
+    toggle.setAttribute('aria-expanded', 'false')
+    toggle.setAttribute('aria-label', toggle.dataset.textForShow)
   } else {
-    searchMenu.removeAttribute('hidden')
-    searchToggle.classList.add('connect-dps-common-header__search-menu-toggle-open')
-    searchToggle.setAttribute('aria-expanded', 'true')
-    searchToggle.setAttribute('aria-label', searchToggle.dataset.textForHide)
+    menu.removeAttribute('hidden')
+    toggle.classList.add(toggleClass)
+    toggle.setAttribute('aria-expanded', 'true')
+    toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }
 }
 
-function hideLink() {
+function hideFallbackLinks() {
   const searchLink = document.querySelector('.connect-dps-common-header__search-menu-link')
+  const userLink = document.querySelector('.connect-dps-common-header__user-menu-link')
   searchLink.setAttribute('hidden', 'hidden')
+  userLink.setAttribute('hidden', 'hidden')
 }
