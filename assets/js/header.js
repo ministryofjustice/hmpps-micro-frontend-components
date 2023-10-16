@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', initHeader, false)
+const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('.connect-dps-common-header__search-menu')
@@ -15,25 +16,36 @@ function initHeader() {
     userToggle.setAttribute('aria-expanded', 'false')
 
     searchToggle.addEventListener('click', function (event) {
-      toggleMenu(searchToggle, searchMenu, 'connect-dps-common-header__search-menu-toggle-open')
+      closeTabs([[userToggle, userMenu]])
+      toggleMenu(searchToggle, searchMenu)
     })
     userToggle.addEventListener('click', function (event) {
-      toggleMenu(userToggle, userMenu, 'connect-dps-common-header__user-menu-toggle-open')
+      closeTabs([[searchToggle, searchMenu]])
+      toggleMenu(userToggle, userMenu)
     })
   }
 }
 
-function toggleMenu(toggle, menu, toggleClass) {
+function closeTabs(tabTuples) {
+  tabTuples.forEach(([tab, menu]) => {
+    menu.setAttribute('hidden', 'hidden')
+    tab.classList.remove(tabOpenClass)
+    tab.setAttribute('aria-expanded', 'false')
+    tab.setAttribute('aria-label', tab.dataset.textForShow)
+  })
+}
+
+function toggleMenu(toggle, menu) {
   const isOpen = !menu.getAttribute('hidden')
 
   if (isOpen) {
     menu.setAttribute('hidden', 'hidden')
-    toggle.classList.remove(toggleClass)
+    toggle.classList.remove(tabOpenClass)
     toggle.setAttribute('aria-expanded', 'false')
     toggle.setAttribute('aria-label', toggle.dataset.textForShow)
   } else {
     menu.removeAttribute('hidden')
-    toggle.classList.add(toggleClass)
+    toggle.classList.add(tabOpenClass)
     toggle.setAttribute('aria-expanded', 'true')
     toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }
