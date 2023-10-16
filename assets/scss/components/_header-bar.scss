@@ -369,16 +369,16 @@
     &:hover {
       background-color: #207dce;
     }
-  }
 
-  &__icon {
-    display: block;
-    pointer-events: none;
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    top: 15px;
-    left: 15px;
+    svg {
+      display: block;
+      pointer-events: none;
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      top: 15px;
+      left: 15px;
+    }
   }
 
   &__icon-link-wrapper {
