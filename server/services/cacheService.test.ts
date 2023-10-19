@@ -1,0 +1,33 @@
+import { RedisClient } from '../data/redisClient'
+import CacheService from './cacheService'
+
+const redisClient = {
+  get: jest.fn(),
+  set: jest.fn(),
+  on: jest.fn(),
+  connect: jest.fn(),
+  isOpen: true,
+} as unknown as jest.Mocked<RedisClient>
+
+const service = new CacheService(redisClient)
+
+describe('CacheService', () => {
+  describe('setData', () => {
+    it('should set the data in redis', async () => {
+      await service.setData('key', 'data')
+      expect(redisClient.set).toBeCalledTimes(1)
+      expect(redisClient.set).toBeCalledWith('key', 'data', { EX: 600 })
+    })
+  })
+
+  describe('getData', () => {
+    it('should set the data in redis', async () => {
+      redisClient.get.mockResolvedValueOnce(JSON.stringify({ key: 'value' }))
+      const result = await service.getData('key')
+
+      expect(result).toEqual({ key: 'value' })
+      expect(redisClient.get).toBeCalledTimes(1)
+      expect(redisClient.get).toBeCalledWith('key')
+    })
+  })
+})

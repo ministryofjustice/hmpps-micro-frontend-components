@@ -77,10 +77,8 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
-    digitalPrisonServiceUrl: get('DIGITAL_PRISON_SERVICE_URL', 'http://localhost:3001', requiredInProduction),
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
-  dpsUrl: get('DPS_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   contentful: {
     host: get('CONTENTFUL_HOST', ''),
@@ -89,4 +87,94 @@ export default {
   },
   contentfulFooterLinksEnabled: get('CONTENTFUL_FOOTER_LINKS_ENABLED', 'false', requiredInProduction) === 'true',
   environmentName: get('ENVIRONMENT_NAME', ''),
+  serviceUrls: {
+    dps: { url: get('DPS_URL', 'http://localhost:3001', requiredInProduction) },
+    omic: { url: get('OMIC_URL', 'http://localhost:3001', requiredInProduction) },
+    activities: {
+      url: get('ACTIVITIES_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('ACTIVITIES_ENABLED_PRISONS', '', requiredInProduction),
+    },
+    appointments: {
+      url: get('APPOINTMENTS_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('APPOINTMENTS_ENABLED_PRISONS', '', requiredInProduction),
+    },
+    checkMyDiary: {
+      url: get('CHECK_MY_DIARY_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    incentives: {
+      url: get('INCENTIVES_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    useOfForce: {
+      url: get('USE_OF_FORCE_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('USE_OF_FORCE_PRISONS', '', requiredInProduction),
+    },
+    pathfinder: {
+      url: get('PATHFINDER_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    licences: {
+      url: get('LICENCES_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    moic: {
+      url: get('MOIC_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    manageAccounts: {
+      url: get('MANAGE_AUTH_ACCOUNTS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    categorisation: {
+      url: get('CATEGORISATION_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    pecs: {
+      url: get('PECS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    soc: {
+      url: get('SOC_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    pinPhones: {
+      url: get('PIN_PHONES_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    manageAdjudications: {
+      url: get('MANAGE_ADJUDICATIONS_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('MANAGE_ADJUDICATIONS_ENABLED', '', requiredInProduction),
+    },
+    managePrisonVisits: {
+      url: get('MANAGE_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    legacyPrisonVisits: {
+      url: get('LEGACY_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    secureSocialVideoCalls: {
+      url: get('SECURE_SOCIAL_VIDEO_CALLS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    sendLegalMail: {
+      url: get('SEND_LEGAL_MAIL_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    welcomePeopleIntoPrison: {
+      url: get('WELCOME_PEOPLE_INTO_PRISON_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS', '', requiredInProduction),
+    },
+    mercurySubmit: {
+      url: get('MERCURY_SUBMIT_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    manageRestrictedPatients: {
+      url: get('MANAGE_RESTRICTED_PATIENTS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    createAndVaryALicence: {
+      url: get('CREATE_AND_VARY_A_LICENCE_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    historicalPrisonerApplication: {
+      url: get('HISTORICAL_PRISONER_APPLICATION_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    getSomeoneReadyForWork: {
+      url: get('GET_SOMEONE_READY_FOR_WORK_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    manageOffences: {
+      url: get('MANAGE_OFFENCES_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    learningAndWorkProgress: {
+      url: get('LEARNING_AND_WORK_PROGRESS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    prepareSomeoneForRelease: {
+      url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
+    },
+  },
 }

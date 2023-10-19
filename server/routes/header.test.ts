@@ -35,7 +35,7 @@ beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
 
   await ensureConnected()
-  redisClient.del('TOKEN_USER')
+  redisClient.del('TOKEN_USER_header')
 
   app = createApp(services())
 })
@@ -48,7 +48,17 @@ afterEach(() => {
 describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [])
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
+        {
+          caseLoadId: 'LEI',
+          description: 'Leeds',
+          type: '',
+          caseloadFunction: '',
+          currentlyActive: true,
+        },
+      ])
+      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 
     it('should render digital prison services title', () => {
@@ -92,6 +102,11 @@ describe('GET /header', () => {
     })
   })
   describe('case load switcher', () => {
+    beforeEach(() => {
+      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/users/me/locations').reply(200, [])
+    })
+
     it('should display case load link if user has multiple caseloads', () => {
       prisonApi.get('/api/users/me/caseLoads').reply(200, [
         {
@@ -116,7 +131,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).text().trim()).toEqual('Leeds')
+          expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).text().trim()).toEqual('Leeds')
         })
     })
 
@@ -137,7 +152,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+          expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
         })
     })
 
@@ -179,7 +194,7 @@ describe('GET /header', () => {
           .expect(res => {
             const $ = cheerio.load(JSON.parse(res.text).html)
             // using 1 active caseload from first request
-            expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+            expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
           })
       })
 
@@ -220,7 +235,7 @@ describe('GET /header', () => {
           .expect(res => {
             const $ = cheerio.load(JSON.parse(res.text).html)
             // using the value from second request
-            expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+            expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
           })
       })
     })
@@ -242,7 +257,7 @@ describe('GET /header', () => {
         })
     })
 
-    it('should display search if latest features enabled ', () => {
+    it('should display search, menu, user menu and caseload switcher if latest features enabled ', () => {
       return request(app)
         .get('/header')
         .set('x-user-token', 'token')
@@ -252,7 +267,7 @@ describe('GET /header', () => {
         .expect(res => {
           const response = JSON.parse(res.text)
           const $ = cheerio.load(response.html)
-          expect($('.connect-dps-common-header__navigation__item').length).toEqual(3)
+          expect($('.connect-dps-common-header__navigation__item').length).toEqual(4)
           expect($('#connect-dps-common-header-search-menu').length).toEqual(1)
           expect($('#connect-dps-common-header-user-menu').length).toEqual(1)
           expect(response.javascript).toEqual(['localhost/assets/js/header.js'])
@@ -261,6 +276,20 @@ describe('GET /header', () => {
   })
 
   describe('non-prison user', () => {
+    beforeEach(() => {
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
+        {
+          caseLoadId: 'LEI',
+          description: 'Leeds',
+          type: '',
+          caseloadFunction: '',
+          currentlyActive: true,
+        },
+      ])
+      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/users/me/locations').reply(200, [])
+    })
+
     it('should render external title', () => {
       return request(app)
         .get('/header')
@@ -282,7 +311,7 @@ describe('GET /header', () => {
           expect(manageDetailsLink.text()).toContain('T. User')
           expect(manageDetailsLink.text()).toContain('Manage your details')
 
-          const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
+          const caseloadSwitcher = $(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
         })
     })
@@ -323,7 +352,7 @@ describe('GET /header', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
 
-          const caseloadSwitcher = $(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`)
+          const caseloadSwitcher = $(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
         })
     })
@@ -362,7 +391,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.apis.digitalPrisonServiceUrl}/change-caseload"]`).length).toEqual(0)
+          expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
         })
     })
   })

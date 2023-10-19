@@ -97,7 +97,7 @@
 
               {# USER MENU #}
               <div class="connect-dps-common-header__navigation__item">
-                <button class="connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" aria-label="Hide user menu" data-text-for-show="Show user menu" data-text-for-hide="Hide user manu" type="button" hidden='hidden'>
+                <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" aria-label="Hide user menu" data-text-for-show="Show user menu" data-text-for-hide="Hide user manu" type="button" hidden='hidden'>
                     <span>
                       {{ userSvg | safe }}
                       <span data-qa="header-user-name">{{ user.displayName | initialiseName }}</span>
@@ -119,6 +119,25 @@
               </div>
               {# END USER MENU #}
 
+              {# SERVICES MENU #}
+              <div class="connect-dps-common-header__navigation__item">
+                <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" aria-label="Hide services menu" data-text-for-show="Show services menu" data-text-for-hide="Hide services manu" type="button" hidden='hidden'>
+                    <span>
+                      <span data-qa="header-user-name" class='govuk-!-font-size-19 govuk-!-font-weight-bold'>Menu</span>
+                    </span>
+                </button>
+
+                <div class="connect-dps-common-header__icon-link-wrapper">
+                  <a class="connect-dps-common-header__link connect-dps-common-header__services-menu-link" href="{{ manageDetailsLink }}">
+                      <span>
+                        <span class="govuk-visually-hidden"> Services</span>
+                        <span data-qa=header-services-menu-link>Menu</span>
+                      </span>
+                  </a>
+                </div>
+              </div>
+              {# END SERVICES MENU #}
+
               {#  SEARCH #}
               <div class="connect-dps-common-header__navigation__item">
                 <button class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" aria-label="Hide search menu" data-text-for-show="Show search menu" data-text-for-hide="Hide search manu" hidden="hidden" type="button">
@@ -138,10 +157,11 @@
         </div>
 
       </div>
+      {#  END MENU #}
 
       {%  if latestFeatures %}
-        {#  END MENU #}
-        <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__search-menu" hidden="hidden">
+      {# SEARCH MENU #}
+        <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__pushdown-menu" hidden="hidden">
           <div class="govuk-width-container">
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-one-half">
@@ -172,8 +192,26 @@
           </div>
         </div>
         {#  END SEARCH MENU #}
+
+        {# SERVICES MENU #}
+        <div id="connect-dps-common-header-services-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__services-menu" hidden="hidden">
+          <div class="govuk-width-container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-three-quarters">
+                <h3 class="govuk-heading-m">
+                  Services
+                </h3>
+                <ul class='govuk-list'>
+                  {% for service in services %}
+                    <li><a href='{{ service.href }}' class='govuk-link govuk-link--no-visited-state'>{{ service.heading }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {#  END SERVICES MENU #}
       {% endif %}
     </nav>
-
   </div>
 </header>

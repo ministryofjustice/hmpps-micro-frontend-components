@@ -1,11 +1,11 @@
+import jwtDecode from 'jwt-decode'
 import { convertToTitleCase } from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { RestClientBuilder } from '../data'
-import { CaseLoad } from '../interfaces/caseLoad'
 import PrisonApiClient from '../data/prisonApiClient'
-import { RedisClient } from '../data/redisClient'
 import logger from '../../logger'
 import { AuthUser, TokenData } from '../@types/Users'
+import { UserData } from '../interfaces/UserData'
 
 interface UserDetails {
   name: string
@@ -22,63 +22,43 @@ export default class UserService {
   constructor(
     private readonly hmppsAuthClientBuilder: RestClientBuilder<HmppsAuthClient>,
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
-    private readonly redisClient: RedisClient,
   ) {}
 
   async getUser(token: string, tokenData?: TokenData): Promise<AuthUser | UserDetails> {
     if (!tokenData) {
       const user = await this.hmppsAuthClientBuilder(token).getUser()
-      return { ...user, displayName: convertToTitleCase(user.name), roles: [] }
+      const { authorities } = jwtDecode(token) as { authorities?: string[] }
+      return {
+        ...user,
+        displayName: convertToTitleCase(user.name),
+        roles: authorities.map(role => role.substring(role.indexOf('_') + 1)),
+      }
     }
 
     return {
       displayName: convertToTitleCase(tokenData.name),
       name: tokenData.name,
-      roles: tokenData.authorities,
+      roles: tokenData.authorities.map(role => role.substring(role.indexOf('_') + 1)),
     }
   }
 
-  private async ensureConnected() {
-    if (!this.redisClient.isOpen) {
-      await this.redisClient.connect()
-    }
-  }
+  async getUserData(token: string, staffId: number): Promise<UserData> {
+    const defaultResponse: UserData = { staffRoles: [], caseLoads: [], activeCaseLoad: null, locations: [] }
 
-  private async getCaseLoadsFromCache(username: string): Promise<CaseLoad[] | null> {
     try {
-      await this.ensureConnected()
-      const redisData = await this.redisClient.get(username)
-      if (!redisData) return null
+      if (this.errorCount >= API_ERROR_LIMIT) return defaultResponse
 
-      return JSON.parse(redisData).caseLoads as CaseLoad[]
-    } catch (error) {
-      logger.error(error.stack, `Error calling redis`)
-      return null
-    }
-  }
+      const prisonApiClient = this.prisonApiClientBuilder(token)
+      const [caseLoads, locations] = await Promise.all([
+        prisonApiClient.getUserCaseLoads(),
+        prisonApiClient.getUserLocations(),
+      ])
 
-  private async setCaseLoadsCache(username: string, caseLoads: CaseLoad[]): Promise<string> {
-    try {
-      await this.ensureConnected()
-      return await this.redisClient.set(username, JSON.stringify({ caseLoads }), { EX: 300 })
-    } catch (error) {
-      logger.error(error.stack, `Error calling redis`)
-      return ''
-    }
-  }
-
-  async getUserCaseLoads(token: string, username: string): Promise<CaseLoad[]> {
-    try {
-      const cachedCaseLoads = await this.getCaseLoadsFromCache(username)
-      if (cachedCaseLoads) return cachedCaseLoads
-
-      if (this.errorCount >= API_ERROR_LIMIT) return []
-
-      const caseLoads = await this.prisonApiClientBuilder(token).getUserCaseLoads()
-      if (caseLoads.length <= 1) await this.setCaseLoadsCache(username, caseLoads)
+      const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
+      const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
 
       this.errorCount = 0
-      return caseLoads
+      return { caseLoads, staffRoles, activeCaseLoad, locations }
     } catch (error) {
       this.errorCount += 1
 
@@ -91,7 +71,7 @@ export default class UserService {
         }, API_COOL_OFF_MINUTES * 60000)
       }
 
-      return []
+      return defaultResponse
     }
   }
 }
