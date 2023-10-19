@@ -5,18 +5,12 @@ import { CaseLoad } from '../interfaces/caseLoad'
 import PrisonApiClient from '../data/prisonApiClient'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import authUserMock from '../../tests/mocks/AuthUserMock'
-import { RedisClient } from '../data/redisClient'
+import TokenMock, { rolesForMockToken } from '../../tests/mocks/TokenMock'
 
 jest.mock('../data/hmppsAuthClient')
 
-const token = 'some token'
-const redisClient = {
-  get: jest.fn(),
-  set: jest.fn(),
-  on: jest.fn(),
-  connect: jest.fn(),
-  isOpen: true,
-} as unknown as jest.Mocked<RedisClient>
+const token = TokenMock
+const staffId = 12345
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -38,7 +32,6 @@ describe('User service', () => {
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
-        redisClient as unknown as RedisClient,
       )
     })
 
@@ -48,13 +41,19 @@ describe('User service', () => {
         expect(hmppsAuthClient.getUser).toBeCalledTimes(1)
         expect(result.displayName).toEqual('John Smith')
       })
+
+      it('Formats the roles from the token', async () => {
+        const result = await userService.getUser(token)
+        expect(hmppsAuthClient.getUser).toBeCalledTimes(1)
+        expect(result.roles).toEqual(rolesForMockToken)
+      })
     })
 
     describe('with token data', () => {
       it('Retrieves and formats user name', async () => {
         const result = await userService.getUser(token, getTokenDataMock())
         expect(hmppsAuthClient.getUser).toBeCalledTimes(0)
-        expect(result).toEqual({ displayName: 'Token User', name: 'Token User', roles: ['ROLE_PF_STD_PRISON'] })
+        expect(result).toEqual({ displayName: 'Token User', name: 'Token User', roles: ['PF_STD_PRISON'] })
       })
     })
 
@@ -65,7 +64,7 @@ describe('User service', () => {
     })
   })
 
-  describe('getUserCaseLoads', () => {
+  describe('getUserData', () => {
     const prisonApiClient = prisonApiClientMock() as undefined as PrisonApiClient
     beforeEach(() => {
       hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
@@ -73,56 +72,53 @@ describe('User service', () => {
 
       expectedCaseLoads = [{ caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' }]
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
+      prisonApiClient.getUserLocations = jest.fn(async () => [])
+      prisonApiClient.getStaffRoles = jest.fn(async () => [{ role: 'KW' }])
 
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
-        redisClient as unknown as RedisClient,
       )
     })
 
-    it('Retrieves case loads', async () => {
-      const result = await userService.getUserCaseLoads(token, 'username')
+    it('Returns case loads', async () => {
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(result).toEqual(expectedCaseLoads)
+      expect(caseLoads).toEqual(expectedCaseLoads)
     })
 
-    it('Returns cached case loads if they are available', async () => {
-      const cachedVal = [
-        { caseloadFunction: '', caseLoadId: 'CACHED', currentlyActive: true, description: '', type: '' },
-      ]
-      redisClient.get.mockResolvedValueOnce(JSON.stringify({ caseLoads: cachedVal }))
-      const result = await userService.getUserCaseLoads(token, 'username')
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(0)
-      expect(result).toEqual(cachedVal)
-    })
-
-    it('Gets from api if cache fails', async () => {
-      redisClient.get.mockRejectedValueOnce('FAIL')
-      const result = await userService.getUserCaseLoads(token, 'username')
+    it('Returns active caseload id', async () => {
+      const { activeCaseLoad } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(result).toEqual(expectedCaseLoads)
+      expect(activeCaseLoad).toEqual(expectedCaseLoads[0])
     })
 
-    it('Returns empty list if redis and api fails', async () => {
-      redisClient.get.mockRejectedValueOnce('FAIL')
+    it('Returns services', async () => {
+      const { services } = await userService.getUserData(token, staffId, ['GLOBAL_SEARCH'])
+      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+      expect(services.find(service => service.heading === 'Global search')).toBeTruthy()
+    })
+
+    it('Returns empty list if api fails', async () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      const result = await userService.getUserCaseLoads(token, 'username')
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(result).toEqual([])
+      expect(caseLoads).toEqual([])
     })
 
     it(`Sets circuit breaker if api fails ${API_ERROR_LIMIT} times`, async () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserCaseLoads(token, 'username')))
+      await Promise.all(
+        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+      )
 
-      const result = await userService.getUserCaseLoads(token, 'username')
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
-      expect(result).toEqual([])
+      expect(caseLoads).toEqual([])
     })
 
     it(`Unsets circuit breaker after ${API_COOL_OFF_MINUTES} minutes`, async () => {
@@ -130,39 +126,16 @@ describe('User service', () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserCaseLoads(token, 'username')))
+      await Promise.all(
+        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+      )
 
       jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
 
-      await userService.getUserCaseLoads(token, 'username')
+      await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
 
       jest.useRealTimers()
-    })
-
-    it('Stores response in cache if user has 1 caseload', async () => {
-      const result = await userService.getUserCaseLoads(token, 'username')
-      expect(redisClient.set).toBeCalledTimes(1)
-      expect(redisClient.set).toBeCalledWith('username', JSON.stringify({ caseLoads: result }), { EX: 300 })
-      expect(result).toEqual(expectedCaseLoads)
-    })
-
-    it('Does not store response in cache if user has > 1 caseload', async () => {
-      expectedCaseLoads = [
-        { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
-        { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
-      ]
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
-
-      userService = new UserService(
-        () => hmppsAuthClient,
-        () => prisonApiClient,
-        redisClient as unknown as RedisClient,
-      )
-
-      const result = await userService.getUserCaseLoads(token, 'username')
-      expect(redisClient.set).toBeCalledTimes(0)
-      expect(result).toEqual(expectedCaseLoads)
     })
   })
 })

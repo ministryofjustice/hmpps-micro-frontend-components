@@ -24,7 +24,6 @@ export default function developRoutes(services: Services): Router {
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
       const viewModel = await controller.getHeaderViewModel(res.locals.user)
-
       return res.render('pages/componentPreview', { ...viewModel, latestFeatures: true })
     }),
   )

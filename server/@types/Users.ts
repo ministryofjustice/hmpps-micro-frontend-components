@@ -27,5 +27,5 @@ export interface AuthUser {
   token: string
 }
 
-export type User = (AuthUser | TokenData) & { authSource: TokenData['auth_source']; token: string }
+export type User = (AuthUser | TokenData) & { authSource: TokenData['auth_source']; token: string; roles: [] }
 export const isApiUser = (user: TokenData | AuthUser): user is TokenData => !!(user as TokenData).auth_source
