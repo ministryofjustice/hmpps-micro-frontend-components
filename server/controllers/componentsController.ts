@@ -21,6 +21,7 @@ export interface FooterViewModel {
   isPrisonUser: boolean
   managedPages: ManagedPageLink[]
   component: string
+  services: Service[]
 }
 
 export const isPrisonUser = (user: User): boolean => {
@@ -49,13 +50,12 @@ const defaultFooterLinks: ManagedPageLink[] = [
 export default ({
   userService,
   contentfulService,
-  servicesService,
   cacheService,
 }: Services): {
   getHeaderViewModel: (user: User) => Promise<HeaderViewModel>
   getFooterViewModel: (user: User) => Promise<FooterViewModel>
 } => ({
-  async getHeaderViewModel(user) {
+  async getHeaderViewModel(user): Promise<HeaderViewModel> {
     const { token } = user
     const apiUser = isApiUser(user)
     const username = apiUser ? user.user_name : user.username
@@ -67,13 +67,9 @@ export default ({
       return cachedResponse
     }
 
-    const { caseLoads, staffRoles, activeCaseLoad, locations } = prisonUser
-      ? await userService.getUserData(token, staffId)
-      : { staffRoles: [], caseLoads: [], activeCaseLoad: null, locations: [] }
-
-    const services = prisonUser
-      ? servicesService.getUserServices(user.roles, staffRoles, activeCaseLoad?.caseLoadId ?? null, staffId, locations)
-      : []
+    const { caseLoads, activeCaseLoad, services } = prisonUser
+      ? await userService.getUserData(token, staffId, user.roles)
+      : { caseLoads: [], activeCaseLoad: null, services: [] }
 
     const payload = {
       caseLoads,
@@ -93,17 +89,37 @@ export default ({
     return payload
   },
 
-  async getFooterViewModel(user: User) {
-    let managedPages: ManagedPageLink[] = defaultFooterLinks
-
-    if (config.contentfulFooterLinksEnabled) {
-      managedPages = await contentfulService.getManagedPages()
+  async getFooterViewModel(user: User): Promise<FooterViewModel> {
+    const apiUser = isApiUser(user)
+    const username = apiUser ? user.user_name : user.username
+    const cachedResponse = await cacheService.getData(`${username}_footer`)
+    if (cachedResponse) {
+      return cachedResponse
     }
 
-    return {
+    const { token } = user
+    const staffId = apiUser ? Number(user.user_id) : user.staffId
+    const prisonUser = isPrisonUser(user)
+
+    const managedPages = config.contentfulFooterLinksEnabled
+      ? await contentfulService.getManagedPages()
+      : defaultFooterLinks
+
+    const { services, caseLoads }: { services: Service[]; caseLoads: CaseLoad[] } = prisonUser
+      ? await userService.getUserData(token, staffId, user.roles)
+      : { services: [], caseLoads: [] }
+
+    const payload = {
       managedPages,
-      isPrisonUser: isPrisonUser(user),
+      isPrisonUser: prisonUser,
       component: 'footer',
+      services,
     }
+
+    if (caseLoads.length <= 1) {
+      await cacheService.setData(`${username}_footer`, JSON.stringify(payload))
+    }
+
+    return payload
   },
 })

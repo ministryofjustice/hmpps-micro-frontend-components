@@ -82,34 +82,28 @@ describe('User service', () => {
     })
 
     it('Returns case loads', async () => {
-      const { caseLoads } = await userService.getUserData(token, staffId)
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(caseLoads).toEqual(expectedCaseLoads)
     })
 
     it('Returns active caseload id', async () => {
-      const { activeCaseLoad } = await userService.getUserData(token, staffId)
+      const { activeCaseLoad } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(activeCaseLoad).toEqual(expectedCaseLoads[0])
     })
 
-    it('Returns staff roles', async () => {
-      const { staffRoles } = await userService.getUserData(token, staffId)
+    it('Returns services', async () => {
+      const { services } = await userService.getUserData(token, staffId, ['GLOBAL_SEARCH'])
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(staffRoles).toEqual([{ role: 'KW' }])
-    })
-
-    it('Returns locations', async () => {
-      const { locations } = await userService.getUserData(token, staffId)
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(locations).toEqual([])
+      expect(services.find(service => service.heading === 'Global search')).toBeTruthy()
     })
 
     it('Returns empty list if api fails', async () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      const { caseLoads } = await userService.getUserData(token, staffId)
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(caseLoads).toEqual([])
     })
@@ -118,9 +112,11 @@ describe('User service', () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId)))
+      await Promise.all(
+        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+      )
 
-      const { caseLoads } = await userService.getUserData(token, staffId)
+      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
       expect(caseLoads).toEqual([])
     })
@@ -130,11 +126,13 @@ describe('User service', () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      await Promise.all([...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId)))
+      await Promise.all(
+        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+      )
 
       jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
 
-      await userService.getUserData(token, staffId)
+      await userService.getUserData(token, staffId, rolesForMockToken)
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
 
       jest.useRealTimers()

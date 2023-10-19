@@ -6,6 +6,7 @@ import PrisonApiClient from '../data/prisonApiClient'
 import logger from '../../logger'
 import { AuthUser, TokenData } from '../@types/Users'
 import { UserData } from '../interfaces/UserData'
+import getServicesForUser from './utils/getServicesForUser'
 
 interface UserDetails {
   name: string
@@ -42,8 +43,12 @@ export default class UserService {
     }
   }
 
-  async getUserData(token: string, staffId: number): Promise<UserData> {
-    const defaultResponse: UserData = { staffRoles: [], caseLoads: [], activeCaseLoad: null, locations: [] }
+  async getUserData(token: string, staffId: number, roles: string[]): Promise<UserData> {
+    const defaultResponse: UserData = {
+      caseLoads: [],
+      activeCaseLoad: null,
+      services: [],
+    }
 
     try {
       if (this.errorCount >= API_ERROR_LIMIT) return defaultResponse
@@ -56,9 +61,10 @@ export default class UserService {
 
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
       const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
+      const services = getServicesForUser(roles, staffRoles, activeCaseLoad?.caseLoadId ?? null, staffId, locations)
 
       this.errorCount = 0
-      return { caseLoads, staffRoles, activeCaseLoad, locations }
+      return { caseLoads, activeCaseLoad, services }
     } catch (error) {
       this.errorCount += 1
 

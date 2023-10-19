@@ -4,7 +4,6 @@ import UserService from './userService'
 import ContentfulService from './contentfulService'
 import config from '../config'
 import { createRedisClient } from '../data/redisClient'
-import ServicesService from './servicesService'
 import CacheService from './cacheService'
 
 export const services = () => {
@@ -27,13 +26,11 @@ export const services = () => {
   })
 
   const contentfulService = new ContentfulService(apolloClient)
-  const servicesService = new ServicesService()
   const cacheService = new CacheService(createRedisClient())
 
   return {
     userService,
     contentfulService,
-    servicesService,
     cacheService,
   }
 }

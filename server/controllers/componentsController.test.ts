@@ -4,9 +4,7 @@ import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import CacheService from '../services/cacheService'
-import ServicesService from '../services/servicesService'
 import { UserData } from '../interfaces/UserData'
-import { Service } from '../interfaces/Service'
 
 const defaultUserData: UserData = {
   caseLoads: [
@@ -18,7 +16,6 @@ const defaultUserData: UserData = {
       currentlyActive: true,
     },
   ],
-  staffRoles: [{ role: 'KW' }],
   activeCaseLoad: {
     caseLoadId: 'LEI',
     description: 'Leeds',
@@ -26,10 +23,9 @@ const defaultUserData: UserData = {
     caseloadFunction: '',
     currentlyActive: true,
   },
-  locations: [],
+  services: [{ id: 'service', heading: 'Service', description: '', href: '/href' }],
 }
 
-const defaultServices: Service[] = [{ id: 'service', heading: 'Service', description: '', href: '/href' }]
 const userServiceMock = {
   getUser: () => ({ name: 'User', activeCaseLoadId: 'LEI' }),
   getUserData: jest.fn().mockResolvedValue(defaultUserData),
@@ -39,10 +35,6 @@ const cacheServiceMock = {
   getData: jest.fn(),
   setData: jest.fn(),
 } as undefined as jest.Mocked<CacheService>
-
-const servicesServiceMock = {
-  getUserServices: jest.fn().mockReturnValue(defaultServices),
-} as undefined as ServicesService
 
 const contentfulServiceMock = {
   getManagedPages: () => [
@@ -55,7 +47,6 @@ const controller = componentsController({
   userService: userServiceMock,
   contentfulService: contentfulServiceMock,
   cacheService: cacheServiceMock,
-  servicesService: servicesServiceMock,
 })
 const defaultTokenData = getTokenDataMock()
 
@@ -93,7 +84,7 @@ describe('getHeaderViewModel', () => {
       isPrisonUser: true,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
       dpsSearchLink: 'http://localhost:3001/prisoner-search',
-      services: defaultServices,
+      services: defaultUserData.services,
     })
   })
 
@@ -190,6 +181,7 @@ describe('getFooterViewModel', () => {
       ],
       isPrisonUser: true,
       component: 'footer',
+      services: defaultUserData.services,
     })
   })
 
@@ -222,6 +214,63 @@ describe('getFooterViewModel', () => {
       ],
       isPrisonUser: true,
       component: 'footer',
+      services: defaultUserData.services,
+    })
+  })
+
+  describe('caching', () => {
+    it('should return cached data if available', async () => {
+      const redisResponse: HeaderViewModel = {
+        caseLoads: [],
+        changeCaseLoadLink: 'http://localhost:3001/change-caseload',
+        component: 'header',
+        ingressUrl: 'localhost',
+        isPrisonUser: false,
+        manageDetailsLink: 'http://localhost:9090/auth/account-details',
+        dpsSearchLink: 'http://localhost:3001/prisoner-search',
+        activeCaseLoad: null,
+        services: [],
+      }
+      cacheServiceMock.getData.mockResolvedValueOnce(redisResponse)
+
+      const output = await controller.getFooterViewModel({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: 'token',
+        roles: [],
+      })
+
+      expect(output).toEqual(redisResponse)
+      expect(userServiceMock.getUserData).toBeCalledTimes(0)
+    })
+
+    it('should not set a cache value if caseloads count > 1', async () => {
+      userServiceMock.getUserData.mockResolvedValueOnce({
+        ...defaultUserData,
+        caseLoads: [
+          { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+          { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
+        ],
+      })
+      await controller.getFooterViewModel({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: 'token',
+        roles: [],
+      })
+
+      expect(cacheServiceMock.setData).toBeCalledTimes(0)
+    })
+
+    it('should not set a cache value if caseloads count not greater than 1', async () => {
+      await controller.getFooterViewModel({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: 'token',
+        roles: [],
+      })
+
+      expect(cacheServiceMock.setData).toBeCalledTimes(1)
     })
   })
 })

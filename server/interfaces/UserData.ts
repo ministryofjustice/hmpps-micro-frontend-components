@@ -1,10 +1,8 @@
 import { CaseLoad } from './caseLoad'
-import { StaffRole } from '../@types/StaffRole'
-import { Location } from './location'
+import { Service } from './Service'
 
 export interface UserData {
   caseLoads: CaseLoad[]
   activeCaseLoad: CaseLoad | null
-  staffRoles: StaffRole[]
-  locations: Location[]
+  services: Service[]
 }
