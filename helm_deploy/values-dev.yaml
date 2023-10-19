@@ -16,7 +16,7 @@ generic-service:
     CONTENTFUL_HOST: https://graphql.contentful.com
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: DEV
-    DPS_URL: https://digital-dev.prison.service.justice.gov.uk/
+    DPS_URL: https://digital-dev.prison.service.justice.gov.uk
     OMIC_URL: https://dev.manage-key-workers.service.justice.gov.uk
     ACTIVITIES_URL: https://activities-dev.prison.service.justice.gov.uk/activities
     APPOINTMENTS_URL: https://activities-dev.prison.service.justice.gov.uk/appointments
