@@ -180,7 +180,6 @@
         &.connect-dps-common-header__toggle-open {
           background: govuk-colour("light-grey");
           color: govuk-colour("blue");
-          font-weight: 700;
 
           >span {
             &:before {
@@ -465,6 +464,7 @@
       gap: 15px 15px;
       justify-items: start;
       font-weight: bold;
+      margin-bottom: 0;
     }
   }
 

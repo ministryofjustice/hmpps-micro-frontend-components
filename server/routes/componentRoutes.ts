@@ -5,7 +5,7 @@ import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController from '../controllers/componentsController'
+import componentsController, { FooterViewModel, HeaderViewModel } from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 
@@ -29,8 +29,12 @@ export default function componentRoutes(services: Services): Router {
 
   router.use(requestIsAuthenticated())
 
-  async function getHeaderResponseBody(res: Response, latestFeatures: boolean): Promise<Component> {
-    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+  async function getHeaderResponseBody(
+    res: Response,
+    latestFeatures: boolean,
+    viewModelCached?: HeaderViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
     const javascript = latestFeatures ? [`${config.ingressUrl}/assets/js/header.js`] : []
 
     return new Promise(resolve => {
@@ -44,8 +48,12 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  async function getFooterResponseBody(res: Response, latestFeatures: boolean): Promise<Component> {
-    const viewModel = await controller.getFooterViewModel(res.locals.user)
+  async function getFooterResponseBody(
+    res: Response,
+    latestFeatures: boolean,
+    viewModelCached?: FooterViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
     return new Promise(resolve => {
       res.render('components/footer', { ...viewModel, latestFeatures }, (_, html) => {
         resolve({
@@ -79,19 +87,27 @@ export default function componentRoutes(services: Services): Router {
     '/components',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const componentMethods: Record<AvailableComponent, (r: Response, latestFeatures: boolean) => Promise<Component>> =
-        {
-          header: getHeaderResponseBody,
-          footer: getFooterResponseBody,
-        }
+      const componentMethods: Record<
+        AvailableComponent,
+        (r: Response, latestFeatures: boolean, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
+      > = {
+        header: getHeaderResponseBody,
+        footer: getFooterResponseBody,
+      }
 
       const componentsRequested = [req.query.component]
         .flat()
         .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
+      const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
+
       const renders = await Promise.all(
         componentsRequested.map(component =>
-          componentMethods[component as AvailableComponent](res, req.headers['x-use-latest-features'] === 'true'),
+          componentMethods[component as AvailableComponent](
+            res,
+            req.headers['x-use-latest-features'] === 'true',
+            viewModels[component],
+          ),
         ),
       )
 

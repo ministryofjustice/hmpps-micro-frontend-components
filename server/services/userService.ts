@@ -4,9 +4,10 @@ import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { RestClientBuilder } from '../data'
 import PrisonApiClient from '../data/prisonApiClient'
 import logger from '../../logger'
-import { AuthUser, TokenData } from '../@types/Users'
+import { AuthUser, isApiUser, TokenData, User } from '../@types/Users'
 import { UserData } from '../interfaces/UserData'
 import getServicesForUser from './utils/getServicesForUser'
+import { isPrisonUser } from '../controllers/componentsController'
 
 interface UserDetails {
   name: string
@@ -43,7 +44,12 @@ export default class UserService {
     }
   }
 
-  async getUserData(token: string, staffId: number, roles: string[]): Promise<UserData> {
+  async getUserData(user: User): Promise<UserData> {
+    const apiUser = isApiUser(user)
+    const { token, roles } = user
+    const staffId = apiUser ? Number(user.user_id) : user.staffId
+    const prisonUser = isPrisonUser(user)
+
     const defaultResponse: UserData = {
       caseLoads: [],
       activeCaseLoad: null,
@@ -51,7 +57,7 @@ export default class UserService {
     }
 
     try {
-      if (this.errorCount >= API_ERROR_LIMIT) return defaultResponse
+      if (!prisonUser || this.errorCount >= API_ERROR_LIMIT) return defaultResponse
 
       const prisonApiClient = this.prisonApiClientBuilder(token)
       const [caseLoads, locations] = await Promise.all([

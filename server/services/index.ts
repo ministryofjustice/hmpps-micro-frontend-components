@@ -26,7 +26,7 @@ export const services = () => {
   })
 
   const contentfulService = new ContentfulService(apolloClient)
-  const cacheService = new CacheService(createRedisClient())
+  const cacheService = new CacheService(createRedisClient(), config.redis.cacheTimeout)
 
   return {
     userService,

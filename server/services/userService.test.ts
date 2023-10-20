@@ -10,7 +10,7 @@ import TokenMock, { rolesForMockToken } from '../../tests/mocks/TokenMock'
 jest.mock('../data/hmppsAuthClient')
 
 const token = TokenMock
-const staffId = 12345
+const defaultTokenData = getTokenDataMock()
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -82,19 +82,37 @@ describe('User service', () => {
     })
 
     it('Returns case loads', async () => {
-      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
+      const { caseLoads } = await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: rolesForMockToken,
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(caseLoads).toEqual(expectedCaseLoads)
     })
 
     it('Returns active caseload id', async () => {
-      const { activeCaseLoad } = await userService.getUserData(token, staffId, rolesForMockToken)
+      const { activeCaseLoad } = await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: rolesForMockToken,
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(activeCaseLoad).toEqual(expectedCaseLoads[0])
     })
 
     it('Returns services', async () => {
-      const { services } = await userService.getUserData(token, staffId, ['GLOBAL_SEARCH'])
+      const { services } = await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: ['GLOBAL_SEARCH'],
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(services.find(service => service.heading === 'Global search')).toBeTruthy()
     })
@@ -103,7 +121,13 @@ describe('User service', () => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => {
         throw new Error('API FAIL')
       })
-      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
+      const { caseLoads } = await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: rolesForMockToken,
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
       expect(caseLoads).toEqual([])
     })
@@ -113,10 +137,24 @@ describe('User service', () => {
         throw new Error('API FAIL')
       })
       await Promise.all(
-        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+        [...Array(API_ERROR_LIMIT)].map(() =>
+          userService.getUserData({
+            ...defaultTokenData,
+            authSource: 'nomis',
+            token: TokenMock,
+            user_id: '12345',
+            roles: rolesForMockToken,
+          }),
+        ),
       )
 
-      const { caseLoads } = await userService.getUserData(token, staffId, rolesForMockToken)
+      const { caseLoads } = await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: rolesForMockToken,
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
       expect(caseLoads).toEqual([])
     })
@@ -127,12 +165,26 @@ describe('User service', () => {
         throw new Error('API FAIL')
       })
       await Promise.all(
-        [...Array(API_ERROR_LIMIT)].map(() => userService.getUserData(token, staffId, rolesForMockToken)),
+        [...Array(API_ERROR_LIMIT)].map(() =>
+          userService.getUserData({
+            ...defaultTokenData,
+            authSource: 'nomis',
+            token: TokenMock,
+            user_id: '12345',
+            roles: rolesForMockToken,
+          }),
+        ),
       )
 
       jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
 
-      await userService.getUserData(token, staffId, rolesForMockToken)
+      await userService.getUserData({
+        ...defaultTokenData,
+        authSource: 'nomis',
+        token: TokenMock,
+        user_id: '12345',
+        roles: rolesForMockToken,
+      })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
 
       jest.useRealTimers()
