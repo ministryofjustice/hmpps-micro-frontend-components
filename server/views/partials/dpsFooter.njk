@@ -1,43 +1,71 @@
 <footer class="connect-dps-common-footer govuk-!-display-none-print" role="contentinfo">
     <div class="govuk-width-container">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters connect-dps-common-footer__services-menu">
-                <h2>Services</h2>
-                <ul class='govuk-list'>
-                    {% for service in services %}
-                        <li><a href='{{ service.href }}' class=''>{{ service.heading }}</a></li>
-                    {% endfor %}
-                </ul>
+        {% if latestFeatures %}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-three-quarters connect-dps-common-footer__services-menu">
+                    <h2>Services</h2>
+                    <ul class='govuk-list'>
+                        {% for service in services %}
+                            <li><a href='{{ service.href }}' class=''>{{ service.heading }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    <div class="connect-dps-common-footer__help">
+                        <h2>Get help with DPS</h2>
+                        <p>Call 0800 917 5148 or #6598 from inside an establishment.</p>
+                    </div>
+                </div>
             </div>
-            <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="connect-dps-common-footer__support-links">
+                        <h2 class="govuk-visually-hidden">Support links</h2>
+
+                        <ul class="connect-dps-common-footer__inline-list">
+                            <li class="connect-dps-common-footer__inline-list-item">
+                                <a class="connect-dps-common-footer__link" href="https://eu.surveymonkey.com/r/FRZYGVQ" target='_blank' referrerpolicy='no-referrer' rel='noopener'>
+                                    Feedback (opens in a new tab)
+                                </a>
+                            </li>
+
+                            {% for page in managedPages %}
+                                <li class="connect-dps-common-footer__inline-list-item">
+                                    <a class="connect-dps-common-footer__link" href="{{ page.href }}">
+                                        {{ page.text }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="connect-dps-common-footer__info">
                 <div class="connect-dps-common-footer__help">
                     <h2>Get help with DPS</h2>
                     <p>Call 0800 917 5148 or #6598 from inside an establishment.</p>
                 </div>
             </div>
-        </div>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <div class="connect-dps-common-footer__support-links">
-                    <h2 class="govuk-visually-hidden">Support links</h2>
+            <div class="connect-dps-common-footer__support-links">
+                <h2 class="govuk-visually-hidden">Support links</h2>
 
-                    <ul class="connect-dps-common-footer__inline-list">
+                <ul class="connect-dps-common-footer__inline-list">
+                    <li class="connect-dps-common-footer__inline-list-item">
+                        <a class="connect-dps-common-footer__link" href="https://eu.surveymonkey.com/r/FRZYGVQ" target='_blank' referrerpolicy='no-referrer' rel='noopener'>
+                            Feedback (opens in a new tab)
+                        </a>
+                    </li>
+
+                    {% for page in managedPages %}
                         <li class="connect-dps-common-footer__inline-list-item">
-                            <a class="connect-dps-common-footer__link" href="https://eu.surveymonkey.com/r/FRZYGVQ" target='_blank' referrerpolicy='no-referrer' rel='noopener'>
-                                Feedback (opens in a new tab)
+                            <a class="connect-dps-common-footer__link" href="{{ page.href }}">
+                                {{ page.text }}
                             </a>
                         </li>
-
-                        {% for page in managedPages %}
-                            <li class="connect-dps-common-footer__inline-list-item">
-                                <a class="connect-dps-common-footer__link" href="{{ page.href }}">
-                                    {{ page.text }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    {% endfor %}
+                </ul>
             </div>
-        </div>
+        {% endif %}
     </div>
 </footer>

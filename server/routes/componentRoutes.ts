@@ -44,10 +44,10 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  async function getFooterResponseBody(res: Response): Promise<Component> {
+  async function getFooterResponseBody(res: Response, latestFeatures: boolean): Promise<Component> {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     return new Promise(resolve => {
-      res.render('components/footer', viewModel, (_, html) => {
+      res.render('components/footer', { ...viewModel, latestFeatures }, (_, html) => {
         resolve({
           html,
           css: [`${config.ingressUrl}/assets/stylesheets/footer.css`],
@@ -70,7 +70,7 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res)
+      const response = await getFooterResponseBody(res, req.headers['x-use-latest-features'] === 'true')
       res.send(response)
     }),
   )
