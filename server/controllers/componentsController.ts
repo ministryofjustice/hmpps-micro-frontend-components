@@ -1,9 +1,11 @@
 import config from '../config'
-import { Services } from '../services'
+import { type Services } from '../services'
 import { CaseLoad } from '../interfaces/caseLoad'
 import { ManagedPageLink } from '../interfaces/managedPage'
 import { isApiUser, User } from '../@types/Users'
 import { Service } from '../interfaces/Service'
+import { AvailableComponent } from '../@types/AvailableComponent'
+import { UserData } from '../interfaces/UserData'
 
 export interface HeaderViewModel {
   caseLoads: CaseLoad[]
@@ -52,26 +54,19 @@ export default ({
   contentfulService,
   cacheService,
 }: Services): {
-  getHeaderViewModel: (user: User) => Promise<HeaderViewModel>
-  getFooterViewModel: (user: User) => Promise<FooterViewModel>
+  getHeaderViewModel: (user: User, userData?: UserData) => Promise<HeaderViewModel>
+  getFooterViewModel: (user: User, userData?: UserData) => Promise<FooterViewModel>
+  getViewModels: (
+    components: AvailableComponent[],
+    user: User,
+  ) => Promise<Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>>>
 } => ({
-  async getHeaderViewModel(user): Promise<HeaderViewModel> {
-    const { token } = user
-    const apiUser = isApiUser(user)
-    const username = apiUser ? user.user_name : user.username
-    const staffId = apiUser ? Number(user.user_id) : user.staffId
-    const prisonUser = isPrisonUser(user)
-
-    const cachedResponse = await cacheService.getData(`${username}_header`)
-    if (cachedResponse) {
-      return cachedResponse
-    }
-
-    const { caseLoads, activeCaseLoad, services } = prisonUser
-      ? await userService.getUserData(token, staffId, user.roles)
+  async getHeaderViewModel(user, preAccessedUserData?: UserData): Promise<HeaderViewModel> {
+    const { caseLoads, activeCaseLoad, services } = isPrisonUser(user)
+      ? preAccessedUserData ?? (await userService.getUserData(user))
       : { caseLoads: [], activeCaseLoad: null, services: [] }
 
-    const payload = {
+    return {
       caseLoads,
       isPrisonUser: isPrisonUser(user),
       activeCaseLoad,
@@ -82,44 +77,50 @@ export default ({
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
       services,
     }
-
-    if (caseLoads.length <= 1) {
-      await cacheService.setData(`${username}_header`, JSON.stringify(payload))
-    }
-    return payload
   },
 
-  async getFooterViewModel(user: User): Promise<FooterViewModel> {
-    const apiUser = isApiUser(user)
-    const username = apiUser ? user.user_name : user.username
-    const cachedResponse = await cacheService.getData(`${username}_footer`)
-    if (cachedResponse) {
-      return cachedResponse
-    }
-
-    const { token } = user
-    const staffId = apiUser ? Number(user.user_id) : user.staffId
-    const prisonUser = isPrisonUser(user)
-
+  async getFooterViewModel(user: User, preAccessedUserData?: UserData): Promise<FooterViewModel> {
     const managedPages = config.contentfulFooterLinksEnabled
       ? await contentfulService.getManagedPages()
       : defaultFooterLinks
 
-    const { services, caseLoads }: { services: Service[]; caseLoads: CaseLoad[] } = prisonUser
-      ? await userService.getUserData(token, staffId, user.roles)
-      : { services: [], caseLoads: [] }
+    const userData = preAccessedUserData ?? (await userService.getUserData(user))
 
-    const payload = {
+    return {
       managedPages,
-      isPrisonUser: prisonUser,
+      isPrisonUser: isPrisonUser(user),
       component: 'footer',
-      services,
+      services: userData.services,
+    }
+  },
+
+  async getViewModels(components: AvailableComponent[], user: User) {
+    const accessMethods = {
+      header: this.getHeaderViewModel,
+      footer: this.getFooterViewModel,
+    }
+    const apiUser = isApiUser(user)
+    const username = apiUser ? user.user_name : user.username
+
+    const cachedResponse = await cacheService.getData<UserData>(`${username}_meta_data`)
+
+    const userData = cachedResponse ?? (await userService.getUserData(user))
+    if (!cachedResponse && userData.caseLoads.length <= 1) {
+      await cacheService.setData(`${username}_meta_data`, JSON.stringify(userData))
     }
 
-    if (caseLoads.length <= 1) {
-      await cacheService.setData(`${username}_footer`, JSON.stringify(payload))
-    }
+    const viewModels = await Promise.all(
+      components.map(component => accessMethods[component as AvailableComponent](user, userData)),
+    )
 
-    return payload
+    return components.reduce<Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>>>(
+      (output, componentName, index) => {
+        return {
+          ...output,
+          [componentName]: viewModels[index],
+        }
+      },
+      {},
+    )
   },
 })

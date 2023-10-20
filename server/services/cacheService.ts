@@ -2,7 +2,10 @@ import logger from '../../logger'
 import { RedisClient } from '../data/redisClient'
 
 export default class CacheService {
-  constructor(private readonly redisClient: RedisClient) {}
+  constructor(
+    private readonly redisClient: RedisClient,
+    private readonly timeout: number,
+  ) {}
 
   private async ensureConnected() {
     if (!this.redisClient.isOpen) {
@@ -13,14 +16,14 @@ export default class CacheService {
   public async setData(key: string, data: string) {
     try {
       await this.ensureConnected()
-      return await this.redisClient.set(key, data, { EX: 600 })
+      return await this.redisClient.set(key, data, { EX: this.timeout })
     } catch (error) {
       logger.error(error.stack, `Error calling redis`)
       return ''
     }
   }
 
-  public async getData(key: string) {
+  public async getData<T>(key: string): Promise<T> {
     try {
       await this.ensureConnected()
       const redisData = await this.redisClient.get(key)

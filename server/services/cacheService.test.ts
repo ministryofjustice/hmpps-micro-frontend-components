@@ -9,7 +9,7 @@ const redisClient = {
   isOpen: true,
 } as unknown as jest.Mocked<RedisClient>
 
-const service = new CacheService(redisClient)
+const service = new CacheService(redisClient, 600)
 
 describe('CacheService', () => {
   describe('setData', () => {

@@ -44,7 +44,7 @@ beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
 
   await ensureConnected()
-  redisClient.del('TOKEN_USER_footer')
+  redisClient.del('TOKEN_USER_meta_data')
 
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
