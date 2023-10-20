@@ -4,9 +4,11 @@
  * In particular, applicationinsights automatically collects bunyan logs
  */
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
+import applicationInfoSupplier from '../applicationInfo'
 
+const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
-buildAppInsightsClient()
+buildAppInsightsClient(applicationInfo.applicationName)
 
 import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
 import { createRedisClient } from './redisClient'
@@ -27,6 +29,7 @@ export default function restClientBuilder<T>(
 }
 
 export const dataAccess = {
+  applicationInfo,
   hmppsAuthClientBuilder: restClientBuilder<HmppsAuthClient>(
     'HMPPS AuthClient',
     config.apis.hmppsAuth,

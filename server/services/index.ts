@@ -7,7 +7,7 @@ import { createRedisClient } from '../data/redisClient'
 import CacheService from './cacheService'
 
 export const services = () => {
-  const { hmppsAuthClientBuilder, prisonApiClientBuilder } = dataAccess
+  const { hmppsAuthClientBuilder, prisonApiClientBuilder, applicationInfo } = dataAccess
 
   const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
 
@@ -29,6 +29,7 @@ export const services = () => {
   const cacheService = new CacheService(createRedisClient())
 
   return {
+    applicationInfo,
     userService,
     contentfulService,
     cacheService,

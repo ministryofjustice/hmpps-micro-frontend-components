@@ -2,7 +2,6 @@ import express from 'express'
 
 import createError from 'http-errors'
 
-import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { metricsMiddleware } from './monitoring/metricsApp'
@@ -19,6 +18,7 @@ import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
+import infoRoutes from './routes/infoRoutes'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -28,16 +28,17 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   app.use(metricsMiddleware)
-  app.use(setUpHealthChecks())
+  app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   setUpEnvironmentName(app)
-  nunjucksSetup(app, path)
+  nunjucksSetup(app, services.applicationInfo)
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
 
+  app.use('/info', infoRoutes())
   app.use('/develop', developRoutes(services))
   app.use('/', componentRoutes(services))
 
