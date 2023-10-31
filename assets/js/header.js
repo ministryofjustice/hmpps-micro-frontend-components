@@ -48,6 +48,7 @@ function closeTabs(tabTuples) {
   tabTuples.forEach(([tab, menu]) => {
     menu.setAttribute('hidden', 'hidden')
     tab.classList.remove(tabOpenClass)
+    tab.parentElement.classList.remove('item-open')
     tab.setAttribute('aria-expanded', 'false')
     tab.setAttribute('aria-label', tab.dataset.textForShow)
   })
@@ -57,13 +58,11 @@ function toggleMenu(toggle, menu) {
   const isOpen = !menu.getAttribute('hidden')
 
   if (isOpen) {
-    menu.setAttribute('hidden', 'hidden')
-    toggle.classList.remove(tabOpenClass)
-    toggle.setAttribute('aria-expanded', 'false')
-    toggle.setAttribute('aria-label', toggle.dataset.textForShow)
+    closeTabs([[toggle, menu]])
   } else {
     menu.removeAttribute('hidden')
     toggle.classList.add(tabOpenClass)
+    toggle.parentElement.classList.add('item-open')
     toggle.setAttribute('aria-expanded', 'true')
     toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }

@@ -232,6 +232,15 @@
           }
         }
       }
+      &.item-open {
+        + div {
+          >button, >a {
+            >span {
+              border-left: 1px solid transparent;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -434,6 +443,7 @@
       padding: 10px 0;
       box-sizing: border-box;
       display: block;
+      width: 100%;
 
       >span {
         height: 100%;
@@ -441,6 +451,7 @@
         border-left: 1px solid govuk-colour('white');
         display: flex;
         align-items: center;
+        justify-content: center;
       }
 
       &:hover {
@@ -470,6 +481,14 @@
       font-weight: bold;
       margin-bottom: 0;
     }
+  }
+
+  &__user-menu-link {
+    width: 181px;
+  }
+
+  &__services-menu-link {
+    width: 107px;
   }
 
   @media print {
