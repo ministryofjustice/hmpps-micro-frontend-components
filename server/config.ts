@@ -36,6 +36,7 @@ export default {
   production,
   https: production,
   staticResourceCacheDuration: '1h',
+  environmentReleased: get('RELEASED', 'false', requiredInProduction) === 'true',
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,

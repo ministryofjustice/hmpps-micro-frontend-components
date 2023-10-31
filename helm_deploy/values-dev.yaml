@@ -17,6 +17,7 @@ generic-service:
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: DEV
     CACHE_TIMOUT: 3
+    RELEASED: true
 
     DPS_URL: https://digital-dev.prison.service.justice.gov.uk
     OMIC_URL: https://dev.manage-key-workers.service.justice.gov.uk

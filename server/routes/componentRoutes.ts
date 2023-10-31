@@ -69,7 +69,10 @@ export default function componentRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getHeaderResponseBody(res, req.headers['x-use-latest-features'] === 'true')
+      const response = await getHeaderResponseBody(
+        res,
+        config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
+      )
       res.send(response)
     }),
   )
@@ -78,7 +81,10 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res, req.headers['x-use-latest-features'] === 'true')
+      const response = await getFooterResponseBody(
+        res,
+        config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
+      )
       res.send(response)
     }),
   )
@@ -105,7 +111,7 @@ export default function componentRoutes(services: Services): Router {
         componentsRequested.map(component =>
           componentMethods[component as AvailableComponent](
             res,
-            req.headers['x-use-latest-features'] === 'true',
+            config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
             viewModels[component],
           ),
         ),
