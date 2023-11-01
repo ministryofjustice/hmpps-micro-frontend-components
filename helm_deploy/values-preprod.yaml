@@ -17,6 +17,7 @@ generic-service:
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: PRE-PRODUCTION
     CACHE_TIMOUT: 600
+    RELEASED: false
 
     DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk
