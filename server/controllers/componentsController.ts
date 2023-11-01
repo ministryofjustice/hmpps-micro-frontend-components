@@ -17,6 +17,7 @@ export interface HeaderViewModel {
   dpsSearchLink: string
   services: Service[]
   manageDetailsLink: string
+  menuLink: string
 }
 
 export interface FooterViewModel {
@@ -72,6 +73,7 @@ export default ({
       activeCaseLoad,
       changeCaseLoadLink: `${config.serviceUrls.dps.url}/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
+      menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
       ingressUrl: config.ingressUrl,
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
