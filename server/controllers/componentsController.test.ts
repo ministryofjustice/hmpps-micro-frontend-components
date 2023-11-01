@@ -77,6 +77,7 @@ const defaultHeaderViewModel = {
   isPrisonUser: true,
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
   dpsSearchLink: 'http://localhost:3001/prisoner-search',
+  menuLink: 'http://localhost:3001#homepage-services',
   services: defaultUserData.services,
 }
 
@@ -130,6 +131,7 @@ describe('getHeaderViewModel', () => {
       isPrisonUser: false,
       manageDetailsLink: 'http://localhost:9090/auth/account-details',
       dpsSearchLink: 'http://localhost:3001/prisoner-search',
+      menuLink: 'http://localhost:3001#homepage-services',
       activeCaseLoad: null,
       services: [],
     })
