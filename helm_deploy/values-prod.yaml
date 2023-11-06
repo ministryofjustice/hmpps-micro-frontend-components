@@ -7,6 +7,12 @@ generic-service:
   ingress:
     host: frontend-components.hmpps.service.justice.gov.uk
 
+  autoscaling:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 95
+
   env:
     INGRESS_URL: "https://frontend-components.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
