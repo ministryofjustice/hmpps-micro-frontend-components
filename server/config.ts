@@ -91,6 +91,7 @@ export default {
   environmentName: get('ENVIRONMENT_NAME', ''),
   serviceUrls: {
     dps: { url: get('DPS_URL', 'http://localhost:3001', requiredInProduction) },
+    newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },
     omic: { url: get('OMIC_URL', 'http://localhost:3001', requiredInProduction) },
     activities: {
       url: get('ACTIVITIES_URL', 'http://localhost:3001', requiredInProduction),

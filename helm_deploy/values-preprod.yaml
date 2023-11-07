@@ -20,6 +20,7 @@ generic-service:
     RELEASED: false
 
     DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
+    NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk
     ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk/activities
     APPOINTMENTS_URL: https://activities-preprod.prison.service.justice.gov.uk/appointments
