@@ -69,6 +69,66 @@ describe('GET /footer', () => {
       })
   })
 
+  it('should render a link to accessibility guidelines', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
+    return request(app)
+      .get('/footer')
+      .set('x-user-token', 'token')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const $ = cheerio.load(JSON.parse(res.text).html)
+        const feedbackLink = $('a[href="http://localhost:3002/accessibility-statement"]')
+        expect(feedbackLink.text()).toContain('Accessibility')
+      })
+  })
+
+  it('should render a link to Terms and conditions', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
+    return request(app)
+      .get('/footer')
+      .set('x-user-token', 'token')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const $ = cheerio.load(JSON.parse(res.text).html)
+        const feedbackLink = $('a[href="http://localhost:3002/terms-and-conditions"]')
+        expect(feedbackLink.text()).toContain('Terms and conditions')
+      })
+  })
+
+  it('should render a link to Privacy policy', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
+    return request(app)
+      .get('/footer')
+      .set('x-user-token', 'token')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const $ = cheerio.load(JSON.parse(res.text).html)
+        const feedbackLink = $('a[href="http://localhost:3002/privacy-policy"]')
+        expect(feedbackLink.text()).toContain('Privacy policy')
+      })
+  })
+
+  it('should render a link to Cookies policy', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
+    return request(app)
+      .get('/footer')
+      .set('x-user-token', 'token')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const $ = cheerio.load(JSON.parse(res.text).html)
+        const feedbackLink = $('a[href="http://localhost:3002/cookies-policy"]')
+        expect(feedbackLink.text()).toContain('Cookies policy')
+      })
+  })
+
   describe('services links', () => {
     beforeEach(() => {
       prisonApi.get('/api/users/me/caseLoads').reply(200, [
