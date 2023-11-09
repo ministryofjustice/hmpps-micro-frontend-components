@@ -10,9 +10,11 @@ function initHeader() {
   const servicesToggle = document.querySelector('.connect-dps-common-header__services-menu-toggle')
   const servicesMenu = document.querySelector('#connect-dps-common-header-services-menu')
 
+  const searchSubmitBtn = searchMenu.querySelector('button[type="submit"]')
+  const submitUrl = searchMenu.querySelector('form').getAttribute('action')
+
   if (searchToggle) {
     hideFallbackLinks()
-
     searchToggle.removeAttribute('hidden')
     searchToggle.setAttribute('aria-expanded', 'false')
     userToggle.removeAttribute('hidden')
@@ -40,6 +42,13 @@ function initHeader() {
         [userToggle, userMenu],
       ])
       toggleMenu(servicesToggle, servicesMenu)
+    })
+
+    searchSubmitBtn.addEventListener('click', function (event) {
+      event.preventDefault()
+      const searchTerms = searchMenu.querySelector('#connect-dps-common-header-prisoner-search').value
+      const parsed = searchTerms.replace(' ', '+')
+      window.location.replace(submitUrl + '?keywords=' + parsed)
     })
   }
 }
