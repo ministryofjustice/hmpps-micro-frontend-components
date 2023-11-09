@@ -48,7 +48,7 @@ function initHeader() {
       event.preventDefault()
       const searchTerms = searchMenu.querySelector('#connect-dps-common-header-prisoner-search').value
       const parsed = searchTerms.replace(' ', '+')
-      window.location.replace(submitUrl + '?keywords=' + parsed)
+      window.location.href = submitUrl + '?keywords=' + parsed
     })
   }
 }
