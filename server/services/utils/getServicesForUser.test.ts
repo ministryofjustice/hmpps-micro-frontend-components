@@ -82,10 +82,10 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Check My Diary', () => {
+  describe('Check my diary', () => {
     it('should return true', () => {
       const output = getServicesForUser([], [], 'LEI', 12345, [])
-      expect(!!output.find(service => service.heading === 'Check My Diary')).toEqual(true)
+      expect(!!output.find(service => service.heading === 'Check my diary')).toEqual(true)
     })
   })
 

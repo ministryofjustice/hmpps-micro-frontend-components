@@ -46,7 +46,7 @@ export default (
     },
     {
       id: 'check-my-diary',
-      heading: 'Check My Diary',
+      heading: 'Check my diary',
       description: 'View your prison staff detail (staff rota) from home.',
       href: config.serviceUrls.checkMyDiary.url,
       enabled: () => true,
