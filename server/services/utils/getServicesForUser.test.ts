@@ -361,7 +361,6 @@ describe('getServicesForUser', () => {
     })
   })
 
-  // TODO
   describe('Allocate people to activities', () => {
     test.each`
       activeCaseLoad | visible
@@ -411,7 +410,6 @@ describe('getServicesForUser', () => {
     })
   })
 
-  // TODO
   describe('View COVID units', () => {
     test.each`
       roles                | caseLoad | visible

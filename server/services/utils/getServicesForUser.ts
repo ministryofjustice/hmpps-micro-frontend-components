@@ -267,7 +267,7 @@ export default (
       id: 'view-unaccounted-for',
       heading: 'View prisoners unaccounted for',
       description: 'View all prisoners not marked as attended or not attended.',
-      href: `${config.serviceUrls.dps}/manage-prisoner-whereabouts/prisoners-unaccounted-for`,
+      href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/prisoners-unaccounted-for`,
       enabled: () =>
         config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
         config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
@@ -276,7 +276,7 @@ export default (
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
-      href: `${config.serviceUrls.dps}/manage-prisoner-whereabouts/scheduled-moves`,
+      href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/scheduled-moves`,
       enabled: () =>
         config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
         config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
@@ -285,7 +285,7 @@ export default (
       id: 'view-covid-units',
       heading: 'View COVID units',
       description: 'View who is in each COVID unit in your establishment.',
-      href: `${config.serviceUrls.dps}/current-covid-units`,
+      href: `${config.serviceUrls.dps.url}/current-covid-units`,
       enabled: () =>
         userHasRoles([Role.PrisonUser], roles) &&
         config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
