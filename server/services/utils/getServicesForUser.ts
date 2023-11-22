@@ -251,26 +251,18 @@ export default (
     },
     {
       id: 'activities',
-      heading: 'Allocate people to activities',
-      description: 'Set up and edit activities. Allocate people, remove them, and edit allocations.',
+      heading: 'Allocate people, unlock and attend',
+      description:
+        'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
       href: config.serviceUrls.activities.url,
       enabled: () => config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'appointments',
       heading: 'Schedule and edit appointments',
-      description: 'Create one-to-one and group appointments. Edit existing appointments and print movement slips.',
+      description: 'Create and manage appointments. Print movement slips.',
       href: config.serviceUrls.appointments.url,
       enabled: () => config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
-    },
-    {
-      id: 'view-unaccounted-for',
-      heading: 'View prisoners unaccounted for',
-      description: 'View all prisoners not marked as attended or not attended.',
-      href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/prisoners-unaccounted-for`,
-      enabled: () =>
-        config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'view-people-due-to-leave',

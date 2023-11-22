@@ -361,14 +361,14 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Allocate people to activities', () => {
+  describe('Allocate people, unlock and attend', () => {
     test.each`
       activeCaseLoad | visible
       ${'LEI'}       | ${true}
       ${'SOM'}       | ${false}
     `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
       const output = getServicesForUser([], [], activeCaseLoad, 12345, [])
-      expect(!!output.find(service => service.heading === 'Allocate people to activities')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Allocate people, unlock and attend')).toEqual(visible)
     })
   })
 
@@ -381,19 +381,6 @@ describe('getServicesForUser', () => {
     `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
       const output = getServicesForUser([], [], activeCaseLoad, 12345, [])
       expect(!!output.find(service => service.heading === 'Schedule and edit appointments')).toEqual(visible)
-    })
-  })
-
-  describe('View prisoners unaccounted for', () => {
-    test.each`
-      activeCaseLoad | visible
-      ${'LEI'}       | ${true}
-      ${'SOM'}       | ${false}
-      ${'LIV'}       | ${false}
-      ${'ELSE'}      | ${false}
-    `('caseload with activities and appointments enabled, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], [], activeCaseLoad, 12345, [])
-      expect(!!output.find(service => service.heading === 'View prisoners unaccounted for')).toEqual(visible)
     })
   })
 
