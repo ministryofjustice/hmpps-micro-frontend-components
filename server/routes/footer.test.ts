@@ -64,7 +64,7 @@ describe('GET /footer', () => {
       .expect('Content-Type', /json/)
       .expect(res => {
         const $ = cheerio.load(JSON.parse(res.text).html)
-        const feedbackLink = $('a[href="https://eu.surveymonkey.com/r/FRZYGVQ"]')
+        const feedbackLink = $('a[href="https://eu.surveymonkey.com/r/HJTL6XS"]')
         expect(feedbackLink.text()).toContain('Feedback')
       })
   })
