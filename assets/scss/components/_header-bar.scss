@@ -38,7 +38,11 @@
     }
 
     .govuk-tag {
-      margin: auto 0
+      margin: auto 0;
+
+      @include govuk-media-query($until: 985px) {
+        display: none;
+      }
     }
   }
 
@@ -94,7 +98,7 @@
 
   &__button-container {
 
-    @include govuk-media-query($from: tablet) {
+    @include govuk-media-query(925px) {
       position: absolute;
       right: 0;
       top: -70px;
