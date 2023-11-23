@@ -2,6 +2,9 @@ import { Role } from './roles'
 import getServicesForUser from './getServicesForUser'
 
 jest.mock('../../config', () => ({
+  app: {
+    covidUnitsEnabled: true,
+  },
   serviceUrls: {
     activities: { url: 'url', enabledPrisons: 'LEI,LIV' },
     appointments: { url: 'url', enabledPrisons: 'LEI,SOM' },
