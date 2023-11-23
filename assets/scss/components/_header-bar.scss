@@ -68,6 +68,10 @@
         right: 15px;
         top: auto;
       }
+
+      svg {
+        fill: govuk-colour('black');
+      }
     }
 
     &:hover {
