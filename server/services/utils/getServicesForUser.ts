@@ -31,7 +31,7 @@ export default (
     {
       id: 'manage-prisoner-whereabouts',
       heading: 'Prisoner whereabouts',
-      description: 'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+      description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts`,
       enabled: () =>
         !config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
@@ -279,6 +279,7 @@ export default (
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.dps.url}/current-covid-units`,
       enabled: () =>
+        config.app.covidUnitsEnabled &&
         userHasRoles([Role.PrisonUser], roles) &&
         config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
         config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
