@@ -19,7 +19,7 @@ generic-service:
     CONTENTFUL_HOST: "https://graphql.contentful.com"
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     CACHE_TIMOUT: 600
-    RELEASED: false
+    RELEASED: true
 
     DPS_URL: https://digital.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps.prison.service.justice.gov.uk
