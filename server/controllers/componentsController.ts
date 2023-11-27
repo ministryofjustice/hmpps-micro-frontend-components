@@ -57,10 +57,7 @@ export default ({
 }: Services): {
   getHeaderViewModel: (user: User, userData?: UserData) => Promise<HeaderViewModel>
   getFooterViewModel: (user: User, userData?: UserData) => Promise<FooterViewModel>
-  getViewModels: (
-    components: AvailableComponent[],
-    user: User,
-  ) => Promise<Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>>>
+  getViewModels: (components: AvailableComponent[], user: User) => Promise<ComponentsData>
 } => ({
   async getHeaderViewModel(user, preAccessedUserData?: UserData): Promise<HeaderViewModel> {
     const { caseLoads, activeCaseLoad, services } = isPrisonUser(user)
@@ -115,14 +112,18 @@ export default ({
       components.map(component => accessMethods[component as AvailableComponent](user, userData)),
     )
 
-    return components.reduce<Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>>>(
+    return components.reduce<ComponentsData>(
       (output, componentName, index) => {
         return {
           ...output,
           [componentName]: viewModels[index],
         }
       },
-      {},
+      { meta: { activeCaseLoad: userData.activeCaseLoad } },
     )
   },
 })
+
+export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
+  meta: { activeCaseLoad: CaseLoad }
+}

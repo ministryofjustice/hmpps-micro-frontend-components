@@ -5,7 +5,11 @@ import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController, { FooterViewModel, HeaderViewModel } from '../controllers/componentsController'
+import componentsController, {
+  ComponentsData,
+  FooterViewModel,
+  HeaderViewModel,
+} from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 
@@ -105,6 +109,7 @@ export default function componentRoutes(services: Services): Router {
         .flat()
         .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
+      if (!componentsRequested.length) return res.send({})
       const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
 
       const renders = await Promise.all(
@@ -117,17 +122,19 @@ export default function componentRoutes(services: Services): Router {
         ),
       )
 
-      const responseBody = componentsRequested.reduce<Partial<Record<AvailableComponent, Component>>>(
+      const responseBody = componentsRequested.reduce<
+        Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
+      >(
         (output, componentName, index) => {
           return {
             ...output,
             [componentName]: renders[index],
           }
         },
-        {},
+        { meta: viewModels.meta },
       )
 
-      res.send(responseBody)
+      return res.send(responseBody)
     }),
   )
 

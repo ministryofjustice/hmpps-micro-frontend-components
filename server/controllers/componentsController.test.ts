@@ -104,6 +104,17 @@ const defaultFooterViewModel = {
   component: 'footer',
   services: defaultUserData.services,
 }
+
+const defaultMeta = {
+  activeCaseLoad: {
+    caseLoadId: 'LEI',
+    caseloadFunction: '',
+    currentlyActive: true,
+    description: 'Leeds',
+    type: '',
+  },
+}
+
 describe('getHeaderViewModel', () => {
   it('should return the HeaderViewModel', async () => {
     const output = await controller.getHeaderViewModel({
@@ -218,6 +229,7 @@ describe('getViewModels', () => {
     expect(output).toEqual({
       header: defaultHeaderViewModel,
       footer: defaultFooterViewModel,
+      meta: defaultMeta,
     })
   })
 
@@ -236,6 +248,7 @@ describe('getViewModels', () => {
     expect(output).toEqual({
       header: defaultHeaderViewModel,
       footer: defaultFooterViewModel,
+      meta: defaultMeta,
     })
   })
 
@@ -289,6 +302,7 @@ describe('getViewModels', () => {
 
     expect(output).toEqual({
       header: defaultHeaderViewModel,
+      meta: defaultMeta,
     })
   })
 
@@ -302,6 +316,7 @@ describe('getViewModels', () => {
 
     expect(output).toEqual({
       footer: defaultFooterViewModel,
+      meta: defaultMeta,
     })
   })
 })
