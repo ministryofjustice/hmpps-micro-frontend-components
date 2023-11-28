@@ -1,3 +1,5 @@
+services_cronjob_schedule: "0 * * * *"
+
 generic-service:
   replicaCount: 4
 
