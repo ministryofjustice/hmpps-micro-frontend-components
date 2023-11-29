@@ -2,7 +2,14 @@ const superagent = require('superagent')
 const redis = require('redis')
 
 const endpoints = [
-  { application: 'adjudications', infoUrl: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info' },
+  {
+    application: 'adjudications',
+    infoUrl: {
+      PRODUCTION: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
+      'PRE-PRODUCTION': 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
+      DEV: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
+    },
+  },
 ]
 
 function getApplicationInfo(url) {
@@ -25,7 +32,9 @@ async function cacheResponses(body) {
 }
 
 const getData = async () => {
-  const responses = await Promise.all(endpoints.map(app => getApplicationInfo(app.infoUrl)))
+  const responses = await Promise.all(
+    endpoints.map(app => getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])),
+  )
   const body = responses.map(response => ({
     app: endpoints.find(app => response.request.url === app.infoUrl).application,
     activeAgencies: response.body.activeAgencies,

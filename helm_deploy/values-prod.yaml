@@ -20,6 +20,7 @@ generic-service:
     PRISON_API_URL: "https://api.prison.service.justice.gov.uk"
     CONTENTFUL_HOST: "https://graphql.contentful.com"
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
+    ENVIRONMENT_NAME: PRODUCTION
     CACHE_TIMOUT: 600
     RELEASED: true
 
