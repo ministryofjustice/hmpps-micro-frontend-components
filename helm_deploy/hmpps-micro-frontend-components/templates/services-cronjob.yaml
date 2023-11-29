@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
             - name: hmpps-micro-frontend-components-services-cronjob
-              image: ghcr.io/ministryofjustice/hmpps-micro-frontend-components
+              image: quay.io/hmpps/hmpps-micro-frontend-components
               args:
                 - npm run getAppsStatus
           restartPolicy: Never
