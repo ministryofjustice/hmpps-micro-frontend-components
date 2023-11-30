@@ -22,7 +22,10 @@ async function cacheResponses(body) {
       url: `rediss://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
       password: process.env.REDIS_AUTH_TOKEN,
     })
-    .on('error', err => console.log(`Redis Error ${err}`))
+    .on('error', err => {
+      console.log(`Redis Error`)
+      throw new Error(err)
+    })
     .connect()
 
   const resp = await client.set('applicationInfo', JSON.stringify(body))
@@ -35,10 +38,20 @@ const getData = async () => {
   const responses = await Promise.all(
     endpoints.map(app => getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])),
   )
-  const body = responses.map(response => ({
-    app: endpoints.find(app => response.request.url === app.infoUrl).application,
-    activeAgencies: response.body.activeAgencies,
-  }))
+
+  const body = responses
+    .map(response => {
+      const applicationName = endpoints.find(
+        app => response.request.url === app.infoUrl[process.env.ENVIRONMENT_NAME],
+      )?.application
+      if (!applicationName) return undefined
+
+      return {
+        app: applicationName,
+        activeAgencies: response.body.activeAgencies,
+      }
+    })
+    .filter(Boolean)
 
   return cacheResponses(body)
 }

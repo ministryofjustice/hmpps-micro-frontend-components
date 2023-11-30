@@ -7,13 +7,15 @@ spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   successfulJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
   jobTemplate:
     spec:
       template:
         spec:
           containers:
             - name: hmpps-micro-frontend-components-services-cronjob
-              image: quay.io/hmpps/hmpps-micro-frontend-components
+              image: "{{ index .Values "generic-service.image.repository" }}:{{ index .Values "generic-service.image.tag" | default .Chart.AppVersion }}"
               args:
-                - npm run getAppsStatus
+                - node ./scripts/getReleaseStatus.js
           restartPolicy: Never
+          activeDeadlineSeconds: 300
