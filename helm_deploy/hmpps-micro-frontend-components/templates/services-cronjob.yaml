@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
             - name: hmpps-micro-frontend-components-services-cronjob
-              image: "{{ .Values.generic-service.image.repository }}:{{ .Values.generic-service.image.tag | default .Chart.AppVersion }}"
+              image: "{{ index .Values "generic-service.image.repository" }}:{{ index .Values "generic-service.image.tag" | default .Chart.AppVersion }}"
               args:
                 - node ./scripts/getReleaseStatus.js
           restartPolicy: Never
