@@ -9,8 +9,6 @@ import CacheService from './cacheService'
 export const services = () => {
   const { hmppsAuthClientBuilder, prisonApiClientBuilder } = dataAccess
 
-  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
-
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
     uri: `${config.contentful.host}/content/v1/spaces/${config.contentful.spaceId}/environments/master`,
@@ -27,6 +25,7 @@ export const services = () => {
 
   const contentfulService = new ContentfulService(apolloClient)
   const cacheService = new CacheService(createRedisClient(), config.redis.cacheTimeout)
+  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder, cacheService)
 
   return {
     userService,

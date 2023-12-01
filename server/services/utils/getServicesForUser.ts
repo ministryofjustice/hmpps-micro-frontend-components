@@ -3,6 +3,21 @@ import config from '../../config'
 import { Role, userHasRoles } from './roles'
 import { Location } from '../../interfaces/location'
 import { Service } from '../../interfaces/Service'
+import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
+
+function isActiveInEstablishment(
+  activeCaseLoadId: string,
+  service: ServiceName,
+  activeServices: ServiceActiveAgencies[] | null,
+): boolean | undefined {
+  if (!activeServices) return undefined // no stored data
+  const applicationAgencyConfig = activeServices.find(as => as.app === service)
+  if (!applicationAgencyConfig) return undefined // no stored data for this service
+
+  return (
+    !applicationAgencyConfig.activeAgencies.length || applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
+  )
+}
 
 export default (
   userRoles: string[],
@@ -10,6 +25,7 @@ export default (
   activeCaseLoadId: string,
   staffId: number,
   locations: Location[],
+  activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
   const roles = [...userRoles, ...staffRoles.map(staffRole => staffRole.role)]
 
@@ -178,7 +194,13 @@ export default (
       heading: 'Adjudications',
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.serviceUrls.manageAdjudications.url,
-      enabled: () => config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => {
+        const activeEstablishment = isActiveInEstablishment(activeCaseLoadId, ServiceName.ADJUDICATION, activeServices)
+        if (activeEstablishment === undefined)
+          return config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId)
+
+        return activeEstablishment
+      },
     },
     {
       id: 'book-a-prison-visit',
