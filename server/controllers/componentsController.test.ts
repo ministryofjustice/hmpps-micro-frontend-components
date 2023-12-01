@@ -113,6 +113,23 @@ const defaultMeta = {
     description: 'Leeds',
     type: '',
   },
+  caseLoads: [
+    {
+      caseLoadId: 'LEI',
+      caseloadFunction: '',
+      currentlyActive: true,
+      description: 'Leeds',
+      type: '',
+    },
+  ],
+  services: [
+    {
+      description: '',
+      heading: 'Service',
+      href: '/href',
+      id: 'service',
+    },
+  ],
 }
 
 describe('getHeaderViewModel', () => {

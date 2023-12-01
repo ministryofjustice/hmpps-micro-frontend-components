@@ -119,11 +119,11 @@ export default ({
           [componentName]: viewModels[index],
         }
       },
-      { meta: { activeCaseLoad: userData.activeCaseLoad } },
+      { meta: userData },
     )
   },
 })
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
-  meta: { activeCaseLoad: CaseLoad }
+  meta: UserData
 }
