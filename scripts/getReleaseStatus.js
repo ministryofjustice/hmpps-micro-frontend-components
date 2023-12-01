@@ -35,8 +35,13 @@ async function cacheResponses(body) {
 }
 
 const getData = async () => {
+  console.log(process.env.REDIS_HOST)
+  console.log(process.env.REDIS_PORT)
   const responses = await Promise.all(
-    endpoints.map(app => getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])),
+    endpoints.map(app => {
+      console.log(app.infoUrl[process.env.ENVIRONMENT_NAME])
+      return getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])
+    }),
   )
 
   const body = responses
