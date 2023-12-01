@@ -22,12 +22,12 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: elasticache-redis
-                    key: REDIS_HOST
+                    key: primary_endpoint_address
               - name: REDIS_AUTH_TOKEN
                 valueFrom:
                   secretKeyRef:
                     name: elasticache-redis
-                    key: REDIS_AUTH_TOKEN
+                    key: auth_token
               command: ["npm", "run", "getAppsStatus"]
           restartPolicy: Never
           activeDeadlineSeconds: 300
