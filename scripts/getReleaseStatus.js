@@ -31,10 +31,14 @@ async function cacheResponses(body) {
   const resp = await client.set('applicationInfo', JSON.stringify(body))
   await client.disconnect()
 
+  console.log(`Successfully cached application info`, body)
   return resp
 }
 
 const getData = async () => {
+  console.log(process.env.ENVIRONMENT_NAME)
+  console.log(process.env.REDIS_HOST)
+  console.log(process.env.REDIS_PORT)
   const responses = await Promise.all(
     endpoints.map(app => getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])),
   )
