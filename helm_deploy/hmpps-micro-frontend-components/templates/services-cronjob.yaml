@@ -15,6 +15,19 @@ spec:
           containers:
             - name: hmpps-micro-frontend-components-services-cronjob
               image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
+              env:
+              - name: ENVIRONMENT_NAME
+                value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
+              - name: REDIS_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: REDIS_HOST
+              - name: REDIS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: REDIS_AUTH_TOKEN
               command: ["npm", "run", "getAppsStatus"]
           restartPolicy: Never
           activeDeadlineSeconds: 300
