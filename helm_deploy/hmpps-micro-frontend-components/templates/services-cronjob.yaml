@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hmpps-micro-frontend-components-services
+spec:
+  schedule: "{{ .Values.services_cronjob_schedule }}"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hmpps-micro-frontend-components-services-cronjob
+              image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
+              command: ["npm", "run", "getAppsStatus"]
+          restartPolicy: Never
+          activeDeadlineSeconds: 300
