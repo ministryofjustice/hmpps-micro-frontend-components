@@ -26,7 +26,7 @@
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
     "clean": "rm -rf dist build node_modules stylesheets",
-    "getAppsStatus": "node ./scripts/getReleaseStatus.js"
+    "getAppsStatus": "ENVIRONMENT_NAME=DEV node ./scripts/getReleaseStatus.js"
   },
   "engines": {
     "node": "^18",

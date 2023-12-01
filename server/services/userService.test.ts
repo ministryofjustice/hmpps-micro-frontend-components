@@ -6,11 +6,17 @@ import PrisonApiClient from '../data/prisonApiClient'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import authUserMock from '../../tests/mocks/AuthUserMock'
 import TokenMock, { rolesForMockToken } from '../../tests/mocks/TokenMock'
+import CacheService from './cacheService'
 
 jest.mock('../data/hmppsAuthClient')
 
 const token = TokenMock
 const defaultTokenData = getTokenDataMock()
+
+const cacheServiceMock = {
+  getData: jest.fn(),
+  setData: jest.fn(),
+} as undefined as jest.Mocked<CacheService>
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -32,6 +38,7 @@ describe('User service', () => {
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
+        cacheServiceMock,
       )
     })
 
@@ -78,6 +85,7 @@ describe('User service', () => {
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
+        cacheServiceMock,
       )
     })
 

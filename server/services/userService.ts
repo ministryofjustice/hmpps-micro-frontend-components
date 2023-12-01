@@ -8,6 +8,8 @@ import { AuthUser, isApiUser, TokenData, User } from '../@types/Users'
 import { UserData } from '../interfaces/UserData'
 import getServicesForUser from './utils/getServicesForUser'
 import { isPrisonUser } from '../controllers/componentsController'
+import CacheService from './cacheService'
+import { ServiceActiveAgencies } from '../@types/activeAgencies'
 
 interface UserDetails {
   name: string
@@ -24,6 +26,7 @@ export default class UserService {
   constructor(
     private readonly hmppsAuthClientBuilder: RestClientBuilder<HmppsAuthClient>,
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
+    private readonly cacheService: CacheService,
   ) {}
 
   async getUser(token: string, tokenData?: TokenData): Promise<AuthUser | UserDetails> {
@@ -67,7 +70,17 @@ export default class UserService {
 
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
       const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
-      const services = getServicesForUser(roles, staffRoles, activeCaseLoad?.caseLoadId ?? null, staffId, locations)
+
+      const activeServices = await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
+
+      const services = getServicesForUser(
+        roles,
+        staffRoles,
+        activeCaseLoad?.caseLoadId ?? null,
+        staffId,
+        locations,
+        activeServices,
+      )
 
       this.errorCount = 0
       return { caseLoads, activeCaseLoad, services }
