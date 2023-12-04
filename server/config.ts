@@ -183,4 +183,9 @@ export default {
       url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
+  features: {
+    servicesStore: {
+      enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
+    },
+  },
 }

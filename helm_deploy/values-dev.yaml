@@ -59,6 +59,7 @@ generic-service:
     MANAGE_ADJUDICATIONS_ENABLED: "MDI,LEI"
     WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
     COVID_UNITS_ENABLED: false
+    FEATURE_SERVICES_STORE_ENABLED: true
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod
