@@ -10,6 +10,7 @@ import getServicesForUser from './utils/getServicesForUser'
 import { isPrisonUser } from '../controllers/componentsController'
 import CacheService from './cacheService'
 import { ServiceActiveAgencies } from '../@types/activeAgencies'
+import config from '../config'
 
 interface UserDetails {
   name: string
@@ -71,7 +72,9 @@ export default class UserService {
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
       const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
 
-      const activeServices = await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
+      const activeServices = config.features.servicesStore.enabled
+        ? await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
+        : null
 
       const services = getServicesForUser(
         roles,
