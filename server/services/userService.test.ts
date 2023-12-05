@@ -141,7 +141,8 @@ describe('User service', () => {
     })
 
     it(`Sets circuit breaker if api fails ${API_ERROR_LIMIT} times`, async () => {
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+      jest.useFakeTimers()
+      prisonApiClient.getUserCaseLoads = jest.fn(() => {
         throw new Error('API FAIL')
       })
       await Promise.all(
@@ -165,6 +166,8 @@ describe('User service', () => {
       })
       expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
       expect(caseLoads).toEqual([])
+
+      jest.runAllTimers()
     })
 
     it(`Unsets circuit breaker after ${API_COOL_OFF_MINUTES} minutes`, async () => {
