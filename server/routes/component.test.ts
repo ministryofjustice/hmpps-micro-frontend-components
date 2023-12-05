@@ -33,6 +33,7 @@ let prisonApi: nock.Scope
 beforeEach(() => {
   prisonApi = nock(config.apis.prisonApi.url)
   prisonApi.get('/api/users/me/caseLoads').reply(200, [])
+  prisonApi.get('/api/users/me/locations').reply(200, [])
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
 
