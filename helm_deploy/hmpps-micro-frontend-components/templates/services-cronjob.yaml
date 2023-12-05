@@ -16,8 +16,10 @@ spec:
             - name: hmpps-micro-frontend-components-services-cronjob
               image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
               env:
-              - name: ENVIRONMENT_NAME
-                value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
+              - name: ACTIVITIES_URL
+                value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
+              - name: APPOINTMENTS_URL
+                value: "{{ index .Values "generic-service" "env" "APPOINTMENTS_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:

@@ -10,6 +10,8 @@ const endpoints = [
       DEV: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
     },
   },
+  { application: 'activities', urlEnv: 'ACTIVITIES_URL' },
+  { application: 'appointments', urlEnv: 'APPOINTMENTS_URL' },
 ]
 
 function getApplicationInfo(url) {
@@ -37,7 +39,9 @@ async function cacheResponses(body) {
 
 const getData = async () => {
   const responses = await Promise.all(
-    endpoints.map(app => getApplicationInfo(app.infoUrl[process.env.ENVIRONMENT_NAME])),
+    endpoints.map(app =>
+      getApplicationInfo(app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT_NAME]),
+    ),
   )
 
   const body = responses
