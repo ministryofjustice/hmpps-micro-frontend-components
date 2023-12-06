@@ -1,10 +1,10 @@
 const nock = require('nock')
-const getData = require('./getReleaseStatus')
+const { getData } = require('./getReleaseStatus')
 const { mockRedisClientMock } = require('redis')
 jest.mock('redis', () => {
   const mockRedisClientMock = {
     set: jest.fn().mockResolvedValue('OK'),
-    disconnect: jest.fn().mockResolvedValue(),
+    disconnect: jest.fn().mockResolvedValue('OK'),
   }
 
   const createClientMock = jest.fn().mockReturnValue({

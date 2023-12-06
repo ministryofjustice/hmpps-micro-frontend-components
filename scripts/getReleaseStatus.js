@@ -57,5 +57,4 @@ const getData = async () => {
   return cacheResponses(body)
 }
 
-getData()
-module.exports = getData
+module.exports = { getData }
