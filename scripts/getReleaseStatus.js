@@ -58,3 +58,4 @@ const getData = async () => {
 }
 
 getData()
+module.exports = getData
