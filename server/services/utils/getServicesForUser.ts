@@ -133,7 +133,7 @@ export default (
     },
     {
       id: 'pom',
-      heading: 'View POM cases',
+      heading: 'POM cases',
       description: 'Keep track of your allocations. If you allocate cases, you also can do that here.',
       href: config.serviceUrls.moic.url,
       enabled: () => userHasRoles([Role.AllocationsManager, Role.AllocationsCaseManager], roles),
