@@ -178,7 +178,7 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('View POM cases', () => {
+  describe('POM cases', () => {
     test.each`
       roles                                                     | visible
       ${[Role.AllocationsCaseManager]}                          | ${true}
@@ -187,7 +187,7 @@ describe('getServicesForUser', () => {
       ${[]}                                                     | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, [], 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'View POM cases')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'POM cases')).toEqual(visible)
     })
   })
 
