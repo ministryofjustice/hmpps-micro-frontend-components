@@ -5,6 +5,8 @@ import { Location } from '../../interfaces/location'
 import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 
+const ALL_PRISONS_STRING = '***'
+
 function isActiveInEstablishment(
   activeCaseLoadId: string,
   service: ServiceName,
@@ -15,7 +17,9 @@ function isActiveInEstablishment(
   if (!applicationAgencyConfig) return undefined // no stored data for this service
 
   return (
-    !applicationAgencyConfig.activeAgencies.length || applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
+    !applicationAgencyConfig.activeAgencies.length ||
+    applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
+    applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
   )
 }
 
