@@ -104,7 +104,7 @@ export default ({
     const cachedResponse = await cacheService.getData<UserData>(`${username}_meta_data`)
 
     const userData = cachedResponse ?? (await userService.getUserData(user))
-    if (!cachedResponse && userData.caseLoads.length <= 1) {
+    if (!cachedResponse && userData.caseLoads.length === 1) {
       await cacheService.setData(`${username}_meta_data`, JSON.stringify(userData))
     }
 
