@@ -17,7 +17,6 @@ function isActiveInEstablishment(
   if (!applicationAgencyConfig) return undefined // no stored data for this service
 
   return (
-    !applicationAgencyConfig.activeAgencies.length ||
     applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
     applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
   )

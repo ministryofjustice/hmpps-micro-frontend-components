@@ -265,7 +265,7 @@ describe('getServicesForUser', () => {
       ${'In cache and env var'}                       | ${'LEI'}            | ${true}  | ${[{ app: 'adjudications' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
       ${'Not in cache, in env var'}                   | ${'LEI'}            | ${false} | ${[{ app: 'adjudications' as ServiceName, activeAgencies: ['ANOTHER'] }]}
       ${'In cache, not env var'}                      | ${'NOT_IN_ENV_VAR'} | ${true}  | ${[{ app: 'adjudications' as ServiceName, activeAgencies: ['NOT_IN_ENV_VAR'] }]}
-      ${'Empty array cache'}                          | ${'ANYTHING'}       | ${true}  | ${[{ app: 'adjudications' as ServiceName, activeAgencies: [] }]}
+      ${'Empty array cache'}                          | ${'LEI'}            | ${false} | ${[{ app: 'adjudications' as ServiceName, activeAgencies: [] }]}
       ${'all prsions cache'}                          | ${'ANYTHING'}       | ${true}  | ${[{ app: 'adjudications' as ServiceName, activeAgencies: ['***'] }]}
       ${'Not in cache, not in env var'}               | ${'NOT_IN_ENV_VAR'} | ${false} | ${[{ app: 'adjudications' as ServiceName, activeAgencies: ['LEI'] }]}
       ${'No application data cached, in env var'}     | ${'LEI'}            | ${true}  | ${[]}
