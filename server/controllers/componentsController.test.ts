@@ -5,6 +5,7 @@ import config from '../config'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import CacheService from '../services/cacheService'
 import { UserData } from '../interfaces/UserData'
+import { CaseLoad } from '../interfaces/caseLoad'
 
 const defaultUserData: UserData = {
   caseLoads: [
@@ -269,7 +270,7 @@ describe('getViewModels', () => {
     })
   })
 
-  it('should set cache if caseloads count <= 1', async () => {
+  it('should set cache if caseloads count === 1', async () => {
     const userServiceResponse = {
       ...defaultUserData,
       caseLoads: [
@@ -296,6 +297,24 @@ describe('getViewModels', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
         { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
       ],
+    }
+    userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
+
+    await controller.getViewModels(['header', 'footer'], {
+      ...defaultTokenData,
+      authSource: 'nomis',
+      token: 'token',
+      roles: [],
+    })
+
+    expect(cacheServiceMock.setData).toBeCalledTimes(0)
+  })
+
+  it('should not set cache if caseloads count < 1', async () => {
+    const userServiceResponse = {
+      caseLoads: [] as CaseLoad[],
+      activeCaseLoad: null as CaseLoad,
+      services: [] as UserData['services'],
     }
     userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
 
