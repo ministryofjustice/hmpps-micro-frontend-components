@@ -1,4 +1,3 @@
-import { StaffRole } from '../../@types/StaffRole'
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
 import { Location } from '../../interfaces/location'
@@ -23,15 +22,13 @@ function isActiveInEstablishment(
 }
 
 export default (
-  userRoles: string[],
-  staffRoles: StaffRole[],
+  roles: string[],
+  isKeywoker: boolean,
   activeCaseLoadId: string,
   staffId: number,
   locations: Location[],
   activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
-  const roles = [...userRoles, ...staffRoles.map(staffRole => staffRole.role)]
-
   return [
     {
       id: 'global-search',
@@ -45,7 +42,7 @@ export default (
       heading: 'My key worker allocation',
       description: 'View your key worker cases.',
       href: `${config.serviceUrls.omic.url}/key-worker/${staffId}`,
-      enabled: () => userHasRoles(['KW'], roles),
+      enabled: () => isKeywoker,
     },
     {
       id: 'manage-prisoner-whereabouts',

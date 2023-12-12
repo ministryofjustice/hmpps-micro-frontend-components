@@ -80,7 +80,7 @@ describe('User service', () => {
       expectedCaseLoads = [{ caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' }]
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
       prisonApiClient.getUserLocations = jest.fn(async () => [])
-      prisonApiClient.getStaffRoles = jest.fn(async () => [{ role: 'KW' }])
+      prisonApiClient.getIsKeyworker = jest.fn(async () => true)
 
       userService = new UserService(
         () => hmppsAuthClient,

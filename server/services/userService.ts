@@ -70,7 +70,7 @@ export default class UserService {
       ])
 
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
-      const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
+      const isKeyworker = await prisonApiClient.getIsKeyworker(activeCaseLoad.caseLoadId, staffId)
 
       const activeServices = config.features.servicesStore.enabled
         ? await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
@@ -78,7 +78,7 @@ export default class UserService {
 
       const services = getServicesForUser(
         roles,
-        staffRoles,
+        isKeyworker,
         activeCaseLoad?.caseLoadId ?? null,
         staffId,
         locations,

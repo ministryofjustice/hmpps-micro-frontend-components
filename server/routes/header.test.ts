@@ -56,7 +56,7 @@ describe('GET /header', () => {
           currentlyActive: true,
         },
       ])
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 
@@ -103,7 +103,7 @@ describe('GET /header', () => {
 
   describe('case load switcher', () => {
     beforeEach(() => {
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 
@@ -227,7 +227,7 @@ describe('GET /header', () => {
 
         // second set of calls will be made as no caching 2 active caseloads, add more nock responses
         prisonApi.get('/api/users/me/locations').reply(200, [])
-        prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+        prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
 
         // make first call with 2 active caseloads
         await request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/)
@@ -257,7 +257,7 @@ describe('GET /header', () => {
           currentlyActive: true,
         },
       ])
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
     })
     it('should not display search by default', () => {
@@ -304,7 +304,7 @@ describe('GET /header', () => {
           currentlyActive: true,
         },
       ])
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 
