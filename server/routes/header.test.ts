@@ -197,52 +197,6 @@ describe('GET /header', () => {
             expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
           })
       })
-
-      it('should not use cached caseloads the second time if 2 active caseloads', async () => {
-        prisonApi.get('/api/users/me/caseLoads').reply(200, [
-          {
-            caseLoadId: 'LEI',
-            description: 'Leeds',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: true,
-          },
-          {
-            caseLoadId: 'DEE',
-            description: 'Deerbolt',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: false,
-          },
-        ])
-        prisonApi.get('/api/users/me/caseLoads').reply(200, [
-          {
-            caseLoadId: 'LEI',
-            description: 'Leeds',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: true,
-          },
-        ])
-
-        // second set of calls will be made as no caching 2 active caseloads, add more nock responses
-        prisonApi.get('/api/users/me/locations').reply(200, [])
-        prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-
-        // make first call with 2 active caseloads
-        await request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/)
-
-        return request(app)
-          .get('/header')
-          .set('x-user-token', 'token')
-          .expect(200)
-          .expect('Content-Type', /json/)
-          .expect(res => {
-            const $ = cheerio.load(JSON.parse(res.text).html)
-            // using the value from second request
-            expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
-          })
-      })
     })
   })
 

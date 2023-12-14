@@ -23,7 +23,7 @@ export default class CacheService {
     }
   }
 
-  public async getData<T>(key: string): Promise<T> {
+  public async getData<T>(key: string): Promise<T | null> {
     try {
       await this.ensureConnected()
       const redisData = await this.redisClient.get(key)
