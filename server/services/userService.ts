@@ -48,7 +48,9 @@ export default class UserService {
     }
   }
 
-  async getUserData(user: User): Promise<UserData> {
+  async getUserData(user: User, cachedData?: UserData): Promise<UserData> {
+    if (cachedData?.caseLoads.length === 1) return cachedData
+
     const apiUser = isApiUser(user)
     const { token, roles } = user
     const staffId = apiUser ? Number(user.user_id) : user.staffId
@@ -64,13 +66,16 @@ export default class UserService {
       if (!prisonUser || this.errorCount >= API_ERROR_LIMIT) return defaultResponse
 
       const prisonApiClient = this.prisonApiClientBuilder(token)
-      const [caseLoads, locations] = await Promise.all([
-        prisonApiClient.getUserCaseLoads(),
-        prisonApiClient.getUserLocations(),
-      ])
-
+      const caseLoads = await prisonApiClient.getUserCaseLoads()
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
-      const isKeyworker = await prisonApiClient.getIsKeyworker(activeCaseLoad.caseLoadId, staffId)
+
+      // return cached data if active caseload has not changed
+      if (cachedData?.activeCaseLoad.caseLoadId === activeCaseLoad.caseLoadId) return cachedData
+
+      const [locations, isKeyworker] = await Promise.all([
+        prisonApiClient.getUserLocations(),
+        prisonApiClient.getIsKeyworker(activeCaseLoad.caseLoadId, staffId),
+      ])
 
       const activeServices = config.features.servicesStore.enabled
         ? await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
