@@ -22,8 +22,8 @@ generic-service:
     DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk
-    ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk/activities
-    APPOINTMENTS_URL: https://activities-preprod.prison.service.justice.gov.uk/appointments
+    ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk
+    APPOINTMENTS_URL: https://activities-preprod.prison.service.justice.gov.uk
     CHECK_MY_DIARY_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk?fromDPS=true
     INCENTIVES_URL: https://incentives-ui-preprod.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://preprod.use-of-force.service.justice.gov.uk

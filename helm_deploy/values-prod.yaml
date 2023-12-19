@@ -27,8 +27,8 @@ generic-service:
     DPS_URL: https://digital.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps.prison.service.justice.gov.uk
     OMIC_URL: https://manage-key-workers.service.justice.gov.uk
-    ACTIVITIES_URL: https://activities.prison.service.justice.gov.uk/activities
-    APPOINTMENTS_URL: https://activities.prison.service.justice.gov.uk/appointments
+    ACTIVITIES_URL: https://activities.prison.service.justice.gov.uk
+    APPOINTMENTS_URL: https://activities.prison.service.justice.gov.uk
     CHECK_MY_DIARY_URL: https://checkmydiary.service.justice.gov.uk?fromDPS=true
     INCENTIVES_URL: https://incentives-ui.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://use-of-force.service.justice.gov.uk
