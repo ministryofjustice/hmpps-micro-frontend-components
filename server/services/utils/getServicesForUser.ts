@@ -10,10 +10,11 @@ function isActiveInEstablishment(
   activeCaseLoadId: string,
   service: ServiceName,
   activeServices: ServiceActiveAgencies[] | null,
+  fallback: boolean,
 ): boolean | undefined {
-  if (!activeServices) return undefined // no stored data
-  const applicationAgencyConfig = activeServices.find(as => as.app === service)
-  if (!applicationAgencyConfig) return undefined // no stored data for this service
+  if (!activeServices) return fallback // no stored data
+  const applicationAgencyConfig = activeServices.find(activeService => activeService.app === service)
+  if (!applicationAgencyConfig) return fallback // no stored data for this service
 
   return (
     applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
@@ -29,6 +30,13 @@ export default (
   locations: Location[],
   activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
+  const isActivitiesEnabled = isActiveInEstablishment(
+    activeCaseLoadId,
+    ServiceName.ACTIVITIES,
+    activeServices,
+    config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
+  )
+
   return [
     {
       id: 'global-search',
@@ -49,9 +57,7 @@ export default (
       heading: 'Prisoner whereabouts',
       description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts`,
-      enabled: () =>
-        !config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        !config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => !isActivitiesEnabled,
     },
     {
       id: 'change-someones-cell',
@@ -194,13 +200,13 @@ export default (
       heading: 'Adjudications',
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.serviceUrls.manageAdjudications.url,
-      enabled: () => {
-        const activeEstablishment = isActiveInEstablishment(activeCaseLoadId, ServiceName.ADJUDICATION, activeServices)
-        if (activeEstablishment === undefined)
-          return config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId)
-
-        return activeEstablishment
-      },
+      enabled: () =>
+        isActiveInEstablishment(
+          activeCaseLoadId,
+          ServiceName.ADJUDICATION,
+          activeServices,
+          config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId),
+        ),
     },
     {
       id: 'book-a-prison-visit',
@@ -277,34 +283,28 @@ export default (
       description:
         'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
       href: `${config.serviceUrls.activities.url}/activities`,
-      enabled: () => config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'appointments',
       heading: 'Schedule and edit appointments',
       description: 'Create and manage appointments. Print movement slips.',
       href: `${config.serviceUrls.appointments.url}/appointments`,
-      enabled: () => config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/scheduled-moves`,
-      enabled: () =>
-        config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'view-covid-units',
       heading: 'View COVID units',
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.dps.url}/current-covid-units`,
-      enabled: () =>
-        config.app.covidUnitsEnabled &&
-        userHasRoles([Role.PrisonUser], roles) &&
-        config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => config.app.covidUnitsEnabled && userHasRoles([Role.PrisonUser], roles) && isActivitiesEnabled,
     },
     {
       id: 'historical-prisoner-application',
