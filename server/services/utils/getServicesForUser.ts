@@ -276,14 +276,14 @@ export default (
       heading: 'Allocate people, unlock and attend',
       description:
         'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
-      href: config.serviceUrls.activities.url,
+      href: `${config.serviceUrls.activities.url}/activities`,
       enabled: () => config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'appointments',
       heading: 'Schedule and edit appointments',
       description: 'Create and manage appointments. Print movement slips.',
-      href: config.serviceUrls.appointments.url,
+      href: `${config.serviceUrls.appointments.url}/appointments`,
       enabled: () => config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
