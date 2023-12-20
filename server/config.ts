@@ -49,7 +49,7 @@ export default {
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
   app: {
-    covidUnitsEnabled: process.env.COVID_UNITS_ENABLED === 'true' || false,
+    covidUnitsEnabled: process.env.COVID_UNITS_ENABLED === 'true',
   },
   apis: {
     hmppsAuth: {

@@ -64,13 +64,13 @@ describe('getServicesForUser', () => {
 
   describe('Prisoner whereabouts', () => {
     test.each`
-      activeCaseLoad | visible
-      ${'LEI'}       | ${false}
-      ${'SOM'}       | ${false}
-      ${'LIV'}       | ${false}
-      ${'ELSE'}      | ${true}
-    `('caseload without activities and appointments enabled, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], null)
+      desc                                      | activeCaseLoad | visible  | activeServices
+      ${'In cache, Activities not enabled'}     | ${'ELSE'}      | ${true}  | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
+      ${'In cache, Activities enabled'}         | ${'LEI'}       | ${false} | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
+      ${'Not in cache, activities enabled'}     | ${'LEI'}       | ${false} | ${null}
+      ${'Not in cache, activities not enabled'} | ${'ELSE'}      | ${true}  | ${null}
+    `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Prisoner whereabouts')).toEqual(visible)
     })
   })
@@ -375,36 +375,43 @@ describe('getServicesForUser', () => {
 
   describe('Allocate people, unlock and attend', () => {
     test.each`
-      activeCaseLoad | visible
-      ${'LEI'}       | ${true}
-      ${'SOM'}       | ${false}
-    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], null)
+      desc                                            | activeCaseLoad      | visible  | activeServices
+      ${'In cache and env var'}                       | ${'LEI'}            | ${true}  | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${'In cache, not env var'}                      | ${'CACHE'}          | ${true}  | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${'Not in cache, env var not enabled'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
+      ${'Not in cache, env var enabled'}              | ${'LEI'}            | ${true}  | ${null}
+      ${'No application data cached, in env var'}     | ${'LEI'}            | ${true}  | ${[]}
+      ${'No application data cached, not in env var'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
+    `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Allocate people, unlock and attend')).toEqual(visible)
     })
   })
 
   describe('Schedule and edit appointments', () => {
     test.each`
-      activeCaseLoad | visible
-      ${'LEI'}       | ${true}
-      ${'SOM'}       | ${true}
-      ${'ELSE'}      | ${false}
-    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], null)
+      desc                                                         | activeCaseLoad      | visible  | activeServices
+      ${'In cache, not env var (activities)'}                      | ${'CACHE'}          | ${true}  | ${[{ app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${'Not in cache, env var not enabled (activities)'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
+      ${'Not in cache, env var enabled (activities)'}              | ${'LEI'}            | ${true}  | ${null}
+      ${'No application data cached, in env var (activities)'}     | ${'LEI'}            | ${true}  | ${[]}
+      ${'No application data cached, not in env var (activities)'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
+    `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Schedule and edit appointments')).toEqual(visible)
     })
   })
 
   describe('People due to leave', () => {
     test.each`
-      activeCaseLoad | visible
-      ${'LEI'}       | ${true}
-      ${'SOM'}       | ${false}
-      ${'LIV'}       | ${false}
-      ${'ELSE'}      | ${false}
-    `('caseload with activities and appointments enabled, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], null)
+      desc                                                         | activeCaseLoad      | visible  | activeServices
+      ${'In cache, not env var (activities)'}                      | ${'CACHE'}          | ${true}  | ${[{ app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${'Not in cache, env var not enabled (activities)'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
+      ${'Not in cache, env var enabled (activities)'}              | ${'LEI'}            | ${true}  | ${null}
+      ${'No application data cached, in env var (activities)'}     | ${'LEI'}            | ${true}  | ${[]}
+      ${'No application data cached, not in env var (activities)'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
+    `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'People due to leave')).toEqual(visible)
     })
   })
@@ -414,7 +421,7 @@ describe('getServicesForUser', () => {
       roles                | caseLoad | visible
       ${[Role.PrisonUser]} | ${'LEI'} | ${true}
       ${[]}                | ${'LEI'} | ${false}
-      ${[Role.PrisonUser]} | ${'LIV'} | ${false}
+      ${[Role.PrisonUser]} | ${'LIV'} | ${true}
     `('user with roles and caseload: $roles, can see: $visible', ({ roles, caseLoad, visible }) => {
       const output = getServicesForUser(roles, false, caseLoad, 12345, [], null)
       expect(!!output.find(service => service.heading === 'View COVID units')).toEqual(visible)
