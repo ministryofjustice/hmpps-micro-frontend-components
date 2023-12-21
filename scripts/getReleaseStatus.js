@@ -22,6 +22,14 @@ function getRedisClient() {
     .createClient({
       url: `rediss://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
       password: process.env.REDIS_AUTH_TOKEN,
+      socket: {
+        reconnectStrategy: attempts => {
+          // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
+          const nextDelay = Math.min(2 ** attempts * 20, 30000)
+          console.log(`Retry Redis connection attempt: ${attempts}, next attempt in: ${nextDelay}ms`)
+          return nextDelay
+        },
+      },
     })
     .on('error', err => {
       console.log(`Redis Error`)
@@ -30,25 +38,22 @@ function getRedisClient() {
     .connect()
 }
 
-async function cacheResponses(body) {
-  const client = await getRedisClient()
-  const resp = await client.set('applicationInfo', JSON.stringify(body))
-  await client.disconnect()
+async function cacheResponses(body, redisClient) {
+  const resp = await redisClient.set('applicationInfo', JSON.stringify(body))
 
   console.log(`Successfully cached application info`, body)
   return resp
 }
 
-async function getStoredData() {
-  const client = await getRedisClient()
-  const responseString = await client.get('applicationInfo')
-  await client.disconnect()
-
+async function getStoredData(redisClient) {
+  const responseString = await redisClient.get('applicationInfo')
+  console.log(`Previous stored application info: ${responseString}`)
   return JSON.parse(responseString)
 }
 
 const getData = async () => {
-  const storedData = await getStoredData()
+  const redisClient = await getRedisClient()
+  const storedData = await getStoredData(redisClient)
 
   const responses = await Promise.allSettled(
     endpoints.map(app =>
@@ -76,6 +81,8 @@ const getData = async () => {
     })
     .filter(Boolean)
 
+  console.log(`Retrieved application info: ${JSON.stringify(newData)}`)
+
   // use new data if we have it for app, use stored data if we don't have it.
   // append any new apps not in stored data
   // if we have no stored data use new data for all
@@ -89,7 +96,8 @@ const getData = async () => {
         .concat(newData.filter(newApp => !storedData.find(stored => stored.app === newApp.app)))
     : newData
 
-  return cacheResponses(body)
+  await cacheResponses(body, redisClient)
+  process.exit()
 }
 
 module.exports = { getData }
