@@ -49,7 +49,7 @@ generic-service:
     HISTORICAL_PRISONER_APPLICATION_URL: https://hpa-stage.hmpps.dsd.io
     GET_SOMEONE_READY_FOR_WORK_URL: https://get-ready-for-work-dev.hmpps.service.justice.gov.uk
     MANAGE_OFFENCES_URL: https://manage-offences-dev.hmpps.service.justice.gov.uk
-    LEARNING_AND_WORK_PROGRESS_URL: https://ciag-induction-dev.hmpps.service.justice.gov.uk
+    LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
 
     # Feature
