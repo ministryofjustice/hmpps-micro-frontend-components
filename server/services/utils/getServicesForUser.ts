@@ -1,17 +1,41 @@
-import { StaffRole } from '../../@types/StaffRole'
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
 import { Location } from '../../interfaces/location'
 import { Service } from '../../interfaces/Service'
+import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
+
+const ALL_PRISONS_STRING = '***'
+
+function isActiveInEstablishment(
+  activeCaseLoadId: string,
+  service: ServiceName,
+  activeServices: ServiceActiveAgencies[] | null,
+  fallback: boolean,
+): boolean | undefined {
+  if (!activeServices) return fallback // no stored data
+  const applicationAgencyConfig = activeServices.find(activeService => activeService.app === service)
+  if (!applicationAgencyConfig) return fallback // no stored data for this service
+
+  return (
+    applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
+    applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
+  )
+}
 
 export default (
-  userRoles: string[],
-  staffRoles: StaffRole[],
+  roles: string[],
+  isKeywoker: boolean,
   activeCaseLoadId: string,
   staffId: number,
   locations: Location[],
+  activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
-  const roles = [...userRoles, ...staffRoles.map(staffRole => staffRole.role)]
+  const isActivitiesEnabled = isActiveInEstablishment(
+    activeCaseLoadId,
+    ServiceName.ACTIVITIES,
+    activeServices,
+    config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
+  )
 
   return [
     {
@@ -26,16 +50,14 @@ export default (
       heading: 'My key worker allocation',
       description: 'View your key worker cases.',
       href: `${config.serviceUrls.omic.url}/key-worker/${staffId}`,
-      enabled: () => userHasRoles(['KW'], roles),
+      enabled: () => isKeywoker,
     },
     {
       id: 'manage-prisoner-whereabouts',
       heading: 'Prisoner whereabouts',
       description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts`,
-      enabled: () =>
-        !config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        !config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => !isActivitiesEnabled,
     },
     {
       id: 'change-someones-cell',
@@ -117,7 +139,7 @@ export default (
     },
     {
       id: 'pom',
-      heading: 'View POM cases',
+      heading: 'POM cases',
       description: 'Keep track of your allocations. If you allocate cases, you also can do that here.',
       href: config.serviceUrls.moic.url,
       enabled: () => userHasRoles([Role.AllocationsManager, Role.AllocationsCaseManager], roles),
@@ -178,7 +200,13 @@ export default (
       heading: 'Adjudications',
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.serviceUrls.manageAdjudications.url,
-      enabled: () => config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () =>
+        isActiveInEstablishment(
+          activeCaseLoadId,
+          ServiceName.ADJUDICATION,
+          activeServices,
+          config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId),
+        ),
     },
     {
       id: 'book-a-prison-visit',
@@ -254,35 +282,29 @@ export default (
       heading: 'Allocate people, unlock and attend',
       description:
         'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
-      href: config.serviceUrls.activities.url,
-      enabled: () => config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
+      href: `${config.serviceUrls.activities.url}/activities`,
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'appointments',
       heading: 'Schedule and edit appointments',
       description: 'Create and manage appointments. Print movement slips.',
-      href: config.serviceUrls.appointments.url,
-      enabled: () => config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      href: `${config.serviceUrls.appointments.url}/appointments`,
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/scheduled-moves`,
-      enabled: () =>
-        config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => isActivitiesEnabled,
     },
     {
       id: 'view-covid-units',
       heading: 'View COVID units',
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.dps.url}/current-covid-units`,
-      enabled: () =>
-        config.app.covidUnitsEnabled &&
-        userHasRoles([Role.PrisonUser], roles) &&
-        config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId) &&
-        config.serviceUrls.appointments.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabled: () => config.app.covidUnitsEnabled && userHasRoles([Role.PrisonUser], roles) && isActivitiesEnabled,
     },
     {
       id: 'historical-prisoner-application',

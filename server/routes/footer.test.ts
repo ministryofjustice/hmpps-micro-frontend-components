@@ -140,7 +140,7 @@ describe('GET /footer', () => {
           currentlyActive: true,
         },
       ])
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, [{ role: 'KW' }])
+      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 

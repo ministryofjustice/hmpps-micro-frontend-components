@@ -5,6 +5,8 @@ import config from '../config'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import CacheService from '../services/cacheService'
 import { UserData } from '../interfaces/UserData'
+import { CaseLoad } from '../interfaces/caseLoad'
+import { TokenData } from '../@types/Users'
 
 const defaultUserData: UserData = {
   caseLoads: [
@@ -49,6 +51,12 @@ const controller = componentsController({
   cacheService: cacheServiceMock,
 })
 const defaultTokenData = getTokenDataMock()
+const defaultUser = {
+  ...defaultTokenData,
+  authSource: 'nomis' as TokenData['auth_source'],
+  roles: [] as string[],
+  token: 'token',
+}
 
 afterEach(() => {
   jest.clearAllMocks()
@@ -113,16 +121,28 @@ const defaultMeta = {
     description: 'Leeds',
     type: '',
   },
+  caseLoads: [
+    {
+      caseLoadId: 'LEI',
+      caseloadFunction: '',
+      currentlyActive: true,
+      description: 'Leeds',
+      type: '',
+    },
+  ],
+  services: [
+    {
+      description: '',
+      heading: 'Service',
+      href: '/href',
+      id: 'service',
+    },
+  ],
 }
 
 describe('getHeaderViewModel', () => {
   it('should return the HeaderViewModel', async () => {
-    const output = await controller.getHeaderViewModel({
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    const output = await controller.getHeaderViewModel(defaultUser)
     expect(output).toEqual(defaultHeaderViewModel)
     expect(userServiceMock.getUserData).toBeCalledTimes(1)
   })
@@ -151,15 +171,7 @@ describe('getHeaderViewModel', () => {
   describe('user data is passed in', () => {
     it('should use the data passed in and not call userService', async () => {
       config.contentfulFooterLinksEnabled = false
-      const output = await controller.getHeaderViewModel(
-        {
-          ...defaultTokenData,
-          authSource: 'nomis',
-          token: 'token',
-          roles: [],
-        },
-        defaultUserData,
-      )
+      const output = await controller.getHeaderViewModel(defaultUser, defaultUserData)
       expect(output).toEqual(defaultHeaderViewModel)
       expect(userServiceMock.getUserData).toBeCalledTimes(0)
     })
@@ -218,12 +230,7 @@ describe('getFooterViewModel', () => {
 
 describe('getViewModels', () => {
   it('should get user data if nothing in cache', async () => {
-    const output = await controller.getViewModels(['header', 'footer'], {
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    const output = await controller.getViewModels(['header', 'footer'], defaultUser)
 
     expect(userServiceMock.getUserData).toBeCalledTimes(1)
     expect(output).toEqual({
@@ -233,18 +240,14 @@ describe('getViewModels', () => {
     })
   })
 
-  it('should use cache data if available', async () => {
+  it('should pass cache data to service', async () => {
     cacheServiceMock.getData.mockResolvedValueOnce(defaultUserData)
 
-    const output = await controller.getViewModels(['header', 'footer'], {
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    const output = await controller.getViewModels(['header', 'footer'], defaultUser)
 
     expect(cacheServiceMock.setData).toBeCalledTimes(0)
-    expect(userServiceMock.getUserData).toBeCalledTimes(0)
+    expect(userServiceMock.getUserData).toBeCalledTimes(1)
+    expect(userServiceMock.getUserData).toBeCalledWith(defaultUser, defaultUserData)
     expect(output).toEqual({
       header: defaultHeaderViewModel,
       footer: defaultFooterViewModel,
@@ -252,7 +255,7 @@ describe('getViewModels', () => {
     })
   })
 
-  it('should set cache if caseloads count <= 1', async () => {
+  it('should set cache if caseloads count === 1', async () => {
     const userServiceResponse = {
       ...defaultUserData,
       caseLoads: [
@@ -261,35 +264,48 @@ describe('getViewModels', () => {
     }
     userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
 
-    await controller.getViewModels(['header', 'footer'], {
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    await controller.getViewModels(['header', 'footer'], defaultUser)
 
     expect(cacheServiceMock.setData).toBeCalledTimes(1)
     expect(cacheServiceMock.setData).toBeCalledWith('TOKEN_USER_meta_data', JSON.stringify(userServiceResponse))
   })
 
-  it('should not set cache if caseloads count > 1', async () => {
+  it('should not set cache if caseloads count < 1', async () => {
     const userServiceResponse = {
-      ...defaultUserData,
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-        { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
-      ],
+      caseLoads: [] as CaseLoad[],
+      activeCaseLoad: null as CaseLoad,
+      services: [] as UserData['services'],
     }
     userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
 
-    await controller.getViewModels(['header', 'footer'], {
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    await controller.getViewModels(['header', 'footer'], defaultUser)
 
     expect(cacheServiceMock.setData).toBeCalledTimes(0)
+  })
+
+  it('should not set cache if cache already set', async () => {
+    cacheServiceMock.getData.mockResolvedValueOnce(defaultUserData)
+
+    const userServiceResponse = defaultUserData
+    userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
+
+    await controller.getViewModels(['header', 'footer'], defaultUser)
+
+    expect(cacheServiceMock.setData).toBeCalledTimes(0)
+  })
+
+  it('should set cache if active caseload has changed', async () => {
+    cacheServiceMock.getData.mockResolvedValueOnce(defaultUserData)
+
+    const userServiceResponse = {
+      ...defaultUserData,
+      activeCaseLoad: { ...defaultUserData.activeCaseLoad, caseLoadId: 'SOMETHING_ELSE' },
+    }
+    userServiceMock.getUserData.mockResolvedValueOnce(userServiceResponse)
+
+    await controller.getViewModels(['header', 'footer'], defaultUser)
+
+    expect(cacheServiceMock.setData).toBeCalledTimes(1)
   })
 
   it('should work for single components, header', async () => {
@@ -307,12 +323,7 @@ describe('getViewModels', () => {
   })
 
   it('should work for single components, footer', async () => {
-    const output = await controller.getViewModels(['footer'], {
-      ...defaultTokenData,
-      authSource: 'nomis',
-      token: 'token',
-      roles: [],
-    })
+    const output = await controller.getViewModels(['footer'], defaultUser)
 
     expect(output).toEqual({
       footer: defaultFooterViewModel,

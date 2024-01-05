@@ -8,6 +8,9 @@ import { AuthUser, isApiUser, TokenData, User } from '../@types/Users'
 import { UserData } from '../interfaces/UserData'
 import getServicesForUser from './utils/getServicesForUser'
 import { isPrisonUser } from '../controllers/componentsController'
+import CacheService from './cacheService'
+import { ServiceActiveAgencies } from '../@types/activeAgencies'
+import config from '../config'
 
 interface UserDetails {
   name: string
@@ -24,6 +27,7 @@ export default class UserService {
   constructor(
     private readonly hmppsAuthClientBuilder: RestClientBuilder<HmppsAuthClient>,
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
+    private readonly cacheService: CacheService,
   ) {}
 
   async getUser(token: string, tokenData?: TokenData): Promise<AuthUser | UserDetails> {
@@ -44,7 +48,9 @@ export default class UserService {
     }
   }
 
-  async getUserData(user: User): Promise<UserData> {
+  async getUserData(user: User, cachedData?: UserData): Promise<UserData> {
+    if (cachedData?.caseLoads.length === 1) return cachedData
+
     const apiUser = isApiUser(user)
     const { token, roles } = user
     const staffId = apiUser ? Number(user.user_id) : user.staffId
@@ -60,14 +66,29 @@ export default class UserService {
       if (!prisonUser || this.errorCount >= API_ERROR_LIMIT) return defaultResponse
 
       const prisonApiClient = this.prisonApiClientBuilder(token)
-      const [caseLoads, locations] = await Promise.all([
-        prisonApiClient.getUserCaseLoads(),
+      const caseLoads = await prisonApiClient.getUserCaseLoads()
+      const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
+
+      // return cached data if active caseload has not changed
+      if (cachedData?.activeCaseLoad.caseLoadId === activeCaseLoad.caseLoadId) return cachedData
+
+      const [locations, isKeyworker] = await Promise.all([
         prisonApiClient.getUserLocations(),
+        prisonApiClient.getIsKeyworker(activeCaseLoad.caseLoadId, staffId),
       ])
 
-      const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
-      const staffRoles = await prisonApiClient.getStaffRoles(activeCaseLoad.caseLoadId, staffId)
-      const services = getServicesForUser(roles, staffRoles, activeCaseLoad?.caseLoadId ?? null, staffId, locations)
+      const activeServices = config.features.servicesStore.enabled
+        ? await this.cacheService.getData<ServiceActiveAgencies[]>('applicationInfo')
+        : null
+
+      const services = getServicesForUser(
+        roles,
+        isKeyworker,
+        activeCaseLoad?.caseLoadId ?? null,
+        staffId,
+        locations,
+        activeServices,
+      )
 
       this.errorCount = 0
       return { caseLoads, activeCaseLoad, services }

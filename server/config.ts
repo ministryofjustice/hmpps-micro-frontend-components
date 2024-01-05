@@ -49,7 +49,7 @@ export default {
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
   app: {
-    covidUnitsEnabled: process.env.COVID_UNITS_ENABLED === 'true' || false,
+    covidUnitsEnabled: process.env.COVID_UNITS_ENABLED === 'true',
   },
   apis: {
     hmppsAuth: {
@@ -181,6 +181,11 @@ export default {
     },
     prepareSomeoneForRelease: {
       url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
+    },
+  },
+  features: {
+    servicesStore: {
+      enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
   },
 }

@@ -6,11 +6,19 @@ import PrisonApiClient from '../data/prisonApiClient'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import authUserMock from '../../tests/mocks/AuthUserMock'
 import TokenMock, { rolesForMockToken } from '../../tests/mocks/TokenMock'
+import CacheService from './cacheService'
+import { User } from '../@types/Users'
+import { UserData } from '../interfaces/UserData'
 
 jest.mock('../data/hmppsAuthClient')
 
 const token = TokenMock
 const defaultTokenData = getTokenDataMock()
+
+const cacheServiceMock = {
+  getData: jest.fn(),
+  setData: jest.fn(),
+} as undefined as jest.Mocked<CacheService>
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -32,6 +40,7 @@ describe('User service', () => {
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
+        cacheServiceMock,
       )
     })
 
@@ -73,121 +82,183 @@ describe('User service', () => {
       expectedCaseLoads = [{ caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' }]
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
       prisonApiClient.getUserLocations = jest.fn(async () => [])
-      prisonApiClient.getStaffRoles = jest.fn(async () => [{ role: 'KW' }])
+      prisonApiClient.getIsKeyworker = jest.fn(async () => true)
 
       userService = new UserService(
         () => hmppsAuthClient,
         () => prisonApiClient,
+        cacheServiceMock,
       )
     })
 
-    it('Returns case loads', async () => {
-      const { caseLoads } = await userService.getUserData({
+    describe('with no cached data', () => {
+      it('Returns case loads', async () => {
+        const { caseLoads } = await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: rolesForMockToken,
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(caseLoads).toEqual(expectedCaseLoads)
+      })
+
+      it('Returns active caseload id', async () => {
+        const { activeCaseLoad } = await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: rolesForMockToken,
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(activeCaseLoad).toEqual(expectedCaseLoads[0])
+      })
+
+      it('Returns services', async () => {
+        const { services } = await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: ['GLOBAL_SEARCH'],
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(services.find(service => service.heading === 'Global search')).toBeTruthy()
+      })
+
+      it('Returns empty list if api fails', async () => {
+        prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+          throw new Error('API FAIL')
+        })
+        const { caseLoads } = await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: rolesForMockToken,
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(caseLoads).toEqual([])
+      })
+
+      it(`Sets circuit breaker if api fails ${API_ERROR_LIMIT} times`, async () => {
+        jest.useFakeTimers()
+        prisonApiClient.getUserCaseLoads = jest.fn(() => {
+          throw new Error('API FAIL')
+        })
+        await Promise.all(
+          [...Array(API_ERROR_LIMIT)].map(() =>
+            userService.getUserData({
+              ...defaultTokenData,
+              authSource: 'nomis',
+              token: TokenMock,
+              user_id: '12345',
+              roles: rolesForMockToken,
+            }),
+          ),
+        )
+
+        const { caseLoads } = await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: rolesForMockToken,
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
+        expect(caseLoads).toEqual([])
+
+        jest.runAllTimers()
+      })
+
+      it(`Unsets circuit breaker after ${API_COOL_OFF_MINUTES} minutes`, async () => {
+        jest.useFakeTimers()
+        prisonApiClient.getUserCaseLoads = jest.fn(async () => {
+          throw new Error('API FAIL')
+        })
+        await Promise.all(
+          [...Array(API_ERROR_LIMIT)].map(() =>
+            userService.getUserData({
+              ...defaultTokenData,
+              authSource: 'nomis',
+              token: TokenMock,
+              user_id: '12345',
+              roles: rolesForMockToken,
+            }),
+          ),
+        )
+
+        jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
+
+        await userService.getUserData({
+          ...defaultTokenData,
+          authSource: 'nomis',
+          token: TokenMock,
+          user_id: '12345',
+          roles: rolesForMockToken,
+        })
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
+
+        jest.useRealTimers()
+      })
+    })
+
+    describe('with cached data', () => {
+      const defaultUser: User = {
         ...defaultTokenData,
         authSource: 'nomis',
         token: TokenMock,
         user_id: '12345',
         roles: rolesForMockToken,
+      }
+      it('returns cached data if number of caseloads is 1', async () => {
+        const cachedData: UserData = {
+          caseLoads: [{ caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' }],
+          activeCaseLoad: { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
+          services: [],
+        }
+        const output = await userService.getUserData(defaultUser, cachedData)
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(0)
+        expect(prisonApiClient.getUserLocations).toBeCalledTimes(0)
+        expect(prisonApiClient.getIsKeyworker).toBeCalledTimes(0)
+        expect(output).toEqual(cachedData)
       })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(caseLoads).toEqual(expectedCaseLoads)
-    })
 
-    it('Returns active caseload id', async () => {
-      const { activeCaseLoad } = await userService.getUserData({
-        ...defaultTokenData,
-        authSource: 'nomis',
-        token: TokenMock,
-        user_id: '12345',
-        roles: rolesForMockToken,
+      it('returns cached data if number of active caseload is unchanged', async () => {
+        const cachedData: UserData = {
+          caseLoads: [
+            expectedCaseLoads[0],
+            { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
+          ],
+          activeCaseLoad: expectedCaseLoads[0],
+          services: [],
+        }
+        const output = await userService.getUserData(defaultUser, cachedData)
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(prisonApiClient.getUserLocations).toBeCalledTimes(0)
+        expect(prisonApiClient.getIsKeyworker).toBeCalledTimes(0)
+        expect(output).toEqual(cachedData)
       })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(activeCaseLoad).toEqual(expectedCaseLoads[0])
-    })
 
-    it('Returns services', async () => {
-      const { services } = await userService.getUserData({
-        ...defaultTokenData,
-        authSource: 'nomis',
-        token: TokenMock,
-        user_id: '12345',
-        roles: ['GLOBAL_SEARCH'],
+      it('gets new data if active caseload has changed', async () => {
+        const cachedData: UserData = {
+          caseLoads: [
+            expectedCaseLoads[0],
+            { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
+          ],
+          activeCaseLoad: { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
+          services: [],
+        }
+        const output = await userService.getUserData(defaultUser, cachedData)
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(prisonApiClient.getUserLocations).toBeCalledTimes(1)
+        expect(prisonApiClient.getIsKeyworker).toBeCalledTimes(1)
+        expect(output.caseLoads).toEqual(expectedCaseLoads)
+        expect(output.activeCaseLoad).toEqual(expectedCaseLoads[0])
+        expect(output.services.find(service => service.heading === 'Global search')).toBeTruthy()
       })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(services.find(service => service.heading === 'Global search')).toBeTruthy()
-    })
-
-    it('Returns empty list if api fails', async () => {
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
-        throw new Error('API FAIL')
-      })
-      const { caseLoads } = await userService.getUserData({
-        ...defaultTokenData,
-        authSource: 'nomis',
-        token: TokenMock,
-        user_id: '12345',
-        roles: rolesForMockToken,
-      })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
-      expect(caseLoads).toEqual([])
-    })
-
-    it(`Sets circuit breaker if api fails ${API_ERROR_LIMIT} times`, async () => {
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
-        throw new Error('API FAIL')
-      })
-      await Promise.all(
-        [...Array(API_ERROR_LIMIT)].map(() =>
-          userService.getUserData({
-            ...defaultTokenData,
-            authSource: 'nomis',
-            token: TokenMock,
-            user_id: '12345',
-            roles: rolesForMockToken,
-          }),
-        ),
-      )
-
-      const { caseLoads } = await userService.getUserData({
-        ...defaultTokenData,
-        authSource: 'nomis',
-        token: TokenMock,
-        user_id: '12345',
-        roles: rolesForMockToken,
-      })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT)
-      expect(caseLoads).toEqual([])
-    })
-
-    it(`Unsets circuit breaker after ${API_COOL_OFF_MINUTES} minutes`, async () => {
-      jest.useFakeTimers()
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => {
-        throw new Error('API FAIL')
-      })
-      await Promise.all(
-        [...Array(API_ERROR_LIMIT)].map(() =>
-          userService.getUserData({
-            ...defaultTokenData,
-            authSource: 'nomis',
-            token: TokenMock,
-            user_id: '12345',
-            roles: rolesForMockToken,
-          }),
-        ),
-      )
-
-      jest.advanceTimersByTime(API_COOL_OFF_MINUTES * 60000)
-
-      await userService.getUserData({
-        ...defaultTokenData,
-        authSource: 'nomis',
-        token: TokenMock,
-        user_id: '12345',
-        roles: rolesForMockToken,
-      })
-      expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
-
-      jest.useRealTimers()
     })
   })
 })

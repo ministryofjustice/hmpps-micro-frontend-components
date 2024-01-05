@@ -1,6 +1,5 @@
 import RestClient from './restClient'
 import { CaseLoad } from '../interfaces/caseLoad'
-import { StaffRole } from '../@types/StaffRole'
 import { Location } from '../interfaces/location'
 
 export default class PrisonApiClient {
@@ -14,8 +13,8 @@ export default class PrisonApiClient {
     return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads' })
   }
 
-  async getStaffRoles(activeCaseloadId: string, staffId: number): Promise<StaffRole[]> {
-    return this.get<StaffRole[]>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles` })
+  async getIsKeyworker(activeCaseloadId: string, staffId: number): Promise<boolean> {
+    return this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
   }
 
   async getUserLocations(): Promise<Location[]> {

@@ -102,9 +102,12 @@ export default ({
     const username = apiUser ? user.user_name : user.username
 
     const cachedResponse = await cacheService.getData<UserData>(`${username}_meta_data`)
+    const userData = await userService.getUserData(user, cachedResponse)
 
-    const userData = cachedResponse ?? (await userService.getUserData(user))
-    if (!cachedResponse && userData.caseLoads.length <= 1) {
+    if (
+      userData.caseLoads.length > 0 &&
+      (!cachedResponse || cachedResponse.activeCaseLoad.caseLoadId !== userData.activeCaseLoad.caseLoadId)
+    ) {
       await cacheService.setData(`${username}_meta_data`, JSON.stringify(userData))
     }
 
@@ -119,11 +122,11 @@ export default ({
           [componentName]: viewModels[index],
         }
       },
-      { meta: { activeCaseLoad: userData.activeCaseLoad } },
+      { meta: userData },
     )
   },
 })
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
-  meta: { activeCaseLoad: CaseLoad }
+  meta: UserData
 }
