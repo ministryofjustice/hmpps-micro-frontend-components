@@ -7,9 +7,9 @@ services:
       - hmpps_int
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    ports:    
+    ports:
       - '6379:6379'
-  
+
   wiremock:
     image: wiremock/wiremock
     networks:
