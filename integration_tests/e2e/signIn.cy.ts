@@ -2,13 +2,12 @@ import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
-import ChangeCaseloadPage from '../pages/changeCaseload'
 
-context.skip('SignIn', () => {
+context('Sign In', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
-    cy.task('stubAuthUser')
+    cy.task('stubManageUser')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -27,7 +26,13 @@ context.skip('SignIn', () => {
     indexPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
-  it('User can log out', () => {
+  it('Phase banner visible in header', () => {
+    cy.signIn()
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.headerPhaseBanner().should('contain.text', 'dev')
+  })
+
+  it('User can sign out', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()
@@ -36,34 +41,12 @@ context.skip('SignIn', () => {
 
   it('User can manage their details', () => {
     cy.signIn()
+    cy.task('stubAuthManageDetails')
     const indexPage = Page.verifyOnPage(IndexPage)
 
     indexPage.manageDetails().get('a').invoke('removeAttr', 'target')
     indexPage.manageDetails().click()
     Page.verifyOnPage(AuthManageDetailsPage)
-  })
-
-  it('User with one caseload does not see change caseload link', () => {
-    cy.setupUserAuth()
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
-    indexPage.changeCaseload().should('not.exist')
-  })
-
-  it('User with multiple caseloads can change their caseload', () => {
-    cy.setupUserAuth({
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-        { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
-      ],
-    })
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
-    indexPage.changeCaseload().should('be.visible')
-    indexPage.changeCaseload().click()
-    Page.verifyOnPage(ChangeCaseloadPage)
   })
 
   it('Token verification failure takes user to sign in page', () => {
@@ -84,7 +67,7 @@ context.skip('SignIn', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubAuthUser', 'bobby brown')
+    cy.task('stubManageUser', 'bobby brown')
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')
