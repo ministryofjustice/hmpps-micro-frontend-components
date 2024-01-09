@@ -15,7 +15,7 @@ parameters:
 
   node-version:
     type: string
-    default: 18.15-browsers
+    default: 20.10-browsers
 
 jobs:
   build:
@@ -50,7 +50,38 @@ jobs:
             - node_modules
             - build
             - dist
-            - .cache/Cypress
+            - assets/stylesheets
+
+  build-int-test:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@9.8.1'
+      - restore_cache:
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm --prefix ./integration_tests/parent_app ci --no-audit
+      - save_cache:
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
+          paths:
+            - ./integration_tests/parent_app/node_modules
+            - ~/.cache
+      - run:
+          command: |
+            npm --prefix ./integration_tests/parent_app run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./integration_tests/parent_app/node_modules
+            - ./integration_tests/parent_app/build
+            - ./integration_tests/parent_app/dist
+            - ./integration_tests/parent_app/assets/stylesheets
+            - .cache
 
   unit_test:
     executor:
@@ -71,9 +102,8 @@ jobs:
 
   integration_test:
     executor:
-      name: hmpps/node_redis
-      node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "7.0"
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
       - attach_workspace:
@@ -82,30 +112,30 @@ jobs:
           name: Install missing OS dependency
           command: sudo apt-get install libxss1
       - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
       - run:
           name: Get wiremock
-          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.3.1/wiremock-standalone-3.3.1.jar
       - run:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091
           background: true
       - run:
           name: Run the node app.
-          command: npm run start-feature
+          command: npm --prefix integration_tests/parent_app run start-feature
           background: true
       - run:
           name: Wait for node app to start
           command: sleep 5
       - run:
           name: integration tests
-          command: npm run int-test
+          command: npm --prefix integration_tests/parent_app run int-test
       - store_test_results:
           path: test_results
       - store_artifacts:
-          path: integration-tests/videos
+          path: integration_tests/videos
       - store_artifacts:
-          path: integration-tests/screenshots
+          path: integration_tests/screenshots
 
 workflows:
   version: 2
@@ -115,12 +145,16 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+      - build-int-test:
+          filters:
+            tags:
+              ignore: /.*/
       - unit_test:
           requires:
             - build
       - integration_test:
           requires:
-            - build
+            - build-int-test
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
