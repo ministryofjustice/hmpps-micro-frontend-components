@@ -26,7 +26,7 @@ jobs:
       - checkout
       - run:
           name: Update npm
-          command: 'sudo npm install -g npm@9.8.1'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -60,27 +60,27 @@ jobs:
       - checkout
       - run:
           name: Update npm
-          command: 'sudo npm install -g npm@9.8.1'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
-          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm --prefix ./integration_tests/parent_app ci --no-audit
+          command: npm --prefix ./integration_tests ci --no-audit
       - save_cache:
-          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
           paths:
-            - ./integration_tests/parent_app/node_modules
+            - ./integration_tests/node_modules
             - ~/.cache
       - run:
           command: |
-            npm --prefix ./integration_tests/parent_app run build
+            npm --prefix ./integration_tests run build
       - persist_to_workspace:
           root: .
           paths:
-            - ./integration_tests/parent_app/node_modules
-            - ./integration_tests/parent_app/build
-            - ./integration_tests/parent_app/dist
-            - ./integration_tests/parent_app/assets/stylesheets
+            - ./integration_tests/node_modules
+            - ./integration_tests/build
+            - ./integration_tests/dist
+            - ./integration_tests/assets/stylesheets
             - .cache
 
   unit_test:
@@ -112,7 +112,7 @@ jobs:
           name: Install missing OS dependency
           command: sudo apt-get install libxss1
       - restore_cache:
-          key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
+          key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
       - run:
           name: Get wiremock
           command: curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.3.1/wiremock-standalone-3.3.1.jar
@@ -122,14 +122,14 @@ jobs:
           background: true
       - run:
           name: Run the node app.
-          command: npm --prefix integration_tests/parent_app run start-feature
+          command: npm --prefix integration_tests run start-feature
           background: true
       - run:
           name: Wait for node app to start
           command: sleep 5
       - run:
           name: integration tests
-          command: npm --prefix integration_tests/parent_app run int-test
+          command: npm --prefix integration_tests run int-test
       - store_test_results:
           path: test_results
       - store_artifacts:
