@@ -65,7 +65,7 @@ jobs:
           key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm --prefix ./integration_tests/parent_app i --no-audit
+          command: npm --prefix ./integration_tests/parent_app ci --no-audit
       - save_cache:
           key: dependency-int-test-cache-{{ checksum "./integration_tests/parent_app/package-lock.json" }}
           paths:
