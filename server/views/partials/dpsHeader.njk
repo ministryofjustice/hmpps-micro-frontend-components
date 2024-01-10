@@ -104,8 +104,8 @@
                     </span>
                 </button>
                 <ul id="connect-dps-common-header-user-menu" class="govuk-list connect-dps-common-header__user-menu" hidden="hidden">
-                  <li><a class="govuk-link govuk-link--no-visited-state" href="{{ manageDetailsLink }}">Your account</a></li>
-                  <li><a class="govuk-link govuk-link--no-visited-state" href="/sign-out">Sign out</a></li>
+                  <li><a class="connect-dps-common-header__submenu-link" href="{{ manageDetailsLink }}">Your account</a></li>
+                  <li><a class="connect-dps-common-header__submenu-link" href="/sign-out">Sign out</a></li>
                 </ul>
 
                 <div class="connect-dps-common-header__icon-link-wrapper connect-dps-common-header__user-menu-link">
@@ -203,7 +203,7 @@
                 </h3>
                 <ul class='govuk-list'>
                   {% for service in services %}
-                    <li><a href='{{ service.href }}' class='govuk-link govuk-link--no-visited-state'>{{ service.heading }}</a></li>
+                    <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
                   {% endfor %}
                 </ul>
               </div>

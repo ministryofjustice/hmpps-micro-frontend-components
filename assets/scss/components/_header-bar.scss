@@ -46,6 +46,11 @@
     }
   }
 
+  &__submenu-link {
+    @include govuk-link-common;
+    @include govuk-link-style-no-visited-state;
+  }
+
   &__link {
     @include govuk-link-common;
     @include govuk-link-style-default;
