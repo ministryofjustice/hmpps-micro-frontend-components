@@ -1,6 +1,15 @@
 version: '3.1'
 services:
 
+  redis:
+    image: 'redis:7.0'
+    networks:
+      - hmpps_int
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:    
+      - '6379:6379'
+  
   wiremock:
     image: wiremock/wiremock
     networks:
@@ -9,6 +18,82 @@ services:
     restart: always
     ports:
       - "9091:8080"
+
+  app:
+    build: .
+    networks:
+      - hmpps_int
+    depends_on:
+      - redis
+      - wiremock
+    container_name: components
+    ports:
+      - "3009:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=test
+      - API_CLIENT_ID=components_client
+      - API_CLIENT_SECRET=components_client_secret
+      - REDIS_HOST=redis
+      - SYSTEM_CLIENT_ID=components_system
+      - SYSTEM_CLIENT_SECRET=components_system_secret
+      - HMPPS_AUTH_URL=http://localhost:9091/auth
+      - PRISON_API_URL=http://wiremock:8080/prison
+      - TOKEN_VERIFICATION_API_URL=http://localhost:9091/verification
+      - PRISONER_SEARCH_API_URL=http://external/prisoner-search
+      - DIGITAL_PRISON_SERVICE_URL=http://external/digital-prison-services
+      - ALLOCATION_MANAGER_ENDPOINT_URL=http://external/allocation
+      - KEYWORKER_API_URL=http://external/keyworker
+      - WHEREABOUTS_API_URL=https://external/whereabouts
+      - CASE_NOTES_API_URL=https://external/case-notes
+      - INCENTIVES_API_URL=https://external/incentives
+      - CURIOUS_API_URL=https://external/curious
+      - PATHFINDER_API_URL=https://external/pathfinder
+      - MANAGE_SOC_CASES_API_URL=https://external/manage-soc-cases
+      - TOKEN_VERIFICATION_ENABLED=true
+      - FEEDBACK_ENABLED_PRISONS=LEI
+      - SYSTEM_PHASE=DEV
+      - INGRESS_URL=http://localhost:3009
+      - ENVIRONMENT_NAME=DEV
+      - CACHE_TIMOUT=60
+      - RELEASED=true
+      - DPS_URL=https://external/dps
+      - NEW_DPS_URL=https://external/new-dps
+      - OMIC_URL=https://external/omic
+      - ACTIVITIES_URL=https://external/activities
+      - APPOINTMENTS_URL=https://external/appointments
+      - CHECK_MY_DIARY_URL=https://external/check-my-diary
+      - INCENTIVES_URL=https://external/incentives
+      - USE_OF_FORCE_URL=https://external/use-of-force
+      - PATHFINDER_URL=https://external/pathfinder
+      - LICENCES_URL=https://external/licences
+      - MOIC_URL=https://external/moic
+      - MANAGE_AUTH_ACCOUNTS_URL=https://external/manage-auth-accounts
+      - CATEGORISATION_URL=https://external/categorisation
+      - PECS_URL=https://external/pecs
+      - SOC_URL=https://external/soc
+      - PIN_PHONES_URL=https://external/pin-phones
+      - MANAGE_ADJUDICATIONS_URL=https://external/manage-adjudications
+      - MANAGE_PRISON_VISITS_URL=https://external/manage-prison-visits
+      - LEGACY_PRISON_VISITS_URL=https://external/legacy-prison-visits
+      - SECURE_SOCIAL_VIDEO_CALLS_URL=https://external/secure-social-video-calls
+      - SEND_LEGAL_MAIL_URL=https://external/send-legal-mail
+      - WELCOME_PEOPLE_INTO_PRISON_URL=https://external/welcome-people-into-prison
+      - MERCURY_SUBMIT_URL=https://external/mercury-submit
+      - MANAGE_RESTRICTED_PATIENTS_URL=https://external/manage-restricted-patients
+      - CREATE_AND_VARY_A_LICENCE_URL=https://external/create-and-vary-a-licence
+      - HISTORICAL_PRISONER_APPLICATION_URL=https://external/historical-prisoner-applications
+      - GET_SOMEONE_READY_FOR_WORK_URL=https://external/get-someone-ready-for-work
+      - MANAGE_OFFENCES_URL=https://external/manage-offences
+      - LEARNING_AND_WORK_PROGRESS_URL=https://external/learning-and-work-progress
+      - PREPARE_SOMEONE_FOR_RELEASE_URL=https://external/prepare-someone-for-release
+
+      - ACTIVITIES_ENABLED_PRISONS="LEI,RSI"
+      - APPOINTMENTS_ENABLED_PRISONS="LEI,RSI"
+      - USE_OF_FORCE_PRISONS="FWI,MDI,WRI"
+      - MANAGE_ADJUDICATIONS_ENABLED="MDI,LEI"
+      - WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS="BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
+      - COVID_UNITS_ENABLED=false
 
 networks:
   hmpps_int:

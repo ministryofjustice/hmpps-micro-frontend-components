@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import jwksRsa from 'jwks-rsa'
 import { expressjwt, GetVerificationKey } from 'express-jwt'
+import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
@@ -31,7 +32,13 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  router.use(requestIsAuthenticated())
+  router.use((req, res, next) => {
+    if (process.env.NODE_ENV === 'test') {
+      req.auth = jwt.decode(req.headers['x-user-token'] as string)
+      return next()
+    }
+    return requestIsAuthenticated()(req, res, next)
+  })
 
   async function getHeaderResponseBody(
     res: Response,
