@@ -14,7 +14,15 @@ export default class PrisonApiClient {
   }
 
   async getIsKeyworker(activeCaseloadId: string, staffId: number): Promise<boolean> {
-    return this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
+    try {
+      return this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
+    } catch (error) {
+      if (error.status === 403) {
+        // can happen for CADM (central admin) users
+        return false
+      }
+      throw error
+    }
   }
 
   async getUserLocations(): Promise<Location[]> {
