@@ -29,6 +29,7 @@ jest.mock('../../config', () => ({
     sendLegalMail: { url: 'url' },
     welcomePeopleIntoPrison: { url: 'url', enabledPrisons: 'LEI,LIV' },
     mercurySubmit: { url: 'url' },
+    manageIntelligence: { url: 'url' },
     manageRestrictedPatients: { url: 'url' },
     createAndVaryALicence: { url: 'url' },
     historicalPrisonerApplication: { url: 'url' },
@@ -339,6 +340,18 @@ describe('getServicesForUser', () => {
     it('should return true', () => {
       const output = getServicesForUser([], false, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Submit an Intelligence Report')).toEqual(true)
+    })
+  })
+
+  describe('Submit an IMS Report', () => {
+    test.each`
+      roles                            | visible
+      ${[Role.ManageIntelligenceUser]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Intelligence Management Service')).toEqual(visible)
+      expect(!!output.find(service => service.description === 'Manage and view intelligence reports')).toEqual(visible)
     })
   })
 

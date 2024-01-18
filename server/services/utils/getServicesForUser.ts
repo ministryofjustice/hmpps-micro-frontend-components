@@ -253,6 +253,13 @@ export default (
       enabled: () => true,
     },
     {
+      id: 'intelligence-management-service',
+      heading: 'Intelligence Management Service',
+      description: 'Manage and view intelligence reports',
+      href: config.serviceUrls.manageIntelligence.url,
+      enabled: () => config.serviceUrls.manageIntelligence.url && userHasRoles([Role.ManageIntelligenceUser], roles),
+    },
+    {
       id: 'manage-restricted-patients',
       heading: 'Manage restricted patients',
       description:
