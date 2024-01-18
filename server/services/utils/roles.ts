@@ -70,6 +70,7 @@ export enum Role {
   ResettlementPassportEdit = 'RESETTLEMENT_PASSPORT_EDIT',
   OmicAdmin = 'OMIC_ADMIN',
   KeyworkerMonitor = 'KEYWORKER_MONITOR',
+  ManageIntelligenceUser = 'IMS_USER',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))

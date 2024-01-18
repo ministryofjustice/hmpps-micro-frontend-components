@@ -247,10 +247,17 @@ export default (
     },
     {
       id: 'submit-an-intelligence-report',
+      heading: 'Submit an Intelligence Report',
+      description: 'Access to the new Mercury submission form',
+      href: config.serviceUrls.mercurySubmit.url,
+      enabled: () => true,
+    },
+    {
+      id: 'intelligence-management-service',
       heading: 'Intelligence Management Service',
       description: 'Manage and view intelligence reports',
-      href: config.serviceUrls.imsSubmit.url,
-      enabled: () => true,
+      href: config.serviceUrls.manageIntelligence.url,
+      enabled: () => config.serviceUrls.manageIntelligence.url && userHasRoles([Role.ManageIntelligenceUser], roles),
     },
     {
       id: 'manage-restricted-patients',
