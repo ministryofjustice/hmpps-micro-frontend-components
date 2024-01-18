@@ -337,6 +337,13 @@ describe('getServicesForUser', () => {
   })
 
   describe('Submit an Intelligence Report', () => {
+    it('should return true', () => {
+      const output = getServicesForUser([], false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Submit an Intelligence Report')).toEqual(true)
+    })
+  })
+
+  describe('Submit an IMS Report', () => {
     test.each`
       roles                            | visible
       ${[Role.ManageIntelligenceUser]} | ${true}
