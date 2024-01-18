@@ -161,6 +161,9 @@ export default {
     mercurySubmit: {
       url: get('MERCURY_SUBMIT_URL', 'http://localhost:3001', requiredInProduction),
     },
+    imsSubmit: {
+      url: get('IMS_SUBMIT_URL', 'http://localhost:3001', requiredInProduction),
+    },
     manageRestrictedPatients: {
       url: get('MANAGE_RESTRICTED_PATIENTS_URL', 'http://localhost:3001', requiredInProduction),
     },
