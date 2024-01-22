@@ -7,9 +7,9 @@ services:
       - hmpps_int
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    ports:    
+    ports:
       - '6379:6379'
-  
+
   wiremock:
     image: wiremock/wiremock
     networks:
@@ -57,7 +57,7 @@ services:
       - ENVIRONMENT_NAME=DEV
       - CACHE_TIMOUT=60
       - RELEASED=true
-      - DPS_URL=https://external/dps
+      - DPS_URL=http://localhost:9091/dps
       - NEW_DPS_URL=https://external/new-dps
       - OMIC_URL=https://external/omic
       - ACTIVITIES_URL=https://external/activities
