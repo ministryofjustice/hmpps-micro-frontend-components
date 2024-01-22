@@ -350,7 +350,7 @@ describe('getServicesForUser', () => {
       ${[]}                            | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Intelligence Management Service')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Intelligence management service')).toEqual(visible)
       expect(!!output.find(service => service.description === 'Manage and view intelligence reports')).toEqual(visible)
     })
   })
