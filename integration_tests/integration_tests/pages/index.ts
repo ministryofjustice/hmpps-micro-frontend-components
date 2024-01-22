@@ -5,7 +5,13 @@ export default class IndexPage extends Page {
     super('This site is under construction...')
   }
 
-  headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
+  headerUserName = (): PageElement => cy.get('[data-qa=connect-dps-common-header-user-name]')
 
-  headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')
+  headerPhaseBanner = (): PageElement => cy.get('[data-qa=connect-dps-common-environment-tag]')
+
+  caseloadSwitcher = (): PageElement => cy.get('[data-qa=connect-dps-caseload-switcher]')
+
+  servicesMenuToggle = (): PageElement => cy.get('[data-qa=connect-dps-common-service-menu-toggle]')
+
+  searchToggle = (): PageElement => cy.get('[data-qa=connect-dps-common-search-toggle]')
 }

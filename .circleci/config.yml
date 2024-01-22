@@ -58,6 +58,8 @@ jobs:
       tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
@@ -65,23 +67,21 @@ jobs:
           key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm --prefix ./integration_tests ci --no-audit
+          command: npm -prefix integration_tests ci --no-audit
+      - run:
+          command: npm -prefix integration_tests run build
       - save_cache:
           key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
           paths:
-            - ./integration_tests/node_modules
+            - integration_tests/node_modules
             - ~/.cache
-      - run:
-          command: |
-            npm --prefix ./integration_tests run build
       - persist_to_workspace:
           root: .
           paths:
-            - ./integration_tests/node_modules
-            - ./integration_tests/build
-            - ./integration_tests/dist
-            - ./integration_tests/assets/stylesheets
-            - .cache
+            - integration_tests/node_modules
+            - integration_tests/build
+            - integration_tests/dist
+            - integration_tests/assets/stylesheets
 
   unit_test:
     executor:
@@ -102,8 +102,9 @@ jobs:
 
   integration_test:
     executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
+      name: hmpps/node_redis
+      node_tag: << pipeline.parameters.node-version >>
+      redis_tag: "7.0"
     steps:
       - checkout
       - attach_workspace:
@@ -111,6 +112,8 @@ jobs:
       - run:
           name: Install missing OS dependency
           command: sudo apt-get install libxss1
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - restore_cache:
           key: dependency-int-test-cache-{{ checksum "./integration_tests/package-lock.json" }}
       - run:
@@ -121,15 +124,19 @@ jobs:
           command: java -jar wiremock.jar --port 9091
           background: true
       - run:
-          name: Run the node app.
-          command: npm --prefix integration_tests run start-feature
+          name: Run the int test node app.
+          command: npm run start-feature-test-app
           background: true
       - run:
-          name: Wait for node app to start
+          name: Run the components node app.
+          command: npm run start-feature-components-app
+          background: true
+      - run:
+          name: Wait for node apps to start
           command: sleep 5
       - run:
           name: integration tests
-          command: npm --prefix integration_tests run int-test
+          command: npm run int-test
       - store_test_results:
           path: test_results
       - store_artifacts:
@@ -149,11 +156,14 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+          requires:
+            - build
       - unit_test:
           requires:
             - build
       - integration_test:
           requires:
+            - build
             - build-int-test
       - hmpps/helm_lint:
           name: helm_lint

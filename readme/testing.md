@@ -3,8 +3,30 @@
 
 ## Testing
 
-This project uses Jest and Supertest for testing. As the project is relatively simple, supertest has been implemented to run through all layers of the codebase and test the resultant html output.
+### Run linter
 
-### Unit Tests
+`npm run lint`
 
-To run: `npm run test`
+### Run tests
+
+`npm run test`
+
+### Running integration tests
+
+For local running, start a test db and wiremock instance and build the components application by:
+
+`docker compose -f docker-compose-test.yml up --build`
+
+To recreate the client use of the components, there is a separate application in the integration_tests folder that calls the components endpoint running in docker and implements the response.
+
+Run this server in test mode by:
+
+`npm run start-feature-test-app`
+
+And then either, run tests in headless mode with:
+
+`npm run int-test`
+
+Or run tests with the cypress UI:
+
+`npm run int-test-ui`

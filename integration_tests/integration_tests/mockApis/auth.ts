@@ -9,11 +9,13 @@ const createToken = (roles: string[] = []) => {
   const authorities = roles.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`))
   const payload = {
     user_name: 'USER1',
+    name: 'John Doe',
     scope: ['read'],
     auth_source: 'nomis',
     authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'clientid',
+    user_id: '12345',
   }
 
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
