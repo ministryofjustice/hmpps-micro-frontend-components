@@ -254,7 +254,7 @@ export default (
     },
     {
       id: 'intelligence-management-service',
-      heading: 'Intelligence Management Service',
+      heading: 'Intelligence management service',
       description: 'Manage and view intelligence reports',
       href: config.serviceUrls.manageIntelligence.url,
       enabled: () => config.serviceUrls.manageIntelligence.url && userHasRoles([Role.ManageIntelligenceUser], roles),
