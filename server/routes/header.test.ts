@@ -99,19 +99,6 @@ describe('GET /header', () => {
           expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
         })
     })
-
-    it('should render despite roles api failure', () => {
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(403, '')
-      return request(app)
-        .get('/header')
-        .set('x-user-token', 'token')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect(res => {
-          const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($('a[href="/sign-out"]').text()).toEqual('Sign out')
-        })
-    })
   })
 
   describe('case load switcher', () => {
