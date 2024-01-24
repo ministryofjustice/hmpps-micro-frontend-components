@@ -37,6 +37,7 @@ jest.mock('../../config', () => ({
     manageOffences: { url: 'url' },
     learningAndWorkProgress: { url: 'url' },
     prepareSomeoneForRelease: { url: 'url' },
+    cas2: { url: 'url' },
   },
 }))
 
@@ -499,6 +500,18 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
+    })
+  })
+
+  describe('CAS2', () => {
+    test.each`
+      roles             | visible
+      ${[Role.PomUser]} | ${true}
+      ${[]}             | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const activeServices = [{ app: 'cas2' as ServiceName, activeAgencies: ['LEI'] }]
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'CAS2 - Short-Term Accommodation')).toEqual(visible)
     })
   })
 })

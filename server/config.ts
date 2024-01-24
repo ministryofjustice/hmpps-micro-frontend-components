@@ -185,6 +185,9 @@ export default {
     prepareSomeoneForRelease: {
       url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
     },
+    cas2: {
+      url: get('CAS2_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {

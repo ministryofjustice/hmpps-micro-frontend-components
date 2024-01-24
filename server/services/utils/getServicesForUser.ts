@@ -349,6 +349,15 @@ export default (
       href: config.serviceUrls.prepareSomeoneForRelease.url,
       enabled: () => userHasRoles([Role.ResettlementPassportEdit], roles),
     },
+    {
+      id: 'cas2',
+      heading: 'CAS2 - Short-Term Accommodation',
+      description: 'Apply for accommodation and support for someone leaving prison on Home Detention Curfew',
+      href: config.serviceUrls.cas2.url,
+      enabled: () =>
+        userHasRoles([Role.PomUser], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.CAS2, activeServices, false),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
