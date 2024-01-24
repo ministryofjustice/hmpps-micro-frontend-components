@@ -17,7 +17,7 @@ export default class PrisonApiClient {
     try {
       return this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
     } catch (error) {
-      if (error.status === 403) {
+      if (error.status === 403 || error.status === 404) {
         // can happen for CADM (central admin) users
         return false
       }
