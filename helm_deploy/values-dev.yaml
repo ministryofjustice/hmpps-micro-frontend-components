@@ -52,6 +52,7 @@ generic-service:
     MANAGE_OFFENCES_URL: https://manage-offences-dev.hmpps.service.justice.gov.uk
     LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
+    CAS2_URL: https://community-accommodation-tier-2-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
