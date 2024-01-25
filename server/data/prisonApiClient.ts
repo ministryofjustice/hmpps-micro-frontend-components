@@ -15,7 +15,7 @@ export default class PrisonApiClient {
 
   async getIsKeyworker(activeCaseloadId: string, staffId: number): Promise<boolean> {
     try {
-      return this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
+      return await this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
     } catch (error) {
       if (error.status === 403 || error.status === 404) {
         // can happen for CADM (central admin) users
