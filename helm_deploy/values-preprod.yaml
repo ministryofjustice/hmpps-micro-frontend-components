@@ -50,6 +50,7 @@ generic-service:
     MANAGE_OFFENCES_URL: https://manage-offences-preprod.hmpps.service.justice.gov.uk
     LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-preprod.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-preprod.hmpps.service.justice.gov.uk
+    CAS2_URL: https://community-accommodation-tier-2-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
