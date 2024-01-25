@@ -505,11 +505,11 @@ describe('getServicesForUser', () => {
 
   describe('CAS2', () => {
     test.each`
-      roles             | visible
-      ${[Role.PomUser]} | ${true}
-      ${[]}             | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const activeServices = [{ app: 'cas2' as ServiceName, activeAgencies: ['LEI'] }]
+      roles             | activeServices                                | visible
+      ${[Role.PomUser]} | ${[{ app: 'cas2', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]}             | ${[{ app: 'cas2', activeAgencies: ['LEI'] }]} | ${false}
+      ${[Role.PomUser]} | ${[{ app: 'cas2', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'CAS2 - Short-Term Accommodation')).toEqual(visible)
     })

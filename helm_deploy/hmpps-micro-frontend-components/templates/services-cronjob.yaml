@@ -20,6 +20,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
               - name: ACTIVITIES_URL
                 value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
+              - name: CAS2_URL
+                value: "{{ index .Values "generic-service" "env" "CAS2_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:

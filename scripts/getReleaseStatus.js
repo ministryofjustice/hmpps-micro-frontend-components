@@ -11,6 +11,7 @@ const endpoints = [
     },
   },
   { application: 'activities', urlEnv: 'ACTIVITIES_URL' },
+  { application: 'cas2', urlEnv: 'CAS2_URL' },
 ]
 
 function getApplicationInfo(url) {
