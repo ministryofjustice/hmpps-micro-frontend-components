@@ -286,16 +286,16 @@ export default (
     },
     {
       id: 'activities',
-      heading: 'Allocate people, unlock and attend',
+      heading: 'Activities, unlock and attendance',
       description:
-        'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
+        'Create and edit activities. Allocate people and edit allocations. Log applications and manage waitlists. Print unlock lists and record activity attendance.',
       href: `${config.serviceUrls.activities.url}/activities`,
       enabled: () => isActivitiesEnabled,
     },
     {
       id: 'appointments',
-      heading: 'Schedule and edit appointments',
-      description: 'Create and manage appointments. Print movement slips.',
+      heading: 'Appointments scheduling and attendance',
+      description: 'Create, manage and edit appointments. Print movement slips. Record appointment attendance.',
       href: `${config.serviceUrls.appointments.url}/appointments`,
       enabled: () => isActivitiesEnabled,
     },

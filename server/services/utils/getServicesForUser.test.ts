@@ -387,7 +387,7 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Allocate people, unlock and attend', () => {
+  describe('Activities, unlock and attendance', () => {
     test.each`
       desc                                            | activeCaseLoad      | visible  | activeServices
       ${'In cache and env var'}                       | ${'LEI'}            | ${true}  | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
@@ -398,11 +398,11 @@ describe('getServicesForUser', () => {
       ${'No application data cached, not in env var'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
     `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
       const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Allocate people, unlock and attend')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Activities, unlock and attendance')).toEqual(visible)
     })
   })
 
-  describe('Schedule and edit appointments', () => {
+  describe('Appointments scheduling and attendance', () => {
     test.each`
       desc                                                         | activeCaseLoad      | visible  | activeServices
       ${'In cache, not env var (activities)'}                      | ${'CACHE'}          | ${true}  | ${[{ app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
@@ -412,7 +412,7 @@ describe('getServicesForUser', () => {
       ${'No application data cached, not in env var (activities)'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
     `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
       const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Schedule and edit appointments')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Appointments scheduling and attendance')).toEqual(visible)
     })
   })
 
