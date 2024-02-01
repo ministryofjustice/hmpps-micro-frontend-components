@@ -22,6 +22,7 @@ jest.mock('redis', () => {
 
 describe('Get release status script', () => {
   beforeEach(() => {
+    jest.spyOn(process, 'exit').mockImplementation(() => {})
     jest.clearAllMocks()
     nock.cleanAll()
   })
@@ -32,7 +33,7 @@ describe('Get release status script', () => {
     nock('https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
     nock('https://activities-test.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
 
-    const result = await getData()
+    await getData()
 
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
       'applicationInfo',
@@ -41,7 +42,6 @@ describe('Get release status script', () => {
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
-    expect(result).toEqual('OK')
   })
 
   it('should store the data it gets if others fail', async () => {
@@ -65,7 +65,7 @@ describe('Get release status script', () => {
       .get('/info')
       .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
 
-    const result = await getData()
+    await getData()
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
       'applicationInfo',
       JSON.stringify([

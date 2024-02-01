@@ -33,10 +33,11 @@ export default function componentRoutes(services: Services): Router {
   }
 
   router.use((req, res, next) => {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'inttest') {
       req.auth = jwt.decode(req.headers['x-user-token'] as string)
       return next()
     }
+
     return requestIsAuthenticated()(req, res, next)
   })
 
