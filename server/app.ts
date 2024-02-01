@@ -19,6 +19,7 @@ import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
+import applicationInfo from './applicationInfo'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -28,7 +29,7 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   app.use(metricsMiddleware)
-  app.use(setUpHealthChecks())
+  app.use(setUpHealthChecks(applicationInfo()))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())

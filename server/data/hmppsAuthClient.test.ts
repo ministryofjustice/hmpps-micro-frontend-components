@@ -7,6 +7,14 @@ import restClientBuilder from '.'
 
 jest.mock('./tokenStore')
 
+jest.mock('../applicationInfo', () => () => ({
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+  branchName: 'main',
+}))
+
 const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
 
 const username = 'Bob'
