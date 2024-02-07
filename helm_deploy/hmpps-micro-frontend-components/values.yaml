@@ -1,6 +1,7 @@
 ---
 generic-service:
   nameOverride: hmpps-micro-frontend-components
+  productId: DPS019
 
   replicaCount: 4
 

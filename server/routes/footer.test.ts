@@ -9,6 +9,14 @@ import ContentfulService from '../services/contentfulService'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 import { createRedisClient } from '../data/redisClient'
 
+jest.mock('../applicationInfo', () => () => ({
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+  branchName: 'main',
+}))
+
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
     if (req.headers['x-user-token'] !== 'token') {
