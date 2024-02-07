@@ -46,10 +46,6 @@ RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 COPY . .
 RUN npm run build
 
-RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
-        export GIT_REF=${GIT_REF} && \
-        npm run record-build-info
-
 RUN npm prune --no-audit --production
 
 # Stage: copy production assets and dependencies
