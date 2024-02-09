@@ -33,10 +33,14 @@ function getRedisClient() {
       },
     })
     .on('error', err => {
-      console.log(`Redis Error`)
-      throw new Error(err)
+      console.log(`Redis Error`, err)
     })
-    .connect()
+}
+
+async function ensureConnected(redisClient) {
+  if (!redisClient.isOpen) {
+    await redisClient.connect()
+  }
 }
 
 async function cacheResponses(body, redisClient) {
@@ -52,14 +56,32 @@ async function getStoredData(redisClient) {
   return JSON.parse(responseString)
 }
 
+function getUrlForApp(appData) {
+  if (appData.urlEnv) {
+    return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
+  }
+  return appData.infoUrl[process.env.ENVIRONMENT_NAME]
+}
+
 const getData = async () => {
   const redisClient = await getRedisClient()
+  await ensureConnected(redisClient)
+
   const storedData = await getStoredData(redisClient)
 
   const responses = await Promise.allSettled(
-    endpoints.map(app =>
-      getApplicationInfo(app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT_NAME]),
-    ),
+    endpoints
+      .map(app => {
+        const url = getUrlForApp(app)
+
+        if (!url) {
+          console.log(`No url found for app: ${app.application}`)
+          return undefined
+        }
+
+        return getApplicationInfo(url)
+      })
+      .filter(Boolean),
   )
 
   const newData = responses
