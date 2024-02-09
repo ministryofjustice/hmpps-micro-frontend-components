@@ -6,12 +6,12 @@ jest.mock('redis', () => {
     set: jest.fn().mockResolvedValue('OK'),
     get: jest.fn().mockResolvedValue(null),
     disconnect: jest.fn().mockResolvedValue('OK'),
+    connect: jest.fn().mockResolvedValue('OK'),
+    isOpen: false,
   }
 
   const createClientMock = jest.fn().mockReturnValue({
-    on: jest.fn().mockReturnValue({
-      connect: jest.fn().mockReturnValue(mockRedisClientMock),
-    }),
+    on: jest.fn().mockResolvedValue(mockRedisClientMock),
   })
 
   return {
