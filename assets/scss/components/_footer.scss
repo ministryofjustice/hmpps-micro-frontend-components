@@ -14,20 +14,20 @@
     display: flex;
   }
 
+  h2 {
+    font-size: 24px;
+    margin-top: 0;
+    padding-bottom: 25px;
+    border-bottom: 1px solid govuk-colour('dark-grey');
+  }
+
   &__help {
     flex-basis: 50%;
-
-    h2 {
-      font-size: 24px;
-      margin-top: 0;
-      padding-bottom: 25px;
-      border-bottom: 1px solid govuk-colour('dark-grey');
-    }
   }
 
   &__support-links {
     border-top: 1px solid govuk-colour('dark-grey');
-    padding-top: 25px;
+    padding-top: 30px;
   }
 
   &__inline-list {
@@ -35,7 +35,6 @@
     margin-bottom: govuk-spacing(3);
     padding: 0;
   }
-
 
   &__inline-list-item {
     display: inline-block;
@@ -46,15 +45,19 @@
   &__link {
     @include govuk-link-common;
     @include govuk-link-style-text;
+  }
 
-    // alphagov/govuk_template includes a specific a:link:focus selector
-    // designed to make unvisited links a slightly darker blue when focussed, so
-    // we need to override the text colour for that combination of selectors.
-    @include _govuk-compatibility(govuk_template) {
-      &:link:focus {
-        @include govuk-text-colour;
+  &__services-menu {
+    ul {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px 15px;
+      justify-items: start;
+      li a {
+        color: $govuk-text-colour;
+        font-size: 16px;
       }
     }
   }
-
 }

@@ -1,7 +1,11 @@
 import config from '../config'
-import { Services } from '../services'
+import { type Services } from '../services'
 import { CaseLoad } from '../interfaces/caseLoad'
 import { ManagedPageLink } from '../interfaces/managedPage'
+import { isApiUser, User } from '../@types/Users'
+import { Service } from '../interfaces/Service'
+import { AvailableComponent } from '../@types/AvailableComponent'
+import { UserData } from '../interfaces/UserData'
 
 export interface HeaderViewModel {
   caseLoads: CaseLoad[]
@@ -9,17 +13,18 @@ export interface HeaderViewModel {
   activeCaseLoad: CaseLoad
   changeCaseLoadLink: string
   component: string
+  ingressUrl: string
+  dpsSearchLink: string
+  services: Service[]
+  manageDetailsLink: string
+  menuLink: string
 }
 
 export interface FooterViewModel {
   isPrisonUser: boolean
   managedPages: ManagedPageLink[]
   component: string
-}
-
-export interface User {
-  token: string
-  authSource: 'nomis' | 'auth'
+  services: Service[]
 }
 
 export const isPrisonUser = (user: User): boolean => {
@@ -28,54 +33,100 @@ export const isPrisonUser = (user: User): boolean => {
 
 const defaultFooterLinks: ManagedPageLink[] = [
   {
-    href: `${config.dpsUrl}/accessibility-statement`,
-    text: 'Accessibility statement',
+    href: `${config.serviceUrls.newDps.url}/accessibility-statement`,
+    text: 'Accessibility',
   },
   {
-    href: `${config.dpsUrl}/terms-and-conditions`,
+    href: `${config.serviceUrls.newDps.url}/terms-and-conditions`,
     text: 'Terms and conditions',
   },
   {
-    href: `${config.dpsUrl}/privacy-policy`,
+    href: `${config.serviceUrls.newDps.url}/privacy-policy`,
     text: 'Privacy policy',
   },
   {
-    href: `${config.dpsUrl}/cookies-policy`,
+    href: `${config.serviceUrls.newDps.url}/cookies-policy`,
     text: 'Cookies policy',
   },
 ]
 
-export default (
-  services: Services,
-): {
-  getHeaderViewModel: (user: User) => Promise<HeaderViewModel>
-  getFooterViewModel: (user: User) => Promise<FooterViewModel>
+export default ({
+  userService,
+  contentfulService,
+  cacheService,
+}: Services): {
+  getHeaderViewModel: (user: User, userData?: UserData) => Promise<HeaderViewModel>
+  getFooterViewModel: (user: User, userData?: UserData) => Promise<FooterViewModel>
+  getViewModels: (components: AvailableComponent[], user: User) => Promise<ComponentsData>
 } => ({
-  async getHeaderViewModel(user) {
-    const { token } = user
+  async getHeaderViewModel(user, preAccessedUserData?: UserData): Promise<HeaderViewModel> {
+    const { caseLoads, activeCaseLoad, services } = isPrisonUser(user)
+      ? preAccessedUserData ?? (await userService.getUserData(user))
+      : { caseLoads: [], activeCaseLoad: null, services: [] }
 
-    const caseLoads = isPrisonUser(user) ? await services.userService.getUserCaseLoads(token) : []
     return {
       caseLoads,
       isPrisonUser: isPrisonUser(user),
-      activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
-      changeCaseLoadLink: `${config.apis.digitalPrisonServiceUrl}/change-caseload`,
+      activeCaseLoad,
+      changeCaseLoadLink: `${config.serviceUrls.dps.url}/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
+      menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
       ingressUrl: config.ingressUrl,
+      dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
+      services,
     }
   },
-  async getFooterViewModel(user: User) {
-    let managedPages: ManagedPageLink[] = defaultFooterLinks
 
-    if (config.contentfulFooterLinksEnabled) {
-      managedPages = await services.contentfulService.getManagedPages()
-    }
+  async getFooterViewModel(user: User, preAccessedUserData?: UserData): Promise<FooterViewModel> {
+    const managedPages = config.contentfulFooterLinksEnabled
+      ? await contentfulService.getManagedPages()
+      : defaultFooterLinks
+
+    const userData = preAccessedUserData ?? (await userService.getUserData(user))
 
     return {
       managedPages,
       isPrisonUser: isPrisonUser(user),
       component: 'footer',
+      services: userData.services,
     }
   },
+
+  async getViewModels(components: AvailableComponent[], user: User) {
+    const accessMethods = {
+      header: this.getHeaderViewModel,
+      footer: this.getFooterViewModel,
+    }
+    const apiUser = isApiUser(user)
+    const username = apiUser ? user.user_name : user.username
+
+    const cachedResponse = await cacheService.getData<UserData>(`${username}_meta_data`)
+    const userData = await userService.getUserData(user, cachedResponse)
+
+    if (
+      userData.caseLoads.length > 0 &&
+      (!cachedResponse || cachedResponse.activeCaseLoad.caseLoadId !== userData.activeCaseLoad.caseLoadId)
+    ) {
+      await cacheService.setData(`${username}_meta_data`, JSON.stringify(userData))
+    }
+
+    const viewModels = await Promise.all(
+      components.map(component => accessMethods[component as AvailableComponent](user, userData)),
+    )
+
+    return components.reduce<ComponentsData>(
+      (output, componentName, index) => {
+        return {
+          ...output,
+          [componentName]: viewModels[index],
+        }
+      },
+      { meta: userData },
+    )
+  },
 })
+
+export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
+  meta: UserData
+}

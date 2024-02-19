@@ -26,6 +26,6 @@ export default class ContentfulService {
       })
     ).data.managedPageCollection
 
-    return items.map((page: ManagedPage) => ({ href: `${config.dpsUrl}/${page.slug}`, text: page.title }))
+    return items.map((page: ManagedPage) => ({ href: `${config.serviceUrls.dps.url}/${page.slug}`, text: page.title }))
   }
 }

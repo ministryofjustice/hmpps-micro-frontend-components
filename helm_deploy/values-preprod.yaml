@@ -1,5 +1,5 @@
----
 # Per environment values which override defaults in hmpps-micro-frontend-components/values.yaml
+services_cronjob_schedule: "0 * * * *"
 
 generic-service:
   replicaCount: 2
@@ -11,108 +11,67 @@ generic-service:
     INGRESS_URL: "https://frontend-components-preprod.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
-    DIGITAL_PRISON_SERVICE_URL: "https://digital-preprod.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support-preprod.hmpps.service.justice.gov.uk/feedback-and-support"
-    PRISON_API_URL: "https://api-preprod.prison.service.justice.gov.uk"
+    PRISON_API_URL: "https://prison-api-preprod.prison.service.justice.gov.uk"
     CONTENTFUL_HOST: "https://graphql.contentful.com"
-    DPS_URL: "https://dps-preprod.prison.service.justice.gov.uk"
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: PRE-PRODUCTION
+    CACHE_TIMOUT: 600
+    RELEASED: true
+
+    DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
+    NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
+    OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk
+    ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk
+    APPOINTMENTS_URL: https://activities-preprod.prison.service.justice.gov.uk
+    CHECK_MY_DIARY_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk?fromDPS=true
+    INCENTIVES_URL: https://incentives-ui-preprod.hmpps.service.justice.gov.uk
+    USE_OF_FORCE_URL: https://preprod.use-of-force.service.justice.gov.uk
+    PATHFINDER_URL: https://preprod.pathfinder.service.justice.gov.uk
+    LICENCES_URL: https://licences-preprod.prison.service.justice.gov.uk
+    MOIC_URL: https://preprod.moic.service.justice.gov.uk
+    MANAGE_AUTH_ACCOUNTS_URL: https://manage-users-preprod.hmpps.service.justice.gov.uk
+    CATEGORISATION_URL: https://preprod.offender-categorisation.service.justice.gov.uk
+    PECS_URL: https://hmpps-book-secure-move-frontend-staging.apps.live-1.cloud-platform.service.justice.gov.uk
+    SOC_URL: https://manage-soc-cases-preprod.hmpps.service.justice.gov.uk
+    PIN_PHONES_URL: https://pcms-preprod.prison.service.justice.gov.uk
+    MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-preprod.hmpps.service.justice.gov.uk
+    MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-preprod.prison.service.justice.gov.uk
+    LEGACY_PRISON_VISITS_URL: https://prison-visits-booking-staff-preprod.apps.live.cloud-platform.service.justice.gov.uk
+    SECURE_SOCIAL_VIDEO_CALLS_URL: https://auth.preprod.prisonvideo.com/accounts/login/oauth/redirect
+    SEND_LEGAL_MAIL_URL: https://check-rule39-mail-preprod.prison.service.justice.gov.uk
+    WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-preprod.prison.service.justice.gov.uk
+    MERCURY_SUBMIT_URL: https://submit-a-mercury-report-preprod.hmpps.service.justice.gov.uk
+    MANAGE_INTELLIGENCE_URL: https://manage-intelligence-preprod.prison.service.justice.gov.uk
+    MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-preprod.hmpps.service.justice.gov.uk
+    CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence-preprod.hmpps.service.justice.gov.uk
+    HISTORICAL_PRISONER_APPLICATION_URL: https://hpa-preprod.service.hmpps.dsd.io
+    GET_SOMEONE_READY_FOR_WORK_URL: https://get-ready-for-work-preprod.hmpps.service.justice.gov.uk
+    MANAGE_OFFENCES_URL: https://manage-offences-preprod.hmpps.service.justice.gov.uk
+    LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-preprod.hmpps.service.justice.gov.uk
+    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-preprod.hmpps.service.justice.gov.uk
+    CAS2_URL: https://community-accommodation-tier-2-preprod.hmpps.service.justice.gov.uk
+
+    # Feature
+    ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
+    APPOINTMENTS_ENABLED_PRISONS: "RSI,LPI"
+    USE_OF_FORCE_PRISONS: "ACI,AGI,ASI,AYI,BAI,BCI,BFI,BHI,BLI,BMI,BNI,BRI,BSI,BWI,BXI,BZI,CDI,CFI,CLI,CWI,DAI,DGI,DHI,DMI,DNI,DTI,DWI,EEI,EHI,ESI,EWI,EXI,EYI,FBI,FDI,FEI,FHI,FKI,FMI,FNI,FSI,FWI,GHI,GMI,GNI,GTI,HBI,HCI,HDI,HEI,HHI,HII,HLI,HMI,HOI,HPI,HVI,ISI,IWI,KMI,KVI,LCI,LEI,LFI,LGI,LHI,LII,LLI,LNI,LPI,LTI,LWI,LYI,MDI,MHI,MRI,MSI,MTI,NHI,NLI,NMI,NSI,NWI,ONI,OWI,PBI,PDI,PFI,PNI,PRI,PVI,RCI,RHI,RNI,RSI,SDI,SFI,SHI,SKI,SLI,SNI,SPI,STI,SUI,SWI,TCI,TSI,UKI,UPI,VEI,WCI,WDI,WEI,WHI,WII,WLI,WMI,WRI,WSI,WTI,WWI"
+    MANAGE_ADJUDICATIONS_ENABLED: "RNI,WLI,MDI,EXI,BXI,PVI,NHI,DMI,BLI,LFI,NSI,SWI,BNI,STI,SPI,SUI,BSI,LWI,CFI,DTI,EEI,FSI,FNI,HMI,LHI,LLI,NMI,ONI,RCI,SKI,WNI,WCI,AGI,BWI,DWI,DHI,ESI,FMI,FHI,HDI,HOI,HHI,HLI,ISI,KVI,LEI,LNI,UPI,RSI,SDI,WWI,WII,WEI,WSI,FYI,UKI,WYI"
+    WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
+    COVID_UNITS_ENABLED: false
+    FEATURE_SERVICES_STORE_ENABLED: true
 
   allowlist:
-    office: "217.33.148.210/32"
-    quantum: "62.25.109.197/32"
-    petty-france-wifi: "213.121.161.112/28"
-    global-protect: "35.176.93.186/32"
-    quantum_alt: "212.137.36.230/32"
-    health-kick: "35.177.252.195/32"
-    digitalprisons1: "52.56.112.98/32"
-    digitalprisons2: "52.56.118.154/32"
-    mojvpn: "81.134.202.29/32"
-    j5-phones-1: "35.177.125.252/32"
-    j5-phones-2: "35.177.137.160/32"
-    sodexo-northumberland: "88.98.48.10/32"
-    sodexo-northumberland2: "51.148.47.137/32"
-    sodoxeo-forest-bank: "51.155.85.249/32"
-    sodexo-peterborough: "51.155.55.241/32"
-    serco: "217.22.14.0/24"
-    ark-nps-hmcts-ttp1: "195.59.75.0/24"
-    ark-nps-hmcts-ttp2: "194.33.192.0/25"
-    ark-nps-hmcts-ttp3: "194.33.193.0/25"
-    ark-nps-hmcts-ttp4: "194.33.196.0/25"
-    ark-nps-hmcts-ttp5: "194.33.197.0/25"
-    oakwood-01: "217.161.76.184/29"
-    oakwood-02: "217.161.76.192/29"
-    oakwood-1: "217.161.76.187/32"
-    oakwood-2: "217.161.76.195/32"
-    oakwood-3: "217.161.76.186/32"
-    oakwood-4: "217.161.76.194/32"
-    durham-tees-valley: "51.179.197.1/32"
-    interservfls: "51.179.196.131/32"
-    sodexo1: "80.86.46.16/32"
-    sodexo2: "80.86.46.17/32"
-    sodexo3: "80.86.46.18/32"
-    sodexo4: "51.148.9.201"
-    cloudplatform-live1-1: "35.178.209.113/32"
-    cloudplatform-live1-2: "3.8.51.207/32"
-    cloudplatform-live1-3: "35.177.252.54/32"
-    dxc_webproxy1: "195.92.38.20/32"
-    dxc_webproxy2: "195.92.38.21/32"
-    dxc_webproxy3: "195.92.38.22/32"
-    dxc_webprox23: "195.92.38.23/32"
-    moj-official-tgw-prod: "51.149.250.0/24"
-    moj-official-tgw-preprod: "51.149.251.0/24"
-    crc-rrp: "62.253.83.37/32"
-    crc-pp-wwm: "5.153.255.210/32"
-    moj-official-ark-c-expo-e: "51.149.249.0/29"
-    moj-official-ark-c-vodafone: "194.33.248.0/29"
-    moj-official-ark-f-vodafone: "194.33.249.0/29"
-    moj-official-ark-f-expo-e: "51.149.249.32/29"
-    met-police-talktalk-vpn-1: "212.139.143.66/32"
-    met-police-talktalk-vpn-2: "212.74.97.221/32"
-    met-police-vodafone-1: "195.27.18.79/32"
-    met-police-vodafone-2: "195.27.18.110/32"
-    met-police-vodafone-3: "195.80.67.207/32"
-    police-1: "81.144.174.115/32"
-    police-2: "81.144.241.238/32"
-    police-3: "62.252.202.50/32"
-    police-4-1: "80.194.71.100/32"
-    police-4-2: "82.33.248.165/32"
-    police-5: "52.56.62.0/24"
-    police-6: "80.193.134.32/32"
-    police-7: "195.92.38.21/32"
-    police-8: "80.193.128.200/32"
-    police-9: "194.73.161.50/32"
-    police-10: "165.225.81.49/32"
-    police-11: "195.89.175.213/32"
-    police-12: "195.89.175.229/32"
-    police-northants-1: "212.250.136.96/27"
-    police-northants-2: "213.106.80.32/27"
-    police-west-york-1: "195.188.22.0/27"
-    police-west-york-2: "195.188.22.128/27"
-    police-west-york-3: "195.89.14.37"
-    police-west-york-4: "195.27.188.37"
-    police-south-york-public: "80.193.114.10"
-    police-south-york-mossway: "51.231.157.126"
-    police-south-york-atlas: "51.231.157.222"
-    police-humberside-public: "80.100.176.162"
-    police-humberside-priory: "51.231.157.226"
-    sscl-blackpool: "31.121.5.27"
-    sscl-azure: "51.142.106.199"
-    sscl-york: "62.6.61.29"
-    sscl-newcastle: "62.172.79.105"
-    sscl-newport: "217.38.237.212"
-    fivewells-1: "20.49.214.199/32"
-    fivewells-2: "20.49.214.228/32"
-    fivewells-3: "195.89.157.56/29"
-    fivewells-4: "195.59.215.184/29"
-    fivewells-5: "51.149.250.0/24"
-    fivewells-6: "51.149.249.0/29"
-    fivewells-7: "194.33.249.0/29"
-    fivewells-8: "51.149.249.32/29"
-    fivewells-9: "194.33.248.0/29"
-    azure-landing-zone-public-egress-1: "20.26.11.71/32"
-    azure-landing-zone-public-egress-2: "20.26.11.108/32"
+    sscl-blackpool: 31.121.5.27/32
+    sscl-azure: 51.142.106.199/32
+    sscl-york: 62.6.61.29/32
+    sscl-newcastle: 62.172.79.105/32
+    sscl-newport: 217.38.237.212/32
+    groups:
+      - internal
+      - prisons
+      - private_prisons
+      - police
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: hmpps-micro-frontend-components-non-prod

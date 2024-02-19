@@ -8,6 +8,14 @@ import { services } from '../services'
 import ContentfulService from '../services/contentfulService'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
 
+jest.mock('../applicationInfo', () => () => ({
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+  branchName: 'main',
+}))
+
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
     if (req.headers['x-user-token'] !== 'token') {
@@ -33,6 +41,7 @@ let prisonApi: nock.Scope
 beforeEach(() => {
   prisonApi = nock(config.apis.prisonApi.url)
   prisonApi.get('/api/users/me/caseLoads').reply(200, [])
+  prisonApi.get('/api/users/me/locations').reply(200, [])
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
 
@@ -60,7 +69,7 @@ describe('GET /components', () => {
         expect(body.header.javascript).toEqual([])
 
         const $footer = cheerio.load(body.footer.html)
-        const feedbackLink = $footer('a[href="https://eu.surveymonkey.com/r/FRZYGVQ?source=[source_value]"]')
+        const feedbackLink = $footer('a[href="https://eu.surveymonkey.com/r/HJTL6XS"]')
         expect(feedbackLink.text()).toContain('Feedback')
         expect(body.footer.css).toEqual(['localhost/assets/stylesheets/footer.css'])
         expect(body.footer.javascript).toEqual([])
@@ -108,7 +117,7 @@ describe('GET /components', () => {
             'a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]',
           ).text(),
         ).toContain('Digital Prison Services')
-        const feedbackLink = $footer('a[href="https://eu.surveymonkey.com/r/FRZYGVQ?source=[source_value]"]')
+        const feedbackLink = $footer('a[href="https://eu.surveymonkey.com/r/HJTL6XS"]')
         expect(feedbackLink.text()).toContain('Feedback')
       })
   })

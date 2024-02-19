@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hmpps-micro-frontend-components-services
+spec:
+  schedule: "{{ .Values.services_cronjob_schedule }}"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hmpps-micro-frontend-components-services-cronjob
+              image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
+              env:
+              - name: ENVIRONMENT_NAME
+                value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
+              - name: ACTIVITIES_URL
+                value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
+              - name: CAS2_URL
+                value: "{{ index .Values "generic-service" "env" "CAS2_URL" }}"
+              - name: REDIS_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: primary_endpoint_address
+              - name: REDIS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: auth_token
+              command: ["npm", "run", "getAppsStatus"]
+          restartPolicy: Never
+          activeDeadlineSeconds: 300

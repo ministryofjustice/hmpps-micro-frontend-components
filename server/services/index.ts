@@ -3,11 +3,11 @@ import { dataAccess } from '../data'
 import UserService from './userService'
 import ContentfulService from './contentfulService'
 import config from '../config'
+import { createRedisClient } from '../data/redisClient'
+import CacheService from './cacheService'
 
 export const services = () => {
   const { hmppsAuthClientBuilder, prisonApiClientBuilder } = dataAccess
-
-  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -24,10 +24,13 @@ export const services = () => {
   })
 
   const contentfulService = new ContentfulService(apolloClient)
+  const cacheService = new CacheService(createRedisClient(), config.redis.cacheTimeout)
+  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder, cacheService)
 
   return {
     userService,
     contentfulService,
+    cacheService,
   }
 }
 

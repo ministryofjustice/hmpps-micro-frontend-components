@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import jwksRsa from 'jwks-rsa'
 import { expressjwt, GetVerificationKey } from 'express-jwt'
+import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController from '../controllers/componentsController'
+import componentsController, {
+  ComponentsData,
+  FooterViewModel,
+  HeaderViewModel,
+} from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 
@@ -27,26 +32,42 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
-  router.use(requestIsAuthenticated())
+  router.use((req, res, next) => {
+    if (process.env.NODE_ENV === 'inttest') {
+      req.auth = jwt.decode(req.headers['x-user-token'] as string)
+      return next()
+    }
 
-  async function getHeaderResponseBody(res: Response): Promise<Component> {
-    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    return requestIsAuthenticated()(req, res, next)
+  })
+
+  async function getHeaderResponseBody(
+    res: Response,
+    latestFeatures: boolean,
+    viewModelCached?: HeaderViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
+    const javascript = latestFeatures ? [`${config.ingressUrl}/assets/js/header.js`] : []
 
     return new Promise(resolve => {
-      res.render('components/header', viewModel, (_, html) => {
+      res.render('components/header', { ...viewModel, latestFeatures }, (_, html) => {
         resolve({
           html,
           css: [`${config.ingressUrl}/assets/stylesheets/header.css`],
-          javascript: [],
+          javascript,
         })
       })
     })
   }
 
-  async function getFooterResponseBody(res: Response): Promise<Component> {
-    const viewModel = await controller.getFooterViewModel(res.locals.user)
+  async function getFooterResponseBody(
+    res: Response,
+    latestFeatures: boolean,
+    viewModelCached?: FooterViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
     return new Promise(resolve => {
-      res.render('components/footer', viewModel, (_, html) => {
+      res.render('components/footer', { ...viewModel, latestFeatures }, (_, html) => {
         resolve({
           html,
           css: [`${config.ingressUrl}/assets/stylesheets/footer.css`],
@@ -60,7 +81,10 @@ export default function componentRoutes(services: Services): Router {
     '/header',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getHeaderResponseBody(res)
+      const response = await getHeaderResponseBody(
+        res,
+        config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
+      )
       res.send(response)
     }),
   )
@@ -69,7 +93,10 @@ export default function componentRoutes(services: Services): Router {
     '/footer',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res)
+      const response = await getFooterResponseBody(
+        res,
+        config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
+      )
       res.send(response)
     }),
   )
@@ -78,7 +105,10 @@ export default function componentRoutes(services: Services): Router {
     '/components',
     populateCurrentUser(services.userService),
     asyncMiddleware(async (req, res, next) => {
-      const componentMethods: Record<AvailableComponent, (r: Response) => Promise<Component>> = {
+      const componentMethods: Record<
+        AvailableComponent,
+        (r: Response, latestFeatures: boolean, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
+      > = {
         header: getHeaderResponseBody,
         footer: getFooterResponseBody,
       }
@@ -87,21 +117,32 @@ export default function componentRoutes(services: Services): Router {
         .flat()
         .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
+      if (!componentsRequested.length) return res.send({})
+      const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
+
       const renders = await Promise.all(
-        componentsRequested.map(component => componentMethods[component as AvailableComponent](res)),
+        componentsRequested.map(component =>
+          componentMethods[component as AvailableComponent](
+            res,
+            config.environmentReleased || req.headers['x-use-latest-features'] === 'true',
+            viewModels[component],
+          ),
+        ),
       )
 
-      const responseBody = componentsRequested.reduce<Partial<Record<AvailableComponent, Component>>>(
+      const responseBody = componentsRequested.reduce<
+        Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
+      >(
         (output, componentName, index) => {
           return {
             ...output,
             [componentName]: renders[index],
           }
         },
-        {},
+        { meta: viewModels.meta },
       )
 
-      res.send(responseBody)
+      return res.send(responseBody)
     }),
   )
 
