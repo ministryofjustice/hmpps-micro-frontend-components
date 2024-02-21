@@ -19,6 +19,7 @@ import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
+import setUpSwagger from './middleware/setUpSwagger'
 import applicationInfo from './applicationInfo'
 
 export default function createApp(services: Services): express.Application {
@@ -38,6 +39,7 @@ export default function createApp(services: Services): express.Application {
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
+  setUpSwagger(app)
 
   app.use('/develop', developRoutes(services))
   app.use('/', componentRoutes(services))

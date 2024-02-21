@@ -7,6 +7,13 @@ This guide assumes that you are importing into an Express application written in
 
 Code samples have been provided for examples. Your requirements may differ.
 
+### Swagger docs
+
+API swagger docs can be found at
+* dev - https://frontend-components-dev.hmpps.service.justice.gov.uk/api-docs
+*  preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk/api-docs
+*  prod - https://frontend-components.hmpps.service.justice.gov.uk/api-docs
+
 ### Calling the component library API
 
 Add environment variables to the `values-{env}.yaml` files for `COMPONENT_API_URL`. Populate with the following values:
