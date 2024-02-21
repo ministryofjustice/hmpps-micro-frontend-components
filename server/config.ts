@@ -189,6 +189,9 @@ export default {
     cas2: {
       url: get('CAS2_URL', 'http://localhost:3001', requiredInProduction),
     },
+    changeSomeonesCell: {
+      url: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
