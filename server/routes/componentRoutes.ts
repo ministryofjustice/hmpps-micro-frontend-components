@@ -18,27 +18,24 @@ export default function componentRoutes(services: Services): Router {
   const router = Router()
   const controller = componentsController(services)
 
-  const requestIsAuthenticated = () => {
-    return expressjwt({
-      secret: jwksRsa.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: `${config.apis.hmppsAuth.url}/.well-known/jwks.json`,
-      }) as GetVerificationKey,
-      issuer: `${config.apis.hmppsAuth.url}/issuer`,
-      algorithms: ['RS256'],
-      getToken: req => req.headers['x-user-token'] as string,
-    })
-  }
-
   router.use((req, res, next) => {
     if (process.env.NODE_ENV === 'inttest') {
       req.auth = jwt.decode(req.headers['x-user-token'] as string)
-      return next()
+      next()
+    } else {
+      expressjwt({
+        secret: jwksRsa.expressJwtSecret({
+          cache: true,
+          rateLimit: true,
+          cacheMaxAge: 604800000, // a week
+          jwksRequestsPerMinute: 2,
+          jwksUri: `${config.apis.hmppsAuth.url}/.well-known/jwks.json`,
+        }) as GetVerificationKey,
+        issuer: `${config.apis.hmppsAuth.url}/issuer`,
+        algorithms: ['RS256'],
+        getToken: reqInternal => reqInternal.headers['x-user-token'] as string,
+      })(req, res, next)
     }
-
-    return requestIsAuthenticated()(req, res, next)
   })
 
   async function getHeaderResponseBody(res: Response, viewModelCached?: HeaderViewModel): Promise<Component> {
@@ -68,6 +65,27 @@ export default function componentRoutes(services: Services): Router {
     })
   }
 
+  /**
+   * @swagger
+   * /header:
+   *   get:
+   *     summary: Retrieve the header component html with links to the required CSS and JS
+   *     deprecated: true
+   *     parameters:
+   *     - in: header
+   *       name: x-user-token
+   *       schema:
+   *         type: string
+   *       required: true
+   *       description: The user token to identify the user
+   *     responses:
+   *       200:
+   *         description: Stringified html for the header component
+   *         content:
+   *           application/json:
+   *             schema:
+   *                $ref: '#/components/schemas/Component'
+   */
   router.get(
     '/header',
     populateCurrentUser(services.userService),
@@ -77,6 +95,27 @@ export default function componentRoutes(services: Services): Router {
     }),
   )
 
+  /**
+   * @swagger
+   * /footer:
+   *   get:
+   *     summary: Retrieve the footer component html with links to the required CSS and JS
+   *     deprecated: true
+   *     parameters:
+   *     - in: header
+   *       name: x-user-token
+   *       schema:
+   *         type: string
+   *       required: true
+   *       description: The user token to identify the user
+   *     responses:
+   *       200:
+   *         description: Stringified html for the footer component
+   *         content:
+   *           application/json:
+   *             schema:
+   *                $ref: '#/components/schemas/Component'
+   */
   router.get(
     '/footer',
     populateCurrentUser(services.userService),
@@ -86,6 +125,46 @@ export default function componentRoutes(services: Services): Router {
     }),
   )
 
+  /**
+   * @swagger
+   * /components:
+   *   get:
+   *     summary: Retrieve html, css links and js links for the requested components. Includes user data in the response.
+   *     description: Can return any number of existing components (currently 'header' and 'footer'). The user data is also returned in the response within the meta field containing case load information and accessible services.
+   *     parameters:
+   *       - in: query
+   *         name: component
+   *         schema:
+   *           type: array
+   *           items:
+   *             type: string
+   *         description: The component(s) to retrieve. Available components are 'header' and 'footer'
+   *         required: true
+   *         explode: true
+   *         examples:
+   *           header:
+   *             value: header
+   *             summary: Request the header component
+   *           footer:
+   *             value: footer
+   *             summary: Request the footer component
+   *           headerAndFooter:
+   *             value: ['header', 'footer']
+   *             summary: Request both the header and footer components
+   *       - in: header
+   *         name: x-user-token
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: The user token to identify the user
+   *     responses:
+   *       200:
+   *         description: Object containing the requested components and user data
+   *         content:
+   *           application/json:
+   *             schema:
+   *                $ref: '#/components/schemas/Components'
+   */
   router.get(
     '/components',
     populateCurrentUser(services.userService),
@@ -137,3 +216,103 @@ export default function componentRoutes(services: Services): Router {
 
   return router
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CaseLoad:
+ *       type: object
+ *       properties:
+ *         caseLoadId:
+ *           type: string
+ *         description:
+ *           type: string
+ *         type:
+ *           type: string
+ *         caseloadFunction:
+ *           type: string
+ *         currentlyActive:
+ *           type: string
+ *
+ *     Service:
+ *       type: object
+ *       properties:
+ *         id: string
+ *         heading: string
+ *         description: string
+ *         href: string
+ *
+ *     Component:
+ *       type: object
+ *       properties:
+ *         html: string
+ *         css:
+ *           type: array
+ *           items:
+ *             type: string
+ *         javascript:
+ *           type: array
+ *           items:
+ *             type: string
+ *
+ *     Components:
+ *       type: object
+ *       properties:
+ *         [component name]:
+ *           $ref: '#/components/schemas/Component'
+ *           description: Component name (header, footer) as the key with the component html and links to JS and CSS for the component
+ *           example:
+ *             html: <div>...</div>
+ *             css: ['https://example.com/styles.css']
+ *             javascript: ['https://example.com/scripts.js']
+ *         meta:
+ *           type: object
+ *           description: Data about the user caseloads and services they have access to
+ *           properties:
+ *            activeCaseLoad:
+ *              $ref: '#/components/schemas/CaseLoad'
+ *            caseLoads:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/CaseLoad'
+ *            services:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Service'
+ *       example:
+ *         header:
+ *           html: <div>...</div>
+ *           css: ['https://example.com/header-styles.css']
+ *           javascript: ['https://example.com/header-scripts.js']
+ *         footer:
+ *           html: <div>...</div>
+ *           css: ['https://example.com/footer-styles.css']
+ *           javascript: ['https://example.com/footer-scripts.js']
+ *         meta: {
+ *           activeCaseLoad: {
+ *              caseLoadId: "FNI",
+ *              description: "Full Sutton (HMP)",
+ *              type: "INST",
+ *              caseloadFunction: "GENERAL",
+ *              currentlyActive: true
+ *           },
+ *           caseLoads: [
+ *              {
+ *                 caseLoadId: "FNI",
+ *                 description: "Full Sutton (HMP)",
+ *                 type: "INST",
+ *                 caseloadFunction: "GENERAL",
+ *                 currentlyActive: true
+ *              },
+ *           ],
+ *           services: [
+ *             {
+ *               id: 'create-and-vary-a-licence',
+ *               heading: 'Create and vary a licence',
+ *               description: 'Create and vary standard determinate licences and post sentence supervision orders.',
+ *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk,
+ *             }
+ *           ]
+ *         }
+ */
