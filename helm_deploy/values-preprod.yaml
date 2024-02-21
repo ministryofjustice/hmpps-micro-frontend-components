@@ -17,7 +17,6 @@ generic-service:
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: PRE-PRODUCTION
     CACHE_TIMOUT: 600
-    RELEASED: true
 
     DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk

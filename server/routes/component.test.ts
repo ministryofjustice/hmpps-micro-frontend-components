@@ -66,7 +66,7 @@ describe('GET /components', () => {
           ).text(),
         ).toContain('Digital Prison Services')
         expect(body.header.css).toEqual(['localhost/assets/stylesheets/header.css'])
-        expect(body.header.javascript).toEqual([])
+        expect(body.header.javascript).toEqual(['localhost/assets/js/header.js'])
 
         const $footer = cheerio.load(body.footer.html)
         const feedbackLink = $footer('a[href="https://eu.surveymonkey.com/r/HJTL6XS"]')
