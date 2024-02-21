@@ -12,6 +12,13 @@ const stubCaseloads = (
       type: 'INST',
       caseloadFunction: 'GENERAL',
     },
+    {
+      caseLoadId: 'LEI',
+      currentlyActive: false,
+      description: 'Leeds',
+      type: 'INST',
+      caseloadFunction: 'GENERAL',
+    },
   ],
 ) =>
   stubFor({
