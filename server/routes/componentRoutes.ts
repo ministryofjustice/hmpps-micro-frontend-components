@@ -18,19 +18,21 @@ export default function componentRoutes(services: Services): Router {
   const router = Router()
   const controller = componentsController(services)
 
+  const jwksIssuer = jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    cacheMaxAge: 604800000, // a week
+    jwksRequestsPerMinute: 2,
+    jwksUri: `${config.apis.hmppsAuth.url}/.well-known/jwks.json`,
+  }) as GetVerificationKey
+
   router.use((req, res, next) => {
     if (process.env.NODE_ENV === 'inttest') {
       req.auth = jwt.decode(req.headers['x-user-token'] as string)
       next()
     } else {
       expressjwt({
-        secret: jwksRsa.expressJwtSecret({
-          cache: true,
-          rateLimit: true,
-          cacheMaxAge: 604800000, // a week
-          jwksRequestsPerMinute: 2,
-          jwksUri: `${config.apis.hmppsAuth.url}/.well-known/jwks.json`,
-        }) as GetVerificationKey,
+        secret: jwksIssuer,
         issuer: `${config.apis.hmppsAuth.url}/issuer`,
         algorithms: ['RS256'],
         getToken: reqInternal => reqInternal.headers['x-user-token'] as string,
