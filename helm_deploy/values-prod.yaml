@@ -55,6 +55,7 @@ generic-service:
     LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
     CAS2_URL: https://short-term-accommodation-cas-2.hmpps.service.justice.gov.uk
+    CHANGE_SOMEONES_CELL_URL: https://digital.prison.service.justice.gov.uk/change-someones-cell
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

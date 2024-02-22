@@ -63,7 +63,7 @@ export default (
       id: 'change-someones-cell',
       heading: 'Change someone’s cell',
       description: 'Complete a cell move and view the 7 day history of all cell moves completed in your establishment.',
-      href: `${config.serviceUrls.dps.url}/change-someones-cell`,
+      href: config.serviceUrls.changeSomeonesCell.url,
       enabled: () => userHasRoles([Role.CellMove], roles),
     },
     {
