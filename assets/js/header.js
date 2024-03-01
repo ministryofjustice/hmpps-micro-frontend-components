@@ -16,11 +16,14 @@ function initHeader() {
   if (searchToggle) {
     hideFallbackLinks()
     searchToggle.removeAttribute('hidden')
-    searchToggle.setAttribute('aria-expanded', 'false')
     userToggle.removeAttribute('hidden')
-    userToggle.setAttribute('aria-expanded', 'false')
     servicesToggle.removeAttribute('hidden')
-    servicesToggle.setAttribute('aria-expanded', 'false')
+
+    closeTabs([
+      [searchToggle, searchMenu],
+      [userToggle, userMenu],
+      [servicesToggle, servicesMenu],
+    ])
 
     searchToggle.addEventListener('click', function (event) {
       closeTabs([
@@ -54,12 +57,12 @@ function initHeader() {
 }
 
 function closeTabs(tabTuples) {
-  tabTuples.forEach(([tab, menu]) => {
+  tabTuples.forEach(([toggle, menu]) => {
     menu.setAttribute('hidden', 'hidden')
-    tab.classList.remove(tabOpenClass)
-    tab.parentElement.classList.remove('item-open')
-    tab.setAttribute('aria-expanded', 'false')
-    tab.setAttribute('aria-label', tab.dataset.textForShow)
+    toggle.classList.remove(tabOpenClass)
+    toggle.parentElement.classList.remove('item-open')
+    toggle.setAttribute('aria-expanded', 'false')
+    if (toggle.dataset.textForShow) toggle.setAttribute('aria-label', toggle.dataset.textForShow)
   })
 }
 
@@ -73,7 +76,7 @@ function toggleMenu(toggle, menu) {
     toggle.classList.add(tabOpenClass)
     toggle.parentElement.classList.add('item-open')
     toggle.setAttribute('aria-expanded', 'true')
-    toggle.setAttribute('aria-label', toggle.dataset.textForHide)
+    if (toggle.dataset.textForHide) toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }
 }
 

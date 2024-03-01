@@ -80,10 +80,11 @@
 
             {# USER MENU #}
             <div class="connect-dps-common-header__navigation__item">
-              <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" aria-label="Hide user menu" data-text-for-show="Show user menu" data-text-for-hide="Hide user manu" type="button" hidden='hidden'>
+              <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" type="button" hidden='hidden'>
                   <span>
                     {{ userSvg | safe }}
                     <span data-qa="connect-dps-common-header-user-name">{{ user.displayName | initialiseName }}</span>
+                    <span class="govuk-visually-hidden">Account menu</span>
                   </span>
               </button>
               <ul id="connect-dps-common-header-user-menu" class="govuk-list connect-dps-common-header__user-menu" hidden="hidden">
@@ -104,7 +105,7 @@
 
             {# SERVICES MENU #}
             <div class="connect-dps-common-header__navigation__item">
-              <button data-qa="connect-dps-common-service-menu-toggle" class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" aria-label="Hide services menu" data-text-for-show="Show services menu" data-text-for-hide="Hide services manu" type="button" hidden='hidden'>
+              <button data-qa="connect-dps-common-service-menu-toggle" class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" data-text-for-show="Show services menu" data-text-for-hide="Hide services menu" type="button" hidden='hidden'>
                   <span>
                     <span class='govuk-!-font-size-19 govuk-!-font-weight-bold'>Menu</span>
                   </span>
@@ -123,7 +124,7 @@
 
             {#  SEARCH #}
             <div class="connect-dps-common-header__navigation__item">
-              <button data-qa="connect-dps-common-search-toggle" class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" aria-label="Hide search menu" data-text-for-show="Show search menu" data-text-for-hide="Hide search manu" hidden="hidden" type="button">
+              <button data-qa="connect-dps-common-search-toggle" class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" data-text-for-show="Show search menu" data-text-for-hide="Hide search menu" hidden="hidden" type="button">
                 <span class="govuk-visually-hidden"> Search for prisoner</span>
                 {{ searchSvg() | safe }}
                 <span aria-hidden="true" class="connect-dps-common-header__search-menu-toggle__close-icon" focusable="false"> × </span>
