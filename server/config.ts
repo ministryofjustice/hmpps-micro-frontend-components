@@ -192,6 +192,9 @@ export default {
     changeSomeonesCell: {
       url: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3001', requiredInProduction),
     },
+    accreditedProgrammes: {
+      url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {

@@ -71,6 +71,8 @@ export enum Role {
   OmicAdmin = 'OMIC_ADMIN',
   KeyworkerMonitor = 'KEYWORKER_MONITOR',
   ManageIntelligenceUser = 'IMS_USER',
+  AccreditedProgrammesReferrer = 'ACP_REFERRER',
+  AccreditedProgrammesTeam = 'ACP_PROGRAMME_TEAM',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))
