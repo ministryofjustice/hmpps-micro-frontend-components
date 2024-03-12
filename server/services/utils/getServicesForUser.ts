@@ -363,7 +363,9 @@ export default (
       heading: 'Accredited Programmes',
       description: 'Search for Accredited Programmes, find out where they’re running and start a referral.',
       href: config.serviceUrls.accreditedProgrammes.url,
-      enabled: () => userHasRoles([Role.AccreditedProgrammesReferrer, Role.AccreditedProgrammesTeam], roles),
+      enabled: () =>
+        config.serviceUrls.accreditedProgrammes.enabled &&
+        userHasRoles([Role.AccreditedProgrammesReferrer, Role.AccreditedProgrammesTeam], roles),
     },
   ]
     .filter(service => service.enabled())
