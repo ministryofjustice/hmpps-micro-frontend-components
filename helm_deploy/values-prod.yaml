@@ -56,7 +56,7 @@ generic-service:
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
     CAS2_URL: https://short-term-accommodation-cas-2.hmpps.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://digital.prison.service.justice.gov.uk/change-someones-cell
-    ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
+#    ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
