@@ -39,6 +39,7 @@ jest.mock('../../config', () => ({
     prepareSomeoneForRelease: { url: 'url' },
     cas2: { url: 'url' },
     changeSomeonesCell: { url: 'url' },
+    accreditedProgrammes: { url: 'url' },
   },
 }))
 

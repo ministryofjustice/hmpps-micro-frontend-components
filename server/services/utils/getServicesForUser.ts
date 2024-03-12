@@ -358,6 +358,13 @@ export default (
         userHasRoles([Role.PomUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CAS2, activeServices, false),
     },
+    {
+      id: 'accredited-programmes',
+      heading: 'Accredited Programmes',
+      description: 'Search for Accredited Programmes, find out where they’re running and start a referral.',
+      href: config.serviceUrls.accreditedProgrammes.url,
+      enabled: () => userHasRoles([Role.AccreditedProgrammesReferrer, Role.AccreditedProgrammesTeam], roles),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
