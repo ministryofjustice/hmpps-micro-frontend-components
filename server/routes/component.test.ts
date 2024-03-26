@@ -2,6 +2,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
 import { NextFunction, Request } from 'express'
+import { App } from 'supertest/types'
 import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
@@ -35,7 +36,7 @@ const contentfulServiceMock = {
   ],
 } as undefined as ContentfulService
 
-let app: Express.Application
+let app: App
 let prisonApi: nock.Scope
 
 beforeEach(() => {
