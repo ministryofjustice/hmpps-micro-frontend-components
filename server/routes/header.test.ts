@@ -2,6 +2,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
 import { NextFunction, Request } from 'express'
+import { App } from 'supertest/types'
 import { createRedisClient } from '../data/redisClient'
 import { services } from '../services'
 import config from '../config'
@@ -29,7 +30,7 @@ jest.mock('express-jwt', () => ({
   },
 }))
 
-let app: Express.Application
+let app: App
 let prisonApi: nock.Scope
 
 const redisClient = createRedisClient()
