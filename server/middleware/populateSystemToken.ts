@@ -9,7 +9,7 @@ export default function populateSystemToken(): RequestHandler {
       if (res.locals.user) {
         const systemToken = await getSystemToken(res.locals.user.username)
         if (systemToken) {
-          res.locals.systemToken = systemToken
+          req.middleware = { ...req.middleware, systemToken }
         } else {
           logger.info('No client token available')
         }
