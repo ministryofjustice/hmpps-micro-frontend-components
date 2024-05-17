@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import nock from 'nock'
@@ -17,15 +18,18 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
+const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
+const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
+
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['x-user-token']
-    if (token !== 'token' && token !== 'external-token') {
+    if (token !== prisonUserToken && token !== externalUserToken) {
       const error = new Error()
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = getTokenDataMock({ auth_source: token === 'token' ? 'nomis' : 'auth' })
+    req.auth = getTokenDataMock({ auth_source: token === prisonUserToken ? 'nomis' : 'external' })
     return next()
   },
 }))
@@ -39,6 +43,7 @@ async function ensureConnected() {
     await redisClient.connect()
   }
 }
+
 beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
 
@@ -72,7 +77,7 @@ describe('GET /header', () => {
     it('should render digital prison services title', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'token')
+        .set('x-user-token', prisonUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -86,7 +91,7 @@ describe('GET /header', () => {
     it('should render user management link using data from token', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'token')
+        .set('x-user-token', prisonUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -99,7 +104,7 @@ describe('GET /header', () => {
     it('should render sign out link', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'token')
+        .set('x-user-token', prisonUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -134,7 +139,7 @@ describe('GET /header', () => {
       ])
       return request(app)
         .get('/header')
-        .set('x-user-token', 'token')
+        .set('x-user-token', prisonUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -155,7 +160,7 @@ describe('GET /header', () => {
       ])
       return request(app)
         .get('/header')
-        .set('x-user-token', 'token')
+        .set('x-user-token', prisonUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -192,11 +197,15 @@ describe('GET /header', () => {
           },
         ])
         // make first call with 1 active caseload
-        await request(app).get('/header').set('x-user-token', 'token').expect(200).expect('Content-Type', /json/)
+        await request(app)
+          .get('/header')
+          .set('x-user-token', prisonUserToken)
+          .expect(200)
+          .expect('Content-Type', /json/)
 
         return request(app)
           .get('/header')
-          .set('x-user-token', 'token')
+          .set('x-user-token', prisonUserToken)
           .expect(200)
           .expect('Content-Type', /json/)
           .expect(res => {
@@ -226,7 +235,7 @@ describe('GET /header', () => {
     it('should render external title', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'external-token')
+        .set('x-user-token', externalUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -252,7 +261,7 @@ describe('GET /header', () => {
     it('should render manage details block', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'external-token')
+        .set('x-user-token', externalUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -267,7 +276,7 @@ describe('GET /header', () => {
     it('should render sign out', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'external-token')
+        .set('x-user-token', externalUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -279,7 +288,7 @@ describe('GET /header', () => {
     it('should not render caseload switcher', () => {
       return request(app)
         .get('/header')
-        .set('x-user-token', 'external-token')
+        .set('x-user-token', externalUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {

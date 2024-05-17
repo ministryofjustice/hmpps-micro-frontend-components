@@ -14,9 +14,9 @@ const service = new CacheService(redisClient, 600)
 describe('CacheService', () => {
   describe('setData', () => {
     it('should set the data in redis', async () => {
-      await service.setData('key', 'data')
+      await service.setData('key', { key: 'value' })
       expect(redisClient.set).toBeCalledTimes(1)
-      expect(redisClient.set).toBeCalledWith('key', 'data', { EX: 600 })
+      expect(redisClient.set).toBeCalledWith('key', '{"key":"value"}', { EX: 600 })
     })
   })
 

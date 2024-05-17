@@ -4,7 +4,7 @@
             <div id="connect-dps-common-footer-services" class="govuk-grid-column-three-quarters connect-dps-common-footer__services-menu">
                 <h2>Services</h2>
                 <ul class='govuk-list'>
-                    {% for service in services %}
+                    {% for service in user.services %}
                         <li><a class="connect-dps-common-footer__link" href='{{ service.href }}' class=''>{{ service.heading }}</a></li>
                     {% endfor %}
                 </ul>

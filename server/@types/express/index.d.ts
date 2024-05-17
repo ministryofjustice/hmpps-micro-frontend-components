@@ -1,3 +1,6 @@
+import { HmppsUser } from '../../interfaces/hmppsUser'
+import { TokenData } from '../Users'
+
 export default {}
 
 declare module 'express-session' {
@@ -22,6 +25,10 @@ export declare global {
       middleware?: Record
       logout(done: (err: unknown) => void): void
       auth?: TokenData
+    }
+
+    interface Locals {
+      user: HmppsUser
     }
   }
 }

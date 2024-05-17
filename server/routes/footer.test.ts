@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio'
 import nock from 'nock'
 import { NextFunction, Request } from 'express'
 import { App } from 'supertest/types'
+import jwt from 'jsonwebtoken'
 import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
@@ -18,9 +19,11 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
+const token = jwt.sign(getTokenDataMock(), 'secret')
+
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['x-user-token'] !== 'token') {
+    if (req.headers['x-user-token'] !== token) {
       const error = new Error()
       error.name = 'UnauthorizedError'
       return next(error)
@@ -68,7 +71,7 @@ describe('GET /footer', () => {
 
     return request(app)
       .get('/footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -83,7 +86,7 @@ describe('GET /footer', () => {
 
     return request(app)
       .get('/footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -98,7 +101,7 @@ describe('GET /footer', () => {
 
     return request(app)
       .get('/footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -113,7 +116,7 @@ describe('GET /footer', () => {
 
     return request(app)
       .get('/footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -128,7 +131,7 @@ describe('GET /footer', () => {
 
     return request(app)
       .get('/footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -158,7 +161,7 @@ describe('GET /footer', () => {
 
       return request(app)
         .get('/footer')
-        .set('x-user-token', 'token')
+        .set('x-user-token', token)
         .set('x-use-latest-features', 'true')
         .expect(200)
         .expect('Content-Type', /json/)
