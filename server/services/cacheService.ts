@@ -13,10 +13,10 @@ export default class CacheService {
     }
   }
 
-  public async setData(key: string, data: string) {
+  public async setData(key: string, data: object) {
     try {
       await this.ensureConnected()
-      return await this.redisClient.set(key, data, { EX: this.timeout })
+      return await this.redisClient.set(key, JSON.stringify(data), { EX: this.timeout })
     } catch (error) {
       logger.error(error.stack, `Error calling redis`)
       return ''

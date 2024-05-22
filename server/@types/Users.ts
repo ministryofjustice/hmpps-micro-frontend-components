@@ -1,7 +1,7 @@
 export interface TokenData {
   sub: string
   user_name: string
-  auth_source: 'nomis' | 'auth' | 'delius' | 'azuread'
+  auth_source: 'nomis' | 'delius' | 'external' | 'azuread'
   iss: string
   authorities: string[]
   client_id: string
@@ -13,19 +13,3 @@ export interface TokenData {
   exp: number
   jti: string
 }
-
-export interface AuthUser {
-  name: string
-  activeCaseLoadId: string
-  username: string
-  authSource: 'nomis' | 'auth'
-  staffId: number
-  userId: string
-  uuid: string
-  displayName: string
-  roles: string[]
-  token: string
-}
-
-export type User = (AuthUser | TokenData) & { authSource: TokenData['auth_source']; token: string; roles: string[] }
-export const isApiUser = (user: TokenData | AuthUser): user is TokenData => !!(user as TokenData).auth_source

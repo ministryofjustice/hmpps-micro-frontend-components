@@ -10,7 +10,7 @@ import populateCurrentUser from '../middleware/populateCurrentUser'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services)
+  const controller = componentsController(services.contentfulService)
 
   router.use(authorisationMiddleware())
   router.use(auth.authenticationMiddleware(tokenVerifier))

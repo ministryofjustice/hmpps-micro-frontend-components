@@ -5,8 +5,6 @@ import type TokenStore from './tokenStore'
 import logger from '../../logger'
 import config from '../config'
 import generateOauthClientToken from '../authentication/clientCredentials'
-import RestClient from './restClient'
-import { AuthUser } from '../@types/Users'
 
 const timeoutSpec = config.apis.hmppsAuth.timeout
 const hmppsAuthUrl = config.apis.hmppsAuth.url
@@ -30,19 +28,6 @@ function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagen
     .set('content-type', 'application/x-www-form-urlencoded')
     .send(grantRequest)
     .timeout(timeoutSpec)
-}
-
-export interface UserRole {
-  roleCode: string
-}
-
-export default class HmppsAuthClient {
-  constructor(private readonly restClient: RestClient) {}
-
-  getUser(): Promise<AuthUser> {
-    logger.info(`Getting user details: calling HMPPS Auth`)
-    return this.restClient.get({ path: '/api/user/me' }) as Promise<AuthUser>
-  }
 }
 
 export const systemTokenBuilder =

@@ -10,7 +10,7 @@ const applicationInfo = applicationInfoProvider()
 initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
-import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
+import { systemTokenBuilder } from './hmppsAuthClient'
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
 import config, { ApiConfig } from '../config'
@@ -29,11 +29,6 @@ export default function restClientBuilder<T>(
 }
 
 export const dataAccess = {
-  hmppsAuthClientBuilder: restClientBuilder<HmppsAuthClient>(
-    'HMPPS AuthClient',
-    config.apis.hmppsAuth,
-    HmppsAuthClient,
-  ),
   prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiClient),
   getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
   applicationInfo,
@@ -41,4 +36,4 @@ export const dataAccess = {
 
 export type DataAccess = typeof dataAccess
 
-export { HmppsAuthClient, RestClientBuilder }
+export { RestClientBuilder }

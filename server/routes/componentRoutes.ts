@@ -13,10 +13,11 @@ import componentsController, {
 } from '../controllers/componentsController'
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
+import { TokenData } from '../@types/Users'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services)
+  const controller = componentsController(services.contentfulService)
 
   const jwksIssuer = jwksRsa.expressJwtSecret({
     cache: true,
@@ -28,7 +29,7 @@ export default function componentRoutes(services: Services): Router {
 
   router.use((req, res, next) => {
     if (process.env.NODE_ENV === 'inttest') {
-      req.auth = jwt.decode(req.headers['x-user-token'] as string)
+      req.auth = jwt.decode(req.headers['x-user-token'] as string) as TokenData
       next()
     } else {
       expressjwt({

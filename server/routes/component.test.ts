@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio'
 import nock from 'nock'
 import { NextFunction, Request } from 'express'
 import { App } from 'supertest/types'
+import jwt from 'jsonwebtoken'
 import config from '../config'
 import createApp from '../app'
 import { services } from '../services'
@@ -17,9 +18,11 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
+const token = jwt.sign(getTokenDataMock(), 'secret')
+
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['x-user-token'] !== 'token') {
+    if (req.headers['x-user-token'] !== token) {
       const error = new Error()
       error.name = 'UnauthorizedError'
       return next(error)
@@ -54,7 +57,7 @@ describe('GET /components', () => {
   it('should return multiple components if requested', () => {
     return request(app)
       .get('/components?component=header&component=footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -80,7 +83,7 @@ describe('GET /components', () => {
   it('should return one component if requested', () => {
     return request(app)
       .get('/components?component=footer')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -93,7 +96,7 @@ describe('GET /components', () => {
   it('should return empty object if no query params', () => {
     return request(app)
       .get('/components')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -105,7 +108,7 @@ describe('GET /components', () => {
   it('should not matter the order of params', () => {
     return request(app)
       .get('/components?component=footer&component=header')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -126,7 +129,7 @@ describe('GET /components', () => {
   it('should filter out undefined components', () => {
     return request(app)
       .get('/components?component=footer&component=golf')
-      .set('x-user-token', 'token')
+      .set('x-user-token', token)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
