@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7
+  hmpps: ministryofjustice/hmpps@8
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -40,8 +40,7 @@ jobs:
       - run:
           command: |
             npm run build
-      - run:
-          # Run linter after build because the integration test code depend on compiled typescript...
+      - run: # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
       - persist_to_workspace:
@@ -85,9 +84,8 @@ jobs:
 
   unit_test:
     executor:
-      name: hmpps/node_redis
-      node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "7.0"
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
       - restore_cache:
@@ -102,9 +100,8 @@ jobs:
 
   integration_test:
     executor:
-      name: hmpps/node_redis
-      node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "7.0"
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
       - attach_workspace:
@@ -177,6 +174,8 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           context: hmpps-common-vars
           filters:
             branches:
@@ -232,10 +231,12 @@ workflows:
     jobs:
       - hmpps/npm_outdated:
           slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          node_tag: << pipeline.parameters.node-version >>
           context:
             - hmpps-common-vars
       - hmpps/npm_security_audit:
           slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          node_tag: << pipeline.parameters.node-version >>
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:

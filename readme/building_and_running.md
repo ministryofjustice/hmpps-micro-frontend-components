@@ -13,22 +13,16 @@ First, build the project by running:
 
 The front-end components service has a number of dependencies:
 
-* [redis](https://redis.io/) - session store and token caching
 * [hmpps-auth](https://github.com/ministryofjustice/hmpps-auth) - for authentication
 * [prison-api](https://github.com/ministryofjustice/prison-api) - the main API for retrieving data from NOMIS
 
 ### Developing against the development environment
 Development of this application has mainly relied on configuring `hmpps-micr-frontent-components` to point at the development
-environment instances of the above dependencies (redis being the exception, a local instance of this was used).
+environment instances of the above dependencies.
 
 Here's the process.
 
-1/ Run redis locally using Docker:
-```
-docker-compose pull && docker-compose up
-```
-
-2/ Create a .env file with environment variables pointing to the development environment
+1/ Create a .env file with environment variables pointing to the development environment
 <details>
 <summary>Click here for an example of the .env file</summary>
 <br>
@@ -49,12 +43,12 @@ TOKEN_VERIFICATION_API_URL=https://token-verification-api-dev.prison.service.jus
 ```
 </details>
 
-3/ And then, to build the assets and start the app with nodemon:
+2/ And then, to build the assets and start the app with nodemon:
 ```
 npm run start:dev
 ```
 
-4/ To access the service, navigate in a web browser to http://localhost:3000/develop
+3/ To access the service, navigate in a web browser to http://localhost:3000/develop
 this will take you to a landing page containing links to the components.
 
 ### Developing locally
