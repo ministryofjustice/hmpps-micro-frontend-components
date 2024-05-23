@@ -5,7 +5,6 @@ import createError from 'http-errors'
 import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import { metricsMiddleware } from './monitoring/metricsApp'
 
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
@@ -31,7 +30,6 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   app.use(appInsightsMiddleware())
-  app.use(metricsMiddleware)
   app.use(setUpHealthChecks(applicationInfo()))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
