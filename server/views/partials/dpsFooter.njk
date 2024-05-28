@@ -5,7 +5,9 @@
                 <h2>Services</h2>
                 <ul class='govuk-list'>
                     {% for service in user.services %}
-                        <li><a class="connect-dps-common-footer__link" href='{{ service.href }}' class=''>{{ service.heading }}</a></li>
+                        {% if service.navEnabled %}
+                            <li><a class="connect-dps-common-footer__link" href='{{ service.href }}' class=''>{{ service.heading }}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>

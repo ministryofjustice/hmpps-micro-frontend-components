@@ -57,6 +57,7 @@ generic-service:
     CAS2_URL: https://short-term-accommodation-cas-2.hmpps.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
+    ALERTS_API_URL: https://alerts-api.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

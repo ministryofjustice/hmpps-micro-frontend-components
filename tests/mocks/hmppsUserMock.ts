@@ -9,30 +9,35 @@ export const servicesMock: Service[] = [
     heading: 'Check my diary',
     description: 'View your prison staff detail (staff rota) from home.',
     href: 'http://localhost:3001',
+    navEnabled: true,
   },
   {
     id: 'key-worker-allocations',
     heading: 'My key worker allocation',
     description: 'View your key worker cases.',
     href: 'http://localhost:3001/key-worker/111111',
+    navEnabled: true,
   },
   {
     id: 'pathfinder',
     heading: 'Pathfinder',
     description: 'Manage your Pathfinder caseloads.',
     href: 'http://localhost:3001',
+    navEnabled: true,
   },
   {
     id: 'manage-prisoner-whereabouts',
     heading: 'Prisoner whereabouts',
     description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
     href: 'http://localhost:3001/manage-prisoner-whereabouts',
+    navEnabled: true,
   },
   {
     id: 'submit-an-intelligence-report',
     heading: 'Submit an Intelligence Report',
     description: 'Access to the new Mercury submission form',
     href: 'http://localhost:3001',
+    navEnabled: true,
   },
 ]
 

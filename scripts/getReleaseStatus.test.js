@@ -32,6 +32,7 @@ describe('Get release status script', () => {
     const apiResponse = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }
     nock('https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
     nock('https://activities-test.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
+    nock('https://alerts-api-dev.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
 
     await getData()
 
@@ -40,6 +41,7 @@ describe('Get release status script', () => {
       JSON.stringify([
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -49,6 +51,7 @@ describe('Get release status script', () => {
     const apiResponse = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }
     nock('https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk').get('/info').reply(404)
     nock('https://activities-test.hmpps.service.justice.gov.uk').get('/info').reply(200, apiResponse)
+    nock('https://alerts-api-dev.hmpps.service.justice.gov.uk').get('/info').reply(404)
 
     await getData()
 
@@ -64,6 +67,9 @@ describe('Get release status script', () => {
     nock('https://activities-test.hmpps.service.justice.gov.uk')
       .get('/info')
       .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
+    nock('https://alerts-api-dev.hmpps.service.justice.gov.uk')
+      .get('/info')
+      .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
 
     await getData()
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
@@ -71,6 +77,7 @@ describe('Get release status script', () => {
       JSON.stringify([
         { app: 'adjudications', activeAgencies: undefined },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -80,6 +87,7 @@ describe('Get release status script', () => {
       const { mockRedisClientMock } = require('redis')
       nock('https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk').get('/info').replyWithError('ERROR')
       nock('https://activities-test.hmpps.service.justice.gov.uk').get('/info').replyWithError('ERROR')
+      nock('https://alerts-api-dev.hmpps.service.justice.gov.uk').get('/info').replyWithError('ERROR')
       const storedData = [{ app: 'adjudications', activeAgencies: ['agency1', 'agency2'] }]
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -93,12 +101,14 @@ describe('Get release status script', () => {
       const storedData = [
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
       ]
 
       nock('https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk').get('/info').replyWithError('ERROR')
       nock('https://activities-test.hmpps.service.justice.gov.uk')
         .get('/info')
         .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
+      nock('https://alerts-api-dev.hmpps.service.justice.gov.uk').get('/info').replyWithError('ERROR')
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
       await getData()
@@ -108,6 +118,7 @@ describe('Get release status script', () => {
         JSON.stringify([
           { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
@@ -120,13 +131,20 @@ describe('Get release status script', () => {
       nock('https://activities-test.hmpps.service.justice.gov.uk')
         .get('/info')
         .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
+      nock('https://alerts-api-dev.hmpps.service.justice.gov.uk')
+        .get('/info')
+        .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
       await getData()
 
       expect(mockRedisClientMock.set).toHaveBeenCalledWith(
         'applicationInfo',
-        JSON.stringify([...storedData, { app: 'activities', activeAgencies: ['agency1', 'agency2'] }]),
+        JSON.stringify([
+          ...storedData,
+          { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+        ]),
       )
     })
 
@@ -140,6 +158,9 @@ describe('Get release status script', () => {
       nock('https://activities-test.hmpps.service.justice.gov.uk')
         .get('/info')
         .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
+      nock('https://alerts-api-dev.hmpps.service.justice.gov.uk')
+        .get('/info')
+        .reply(200, { some: 'stuff', activeAgencies: ['agency1', 'agency2'] })
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
       await getData()
@@ -149,6 +170,7 @@ describe('Get release status script', () => {
         JSON.stringify([
           { app: 'adjudications', activeAgencies: ['agency3', 'agency4'] },
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })

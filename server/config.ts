@@ -196,6 +196,9 @@ export default {
       url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3001', requiredInProduction),
       enabled: get('ACCREDITED_PROGRAMMES_ENABLED', 'false') === 'true',
     },
+    alerts: {
+      url: get('ALERTS_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {

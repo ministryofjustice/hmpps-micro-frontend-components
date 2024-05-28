@@ -52,6 +52,7 @@ generic-service:
     CAS2_URL: https://community-accommodation-tier-2-preprod.hmpps.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-preprod.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-preprod.hmpps.service.justice.gov.uk
+    ALERTS_API_URL: https://alerts-api-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
