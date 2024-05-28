@@ -40,6 +40,7 @@ jest.mock('../../config', () => ({
     cas2: { url: 'url' },
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
+    alerts: { url: 'url' },
   },
 }))
 
@@ -514,6 +515,17 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'CAS2 - Short-Term Accommodation')).toEqual(visible)
+    })
+  })
+
+  describe('Alerts', () => {
+    test.each`
+      roles | activeServices                                  | visible
+      ${[]} | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: 'alerts', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Alerts')).toEqual(visible)
     })
   })
 })

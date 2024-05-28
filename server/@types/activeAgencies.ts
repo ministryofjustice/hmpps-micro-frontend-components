@@ -3,6 +3,7 @@ export enum ServiceName {
   ADJUDICATION = 'adjudications',
   ACTIVITIES = 'activities',
   CAS2 = 'cas2',
+  ALERTS = 'alerts',
 }
 
 export interface ServiceActiveAgencies {

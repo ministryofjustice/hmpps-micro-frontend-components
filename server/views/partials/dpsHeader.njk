@@ -185,7 +185,9 @@
               </h3>
               <ul class='govuk-list'>
                 {% for service in user.services %}
-                  <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
+                  {% if service.navEnabled %}
+                    <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </div>
