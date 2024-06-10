@@ -56,6 +56,7 @@ generic-service:
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-dev.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-dev.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-dev.hmpps.service.justice.gov.uk
+    REPORTING_URL: https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
@@ -66,6 +67,7 @@ generic-service:
     COVID_UNITS_ENABLED: false
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
+    REPORTING_ENABLED_PRISONS: "***"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod

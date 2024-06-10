@@ -37,6 +37,10 @@ export default (
     config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
   )
 
+  const isReportingEnabled =
+    config.serviceUrls.reporting.enabledPrisons === ALL_PRISONS_STRING ||
+    config.serviceUrls.reporting.enabledPrisons.split(',').includes(activeCaseLoadId)
+
   return [
     {
       id: 'global-search',
@@ -410,6 +414,14 @@ export default (
       href: config.serviceUrls.alerts.url,
       navEnabled: false,
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
+    },
+    {
+      id: 'reporting',
+      heading: 'Reporting',
+      description: 'Digital Prison Reporting - Find and view reports.',
+      href: config.serviceUrls.reporting.url,
+      navEnabled: true,
+      enabled: () => isReportingEnabled,
     },
   ]
     .filter(service => service.enabled())
