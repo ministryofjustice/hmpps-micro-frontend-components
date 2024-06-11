@@ -4,6 +4,7 @@ export enum ServiceName {
   ACTIVITIES = 'activities',
   CAS2 = 'cas2',
   ALERTS = 'alerts',
+  REPORTING = 'reporting',
 }
 
 export interface ServiceActiveAgencies {
