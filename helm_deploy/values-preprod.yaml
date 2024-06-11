@@ -53,6 +53,7 @@ generic-service:
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-preprod.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-preprod.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-preprod.hmpps.service.justice.gov.uk
+    REPORTING_URL: https://digital-prison-reporting-mi-ui-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
@@ -63,6 +64,7 @@ generic-service:
     COVID_UNITS_ENABLED: false
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
+    REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32

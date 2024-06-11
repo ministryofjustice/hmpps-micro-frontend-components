@@ -199,6 +199,10 @@ export default {
     alerts: {
       url: get('ALERTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
+    reporting: {
+      url: get('REPORTING_URL', 'http://localhost:3001', requiredInProduction),
+      enabledPrisons: get('REPORTING_ENABLED_PRISONS', '', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {

@@ -41,6 +41,7 @@ jest.mock('../../config', () => ({
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
+    reporting: { url: 'url', enabledPrisons: 'AAA' },
   },
 }))
 
@@ -526,6 +527,17 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Alerts')).toEqual(visible)
+    })
+  })
+
+  describe('Reporting', () => {
+    test.each`
+      activeCaseLoad | visible
+      ${'AAA'}       | ${true}
+      ${'BBB'}       | ${false}
+    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], [])
+      expect(!!output.find(service => service.heading === 'Reporting')).toEqual(visible)
     })
   })
 })
