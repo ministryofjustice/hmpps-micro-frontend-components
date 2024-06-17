@@ -22,6 +22,18 @@ function isActiveInEstablishment(
   )
 }
 
+function isActiveInEstablishmentWithLegacyFallback(
+  activeCaseLoadId: string,
+  service: ServiceName,
+  activeServices: ServiceActiveAgencies[] | null,
+  legacyConfiguration: string,
+): boolean | undefined {
+  const legacyFallbackEnabled =
+    legacyConfiguration === ALL_PRISONS_STRING || legacyConfiguration.split(',').includes(activeCaseLoadId)
+
+  return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
+}
+
 export default (
   roles: string[],
   isKeyworker: boolean,
@@ -30,11 +42,11 @@ export default (
   locations: Location[],
   activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
-  const isActivitiesEnabled = isActiveInEstablishment(
+  const isActivitiesEnabled = isActiveInEstablishmentWithLegacyFallback(
     activeCaseLoadId,
     ServiceName.ACTIVITIES,
     activeServices,
-    config.serviceUrls.activities.enabledPrisons.split(',').includes(activeCaseLoadId),
+    config.serviceUrls.activities.enabledPrisons,
   )
 
   return [
@@ -136,7 +148,7 @@ export default (
       id: 'establishment-roll',
       heading: 'Establishment roll check',
       description: 'View the roll broken down by residential unit and see who is arriving and leaving.',
-      href: `${config.serviceUrls.dps.url}/establishment-roll`,
+      href: `${config.features.establishmentRoll.excluded.split(',').includes(activeCaseLoadId) ? config.serviceUrls.dps.url : config.serviceUrls.newDps.url}/establishment-roll`,
       navEnabled: true,
       enabled: () => locations?.length > 0,
     },
@@ -219,11 +231,11 @@ export default (
       href: config.serviceUrls.manageAdjudications.url,
       navEnabled: true,
       enabled: () =>
-        isActiveInEstablishment(
+        isActiveInEstablishmentWithLegacyFallback(
           activeCaseLoadId,
           ServiceName.ADJUDICATION,
           activeServices,
-          config.serviceUrls.manageAdjudications.enabledPrisons.split(',').includes(activeCaseLoadId),
+          config.serviceUrls.manageAdjudications.enabledPrisons,
         ),
     },
     {
@@ -410,6 +422,20 @@ export default (
       href: config.serviceUrls.alerts.url,
       navEnabled: false,
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
+    },
+    {
+      id: 'reporting',
+      heading: 'Reporting',
+      description: 'Digital Prison Reporting - Find and view reports.',
+      href: config.serviceUrls.reporting.url,
+      navEnabled: true,
+      enabled: () =>
+        isActiveInEstablishmentWithLegacyFallback(
+          activeCaseLoadId,
+          ServiceName.REPORTING,
+          activeServices,
+          config.serviceUrls.reporting.enabledPrisons,
+        ),
     },
   ]
     .filter(service => service.enabled())

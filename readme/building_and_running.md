@@ -18,7 +18,7 @@ The front-end components service has a number of dependencies:
 * [prison-api](https://github.com/ministryofjustice/prison-api) - the main API for retrieving data from NOMIS
 
 ### Developing against the development environment
-Development of this application has mainly relied on configuring `hmpps-micr-frontent-components` to point at the development
+Development of this application has mainly relied on configuring `hmpps-micro-frontent-components` to point at the development
 environment instances of the above dependencies (redis being the exception, a local instance of this was used).
 
 Here's the process.

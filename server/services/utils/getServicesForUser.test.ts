@@ -9,7 +9,8 @@ jest.mock('../../config', () => ({
   serviceUrls: {
     activities: { url: 'url', enabledPrisons: 'LEI,LIV' },
     appointments: { url: 'url', enabledPrisons: 'LEI,SOM' },
-    dps: { url: 'url' },
+    dps: { url: 'http://old-dps.com' },
+    newDps: { url: 'http://new-dps.com' },
     omic: { url: 'url' },
     checkMyDiary: { url: 'url' },
     incentives: { url: 'url' },
@@ -41,6 +42,12 @@ jest.mock('../../config', () => ({
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
+    reporting: { url: 'url', enabledPrisons: 'AAA' },
+  },
+  features: {
+    establishmentRoll: {
+      excluded: 'MDI,LEI',
+    },
   },
 }))
 
@@ -161,12 +168,15 @@ describe('getServicesForUser', () => {
 
   describe('Establishment roll check', () => {
     test.each`
-      locations | visible
-      ${[]}     | ${false}
-      ${[{}]}   | ${true}
-    `('user with locations: $locations.length, can see: $visible', ({ locations, visible }) => {
-      const output = getServicesForUser([], false, 'LEI', 12345, locations, null)
-      expect(!!output.find(service => service.heading === 'Establishment roll check')).toEqual(visible)
+      locations | visible  | activeCaseLoadId | href
+      ${[]}     | ${false} | ${'MDI'}         | ${undefined}
+      ${[{}]}   | ${true}  | ${'MDI'}         | ${'http://old-dps.com/establishment-roll'}
+      ${[{}]}   | ${true}  | ${'DNI'}         | ${'http://new-dps.com/establishment-roll'}
+    `('user with locations: $locations.length, can see: $visible', ({ locations, visible, activeCaseLoadId, href }) => {
+      const output = getServicesForUser([], false, activeCaseLoadId, 12345, locations, null)
+      const serviceData = output.find(service => service.heading === 'Establishment roll check')
+      expect(!!serviceData).toEqual(visible)
+      expect(serviceData?.href).toEqual(href)
     })
   })
 
@@ -526,6 +536,17 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Alerts')).toEqual(visible)
+    })
+  })
+
+  describe('Reporting', () => {
+    test.each`
+      activeCaseLoad | visible
+      ${'AAA'}       | ${true}
+      ${'BBB'}       | ${false}
+    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], [])
+      expect(!!output.find(service => service.heading === 'Reporting')).toEqual(visible)
     })
   })
 })
