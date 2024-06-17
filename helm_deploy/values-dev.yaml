@@ -68,6 +68,7 @@ generic-service:
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
+    ESTABLISHMENT_ROLL_EXCLUDED: ""
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod

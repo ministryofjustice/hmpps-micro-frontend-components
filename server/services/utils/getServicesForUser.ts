@@ -148,7 +148,7 @@ export default (
       id: 'establishment-roll',
       heading: 'Establishment roll check',
       description: 'View the roll broken down by residential unit and see who is arriving and leaving.',
-      href: `${config.serviceUrls.dps.url}/establishment-roll`,
+      href: `${config.features.establishmentRoll.excluded.split(',').includes(activeCaseLoadId) ? config.serviceUrls.dps.url : config.serviceUrls.newDps.url}/establishment-roll`,
       navEnabled: true,
       enabled: () => locations?.length > 0,
     },
