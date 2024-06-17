@@ -209,7 +209,7 @@ export default {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
     establishmentRoll: {
-      excluded: get('ESTABLISHMENT_ROLL_EXCLUDED', '', requiredInProduction),
+      excluded: get('ESTABLISHMENT_ROLL_EXCLUDED', ''),
     },
   },
 }
