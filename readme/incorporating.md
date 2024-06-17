@@ -1,7 +1,15 @@
 [< Back](../README.md)
 ---
 
-## Incorporating components
+## Using the NPM package.
+
+The easiest way to incorporate the components into your application is to use the [NPM package](https://www.npmjs.com/package/@ministryofjustice/hmpps-connect-dps-components).
+
+Instructions can be found in the readme of that project.
+
+If you have bespoke requirements that mean you cannot use the NPM package, you can incorporate the components manually. This guide will show you how to do that. However, please discuss your requirements in the #connect-dps slack channel as it may be something we would look to incorporate into the NPM package.
+
+## Incorporating components manually
 
 This guide assumes that you are importing into an Express application written in TypeScript based on the [hmpps-template-typescript](https://github.com/ministryofjustice/hmpps-template-typescript) project.
 
