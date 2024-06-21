@@ -541,11 +541,13 @@ describe('getServicesForUser', () => {
 
   describe('Reporting', () => {
     test.each`
-      activeCaseLoad | visible
-      ${'AAA'}       | ${true}
-      ${'BBB'}       | ${false}
-    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], [])
+      activeCaseLoad | visible  | activeServices
+      ${'LEI'}       | ${true}  | ${[{ app: 'reporting' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
+      ${'LEI'}       | ${false} | ${[{ app: 'reporting' as ServiceName, activeAgencies: ['ANOTHER'] }]}
+      ${'AAA'}       | ${true}  | ${[{ app: 'another' as ServiceName, activeAgencies: ['LEI'] }]}
+      ${'BBB'}       | ${false} | ${[{ app: 'another' as ServiceName, activeAgencies: ['LEI'] }]}
+    `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Reporting')).toEqual(visible)
     })
   })
