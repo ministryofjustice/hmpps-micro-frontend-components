@@ -31,7 +31,7 @@ generic-service:
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     MANAGE_AUTH_ACCOUNTS_URL: https://manage-users-preprod.hmpps.service.justice.gov.uk
     CATEGORISATION_URL: https://preprod.offender-categorisation.service.justice.gov.uk
-    PECS_URL: https://hmpps-book-secure-move-frontend-staging.apps.live-1.cloud-platform.service.justice.gov.uk
+    PECS_URL: https://hmpps-book-secure-move-frontend-preprod.apps.cloud-platform.service.justice.gov.uk
     SOC_URL: https://manage-soc-cases-preprod.hmpps.service.justice.gov.uk
     PIN_PHONES_URL: https://pcms-preprod.prison.service.justice.gov.uk
     MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-preprod.hmpps.service.justice.gov.uk
