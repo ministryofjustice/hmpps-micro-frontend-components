@@ -43,6 +43,7 @@ jest.mock('../../config', () => ({
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
+    residentialLocations: { url: 'url' },
   },
   features: {
     establishmentRoll: {
@@ -536,6 +537,19 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Alerts')).toEqual(visible)
+    })
+  })
+
+  describe('Residential Locations', () => {
+    test.each`
+      roles                               | activeServices                                                | visible  | activeServices
+      ${[]}                               | ${[{ app: 'residentialLocations', activeAgencies: ['LEI'] }]} | ${false} | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${[{ app: 'residentialLocations', activeAgencies: ['LEI'] }]} | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${[{ app: 'residentialLocations', activeAgencies: ['MOR'] }]} | ${false} | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['PVI'] }]}
+      ${['MANAGE_RESIDENTIAL_LOCATIONS']} | ${[{ app: 'residentialLocations', activeAgencies: ['LEI'] }]} | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['***'] }]}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Residential locations')).toEqual(visible)
     })
   })
 

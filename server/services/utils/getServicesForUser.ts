@@ -424,6 +424,16 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
     },
     {
+      id: 'residential-locations',
+      heading: 'Residential locations',
+      description: 'View and maintain residential locations',
+      href: config.serviceUrls.residentialLocations.url,
+      navEnabled: false,
+      enabled: () =>
+        userHasRoles([Role.ViewLocation, Role.ChangeLocation, Role.ManageResidentialLocations], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+    },
+    {
       id: 'reporting',
       heading: 'Reporting',
       description: 'Digital Prison Reporting - Find and view reports.',
