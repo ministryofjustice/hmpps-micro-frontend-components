@@ -2,7 +2,7 @@ const nock = require('nock')
 const { getData } = require('./getReleaseStatus')
 const { mockRedisClientMock } = require('redis')
 
-const residentialLocationUrl = 'https://locations-inside-prison-dev.hmpps.service.justice.gov.uk'
+const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 const alertsUrl = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 const activitiesUrl = 'https://activities-test.hmpps.service.justice.gov.uk'
