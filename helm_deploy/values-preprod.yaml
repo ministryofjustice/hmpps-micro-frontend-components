@@ -54,6 +54,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-preprod.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-preprod.hmpps.service.justice.gov.uk
     REPORTING_URL: https://digital-prison-reporting-mi-ui-preprod.hmpps.service.justice.gov.uk
+    RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

@@ -73,6 +73,9 @@ export enum Role {
   ManageIntelligenceUser = 'IMS_USER',
   AccreditedProgrammesReferrer = 'ACP_REFERRER',
   AccreditedProgrammesTeam = 'ACP_PROGRAMME_TEAM',
+  ViewLocation = 'VIEW_INTERNAL_LOCATION',
+  ChangeLocation = 'MANAGE_RES_LOCATIONS_OP_CAP',
+  ManageResidentialLocations = 'MANAGE_RESIDENTIAL_LOCATIONS',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))
