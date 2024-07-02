@@ -428,7 +428,7 @@ export default (
       heading: 'Residential locations',
       description: 'View and manage residential locations in the establishment.',
       href: config.serviceUrls.residentialLocations.url,
-      navEnabled: false,
+      navEnabled: true,
       enabled: () =>
         userHasRoles([Role.ViewLocation, Role.ChangeLocation, Role.ManageResidentialLocations], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
