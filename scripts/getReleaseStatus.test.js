@@ -7,7 +7,15 @@ const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.j
 const alertsUrl = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 const activitiesUrl = 'https://activities-test.hmpps.service.justice.gov.uk'
 const adjudicationsUrl = 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk'
-const allUrls = [residentialLocationUrl, reportingUrl, alertsUrl, activitiesUrl, adjudicationsUrl]
+const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
+const allUrls = [
+  residentialLocationUrl,
+  reportingUrl,
+  alertsUrl,
+  activitiesUrl,
+  adjudicationsUrl,
+  learningAndWorkProgressUrl,
+]
 
 function setMockSuccess(urls, body = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }) {
   const urlsToUse = urls || allUrls
@@ -61,6 +69,7 @@ describe('Get release status script', () => {
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -94,6 +103,7 @@ describe('Get release status script', () => {
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: undefined },
+        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -161,6 +171,7 @@ describe('Get release status script', () => {
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })

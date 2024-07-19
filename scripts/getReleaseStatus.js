@@ -15,6 +15,7 @@ const endpoints = [
   { application: 'alerts', urlEnv: 'ALERTS_API_URL' },
   { application: 'reporting', urlEnv: 'REPORTING_URL' },
   { application: 'residentialLocations', urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
+  { application: 'learningAndWorkProgress', urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
 ]
 
 function getApplicationInfo(url) {
