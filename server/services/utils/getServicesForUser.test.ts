@@ -495,13 +495,17 @@ describe('getServicesForUser', () => {
 
   describe('Learning and work progress', () => {
     test.each`
-      roles                                                           | visible
-      ${[Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer]} | ${true}
-      ${[Role.EducationWorkPlanEditor]}                               | ${true}
-      ${[Role.EducationWorkPlanViewer]}                               | ${true}
-      ${[]}                                                           | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      roles                                                           | activeServices                                                                  | visible
+      ${[Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer]} | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${true}
+      ${[Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer]} | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['***'] }]} | ${true}
+      ${[Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer]} | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['MDI'] }]} | ${false}
+      ${[Role.EducationWorkPlanEditor]}                               | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${true}
+      ${[Role.EducationWorkPlanEditor]}                               | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['MDI'] }]} | ${false}
+      ${[Role.EducationWorkPlanViewer]}                               | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${true}
+      ${[Role.EducationWorkPlanViewer]}                               | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['MDI'] }]} | ${false}
+      ${[]}                                                           | ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeServices, visible }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Learning and work progress')).toEqual(visible)
     })
   })
