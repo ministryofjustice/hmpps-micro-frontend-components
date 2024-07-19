@@ -28,6 +28,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "REPORTING_URL" }}"
               - name: RESIDENTIAL_LOCATIONS_API_URL
                 value: "{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}"
+              - name: LEARNING_AND_WORK_PROGRESS_URL
+                value: "{{ index .Values "generic-service" "env" "LEARNING_AND_WORK_PROGRESS_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:

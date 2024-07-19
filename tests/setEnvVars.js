@@ -3,3 +3,4 @@ process.env.ACTIVITIES_URL = 'https://activities-test.hmpps.service.justice.gov.
 process.env.ALERTS_API_URL = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 process.env.REPORTING_URL = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 process.env.RESIDENTIAL_LOCATIONS_API_URL = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
+process.env.LEARNING_AND_WORK_PROGRESS_URL = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
