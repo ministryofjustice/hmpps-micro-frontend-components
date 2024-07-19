@@ -387,7 +387,9 @@ export default (
       description: 'View and manage learning and work history, support needs, goals and progress.',
       href: config.serviceUrls.learningAndWorkProgress.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer], roles),
+      enabled: () =>
+        userHasRoles([Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.LEARNING_AND_WORK_PROGRESS, activeServices, false),
     },
     {
       id: 'prepare-someone-for-release',
