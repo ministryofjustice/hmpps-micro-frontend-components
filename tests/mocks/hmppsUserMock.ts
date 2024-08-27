@@ -26,13 +26,6 @@ export const servicesMock: Service[] = [
     navEnabled: true,
   },
   {
-    id: 'manage-prisoner-whereabouts',
-    heading: 'Prisoner whereabouts',
-    description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
-    href: 'http://localhost:3001/manage-prisoner-whereabouts',
-    navEnabled: true,
-  },
-  {
     id: 'submit-an-intelligence-report',
     heading: 'Submit an Intelligence Report',
     description: 'Access to the new Mercury submission form',

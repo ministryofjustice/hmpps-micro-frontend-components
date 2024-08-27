@@ -168,7 +168,7 @@ describe('GET /footer', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           const serviceLinks = $('.connect-dps-common-footer__services-menu').find('a')
-          expect(serviceLinks.length).toEqual(5)
+          expect(serviceLinks.length).toEqual(4)
         })
     })
   })
