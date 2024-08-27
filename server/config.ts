@@ -206,6 +206,9 @@ export default {
       url: get('REPORTING_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('REPORTING_ENABLED_PRISONS', '', requiredInProduction),
     },
+    whereabouts: {
+      apiUrl: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {

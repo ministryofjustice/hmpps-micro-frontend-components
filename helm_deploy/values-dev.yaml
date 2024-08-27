@@ -59,6 +59,7 @@ generic-service:
     REPORTING_URL: https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-dev.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+    WHEREABOUTS_API_URL: https://whereabouts-api-dev.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
