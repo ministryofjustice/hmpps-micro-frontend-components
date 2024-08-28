@@ -77,13 +77,11 @@ describe('getServicesForUser', () => {
 
   describe('Prisoner whereabouts', () => {
     test.each`
-      desc                                      | activeCaseLoad | visible  | activeServices
-      ${'In cache, Activities not enabled'}     | ${'ELSE'}      | ${true}  | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
-      ${'In cache, Activities enabled'}         | ${'LEI'}       | ${false} | ${[{ app: 'appointments' as ServiceName, activeAgencies: ['LEI', 'FSI'] }, { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}
-      ${'Not in cache, activities enabled'}     | ${'LEI'}       | ${false} | ${null}
-      ${'Not in cache, activities not enabled'} | ${'ELSE'}      | ${true}  | ${null}
-    `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
-      const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
+      roles | activeServices                                       | visible
+      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Prisoner whereabouts')).toEqual(visible)
     })
   })

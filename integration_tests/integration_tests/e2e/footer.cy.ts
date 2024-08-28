@@ -15,7 +15,7 @@ context('Footer', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
 
-    indexPage.footer.services.list().should('have.length', 7)
+    indexPage.footer.services.list().should('have.length', 6)
   })
 
   it('Links should be displayed', () => {

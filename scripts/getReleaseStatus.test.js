@@ -8,6 +8,7 @@ const alertsUrl = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 const activitiesUrl = 'https://activities-test.hmpps.service.justice.gov.uk'
 const adjudicationsUrl = 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk'
 const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
+const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
 const allUrls = [
   residentialLocationUrl,
   reportingUrl,
@@ -15,6 +16,7 @@ const allUrls = [
   activitiesUrl,
   adjudicationsUrl,
   learningAndWorkProgressUrl,
+  whereaboutsApiUrl,
 ]
 
 function setMockSuccess(urls, body = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }) {
@@ -70,6 +72,7 @@ describe('Get release status script', () => {
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -104,6 +107,7 @@ describe('Get release status script', () => {
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: undefined },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -129,6 +133,7 @@ describe('Get release status script', () => {
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]
 
       const [residentialLocationUrl, ...restUrls] = allUrls
@@ -147,6 +152,7 @@ describe('Get release status script', () => {
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
+          { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
@@ -172,6 +178,7 @@ describe('Get release status script', () => {
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
