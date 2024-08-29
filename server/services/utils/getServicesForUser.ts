@@ -72,7 +72,8 @@ export default (
       description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts`,
       navEnabled: true,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, false),
+      enabled: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, !isActivitiesEnabled),
     },
     {
       id: 'change-someones-cell',
