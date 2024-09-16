@@ -148,7 +148,7 @@
     "@types/express-session": "^1.18.0",
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.14.15",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.16",
     "@types/passport-oauth2": "^1.4.16",
