@@ -159,8 +159,8 @@ export default {
       url: get('WELCOME_PEOPLE_INTO_PRISON_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS', '', requiredInProduction),
     },
-    mercurySubmit: {
-      url: get('MERCURY_SUBMIT_URL', 'http://localhost:3001', requiredInProduction),
+    manageIntelligenceSubmit: {
+      url: get('MANAGE_INTELLIGENCE_SUBMIT_URL', 'http://localhost:3001', requiredInProduction),
     },
     manageIntelligence: {
       url: get('MANAGE_INTELLIGENCE_URL', 'http://localhost:3001', requiredInProduction),
