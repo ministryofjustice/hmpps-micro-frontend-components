@@ -45,7 +45,7 @@ generic-service:
     SECURE_SOCIAL_VIDEO_CALLS_URL: https://auth.phonehub.io/accounts/login/oauth/redirect
     SEND_LEGAL_MAIL_URL: https://check-rule39-mail.prison.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
-    MERCURY_SUBMIT_URL: https://submit-a-mercury-report.hmpps.service.justice.gov.uk
+    MANAGE_INTELLIGENCE_SUBMIT_URL: https://submit-information-report.hmpps.service.justice.gov.uk
     MANAGE_INTELLIGENCE_URL: https://manage-intelligence.prison.service.justice.gov.uk
     MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients.hmpps.service.justice.gov.uk
     CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence.hmpps.service.justice.gov.uk
