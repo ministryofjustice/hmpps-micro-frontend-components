@@ -83,7 +83,7 @@ services:
       - MANAGE_RESTRICTED_PATIENTS_URL=https://external/manage-restricted-patients
       - CREATE_AND_VARY_A_LICENCE_URL=https://external/create-and-vary-a-licence
       - HISTORICAL_PRISONER_APPLICATION_URL=https://external/historical-prisoner-applications
-      - GET_SOMEONE_READY_FOR_WORK_URL=https://external/get-someone-ready-for-work
+      - WORK_AFTER_RELEASE_URL=https://external/get-someone-ready-for-work
       - MANAGE_OFFENCES_URL=https://external/manage-offences
       - LEARNING_AND_WORK_PROGRESS_URL=https://external/learning-and-work-progress
       - PREPARE_SOMEONE_FOR_RELEASE_URL=https://external/prepare-someone-for-release
