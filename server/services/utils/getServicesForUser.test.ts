@@ -34,7 +34,7 @@ jest.mock('../../config', () => ({
     manageRestrictedPatients: { url: 'url' },
     createAndVaryALicence: { url: 'url' },
     historicalPrisonerApplication: { url: 'url' },
-    getSomeoneReadyForWork: { url: 'url' },
+    workAfterRelease: { url: 'url' },
     manageOffences: { url: 'url' },
     learningAndWorkProgress: { url: 'url' },
     prepareSomeoneForRelease: { url: 'url' },
@@ -464,7 +464,7 @@ describe('getServicesForUser', () => {
       expect(!!output.find(service => service.heading === 'Historical Prisoner Application')).toEqual(visible)
     })
   })
-  describe('Get someone ready to work', () => {
+  describe('Work after release', () => {
     test.each`
       roles                                               | visible
       ${[Role.WorkReadinessView, Role.WorkReadinessEdit]} | ${true}
@@ -473,7 +473,7 @@ describe('getServicesForUser', () => {
       ${[]}                                               | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Get someone ready to work')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Work after release')).toEqual(visible)
     })
   })
 

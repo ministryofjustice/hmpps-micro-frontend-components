@@ -174,7 +174,7 @@ export default {
     historicalPrisonerApplication: {
       url: get('HISTORICAL_PRISONER_APPLICATION_URL', 'http://localhost:3001', requiredInProduction),
     },
-    getSomeoneReadyForWork: {
+    workAfterRelease: {
       url: get('GET_SOMEONE_READY_FOR_WORK_URL', 'http://localhost:3001', requiredInProduction),
     },
     manageOffences: {
