@@ -464,7 +464,7 @@ describe('getServicesForUser', () => {
       expect(!!output.find(service => service.heading === 'Historical Prisoner Application')).toEqual(visible)
     })
   })
-  describe('Work after release', () => {
+  describe('Work after leaving prison', () => {
     test.each`
       roles                                               | visible
       ${[Role.WorkReadinessView, Role.WorkReadinessEdit]} | ${true}
@@ -473,7 +473,7 @@ describe('getServicesForUser', () => {
       ${[]}                                               | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Work after release')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Work after leaving prison')).toEqual(visible)
     })
   })
 
