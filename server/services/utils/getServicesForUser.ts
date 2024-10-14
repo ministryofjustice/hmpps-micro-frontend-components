@@ -366,10 +366,10 @@ export default (
       enabled: () => userHasRoles([Role.HpaUser], roles),
     },
     {
-      id: 'work-after-release',
-      heading: 'Work after release',
+      id: 'work-after-leaving-prison',
+      heading: 'Work after leaving prison',
       description: 'Manage progress in preparing people for work. Match people to jobs and manage applications.',
-      href: `${config.serviceUrls.workAfterRelease.url}?sort=releaseDate&order=descending`,
+      href: `${config.serviceUrls.workAfterLeavingPrison?.url || ''}?sort=releaseDate&order=descending`,
       navEnabled: true,
       enabled: () => userHasRoles([Role.WorkReadinessView, Role.WorkReadinessEdit], roles),
     },
