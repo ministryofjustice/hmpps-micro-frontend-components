@@ -85,11 +85,6 @@ generic-service:
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod
 
-  # Elasticache Alerts:
   elastiCacheAlertsClusterIds:
     cp-e050515d3e466664-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"
     cp-e050515d3e466664-002: "HMPPS Micro Frontend Components ElastiCache Cluster Node 2"
-  elastiCacheAlertsEngineCPUThreshold: 75
-  elastiCacheAlertsCPUThreshold: 75
-  elastiCacheAlertsFreeMemoryThreshold: 150
-  elastiCacheAlertsMemoryUsageThreshold: 75
