@@ -73,7 +73,6 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
     ESTABLISHMENT_ROLL_EXCLUDED: ""
-    CSIP_ENABLED_PRISONS: "LEI,MDI"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod

@@ -75,7 +75,6 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
     ESTABLISHMENT_ROLL_EXCLUDED: ""
-    CSIP_ENABLED_PRISONS: ""
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
