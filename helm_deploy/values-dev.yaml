@@ -60,6 +60,7 @@ generic-service:
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-dev.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
     WHEREABOUTS_API_URL: https://whereabouts-api-dev.service.justice.gov.uk
+    CSIP_API_URL: https://csip-api-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
@@ -72,6 +73,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
     ESTABLISHMENT_ROLL_EXCLUDED: ""
+    CSIP_ENABLED_PRISONS: "LEI,MDI"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod

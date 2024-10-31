@@ -199,6 +199,9 @@ export default {
     alerts: {
       url: get('ALERTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
+    csipApi: {
+      url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
     residentialLocations: {
       url: get('RESIDENTIAL_LOCATIONS_URL', 'http://localhost:3001', requiredInProduction),
     },

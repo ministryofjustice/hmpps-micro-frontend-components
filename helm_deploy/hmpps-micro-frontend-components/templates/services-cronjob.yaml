@@ -32,6 +32,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "LEARNING_AND_WORK_PROGRESS_URL" }}"
               - name: WHEREABOUTS_API_URL
                 value: "{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}"
+              - name: CSIP_API_URL
+                value: "{{ index .Values "generic-service" "env" "CSIP_API_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:

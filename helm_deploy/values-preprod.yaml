@@ -57,6 +57,7 @@ generic-service:
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-preprod.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-preprod.hmpps.service.justice.gov.uk
     WHEREABOUTS_API_URL: https://whereabouts-api-preprod.service.justice.gov.uk
+    CSIP_API_URL: https://csip-api-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
@@ -69,6 +70,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
     ESTABLISHMENT_ROLL_EXCLUDED: ""
+    CSIP_ENABLED_PRISONS: ""
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
