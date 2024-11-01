@@ -431,7 +431,7 @@ export default (
       heading: 'CSIP',
       description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload',
       href: config.serviceUrls.csipUI.url,
-      navEnabled: false,
+      navEnabled: true,
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
     },
     {

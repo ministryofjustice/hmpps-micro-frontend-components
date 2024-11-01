@@ -545,9 +545,9 @@ describe('getServicesForUser', () => {
 
   describe('Csip api', () => {
     test.each`
-      roles | activeServices                                  | visible
-      ${[]} | ${[{ app: 'csipUI', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]} | ${[{ app: 'csipUI', activeAgencies: ['MOR'] }]} | ${false}
+      roles | activeServices                                   | visible
+      ${[]} | ${[{ app: 'csipApi', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: 'csipApi', activeAgencies: ['MOR'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'CSIP')).toEqual(visible)
