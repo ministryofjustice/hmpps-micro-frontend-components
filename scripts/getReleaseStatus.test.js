@@ -9,10 +9,12 @@ const activitiesUrl = 'https://activities-test.hmpps.service.justice.gov.uk'
 const adjudicationsUrl = 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk'
 const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
+const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 const allUrls = [
   residentialLocationUrl,
   reportingUrl,
   alertsUrl,
+  csipApiUrl,
   activitiesUrl,
   adjudicationsUrl,
   learningAndWorkProgressUrl,
@@ -69,6 +71,7 @@ describe('Get release status script', () => {
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
@@ -104,6 +107,7 @@ describe('Get release status script', () => {
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: undefined },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
@@ -131,6 +135,7 @@ describe('Get release status script', () => {
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
@@ -150,6 +155,7 @@ describe('Get release status script', () => {
           { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
@@ -176,6 +182,7 @@ describe('Get release status script', () => {
           { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },

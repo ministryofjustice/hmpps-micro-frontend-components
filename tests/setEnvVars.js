@@ -5,3 +5,4 @@ process.env.REPORTING_URL = 'https://digital-prison-reporting-mi-ui-dev.hmpps.se
 process.env.RESIDENTIAL_LOCATIONS_API_URL = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 process.env.LEARNING_AND_WORK_PROGRESS_URL = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 process.env.WHEREABOUTS_API_URL = 'https://whereabouts-api-dev.service.justice.gov.uk'
+process.env.CSIP_API_URL = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
