@@ -464,5 +464,5 @@ export default (
       const { id, heading, description, href, navEnabled } = service
       return { id, heading, description, href, navEnabled }
     })
-    .sort((a, b) => (a.heading < b.heading ? -1 : 1))
+    .sort((a, b) => (a.heading.toLowerCase() < b.heading.toLowerCase() ? -1 : 1))
 }
