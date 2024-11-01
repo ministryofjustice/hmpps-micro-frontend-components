@@ -4,7 +4,7 @@ export enum ServiceName {
   ACTIVITIES = 'activities',
   CAS2 = 'cas2',
   ALERTS = 'alerts',
-  CSIP_API = 'csipApi',
+  CSIP = 'csipUI',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',

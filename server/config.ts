@@ -202,6 +202,9 @@ export default {
     csipApi: {
       url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction),
     },
+    csipUI: {
+      url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
     residentialLocations: {
       url: get('RESIDENTIAL_LOCATIONS_URL', 'http://localhost:3001', requiredInProduction),
     },

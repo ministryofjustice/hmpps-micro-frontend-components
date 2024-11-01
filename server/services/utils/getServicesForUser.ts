@@ -427,12 +427,12 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
     },
     {
-      id: 'csipApi',
+      id: 'csipUI',
       heading: 'CSIP',
       description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload',
-      href: config.serviceUrls.csipApi.url,
+      href: config.serviceUrls.csipUI.url,
       navEnabled: false,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP_API, activeServices, false),
+      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
     },
     {
       id: 'residential-locations',
