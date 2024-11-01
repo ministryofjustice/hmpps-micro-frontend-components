@@ -429,7 +429,7 @@ export default (
     {
       id: 'csipUI',
       heading: 'CSIP',
-      description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload',
+      description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload.',
       href: config.serviceUrls.csipUI.url,
       navEnabled: true,
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
@@ -464,5 +464,5 @@ export default (
       const { id, heading, description, href, navEnabled } = service
       return { id, heading, description, href, navEnabled }
     })
-    .sort((a, b) => (a.heading < b.heading ? -1 : 1))
+    .sort((a, b) => (a.heading.toLowerCase() < b.heading.toLowerCase() ? -1 : 1))
 }
