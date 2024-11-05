@@ -389,7 +389,6 @@ export default (
       href: config.serviceUrls.learningAndWorkProgress.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.EducationWorkPlanEditor, Role.EducationWorkPlanViewer], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.LEARNING_AND_WORK_PROGRESS, activeServices, false),
     },
     {
