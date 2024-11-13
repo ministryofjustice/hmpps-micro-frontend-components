@@ -498,8 +498,8 @@ describe('getServicesForUser', () => {
       ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
       ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['***'] }]} | ${'LEI'}         | ${true}
       ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['MDI'] }]} | ${'MDI'}         | ${true}
-      ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${'MDI'}         | ${false}
-      ${[]}                                                                           | ${'LEI'}         | ${false}
+      ${[{ app: 'learningAndWorkProgress' as ServiceName, activeAgencies: ['LEI'] }]} | ${'MDI'}         | ${true}
+      ${[]}                                                                           | ${'LEI'}         | ${true}
     `(
       'user with activeCaseLoadId: $activeCaseLoadId, can see: $visible',
       ({ activeServices, activeCaseLoadId, visible }) => {

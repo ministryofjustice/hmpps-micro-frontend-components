@@ -12,6 +12,13 @@ export const servicesMock: Service[] = [
     navEnabled: true,
   },
   {
+    id: 'learning-and-work-progress',
+    heading: 'Learning and work progress',
+    description: 'View and manage learning and work history, support needs, goals and progress.',
+    href: 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk',
+    navEnabled: true,
+  },
+  {
     id: 'key-worker-allocations',
     heading: 'My key worker allocation',
     description: 'View your key worker cases.',
