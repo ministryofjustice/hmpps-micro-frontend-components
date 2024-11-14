@@ -10,8 +10,8 @@ function initHeader() {
   const servicesToggle = document.querySelector('.connect-dps-common-header__services-menu-toggle')
   const servicesMenu = document.querySelector('#connect-dps-common-header-services-menu')
 
-  const searchSubmitBtn = searchMenu.querySelector('button[type="submit"]')
-  const submitUrl = searchMenu.querySelector('form').getAttribute('action')
+  const searchSubmitBtn = searchMenu && searchMenu.querySelector('button[type="submit"]')
+  const submitUrl = searchMenu && searchMenu.querySelector('form').getAttribute('action')
 
   if (searchToggle) {
     hideFallbackLinks()
