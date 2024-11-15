@@ -458,6 +458,16 @@ export default (
           config.serviceUrls.reporting.enabledPrisons,
         ),
     },
+    {
+      id: 'incident-reporting',
+      heading: 'Incident reporting',
+      description: 'View, create and edit incident reports.',
+      href: config.serviceUrls.incidentReporting.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {

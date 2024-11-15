@@ -9,6 +9,7 @@ export enum ServiceName {
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   WHEREABOUTS = 'whereabouts',
+  INCIDENT_REPORTING = 'incidentReporting',
 }
 
 export interface ServiceActiveAgencies {

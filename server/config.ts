@@ -215,6 +215,9 @@ export default {
     whereabouts: {
       apiUrl: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
+    incidentReporting: {
+      url: get('INCIDENT_REPORTING_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
