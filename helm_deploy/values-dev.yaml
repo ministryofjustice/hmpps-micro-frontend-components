@@ -62,6 +62,7 @@ generic-service:
     WHEREABOUTS_API_URL: https://whereabouts-api-dev.service.justice.gov.uk
     CSIP_API_URL: https://csip-api-dev.hmpps.service.justice.gov.uk
     CSIP_UI_URL: https://csip-dev.hmpps.service.justice.gov.uk
+    INCIDENT_REPORTING_URL: https://incident-reporting-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

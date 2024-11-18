@@ -45,6 +45,7 @@ jest.mock('../../config', () => ({
     csipUI: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
+    incidentReporting: { url: 'url' },
   },
   features: {
     establishmentRoll: {
@@ -578,6 +579,20 @@ describe('getServicesForUser', () => {
     `('caseload: $activeCaseLoad, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
       const output = getServicesForUser([], false, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Reporting')).toEqual(visible)
+    })
+  })
+
+  describe('Incident reporting', () => {
+    test.each`
+      roles                            | visible  | activeServices
+      ${[]}                            | ${false} | ${[{ app: 'incidentReporting' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['INCIDENT_REPORTS__RO']}      | ${true}  | ${[{ app: 'incidentReporting' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['INCIDENT_REPORTS__RO']}      | ${false} | ${[{ app: 'incidentReporting' as ServiceName, activeAgencies: ['PVI'] }]}
+      ${['INCIDENT_REPORTS__RW']}      | ${true}  | ${[{ app: 'incidentReporting' as ServiceName, activeAgencies: ['***'] }]}
+      ${['INCIDENT_REPORTS__APPROVE']} | ${true}  | ${[{ app: 'incidentReporting' as ServiceName, activeAgencies: ['***'] }]}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Incident reporting')).toEqual(visible)
     })
   })
 })
