@@ -425,6 +425,14 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
     },
     {
+      id: 'caseNotesApi',
+      heading: 'Case Notes API',
+      description: 'Case Notes API Service',
+      href: config.serviceUrls.caseNotesApi.url,
+      navEnabled: false,
+      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CASE_NOTES, activeServices, false),
+    },
+    {
       id: 'csipUI',
       heading: 'CSIP',
       description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload.',
