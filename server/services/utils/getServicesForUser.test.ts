@@ -46,6 +46,7 @@ jest.mock('../../config', () => ({
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
     incidentReporting: { url: 'url' },
+    caseNotesApi: { url: 'url' },
   },
   features: {
     establishmentRoll: {
@@ -593,6 +594,17 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Incident reporting')).toEqual(visible)
+    })
+  })
+
+  describe('Case Notes', () => {
+    test.each`
+      roles | activeServices                                        | visible
+      ${[]} | ${[{ app: 'caseNotesApi', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: 'caseNotesApi', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Case Notes API')).toEqual(visible)
     })
   })
 })

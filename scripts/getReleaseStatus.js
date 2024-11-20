@@ -19,6 +19,7 @@ const endpoints = [
   { application: 'learningAndWorkProgress', urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
   { application: 'whereabouts', urlEnv: 'WHEREABOUTS_API_URL' },
   { application: 'incidentReporting', urlEnv: 'INCIDENT_REPORTING_URL' },
+  { application: 'caseNotesApi', urlEnv: 'CASE_NOTES_API_URL' },
 ]
 
 function getApplicationInfo(url) {

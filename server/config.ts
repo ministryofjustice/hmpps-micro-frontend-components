@@ -205,6 +205,9 @@ export default {
     csipUI: {
       url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    caseNotesApi: {
+      url: get('CASE_NOTES_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
     residentialLocations: {
       url: get('RESIDENTIAL_LOCATIONS_URL', 'http://localhost:3001', requiredInProduction),
     },
