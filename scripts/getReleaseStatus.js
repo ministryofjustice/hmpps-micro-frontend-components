@@ -99,11 +99,17 @@ const getData = async () => {
         return undefined
       }
       const { body, request } = response.value
+
       const applicationName = endpoints.find(
         app =>
           request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT_NAME]),
       )?.application
       if (!applicationName) return undefined
+
+      if (!Array.isArray(body.activeAgencies)) {
+        console.log(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        return undefined
+      }
 
       return {
         app: applicationName,

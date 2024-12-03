@@ -607,4 +607,15 @@ describe('getServicesForUser', () => {
       expect(!!output.find(service => service.heading === 'Case Notes API')).toEqual(visible)
     })
   })
+
+  describe('Handle invalid activeAgencies', () => {
+    test.each`
+      roles | activeServices                                          | visible
+      ${[]} | ${[{ app: 'caseNotesApi', activeAgencies: ['LEI'] }]}   | ${true}
+      ${[]} | ${[{ app: 'caseNotesApi', activeAgencies: undefined }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Case Notes API')).toEqual(visible)
+    })
+  })
 })
