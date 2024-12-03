@@ -112,7 +112,6 @@ describe('Get release status script', () => {
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'residentialLocations', activeAgencies: undefined },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },

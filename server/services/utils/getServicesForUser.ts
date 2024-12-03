@@ -17,8 +17,9 @@ function isActiveInEstablishment(
   if (!applicationAgencyConfig) return fallback // no stored data for this service
 
   return (
-    applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
-    applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId)
+    Array.isArray(applicationAgencyConfig.activeAgencies) &&
+    (applicationAgencyConfig.activeAgencies[0] === ALL_PRISONS_STRING ||
+      applicationAgencyConfig.activeAgencies.includes(activeCaseLoadId))
   )
 }
 
@@ -29,7 +30,7 @@ function isActiveInEstablishmentWithLegacyFallback(
   legacyConfiguration: string,
 ): boolean | undefined {
   const legacyFallbackEnabled =
-    legacyConfiguration === ALL_PRISONS_STRING || legacyConfiguration.split(',').includes(activeCaseLoadId)
+    legacyConfiguration === ALL_PRISONS_STRING || (legacyConfiguration?.split(',').includes(activeCaseLoadId) ?? false)
 
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
