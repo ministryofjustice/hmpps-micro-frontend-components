@@ -39,7 +39,7 @@ generic-service:
     PIN_PHONES_URL: https://pcms-dev.prison.service.justice.gov.uk
     MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-dev.hmpps.service.justice.gov.uk
     MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-dev.prison.service.justice.gov.uk
-    LEGACY_PRISON_VISITS_URL: https://prison-visits-booking-staff-dev.apps.live.cloud-platform.service.justice.gov.uk
+    LEGACY_PRISON_VISITS_URL: https://staff.dev.prisonvisits.service.justice.gov.uk
     SECURE_SOCIAL_VIDEO_CALLS_URL: https://auth.dev.prisonvideo.com/accounts/login/oauth/redirect
     SEND_LEGAL_MAIL_URL: https://check-rule39-mail-dev.prison.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-dev.prison.service.justice.gov.uk
