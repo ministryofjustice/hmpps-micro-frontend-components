@@ -5,6 +5,7 @@ export enum ServiceName {
   CAS2 = 'cas2',
   ALERTS = 'alerts',
   CSIP = 'csipApi',
+  KEYWORKER = 'keyworkerApi',
   CASE_NOTES = 'caseNotesApi',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',

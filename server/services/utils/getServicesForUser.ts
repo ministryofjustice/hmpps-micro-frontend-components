@@ -442,6 +442,14 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
     },
     {
+      id: 'keyworkerUI',
+      heading: 'KEYWORKER',
+      description: 'View and manage allocations of key workers to prisoners',
+      href: config.serviceUrls.keyworkerUI.url,
+      navEnabled: true,
+      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.KEYWORKER, activeServices, false),
+    },
+    {
       id: 'residential-locations',
       heading: 'Residential locations',
       description: 'View and manage residential locations in the establishment.',

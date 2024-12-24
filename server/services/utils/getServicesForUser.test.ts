@@ -43,6 +43,7 @@ jest.mock('../../config', () => ({
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
     csipUI: { url: 'url' },
+    keyworkerUI: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
     incidentReporting: { url: 'url' },
@@ -553,6 +554,17 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'CSIP')).toEqual(visible)
+    })
+  })
+
+  describe('Keyworker api', () => {
+    test.each`
+      roles | activeServices                                        | visible
+      ${[]} | ${[{ app: 'keyworkerApi', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: 'keyworkerApi', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'KEYWORKER')).toEqual(visible)
     })
   })
 

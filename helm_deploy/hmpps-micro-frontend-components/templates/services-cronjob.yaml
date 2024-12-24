@@ -34,6 +34,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}"
               - name: CSIP_API_URL
                 value: "{{ index .Values "generic-service" "env" "CSIP_API_URL" }}"
+              - name: KEYWORKER_API_URL
+                value: "{{ index .Values "generic-service" "env" "KEYWORKER_API_URL" }}"
               - name: INCIDENT_REPORTING_URL
                 value: "{{ index .Values "generic-service" "env" "INCIDENT_REPORTING_URL" }}"
               - name: CASE_NOTES_API_URL
