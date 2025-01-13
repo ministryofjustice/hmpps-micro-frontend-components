@@ -412,7 +412,7 @@ export default (
     {
       id: 'accredited-programmes',
       heading: 'Accredited Programmes',
-      description: 'Search for Accredited Programmes, find out where they’re running and start a referral.',
+      description: 'Search for Accredited Programmes, make referrals and view their progress.',
       href: config.serviceUrls.accreditedProgrammes.url,
       navEnabled: true,
       enabled: () => config.serviceUrls.accreditedProgrammes.enabled,
