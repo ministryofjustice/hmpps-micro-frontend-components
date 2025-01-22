@@ -66,6 +66,7 @@ generic-service:
     CSIP_UI_URL: https://csip.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://offender-case-notes.service.justice.gov.uk
+    APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

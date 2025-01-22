@@ -475,6 +475,14 @@ export default (
         userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false),
     },
+    {
+      id: 'applications',
+      heading: 'Applications',
+      description: 'Log, action and reply to prisoner applications.',
+      href: config.serviceUrls.applications.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([], roles),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
