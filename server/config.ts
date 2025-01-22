@@ -221,6 +221,9 @@ export default {
     incidentReporting: {
       url: get('INCIDENT_REPORTING_URL', 'http://localhost:3001', requiredInProduction),
     },
+    applications: {
+      url: get('APPLICATIONS_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
