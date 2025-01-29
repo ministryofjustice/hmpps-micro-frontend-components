@@ -608,6 +608,16 @@ describe('getServicesForUser', () => {
     })
   })
 
+  describe('Dietary requirements', () => {
+    test.each`
+      roles                            | visible
+      ${[Role.DietAndAllergiesReport]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Dietary requirements')).toEqual(visible)
+    })
+  })
   describe('Handle invalid activeAgencies', () => {
     test.each`
       roles | activeServices                                          | visible
