@@ -475,6 +475,14 @@ export default (
         userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false),
     },
+    {
+      id: 'dietary-requirements',
+      heading: 'Dietary requirements',
+      description: 'View prisoner food allergies, medical dietary requirements, and personal dietary needs.',
+      href: `${config.serviceUrls.newDps.url}/dietary-requirements`,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.DietAndAllergiesReport], roles),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
