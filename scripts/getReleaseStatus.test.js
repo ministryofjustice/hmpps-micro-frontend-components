@@ -10,12 +10,14 @@ const adjudicationsUrl = 'https://manage-adjudications-api-dev.hmpps.service.jus
 const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
 const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
+const keyworkerApiUrl = 'https://allocate-key-workers-dev.hmpps.service.justice.gov.uk'
 const caseNotesApiUrl = 'https://dev.offender-case-notes.service.justice.gov.uk'
 const allUrls = [
   residentialLocationUrl,
   reportingUrl,
   alertsUrl,
   csipApiUrl,
+  keyworkerApiUrl,
   activitiesUrl,
   adjudicationsUrl,
   learningAndWorkProgressUrl,
@@ -74,6 +76,7 @@ describe('Get release status script', () => {
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'keyworkerApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
@@ -111,6 +114,7 @@ describe('Get release status script', () => {
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'keyworkerApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
@@ -139,6 +143,7 @@ describe('Get release status script', () => {
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
         { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'keyworkerApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
@@ -160,6 +165,7 @@ describe('Get release status script', () => {
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'keyworkerApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
@@ -188,6 +194,7 @@ describe('Get release status script', () => {
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'keyworkerApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
