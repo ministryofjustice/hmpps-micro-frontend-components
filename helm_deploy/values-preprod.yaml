@@ -59,6 +59,7 @@ generic-service:
     WHEREABOUTS_API_URL: https://whereabouts-api-preprod.service.justice.gov.uk
     CSIP_API_URL: https://csip-api-preprod.hmpps.service.justice.gov.uk
     CSIP_UI_URL: https://csip-preprod.hmpps.service.justice.gov.uk
+    KEYWORKER_UI_URL: https://allocate-key-workers-preprod.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting-preprod.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://preprod.offender-case-notes.service.justice.gov.uk
 
