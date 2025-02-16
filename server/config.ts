@@ -205,6 +205,12 @@ export default {
     csipUI: {
       url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    keyworkerApi: {
+      url: get('KEYWORKER_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    keyworkerUI: {
+      url: get('KEYWORKER_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
     caseNotesApi: {
       url: get('CASE_NOTES_API_URL', 'http://localhost:3001', requiredInProduction),
     },
