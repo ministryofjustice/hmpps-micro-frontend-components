@@ -61,6 +61,7 @@ generic-service:
     CSIP_UI_URL: https://csip-preprod.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting-preprod.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://preprod.offender-case-notes.service.justice.gov.uk
+    ESTABLISHMENT_ROLL_URL: https://prison-roll-count-preprod.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
@@ -72,7 +73,6 @@ generic-service:
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
-    ESTABLISHMENT_ROLL_EXCLUDED: ""
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
