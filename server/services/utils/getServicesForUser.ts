@@ -481,7 +481,7 @@ export default (
       description: 'Log, action and reply to prisoner applications.',
       href: config.serviceUrls.applications.url,
       navEnabled: true,
-      enabled: () => userHasRoles([], roles),
+      enabled: () => userHasRoles([Role.ManagingPrisonerApps], roles),
     },
   ]
     .filter(service => service.enabled())
