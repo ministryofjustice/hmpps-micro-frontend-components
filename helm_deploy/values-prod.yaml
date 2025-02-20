@@ -66,7 +66,7 @@ generic-service:
     CSIP_UI_URL: https://csip.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://offender-case-notes.service.justice.gov.uk
-    APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui.hmpps.service.justice.gov.uk
+    MANAGING_APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://dps.prison.service.justice.gov.uk/establishment-roll
 
     # Feature
