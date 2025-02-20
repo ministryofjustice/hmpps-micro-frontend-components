@@ -79,7 +79,7 @@ export enum Role {
   IncidentReportingRO = 'INCIDENT_REPORTS__RO',
   IncidentReportingRW = 'INCIDENT_REPORTS__RW',
   IncidentReportingApprove = 'INCIDENT_REPORTS__APPROVE',
-  ManagingPrisonerApps = 'MANAGING_PRISONER_APPS',
+  ManagePrisonerApps = 'MANAGING_PRISONER_APPS',
   DietAndAllergiesReport = 'DIET_AND_FOOD_ALLERGIES_REPORT',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
