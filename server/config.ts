@@ -224,13 +224,13 @@ export default {
     applications: {
       url: get('APPLICATIONS_URL', 'http://localhost:3001', requiredInProduction),
     },
+    establishmentRoll: {
+      url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
-    },
-    establishmentRoll: {
-      excluded: get('ESTABLISHMENT_ROLL_EXCLUDED', ''),
     },
   },
 }

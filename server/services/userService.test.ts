@@ -5,6 +5,7 @@ import PrisonApiClient from '../data/prisonApiClient'
 import CacheService from './cacheService'
 import { prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
 import { PrisonUserAccess } from '../interfaces/hmppsUser'
+import { Location } from '../interfaces/location'
 
 const expectedCaseLoads: CaseLoad[] = [
   { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
@@ -32,7 +33,7 @@ describe('User service', () => {
     const prisonApiClient = prisonApiClientMock() as undefined as PrisonApiClient
     beforeEach(() => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
-      prisonApiClient.getUserLocations = jest.fn(async () => [])
+      prisonApiClient.getUserLocations = jest.fn(async () => [] as Location[])
       prisonApiClient.getIsKeyworker = jest.fn(async () => true)
 
       userService = new UserService(() => prisonApiClient, cacheServiceMock)
@@ -59,7 +60,7 @@ describe('User service', () => {
       })
 
       it('Does not set cache if user has no case loads', async () => {
-        prisonApiClient.getUserCaseLoads = jest.fn(async () => [])
+        prisonApiClient.getUserCaseLoads = jest.fn(async () => [] as CaseLoad[])
 
         const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
 

@@ -47,11 +47,7 @@ jest.mock('../../config', () => ({
     residentialLocations: { url: 'url' },
     incidentReporting: { url: 'url' },
     caseNotesApi: { url: 'url' },
-  },
-  features: {
-    establishmentRoll: {
-      excluded: 'MDI,LEI',
-    },
+    establishmentRoll: { url: 'url' },
   },
 }))
 
@@ -170,15 +166,13 @@ describe('getServicesForUser', () => {
 
   describe('Establishment roll check', () => {
     test.each`
-      locations | visible  | activeCaseLoadId | href
-      ${[]}     | ${false} | ${'MDI'}         | ${undefined}
-      ${[{}]}   | ${true}  | ${'MDI'}         | ${'http://old-dps.com/establishment-roll'}
-      ${[{}]}   | ${true}  | ${'DNI'}         | ${'http://new-dps.com/establishment-roll'}
-    `('user with locations: $locations.length, can see: $visible', ({ locations, visible, activeCaseLoadId, href }) => {
+      locations | visible  | activeCaseLoadId
+      ${[]}     | ${false} | ${'MDI'}
+      ${[{}]}   | ${true}  | ${'MDI'}
+      ${[{}]}   | ${true}  | ${'DNI'}
+    `('user with locations: $locations.length, can see: $visible', ({ locations, visible, activeCaseLoadId }) => {
       const output = getServicesForUser([], false, activeCaseLoadId, 12345, locations, null)
-      const serviceData = output.find(service => service.heading === 'Establishment roll check')
-      expect(!!serviceData).toEqual(visible)
-      expect(serviceData?.href).toEqual(href)
+      expect(!!output.find(service => service.heading === 'Establishment roll check')).toEqual(visible)
     })
   })
 
@@ -608,6 +602,16 @@ describe('getServicesForUser', () => {
     })
   })
 
+  describe('Dietary requirements', () => {
+    test.each`
+      roles                            | visible
+      ${[Role.DietAndAllergiesReport]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Dietary requirements')).toEqual(visible)
+    })
+  })
   describe('Handle invalid activeAgencies', () => {
     test.each`
       roles | activeServices                                          | visible

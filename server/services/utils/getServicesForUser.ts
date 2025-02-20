@@ -150,7 +150,7 @@ export default (
       id: 'establishment-roll',
       heading: 'Establishment roll check',
       description: 'View the roll broken down by residential unit and see who is arriving and leaving.',
-      href: `${config.features.establishmentRoll.excluded.split(',').includes(activeCaseLoadId) ? config.serviceUrls.dps.url : config.serviceUrls.newDps.url}/establishment-roll`,
+      href: config.serviceUrls.establishmentRoll.url,
       navEnabled: true,
       enabled: () => locations?.length > 0,
     },
@@ -482,6 +482,14 @@ export default (
       href: config.serviceUrls.applications.url,
       navEnabled: true,
       enabled: () => userHasRoles([Role.ManagingPrisonerApps], roles),
+    },
+    {
+      id: 'dietary-requirements',
+      heading: 'Dietary requirements',
+      description: 'View prisoner food allergies, medical dietary requirements, and personal dietary needs.',
+      href: `${config.serviceUrls.newDps.url}/dietary-requirements`,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.DietAndAllergiesReport], roles),
     },
   ]
     .filter(service => service.enabled())
