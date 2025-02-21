@@ -28,11 +28,12 @@
     "int-test-ui": "cypress open --project ./integration_tests --e2e --browser chrome",
     "clean": "rm -rf dist build node_modules stylesheets",
     "rebuild": "npm run clean && npm i && npm run build",
-    "getAppsStatus": "node -e 'require(\"./scripts/getReleaseStatus\").getData()'"
+    "getAppsStatus": "node -e 'require(\"./scripts/getReleaseStatus\").getData()'",
+    "postinstall": "npx patch-package"
   },
   "engines": {
-    "node": "^20",
-    "npm": "^10"
+    "node": "^22",
+    "npm": "^11"
   },
   "jest": {
     "transform": {
@@ -98,7 +99,7 @@
     ]
   },
   "dependencies": {
-    "@apollo/client": "^3.13.0",
+    "@apollo/client": "^3.13.1",
     "@contentful/rich-text-html-renderer": "^16.6.10",
     "@contentful/rich-text-types": "^16.8.5",
     "@ministryofjustice/frontend": "^2.2.5",
@@ -139,6 +140,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
@@ -169,7 +171,7 @@
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.8.0",
+    "eslint-import-resolver-typescript": "^3.8.3",
     "eslint-plugin-cypress": "^2.15.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-no-only-tests": "^3.3.0",
