@@ -221,6 +221,9 @@ export default {
     incidentReporting: {
       url: get('INCIDENT_REPORTING_URL', 'http://localhost:3001', requiredInProduction),
     },
+    manageApplications: {
+      url: get('MANAGE_APPLICATIONS_URL', 'http://localhost:3001', requiredInProduction),
+    },
     establishmentRoll: {
       url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction),
     },

@@ -61,6 +61,7 @@ generic-service:
     CSIP_UI_URL: https://csip-preprod.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting-preprod.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://preprod.offender-case-notes.service.justice.gov.uk
+    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui-preprod.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count-preprod.hmpps.service.justice.gov.uk
 
     # Feature

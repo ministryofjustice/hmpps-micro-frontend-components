@@ -476,6 +476,14 @@ export default (
         isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false),
     },
     {
+      id: 'manage-applications',
+      heading: 'Applications',
+      description: 'Log, action and reply to prisoner applications.',
+      href: config.serviceUrls.manageApplications.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.ManagePrisonerApps], roles),
+    },
+    {
       id: 'dietary-requirements',
       heading: 'Dietary requirements',
       description: 'View prisoner food allergies, medical dietary requirements, and personal dietary needs.',
