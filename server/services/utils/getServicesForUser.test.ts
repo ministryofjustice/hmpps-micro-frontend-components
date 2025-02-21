@@ -48,6 +48,7 @@ jest.mock('../../config', () => ({
     incidentReporting: { url: 'url' },
     caseNotesApi: { url: 'url' },
     establishmentRoll: { url: 'url' },
+    manageApplications: { url: 'url' },
   },
 }))
 
@@ -612,6 +613,18 @@ describe('getServicesForUser', () => {
       expect(!!output.find(service => service.heading === 'Dietary requirements')).toEqual(visible)
     })
   })
+
+  describe('Manage Applications', () => {
+    test.each`
+      roles                        | visible
+      ${[Role.ManagePrisonerApps]} | ${true}
+      ${[]}                        | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Applications')).toEqual(visible)
+    })
+  })
+
   describe('Handle invalid activeAgencies', () => {
     test.each`
       roles | activeServices                                          | visible
