@@ -13,7 +13,8 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support-preprod.hmpps.service.justice.gov.uk/feedback-and-support"
     PRISON_API_URL: "https://prison-api-preprod.prison.service.justice.gov.uk"
-    CONTENTFUL_HOST: "https://graphql.contentful.com"
+    CONTENTFUL_HOST: "https://graphql.eu.contentful.com"
+    CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: PRE-PRODUCTION
     CACHE_TIMOUT: 600
