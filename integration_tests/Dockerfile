@@ -44,6 +44,7 @@ COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 
 COPY hmpps-template-typescript .
+RUN npm run postinstall
 RUN npm run build
 
 RUN npm prune --no-audit --omit=dev
