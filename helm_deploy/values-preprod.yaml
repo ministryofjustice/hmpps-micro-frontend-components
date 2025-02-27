@@ -13,7 +13,8 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support-preprod.hmpps.service.justice.gov.uk/feedback-and-support"
     PRISON_API_URL: "https://prison-api-preprod.prison.service.justice.gov.uk"
-    CONTENTFUL_HOST: "https://graphql.contentful.com"
+    CONTENTFUL_HOST: "https://graphql.eu.contentful.com"
+    CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT_NAME: PRE-PRODUCTION
     CACHE_TIMOUT: 600
@@ -61,6 +62,7 @@ generic-service:
     CSIP_UI_URL: https://csip-preprod.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting-preprod.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://preprod.offender-case-notes.service.justice.gov.uk
+    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui-preprod.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count-preprod.hmpps.service.justice.gov.uk
 
     # Feature

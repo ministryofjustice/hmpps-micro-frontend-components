@@ -89,6 +89,7 @@ export default {
   contentful: {
     host: get('CONTENTFUL_HOST', ''),
     spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
+    environment: get('CONTENTFUL_ENVIRONMENT', 'environment', requiredInProduction),
     accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
   },
   contentfulFooterLinksEnabled: get('CONTENTFUL_FOOTER_LINKS_ENABLED', 'false', requiredInProduction) === 'true',
@@ -220,6 +221,9 @@ export default {
     },
     incidentReporting: {
       url: get('INCIDENT_REPORTING_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    manageApplications: {
+      url: get('MANAGE_APPLICATIONS_URL', 'http://localhost:3001', requiredInProduction),
     },
     establishmentRoll: {
       url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction),
