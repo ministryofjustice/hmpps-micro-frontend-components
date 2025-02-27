@@ -68,7 +68,7 @@ generic-service:
     INCIDENT_REPORTING_URL: https://incident-reporting.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://offender-case-notes.service.justice.gov.uk
     MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui.hmpps.service.justice.gov.uk
-    ESTABLISHMENT_ROLL_URL: https://dps.prison.service.justice.gov.uk/establishment-roll
+    ESTABLISHMENT_ROLL_URL: https://prison-roll-count.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
