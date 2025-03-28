@@ -14,6 +14,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 
 import developRoutes from './routes/developRoutes'
 import componentRoutes from './routes/componentRoutes'
+import notificationRoutes from './routes/notificationRoutes'
 import type { Services } from './services'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpAuthentication from './middleware/setUpAuthentication'
@@ -38,11 +39,13 @@ export default function createApp(services: Services): express.Application {
   setUpEnvironmentName(app)
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
-  app.use(setUpCsrf())
+  // app.use(setUpCsrf())
   setUpSwagger(app)
 
   app.use('/develop', developRoutes(services))
   app.use('/', componentRoutes(services))
+  // Use this service as the notifications one for now
+  app.use('/notifications', notificationRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

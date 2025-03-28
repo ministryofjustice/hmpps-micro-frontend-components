@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', initHeader, false)
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
+  const notificationsToggle = document.querySelector('.connect-dps-common-header__notifications-toggle')
+  const notificationsMenu = document.querySelector('#connect-dps-common-header-notifications-menu')
+
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -18,8 +21,10 @@ function initHeader() {
     searchToggle.removeAttribute('hidden')
     userToggle.removeAttribute('hidden')
     servicesToggle.removeAttribute('hidden')
+    notificationsToggle.removeAttribute('hidden')
 
     closeTabs([
+      [notificationsToggle, notificationsMenu],
       [searchToggle, searchMenu],
       [userToggle, userMenu],
       [servicesToggle, servicesMenu],
@@ -27,24 +32,39 @@ function initHeader() {
 
     searchToggle.addEventListener('click', function (event) {
       closeTabs([
+        [notificationsToggle, notificationsMenu],
         [userToggle, userMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(searchToggle, searchMenu)
     })
+
     userToggle.addEventListener('click', function (event) {
       closeTabs([
+        [notificationsToggle, notificationsMenu],
         [searchToggle, searchMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(userToggle, userMenu)
     })
+
     servicesToggle.addEventListener('click', function (event) {
       closeTabs([
+        [notificationsToggle, notificationsMenu],
         [searchToggle, searchMenu],
         [userToggle, userMenu],
       ])
       toggleMenu(servicesToggle, servicesMenu)
+    })
+
+    notificationsToggle.addEventListener('click', function (event) {
+      closeTabs([
+        [servicesToggle, servicesMenu],
+        [searchToggle, searchMenu],
+        [userToggle, userMenu],
+      ])
+
+      toggleMenu(notificationsToggle, notificationsMenu)
     })
 
     searchSubmitBtn.addEventListener('click', function (event) {
@@ -84,7 +104,9 @@ function hideFallbackLinks() {
   const searchLink = document.querySelector('.connect-dps-common-header__search-menu-link')
   const userLink = document.querySelector('.connect-dps-common-header__user-menu-link')
   const servicesLink = document.querySelector('.connect-dps-common-header__services-menu-link')
+  // const notificationsLink = document.querySelector('.connect-dps-common-header__notifications-link')
   searchLink.setAttribute('hidden', 'hidden')
   userLink.setAttribute('hidden', 'hidden')
   servicesLink.setAttribute('hidden', 'hidden')
+  // notificationsLink.setAttribute('hidden', 'hidden')
 }

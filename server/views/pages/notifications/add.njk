@@ -1,0 +1,36 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block bodyStart %}
+  <form method="POST">
+    {% call govukFieldset({
+  legend: {
+    text: "New notification",
+    classes: "govuk-fieldset__legend--l",
+    isPageHeading: true
+  }
+}) %}
+    {{ govukInput({
+    label: {
+      text: "User ID to notify (fixed for now)"
+    },
+    id: "userId",
+    name: "userId",
+    disabled: "true",
+  }) }}
+
+    {{ govukInput({
+    label: {
+      text: "Content"
+    },
+    id: "content",
+    name: "content"
+  }) }}
+
+    {% endcall %}
+    {{ govukButton({
+  text: "Save notification"
+}) }}
+  </form>
+{% endblock %}

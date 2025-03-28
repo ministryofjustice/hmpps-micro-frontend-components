@@ -62,6 +62,18 @@
       <div class="govuk-width-container connect-dps-common-header__button-width-container">
         <div class="connect-dps-common-header__button-container">
           <div class="connect-dps-common-header__navigation">
+            <div class="connect-ddps-common-header__navigation__item">
+              <div class="connect-dps-common-header__icon-link-wrapper">
+                <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__notifications-toggle" aria-controls="connect-dps-common-header-notifications" aria-expanded="false" type="button" hidden='hidden'>
+                  <span>
+                    🔔
+                    <span style="colour: white; background-colour: red">
+                      {{ user.unreadNotifications }}
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
 
             {# CASELOAD SWITCHER #}
             {% if user.caseLoads.length > 1 %}
@@ -188,6 +200,30 @@
                   {% if service.navEnabled %}
                     <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
                   {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {#  END SERVICES MENU #}
+
+      {# NOTIFICATIONS MENU #}
+      <div id="connect-dps-common-header-notifications-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__notifications-menu" hidden="hidden">
+        <div class="govuk-width-container">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+              <h3 class="govuk-heading-m">
+                Notifications
+              </h3>
+              <ul class='govuk-list'>
+                {% for notification in user.notifications %}
+                  <p class="govuk-body">
+                    {% if not notification.seen %}
+                      ⚠️
+                    {% endif %}
+                    {{ notification.content }} - <a class="govuk-link" href="http://localhost:3000/notification/{{ notification.id }}?url={{notification.url | urlencode }}">View now</a>
+                  </p>
                 {% endfor %}
               </ul>
             </div>

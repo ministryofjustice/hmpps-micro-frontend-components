@@ -1,3 +1,4 @@
+import { Notification } from '../@types/Notification'
 import { Role } from '../services/utils/roles'
 import { CaseLoad } from './caseLoad'
 import { Service } from './Service'
@@ -21,6 +22,8 @@ export interface PrisonUserAccess {
   caseLoads: CaseLoad[]
   activeCaseLoad: CaseLoad | null
   services: Service[]
+  notifications?: Notification[]
+  unreadNotifications?: number
 }
 
 /**
