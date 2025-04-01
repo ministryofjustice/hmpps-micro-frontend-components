@@ -38,7 +38,7 @@ export default class IndexPage extends Page {
       list: (): PageElement => cy.get('#connect-dps-common-footer-services ul li'),
     },
 
-    surveyMonkeyLink: (): PageElement => cy.get('a[href="https://eu.surveymonkey.com/r/HJTL6XS"]'),
+    feedbackSurveyLink: (): PageElement => cy.get('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]'),
     accessibilityLink: (): PageElement => cy.get('a[href="https://external/new-dps/accessibility-statement"]'),
     termsAndConditionsLink: (): PageElement => cy.get('a[href="https://external/new-dps/terms-and-conditions"]'),
     privacyPolicyLink: (): PageElement => cy.get('a[href="https://external/new-dps/privacy-policy"]'),
