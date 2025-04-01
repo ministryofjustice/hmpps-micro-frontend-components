@@ -21,7 +21,7 @@ context('Footer', () => {
   it('Links should be displayed', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.footer.surveyMonkeyLink().should('be.visible')
+    indexPage.footer.feedbackSurveyLink().should('be.visible')
     indexPage.footer.accessibilityLink().should('be.visible')
     indexPage.footer.termsAndConditionsLink().should('be.visible')
     indexPage.footer.privacyPolicyLink().should('be.visible')
