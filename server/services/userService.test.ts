@@ -9,6 +9,7 @@ import { Location } from '../interfaces/location'
 
 const expectedCaseLoads: CaseLoad[] = [
   { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
+  { caseloadFunction: '', caseLoadId: '2', currentlyActive: false, description: '', type: '' },
 ]
 
 const expectedUserAccess: PrisonUserAccess = {
@@ -128,32 +129,45 @@ describe('User service', () => {
         expect(output).toEqual(cachedData)
       })
 
-      it('returns cached data if active caseload is unchanged', async () => {
-        const cachedData: PrisonUserAccess = {
-          caseLoads: [
-            expectedCaseLoads[0],
-            { caseloadFunction: '', caseLoadId: '2', currentlyActive: false, description: '', type: '' },
-          ],
-          activeCaseLoad: expectedCaseLoads[0],
-          services: [],
-        }
-
-        cacheServiceMock.getData.mockResolvedValue(cachedData)
+      it('returns cached data if active case load and case load list is unchanged', async () => {
+        cacheServiceMock.getData.mockResolvedValue(expectedUserAccess)
 
         const output = await userService.getPrisonUserAccess(prisonUserMock)
         expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
         expect(prisonApiClient.getUserLocations).toBeCalledTimes(0)
         expect(prisonApiClient.getIsKeyworker).toBeCalledTimes(0)
-        expect(output).toEqual(cachedData)
+        expect(output).toEqual(expectedUserAccess)
       })
 
       it('gets new data if active caseload has changed', async () => {
         const cachedData: PrisonUserAccess = {
           caseLoads: [
             { ...expectedCaseLoads[0], currentlyActive: false },
-            { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
+            { ...expectedCaseLoads[1], currentlyActive: true },
           ],
-          activeCaseLoad: { caseloadFunction: '', caseLoadId: '2', currentlyActive: true, description: '', type: '' },
+          activeCaseLoad: { ...expectedCaseLoads[1], currentlyActive: true },
+          services: [],
+        }
+
+        cacheServiceMock.getData.mockResolvedValue(cachedData)
+
+        const output = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(1)
+        expect(prisonApiClient.getUserLocations).toBeCalledTimes(1)
+        expect(prisonApiClient.getIsKeyworker).toBeCalledTimes(1)
+
+        expect(output).toEqual(expectedUserAccess)
+      })
+
+      it('gets new data if list of caseloads has changed', async () => {
+        const cachedData: PrisonUserAccess = {
+          caseLoads: [
+            expectedCaseLoads[0],
+            expectedCaseLoads[1],
+            { caseloadFunction: '', caseLoadId: '3', currentlyActive: false, description: '', type: '' },
+          ],
+          activeCaseLoad: expectedUserAccess.activeCaseLoad,
           services: [],
         }
 

@@ -37,7 +37,13 @@ export default class UserService {
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS
-      if (cache && this.activeCaseLoadHasNotChanged(activeCaseLoad, cache)) return cache
+      if (
+        cache &&
+        this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
+        this.caseLoadsHaveNotChanged(caseLoads, cache)
+      ) {
+        return cache
+      }
 
       const services = await this.getServicesForUser(user, activeCaseLoad?.caseLoadId, prisonApiClient)
       const userAccess: PrisonUserAccess = { caseLoads, activeCaseLoad, services }
@@ -63,6 +69,19 @@ export default class UserService {
 
   private activeCaseLoadHasNotChanged(activeCaseLoad: CaseLoad, cache: PrisonUserAccess): boolean {
     return cache?.activeCaseLoad?.caseLoadId === activeCaseLoad?.caseLoadId
+  }
+
+  private caseLoadsHaveNotChanged(caseLoads: CaseLoad[], cache: PrisonUserAccess): boolean {
+    return (
+      cache?.caseLoads
+        ?.map(c => c.caseLoadId)
+        .sort()
+        .join(',') ===
+      caseLoads
+        ?.map(c => c.caseLoadId)
+        .sort()
+        .join(',')
+    )
   }
 
   private async getServicesForUser(
