@@ -35,6 +35,10 @@ function isActiveInEstablishmentWithLegacyFallback(
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
 
+function isEstablishmentEnabledForResettlement(activeCaseLoadId: string): boolean {
+  return config.serviceUrls.prepareSomeoneForRelease.enabledPrisons.includes(activeCaseLoadId.toUpperCase())
+}
+
 export default (
   roles: string[],
   isKeyworker: boolean,
@@ -397,7 +401,8 @@ export default (
       description: 'Search for people with resettlement needs. View and manage their information and support.',
       href: config.serviceUrls.prepareSomeoneForRelease.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ResettlementPassportEdit], roles),
+      enabled: () =>
+        userHasRoles([Role.ResettlementPassportEdit], roles) && isEstablishmentEnabledForResettlement(activeCaseLoadId),
     },
     {
       id: 'cas2',
