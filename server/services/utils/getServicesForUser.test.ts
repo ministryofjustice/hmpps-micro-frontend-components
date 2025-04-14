@@ -37,7 +37,7 @@ jest.mock('../../config', () => ({
     workAfterRelease: { url: 'url' },
     manageOffences: { url: 'url' },
     learningAndWorkProgress: { url: 'url' },
-    prepareSomeoneForRelease: { url: 'url' },
+    prepareSomeoneForRelease: { url: 'url', enabledPrisons: 'LEI,MDI' },
     cas2: { url: 'url' },
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
@@ -513,6 +513,17 @@ describe('getServicesForUser', () => {
       ${[]}                              | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
+    })
+  })
+
+  describe('Prepare someone for release not displayed for non-eligible establishment', () => {
+    test.each`
+      roles                              | visible
+      ${[Role.ResettlementPassportEdit]} | ${false}
+      ${[]}                              | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, 'MOR', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
     })
   })
