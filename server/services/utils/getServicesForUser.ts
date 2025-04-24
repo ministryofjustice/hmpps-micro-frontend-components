@@ -34,7 +34,6 @@ function isActiveInEstablishmentWithLegacyFallback(
 
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
-
 export default (
   roles: string[],
   isKeyworker: boolean,
@@ -395,9 +394,11 @@ export default (
       id: 'prepare-someone-for-release',
       heading: 'Prepare someone for release',
       description: 'Search for people with resettlement needs. View and manage their information and support.',
-      href: config.serviceUrls.prepareSomeoneForRelease.url,
+      href: config.serviceUrls.prepareSomeoneForReleaseUi.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ResettlementPassportEdit], roles),
+      enabled: () =>
+        userHasRoles([Role.ResettlementPassportEdit], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.PREPARE_SOMEONE_FOR_RELEASE, activeServices, false),
     },
     {
       id: 'cas2',

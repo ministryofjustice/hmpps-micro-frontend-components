@@ -184,7 +184,7 @@ export default {
     learningAndWorkProgress: {
       url: get('LEARNING_AND_WORK_PROGRESS_URL', 'http://localhost:3001', requiredInProduction),
     },
-    prepareSomeoneForRelease: {
+    prepareSomeoneForReleaseUi: {
       url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
     },
     cas2: {

@@ -11,6 +11,7 @@ export enum ServiceName {
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   WHEREABOUTS = 'whereabouts',
   INCIDENT_REPORTING = 'incidentReporting',
+  PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
 }
 
 export interface ServiceActiveAgencies {
