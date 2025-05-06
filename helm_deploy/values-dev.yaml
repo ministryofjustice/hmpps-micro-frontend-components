@@ -57,6 +57,7 @@ generic-service:
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-dev.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-dev.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-dev.hmpps.service.justice.gov.uk
+    ALERTS_UI_URL: https://alerts-ui-dev.hmpps.service.justice.gov.uk
     REPORTING_URL: https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-dev.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk

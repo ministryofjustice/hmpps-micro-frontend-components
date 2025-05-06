@@ -427,6 +427,25 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
     },
     {
+      id: 'alertsUI',
+      heading: 'Manage prisoner alerts',
+      description: [
+        '',
+        'Upload alerts in bulk.',
+        'Edit alerts and alert types and make different alerts active and inactive.',
+        'Edit alerts and alert types, make different alerts active and inactive, and upload alerts in bulk.',
+      ][
+        +userHasRoles([Role.BulkPrisonEstateAlerts], roles) +
+          +userHasRoles([Role.AlertsReferenceDataManager], roles) * 2
+      ],
+      href: config.serviceUrls.alertsUI.url,
+      navEnabled: true,
+      enabled: () =>
+        (userHasRoles([Role.BulkPrisonEstateAlerts], roles) ||
+          userHasRoles([Role.AlertsReferenceDataManager], roles)) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
+    },
+    {
       id: 'caseNotesApi',
       heading: 'Case Notes API',
       description: 'Case Notes API Service',

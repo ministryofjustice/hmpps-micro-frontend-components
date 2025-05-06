@@ -200,6 +200,9 @@ export default {
     alerts: {
       url: get('ALERTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
+    alertsUI: {
+      url: get('ALERTS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
     csipApi: {
       url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction),
     },

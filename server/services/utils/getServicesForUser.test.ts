@@ -42,6 +42,7 @@ jest.mock('../../config', () => ({
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
+    alertsUI: { url: 'url' },
     csipUI: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
@@ -592,7 +593,7 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Alerts', () => {
+  describe('Alerts API', () => {
     test.each`
       roles | activeServices                                  | visible
       ${[]} | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${true}
@@ -600,6 +601,23 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Alerts')).toEqual(visible)
+    })
+  })
+
+  describe('Alerts UI', () => {
+    test.each`
+      roles                                                             | activeServices                                  | visible  | description
+      ${['ALERTS_REFERENCE_DATA_MANAGER']}                              | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${true}  | ${'Edit alerts and alert types and make different alerts active and inactive.'}
+      ${['BULK_PRISON_ESTATE_ALERTS']}                                  | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${true}  | ${'Upload alerts in bulk.'}
+      ${['ALERTS_REFERENCE_DATA_MANAGER', 'BULK_PRISON_ESTATE_ALERTS']} | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${true}  | ${'Edit alerts and alert types, make different alerts active and inactive, and upload alerts in bulk.'}
+      ${[]}                                                             | ${[{ app: 'alerts', activeAgencies: ['LEI'] }]} | ${false} | ${''}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices, description }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
+      const alertsUIService = output.find(service => service.heading === 'Manage prisoner alerts')
+      expect(!!alertsUIService).toEqual(visible)
+      if (description) {
+        expect(alertsUIService.description).toEqual(description)
+      }
     })
   })
 
