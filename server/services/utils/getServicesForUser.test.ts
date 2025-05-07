@@ -760,4 +760,16 @@ describe('getServicesForUser', () => {
       expect(!!output.find(service => service.heading === 'Case Notes API')).toEqual(visible)
     })
   })
+
+  describe('Create an electronic monitoring order', () => {
+    test.each([
+      [[], false],
+      [[Role.CreateAnEMOrder], true],
+    ])('user with roles $1, can see $2', (roles, visible) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      expect(
+        !!output.find(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
+      ).toEqual(visible)
+    })
+  })
 })
