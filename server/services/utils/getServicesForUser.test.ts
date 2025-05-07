@@ -50,6 +50,7 @@ jest.mock('../../config', () => ({
     caseNotesApi: { url: 'url' },
     establishmentRoll: { url: 'url' },
     manageApplications: { url: 'url' },
+    createAnEMOrder: { url: 'url' },
   },
 }))
 
@@ -775,6 +776,20 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Case Notes API')).toEqual(visible)
+    })
+  })
+
+  describe('Create an electronic monitoring order', () => {
+    test.each([
+      [[], 'LEI', false],
+      [[Role.CreateAnEMOrder], 'LEI', false],
+      [[Role.CreateAnEMOrder], 'DNI', true],
+      [[Role.CreateAnEMOrder], 'WEI', true],
+    ])('user with roles %s, can see: %s', (roles, activeCaseLoadId, visible) => {
+      const output = getServicesForUser(roles, false, activeCaseLoadId, 12345, [], null)
+      expect(
+        output.some(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
+      ).toEqual(visible)
     })
   })
 })
