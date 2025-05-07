@@ -34,6 +34,17 @@ function isActiveInEstablishmentWithLegacyFallback(
 
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
+
+function getAlertsUiServiceDescription(roles: string[]): string {
+  const canUploadBulkAlerts: boolean = userHasRoles([Role.BulkPrisonEstateAlerts], roles)
+  const canEditReferenceData: boolean = userHasRoles([Role.AlertsReferenceDataManager], roles)
+  if (canUploadBulkAlerts && canEditReferenceData)
+    return 'Edit alerts and alert types, make different alerts active and inactive, and upload alerts in bulk.'
+  if (canUploadBulkAlerts) return 'Upload alerts in bulk.'
+  if (canEditReferenceData) return 'Edit alerts and alert types and make different alerts active and inactive.'
+  return ''
+}
+
 export default (
   roles: string[],
   isKeyworker: boolean,
@@ -429,15 +440,7 @@ export default (
     {
       id: 'alertsUI',
       heading: 'Manage prisoner alerts',
-      description: [
-        '',
-        'Upload alerts in bulk.',
-        'Edit alerts and alert types and make different alerts active and inactive.',
-        'Edit alerts and alert types, make different alerts active and inactive, and upload alerts in bulk.',
-      ][
-        +userHasRoles([Role.BulkPrisonEstateAlerts], roles) +
-          +userHasRoles([Role.AlertsReferenceDataManager], roles) * 2
-      ],
+      description: getAlertsUiServiceDescription(roles),
       href: config.serviceUrls.alertsUI.url,
       navEnabled: true,
       enabled: () =>
