@@ -492,6 +492,14 @@ export default (
       navEnabled: true,
       enabled: () => userHasRoles([Role.DietAndAllergiesReport], roles),
     },
+    {
+      id: 'create-an-electronic-monitoring-order',
+      heading: 'Apply, change or end an Electronic Monitoring Order (EMO)',
+      description: '',
+      href: config.serviceUrls.createAnEMOrder.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.CreateAnEMOrder], roles) && ['DNI', 'WEI'].includes(activeCaseLoadId),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {

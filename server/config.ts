@@ -228,6 +228,9 @@ export default {
     establishmentRoll: {
       url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction),
     },
+    createAnEMOrder: {
+      url: get('CEMO_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
