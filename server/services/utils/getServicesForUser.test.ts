@@ -765,7 +765,7 @@ describe('getServicesForUser', () => {
     test.each([
       [[], false],
       [[Role.CreateAnEMOrder], true],
-    ])('user with roles $1, can see $2', (roles, visible) => {
+    ])('user with roles %s, can see: %s', (roles, visible) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
       expect(
         output.some(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
