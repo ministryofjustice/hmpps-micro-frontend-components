@@ -768,7 +768,7 @@ describe('getServicesForUser', () => {
     ])('user with roles $1, can see $2', (roles, visible) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
       expect(
-        !!output.find(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
+        output.some(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
       ).toEqual(visible)
     })
   })
