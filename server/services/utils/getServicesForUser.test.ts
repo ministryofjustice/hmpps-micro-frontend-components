@@ -49,6 +49,7 @@ jest.mock('../../config', () => ({
     caseNotesApi: { url: 'url' },
     establishmentRoll: { url: 'url' },
     manageApplications: { url: 'url' },
+    createAnEMOrder: { url: 'url' },
   },
 }))
 
