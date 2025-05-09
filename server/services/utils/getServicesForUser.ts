@@ -498,7 +498,9 @@ export default (
       description: '',
       href: config.serviceUrls.createAnEMOrder.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.CreateAnEMOrder], roles) && ['DNI', 'WEI'].includes(activeCaseLoadId),
+      enabled: () =>
+        userHasRoles([Role.CreateAnEMOrder], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.CEMO, activeServices, false),
     },
   ]
     .filter(service => service.enabled())

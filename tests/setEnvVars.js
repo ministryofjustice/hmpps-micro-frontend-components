@@ -8,3 +8,4 @@ process.env.WHEREABOUTS_API_URL = 'https://whereabouts-api-dev.service.justice.g
 process.env.CSIP_API_URL = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 process.env.CASE_NOTES_API_URL = 'https://dev.offender-case-notes.service.justice.gov.uk'
 process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
+process.env.CEMO_URL = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
