@@ -12,6 +12,7 @@ const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
 const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 const caseNotesApiUrl = 'https://dev.offender-case-notes.service.justice.gov.uk'
 const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
+const cemoUrl = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
 const allUrls = [
   residentialLocationUrl,
   reportingUrl,
@@ -23,6 +24,7 @@ const allUrls = [
   whereaboutsApiUrl,
   caseNotesApiUrl,
   prepareSomeoneForReleaseUrl,
+  cemoUrl,
 ]
 
 function setMockSuccess(urls, body = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }) {
