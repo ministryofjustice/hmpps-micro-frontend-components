@@ -82,6 +82,7 @@ describe('Get release status script', () => {
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -119,6 +120,7 @@ describe('Get release status script', () => {
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -148,6 +150,7 @@ describe('Get release status script', () => {
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
       ]
 
       const [residentialLocationUrl, ...restUrls] = allUrls
@@ -170,6 +173,7 @@ describe('Get release status script', () => {
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
@@ -199,6 +203,7 @@ describe('Get release status script', () => {
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
           { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })

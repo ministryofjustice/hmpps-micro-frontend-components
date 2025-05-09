@@ -12,6 +12,7 @@ export enum ServiceName {
   WHEREABOUTS = 'whereabouts',
   INCIDENT_REPORTING = 'incidentReporting',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
+  CEMO = 'cemo',
 }
 
 export interface ServiceActiveAgencies {
