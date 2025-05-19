@@ -34,28 +34,6 @@ describe('POST', () => {
     })
   })
 
-  it('Should return raw response body', async () => {
-    nock('http://localhost:8080', {
-      reqheaders: { authorization: 'Bearer token-1' },
-    })
-      .post('/api/test')
-      .reply(200, { success: true })
-
-    const result = await restClient.post({
-      path: '/test',
-      headers: { header1: 'headerValue1' },
-      raw: true,
-    })
-
-    expect(nock.isDone()).toBe(true)
-
-    expect(result).toMatchObject({
-      req: { method: 'POST' },
-      status: 200,
-      text: '{"success":true}',
-    })
-  })
-
   it('Should not retry by default', async () => {
     nock('http://localhost:8080', {
       reqheaders: { authorization: 'Bearer token-1' },

@@ -12,7 +12,6 @@ interface GetRequest {
   query?: string
   headers?: Record<string, string>
   responseType?: string
-  raw?: boolean
 }
 
 interface PostRequest {
@@ -20,7 +19,6 @@ interface PostRequest {
   headers?: Record<string, string>
   responseType?: string
   data?: Record<string, unknown>
-  raw?: boolean
   retry?: boolean
 }
 
@@ -53,7 +51,7 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get<T>({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<T> {
+  async get<T>({ path = null, query = '', headers = {}, responseType = '' }: GetRequest): Promise<T> {
     try {
       const result = await superagent
         .get(`${this.apiUrl()}${path}`)
@@ -64,7 +62,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError, query }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
@@ -77,7 +75,6 @@ export default class RestClient {
     headers = {},
     responseType = '',
     data = {},
-    raw = false,
     retry = false,
   }: PostRequest = {}): Promise<unknown> {
     try {
@@ -97,7 +94,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)

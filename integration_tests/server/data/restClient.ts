@@ -13,7 +13,6 @@ interface Request {
   query?: object | string
   headers?: Record<string, string>
   responseType?: string
-  raw?: boolean
 }
 
 interface RequestWithBody extends Request {
@@ -46,13 +45,7 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get<Response = unknown>({
-    path,
-    query = {},
-    headers = {},
-    responseType = '',
-    raw = false,
-  }: Request): Promise<Response> {
+  async get<Response = unknown>({ path, query = {}, headers = {}, responseType = '' }: Request): Promise<Response> {
     logger.info(`${this.name} GET: ${path}`)
     try {
       const result = await superagent
@@ -68,7 +61,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
@@ -78,7 +71,7 @@ export default class RestClient {
 
   private async requestWithBody<Response = unknown>(
     method: 'patch' | 'post' | 'put',
-    { path, query = {}, headers = {}, responseType = '', data = {}, raw = false, retry = false }: RequestWithBody,
+    { path, query = {}, headers = {}, responseType = '', data = {}, retry = false }: RequestWithBody,
   ): Promise<Response> {
     logger.info(`${this.name} ${method.toUpperCase()}: ${path}`)
     try {
@@ -98,7 +91,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: '${method.toUpperCase()}'`)
@@ -118,13 +111,7 @@ export default class RestClient {
     return this.requestWithBody('put', request)
   }
 
-  async delete<Response = unknown>({
-    path,
-    query = {},
-    headers = {},
-    responseType = '',
-    raw = false,
-  }: Request): Promise<Response> {
+  async delete<Response = unknown>({ path, query = {}, headers = {}, responseType = '' }: Request): Promise<Response> {
     logger.info(`${this.name} DELETE: ${path}`)
     try {
       const result = await superagent
@@ -140,7 +127,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return result.body
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'DELETE'`)
