@@ -80,6 +80,13 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - prisons
+      - accessibility-testing-1
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod
 
