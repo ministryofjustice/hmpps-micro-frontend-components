@@ -79,7 +79,6 @@ export enum Role {
   IncidentReportingRO = 'INCIDENT_REPORTS__RO',
   IncidentReportingRW = 'INCIDENT_REPORTS__RW',
   IncidentReportingApprove = 'INCIDENT_REPORTS__APPROVE',
-  ManagePrisonerApps = 'MANAGING_PRISONER_APPS',
   DietAndAllergiesReport = 'DIET_AND_FOOD_ALLERGIES_REPORT',
   CreateAnEMOrder = 'EM_CEMO__CREATE_ORDER',
 }
