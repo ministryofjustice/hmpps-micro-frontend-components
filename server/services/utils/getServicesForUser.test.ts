@@ -741,11 +741,11 @@ describe('getServicesForUser', () => {
 
   describe('Manage Applications', () => {
     test.each`
-      roles                        | visible
-      ${[Role.ManagePrisonerApps]} | ${true}
-      ${[]}                        | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
+      roles                        | activeServices                                              | visible
+      ${[Role.ManagePrisonerApps]} | ${[{ app: 'manageApplications', activeAgencies: ['LEI'] }]} | ${true}
+      ${[]}                        | ${[{ app: 'manageApplications', activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, false, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Applications')).toEqual(visible)
     })
   })
