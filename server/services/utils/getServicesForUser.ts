@@ -482,7 +482,7 @@ export default (
       description: 'Log, action and reply to prisoner applications.',
       href: config.serviceUrls.manageApplications.url,
       navEnabled: true,
-      enabled: () => 
+      enabled: () =>
         userHasRoles([Role.ManagePrisonerApps], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.MANAGE_APPLICATIONS, activeServices, false),
     },
