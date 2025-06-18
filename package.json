@@ -117,7 +117,7 @@
     "cheerio": "^1.0.0",
     "compression": "^1.8.0",
     "connect-flash": "^0.1.1",
-    "connect-redis": "^7.1.1",
+    "connect-redis": "^9.0.0",
     "cookie": "^0.7.2",
     "cookie-signature": "^1.2.2",
     "csurf": "^1.11.0",
