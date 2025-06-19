@@ -22,6 +22,7 @@ const endpoints = [
   { application: 'caseNotesApi', urlEnv: 'CASE_NOTES_API_URL' },
   { application: 'prepareSomeoneForReleaseUi', urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
   { application: 'cemo', urlEnv: 'CEMO_URL' },
+  { application: 'manageApplications', urlEnv: 'MANAGE_APPLICATIONS_URL' },
 ]
 
 function getApplicationInfo(url) {

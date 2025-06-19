@@ -482,7 +482,9 @@ export default (
       description: 'Log, action and reply to prisoner applications.',
       href: config.serviceUrls.manageApplications.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ManagePrisonerApps], roles),
+      enabled: () =>
+        userHasRoles([Role.ManagePrisonerApps], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.MANAGE_APPLICATIONS, activeServices, false),
     },
     {
       id: 'dietary-requirements',
