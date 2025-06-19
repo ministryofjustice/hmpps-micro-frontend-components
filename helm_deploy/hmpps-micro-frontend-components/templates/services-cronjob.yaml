@@ -42,6 +42,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "PREPARE_SOMEONE_FOR_RELEASE_URL" }}"
               - name: CEMO_URL
                 value: "{{ index .Values "generic-service" "env" "CEMO_URL" }}"
+              - name: MANAGE_APPLICATIONS_URL
+                value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:
