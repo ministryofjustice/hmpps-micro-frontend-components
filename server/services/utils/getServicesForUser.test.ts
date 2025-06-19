@@ -742,7 +742,7 @@ describe('getServicesForUser', () => {
   describe('Manage Applications', () => {
     test.each`
       roles                        | visible
-      ${[Role.PrisonUser]} | ${true}
+      ${[Role.PrisonUser]}         | ${true}
       ${[]}                        | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, 'LEI', 12345, [], null)
