@@ -483,7 +483,7 @@ export default (
       href: config.serviceUrls.manageApplications.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.ManagePrisonerApps], roles) &&
+        userHasRoles([Role.PrisonUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.MANAGE_APPLICATIONS, activeServices, false),
     },
     {
