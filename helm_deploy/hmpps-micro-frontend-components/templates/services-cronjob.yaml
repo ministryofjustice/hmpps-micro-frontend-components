@@ -44,6 +44,10 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "CEMO_URL" }}"
               - name: MANAGE_APPLICATIONS_URL
                 value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
+              - name: ALLOCATE_KEY_WORKERS_API_URL
+                value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
+              - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
+                value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:

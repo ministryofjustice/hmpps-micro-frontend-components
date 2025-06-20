@@ -16,6 +16,7 @@ import TokenStore from './tokenStore'
 import config, { ApiConfig } from '../config'
 import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
 import PrisonApiClient from './prisonApiClient'
+import AllocationsApiClient from './AllocationsApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -30,6 +31,11 @@ export default function restClientBuilder<T>(
 
 export const dataAccess = {
   prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiClient),
+  allocationsApiClientBuilder: restClientBuilder<AllocationsApiClient>(
+    'Allocations API',
+    config.apis.allocationsApi,
+    AllocationsApiClient,
+  ),
   getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
   applicationInfo,
 }

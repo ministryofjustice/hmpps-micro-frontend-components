@@ -14,6 +14,8 @@ export enum ServiceName {
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
   CEMO = 'cemo',
   MANAGE_APPLICATIONS = 'manageApplications',
+  ALLOCATE_KEY_WORKERS = 'allocateKeyWorkers',
+  ALLOCATE_PERSONAL_OFFICERS = 'allocatePersonalOfficers',
 }
 
 export interface ServiceActiveAgencies {
