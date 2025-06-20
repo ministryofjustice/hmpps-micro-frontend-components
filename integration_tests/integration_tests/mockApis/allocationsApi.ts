@@ -10,7 +10,7 @@ const stubGetStaffAllocationPolicies = (
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/prisons/.*/staff/.*/job-classifications',
+      urlPattern: '/allocations/prisons/.*/staff/.*/job-classifications',
     },
     response: {
       status: 200,
