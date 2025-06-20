@@ -36,6 +36,7 @@ jest.mock('express-jwt', () => ({
 
 let app: App
 let prisonApi: nock.Scope
+let allocationsApi: nock.Scope
 
 const redisClient = createRedisClient()
 async function ensureConnected() {
@@ -46,6 +47,7 @@ async function ensureConnected() {
 
 beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
+  allocationsApi = nock(config.apis.allocationsApi.url)
 
   await ensureConnected()
   redisClient.del('TOKEN_USER_meta_data')
@@ -72,6 +74,7 @@ describe('GET /header', () => {
       ])
       prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       prisonApi.get('/api/users/me/locations').reply(200, [])
+      allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
     })
 
     it('should render digital prison services title', () => {

@@ -21,6 +21,7 @@ export interface PrisonUserAccess {
   caseLoads: CaseLoad[]
   activeCaseLoad: CaseLoad | null
   services: Service[]
+  allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
 }
 
 /**

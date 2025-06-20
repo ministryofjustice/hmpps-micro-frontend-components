@@ -68,6 +68,11 @@ generic-service:
     MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count-dev.hmpps.service.justice.gov.uk
     CEMO_URL: https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk
+    ALLOCATIONS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk
+    ALLOCATE_KEY_WORKERS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk/KEY_WORKER
+    ALLOCATE_KEY_WORKERS_UI_URL: https://allocate-key-workers-dev.hmpps.service.justice.gov.uk/key-worker
+    ALLOCATE_PERSONAL_OFFICERS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk/PERSONAL_OFFICER
+    ALLOCATE_PERSONAL_OFFICERS_UI_URL: https://allocate-key-workers-dev.hmpps.service.justice.gov.uk/personal-officer
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

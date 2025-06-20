@@ -91,7 +91,12 @@ export default (
       {
         meta:
           user.authSource === 'nomis'
-            ? { caseLoads: user.caseLoads, activeCaseLoad: user.activeCaseLoad, services: user.services }
+            ? {
+                caseLoads: user.caseLoads,
+                activeCaseLoad: user.activeCaseLoad,
+                services: user.services,
+                allocationJobResponsibilities: user.allocationJobResponsibilities,
+              }
             : DEFAULT_USER_ACCESS,
       },
     )

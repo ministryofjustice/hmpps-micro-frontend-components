@@ -81,6 +81,9 @@ export enum Role {
   IncidentReportingApprove = 'INCIDENT_REPORTS__APPROVE',
   DietAndAllergiesReport = 'DIET_AND_FOOD_ALLERGIES_REPORT',
   CreateAnEMOrder = 'EM_CEMO__CREATE_ORDER',
+  PersonalOfficer = 'PERSONAL_OFFICER',
+  PersonalOfficerView = 'PERSONAL_OFFICER_VIEW',
+  PersonalOfficerAllocate = 'PERSONAL_OFFICER_ALLOCATE',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))
