@@ -17,7 +17,7 @@ const expectedUserAccess: PrisonUserAccess = {
   caseLoads: expectedCaseLoads,
   activeCaseLoad: expectedCaseLoads[0],
   services: servicesMock,
-  allocationJobResponsibilities: [],
+  allocationJobResponsibilities: ['KEY_WORKER'],
 }
 
 const cacheServiceMock = {
@@ -41,7 +41,7 @@ describe('User service', () => {
       prisonApiClient.getIsKeyworker = jest.fn(async () => true)
       allocationsApiClient.getStaffAllocationPolicies = jest.fn(
         async (_prisonCode: string, _staffId: number): Promise<StaffAllocationPolicies> => ({
-          policies: [],
+          policies: ['KEY_WORKER'],
         }),
       )
 
@@ -121,6 +121,21 @@ describe('User service', () => {
         expect(prisonApiClient.getUserCaseLoads).toBeCalledTimes(API_ERROR_LIMIT + 1)
 
         jest.useRealTimers()
+      })
+    })
+
+    describe('with cached allocation data', () => {
+      it('uses cached allocation job responsibilities', async () => {
+        cacheServiceMock.getData.mockImplementation(async key => {
+          if (key.endsWith('_allocation')) {
+            return { policies: ['PERSONAL_OFFICER'] }
+          }
+          return null
+        })
+
+        const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
+        expect(allocationsApiClient.getStaffAllocationPolicies).toBeCalledTimes(0)
+        expect(userAccess.allocationJobResponsibilities).toStrictEqual(['PERSONAL_OFFICER'])
       })
     })
 
