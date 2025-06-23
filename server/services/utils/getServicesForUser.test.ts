@@ -69,12 +69,13 @@ describe('getServicesForUser', () => {
 
   describe('Keyworker allocation', () => {
     test.each`
-      isKeyworker | visible
-      ${true}     | ${true}
-      ${false}    | ${false}
-    `('user with staffRoles: $staffRoles, can see: $visible', ({ isKeyworker, visible }) => {
-      const output = getServicesForUser([], isKeyworker, { policies: [] }, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'My key worker allocation')).toEqual(visible)
+      isKeyworker | activeServices                                                          | visible
+      ${true}     | ${[]}                                                                   | ${true}
+      ${true}     | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${false}
+      ${false}    | ${[]}                                                                   | ${false}
+    `('user with staffRoles: $staffRoles, can see: $visible', ({ isKeyworker, activeServices, visible }) => {
+      const output = getServicesForUser([], isKeyworker, { policies: [] }, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.id === 'key-worker-allocations')).toEqual(visible)
     })
   })
 
@@ -182,14 +183,15 @@ describe('getServicesForUser', () => {
 
   describe('Key workers', () => {
     test.each`
-      roles                                      | visible
-      ${[Role.OmicAdmin]}                        | ${true}
-      ${[Role.KeyworkerMonitor]}                 | ${true}
-      ${[Role.OmicAdmin, Role.KeyworkerMonitor]} | ${true}
-      ${[]}                                      | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Key workers')).toEqual(visible)
+      roles                                      | activeServices                                                          | visible
+      ${[Role.OmicAdmin]}                        | ${[]}                                                                   | ${true}
+      ${[Role.KeyworkerMonitor]}                 | ${[]}                                                                   | ${true}
+      ${[Role.OmicAdmin, Role.KeyworkerMonitor]} | ${[]}                                                                   | ${true}
+      ${[Role.OmicAdmin, Role.KeyworkerMonitor]} | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${false}
+      ${[]}                                      | ${[]}                                                                   | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeServices, visible }) => {
+      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.id === 'manage-key-workers')).toEqual(visible)
     })
   })
 
@@ -785,24 +787,27 @@ describe('getServicesForUser', () => {
       ${[Role.OmicAdmin]} | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['MOR'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(
-        !!output.find(
-          service =>
-            service.description === 'Allocate key workers to prisoners and manage key work in your establishment.',
-        ),
-      ).toEqual(visible)
+      expect(!!output.find(service => service.id === 'allocate-key-workers')).toEqual(visible)
     })
   })
 
   describe('My Key Worker allocation', () => {
     test.each`
-      roles               | activeServices                                                          | visible
-      ${[Role.KeyWorker]} | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${true}
-      ${[]}               | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${false}
-      ${[Role.KeyWorker]} | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'My key worker allocations')).toEqual(visible)
+      allocationJobResponsibilities | activeServices                                                          | visible
+      ${['KEY_WORKER']}             | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${true}
+      ${[]}                         | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['LEI'] }]} | ${false}
+      ${['KEY_WORKER']}             | ${[{ app: ServiceName.ALLOCATE_KEY_WORKERS, activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ allocationJobResponsibilities, visible, activeServices }) => {
+      const output = getServicesForUser(
+        [],
+        false,
+        { policies: allocationJobResponsibilities },
+        'LEI',
+        12345,
+        [],
+        activeServices,
+      )
+      expect(!!output.find(service => service.id === 'my-key-worker-allocations')).toEqual(visible)
     })
   })
 
@@ -820,12 +825,20 @@ describe('getServicesForUser', () => {
 
   describe('My Personal Officer allocation', () => {
     test.each`
-      roles                     | activeServices                                                                | visible
-      ${[Role.PersonalOfficer]} | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['LEI'] }]} | ${true}
-      ${[]}                     | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['LEI'] }]} | ${false}
-      ${[Role.PersonalOfficer]} | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
+      allocationJobResponsibilities | activeServices                                                                | visible
+      ${['PERSONAL_OFFICER']}       | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['LEI'] }]} | ${true}
+      ${[]}                         | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['LEI'] }]} | ${false}
+      ${['PERSONAL_OFFICER']}       | ${[{ app: ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeAgencies: ['MOR'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ allocationJobResponsibilities, visible, activeServices }) => {
+      const output = getServicesForUser(
+        [],
+        false,
+        { policies: allocationJobResponsibilities },
+        'LEI',
+        12345,
+        [],
+        activeServices,
+      )
       expect(!!output.find(service => service.heading === 'My personal officer allocations')).toEqual(visible)
     })
   })

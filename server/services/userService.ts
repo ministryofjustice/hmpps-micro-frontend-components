@@ -55,12 +55,16 @@ export default class UserService {
         prisonApiClient,
         allocationsApiClient,
       )
-      const allocation = await this.getAllocationPolicies(user, activeCaseLoad?.caseLoadId, allocationsApiClient)
+      const allocationPolicies = await this.getAllocationPolicies(
+        user,
+        activeCaseLoad?.caseLoadId,
+        allocationsApiClient,
+      )
       const userAccess: PrisonUserAccess = {
         caseLoads,
         activeCaseLoad,
         services,
-        allocationJobResponsibilities: allocation.policies,
+        allocationJobResponsibilities: allocationPolicies.policies,
       }
       await this.setCache(user, userAccess)
 
@@ -105,7 +109,7 @@ export default class UserService {
     prisonApiClient: PrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
-    const [locations, isKeyworker, allocation] = await Promise.all([
+    const [locations, isKeyworker, allocationPolicies] = await Promise.all([
       prisonApiClient.getUserLocations(),
       prisonApiClient.getIsKeyworker(caseLoadId, user.staffId),
       this.getAllocationPolicies(user, caseLoadId, allocationsApiClient),
@@ -118,7 +122,7 @@ export default class UserService {
     return getServicesForUser(
       user.userRoles,
       isKeyworker,
-      allocation,
+      allocationPolicies,
       caseLoadId ?? null,
       user.staffId,
       locations,

@@ -38,7 +38,7 @@ function isActiveInEstablishmentWithLegacyFallback(
 export default (
   roles: string[],
   isKeyworker: boolean,
-  allocation: StaffAllocationPolicies,
+  allocationPolicies: StaffAllocationPolicies,
   activeCaseLoadId: string,
   staffId: number,
   locations: Location[],
@@ -527,7 +527,7 @@ export default (
       href: `${config.serviceUrls.allocateKeyWorkers.url}/staff-profile/${staffId}`,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.KeyWorker], roles) &&
+        allocationPolicies.policies.includes('KEY_WORKER') &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
@@ -537,7 +537,7 @@ export default (
       href: config.serviceUrls.allocatePersonalOfficers.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.PersonalOfficerAllocate, Role.PersonalOfficerView], roles) &&
+        userHasRoles([Role.PersonalOfficerView, Role.PersonalOfficerAllocate], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
     },
     {
@@ -547,7 +547,7 @@ export default (
       href: `${config.serviceUrls.allocatePersonalOfficers.url}/staff-profile/${staffId}`,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.PersonalOfficer], roles) &&
+        allocationPolicies.policies.includes('PERSONAL_OFFICER') &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
     },
   ]
