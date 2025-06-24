@@ -83,6 +83,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
+    allocationsApi: {
+      url: get('ALLOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('ALLOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
+    },
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
@@ -230,6 +238,12 @@ export default {
     },
     createAnEMOrder: {
       url: get('CEMO_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    allocateKeyWorkers: {
+      url: get('ALLOCATE_KEY_WORKERS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    allocatePersonalOfficers: {
+      url: get('ALLOCATE_PERSONAL_OFFICERS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
   features: {

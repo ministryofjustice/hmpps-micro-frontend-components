@@ -23,6 +23,8 @@ const endpoints = [
   { application: 'prepareSomeoneForReleaseUi', urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
   { application: 'cemo', urlEnv: 'CEMO_URL' },
   { application: 'manageApplications', urlEnv: 'MANAGE_APPLICATIONS_URL' },
+  { application: 'allocateKeyWorkers', urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
+  { application: 'allocatePersonalOfficers', urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
 ]
 
 function getApplicationInfo(url) {

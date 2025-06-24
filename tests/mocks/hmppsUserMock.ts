@@ -68,6 +68,7 @@ export const prisonUserMock: PrisonUser = {
   caseLoads: [activeCaseLoadMock],
   activeCaseLoad: activeCaseLoadMock,
   services: servicesMock,
+  allocationJobResponsibilities: [],
 }
 
 export const hmppsUserMock: HmppsUser = {

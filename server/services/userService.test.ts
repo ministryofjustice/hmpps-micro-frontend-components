@@ -6,6 +6,7 @@ import CacheService from './cacheService'
 import { prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
 import { PrisonUserAccess } from '../interfaces/hmppsUser'
 import { Location } from '../interfaces/location'
+import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
 
 const expectedCaseLoads: CaseLoad[] = [
   { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
@@ -16,6 +17,7 @@ const expectedUserAccess: PrisonUserAccess = {
   caseLoads: expectedCaseLoads,
   activeCaseLoad: expectedCaseLoads[0],
   services: servicesMock,
+  allocationJobResponsibilities: ['KEY_WORKER'],
 }
 
 const cacheServiceMock = {
@@ -32,12 +34,22 @@ describe('User service', () => {
 
   describe('getPrisonUserAccess', () => {
     const prisonApiClient = prisonApiClientMock() as undefined as PrisonApiClient
+    const allocationsApiClient = { getStaffAllocationPolicies: jest.fn() } as unknown as AllocationsApiClient
     beforeEach(() => {
       prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
       prisonApiClient.getUserLocations = jest.fn(async () => [] as Location[])
       prisonApiClient.getIsKeyworker = jest.fn(async () => true)
+      allocationsApiClient.getStaffAllocationPolicies = jest.fn(
+        async (_prisonCode: string, _staffId: number): Promise<StaffAllocationPolicies> => ({
+          policies: ['KEY_WORKER'],
+        }),
+      )
 
-      userService = new UserService(() => prisonApiClient, cacheServiceMock)
+      userService = new UserService(
+        () => prisonApiClient,
+        () => allocationsApiClient,
+        cacheServiceMock,
+      )
     })
 
     describe('with no cached data', () => {
@@ -112,12 +124,28 @@ describe('User service', () => {
       })
     })
 
+    describe('with cached allocation data', () => {
+      it('uses cached allocation job responsibilities', async () => {
+        cacheServiceMock.getData.mockImplementation(async key => {
+          if (key.endsWith('_allocation')) {
+            return { policies: ['PERSONAL_OFFICER'] }
+          }
+          return null
+        })
+
+        const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
+        expect(allocationsApiClient.getStaffAllocationPolicies).toBeCalledTimes(0)
+        expect(userAccess.allocationJobResponsibilities).toStrictEqual(['PERSONAL_OFFICER'])
+      })
+    })
+
     describe('with cached data', () => {
       it('returns cached data if number of caseloads is 1', async () => {
         const cachedData: PrisonUserAccess = {
           caseLoads: [{ caseloadFunction: '', caseLoadId: '123', currentlyActive: true, description: '', type: '' }],
           activeCaseLoad: { caseloadFunction: '', caseLoadId: '123', currentlyActive: true, description: '', type: '' },
           services: [],
+          allocationJobResponsibilities: [],
         }
 
         cacheServiceMock.getData.mockResolvedValue(cachedData)
@@ -147,6 +175,7 @@ describe('User service', () => {
           ],
           activeCaseLoad: { ...expectedCaseLoads[1], currentlyActive: true },
           services: [],
+          allocationJobResponsibilities: [],
         }
 
         cacheServiceMock.getData.mockResolvedValue(cachedData)
@@ -169,6 +198,7 @@ describe('User service', () => {
           ],
           activeCaseLoad: expectedUserAccess.activeCaseLoad,
           services: [],
+          allocationJobResponsibilities: [],
         }
 
         cacheServiceMock.getData.mockResolvedValue(cachedData)
