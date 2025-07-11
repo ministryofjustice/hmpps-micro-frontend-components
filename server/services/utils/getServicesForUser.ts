@@ -550,6 +550,15 @@ export default (
         allocationPolicies.policies.includes('PERSONAL_OFFICER') &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
     },
+    {
+      id: 'match-learner-record',
+      heading: "Match someone's learning record",
+      description:
+        'Search the Learning Records Service (LRS) to match someone’s learning record or unique learner number (ULN), or identify if they do not have a ULN.',
+      href: config.serviceUrls.matchLearnerRecord.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.MatchLearnerRecord], roles),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
