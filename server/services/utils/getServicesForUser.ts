@@ -475,7 +475,7 @@ export default (
     {
       id: 'incident-reporting',
       heading: 'Incident reporting',
-      description: 'View, create and edit incident reports.',
+      description: 'Create, update and search reports for incidents that happen in prison.',
       href: config.serviceUrls.incidentReporting.url,
       navEnabled: true,
       enabled: () =>
