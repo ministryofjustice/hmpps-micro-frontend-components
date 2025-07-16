@@ -186,6 +186,9 @@ export default {
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
+    matchLearnerRecord: {
+      url: get('MATCH_LEARNER_RECORD_URL', 'http://localhost:3001', requiredInProduction),
+    },
     manageOffences: {
       url: get('MANAGE_OFFENCES_URL', 'http://localhost:3001', requiredInProduction),
     },
