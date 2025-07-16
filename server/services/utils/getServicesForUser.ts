@@ -565,7 +565,7 @@ export default (
         "Search the Learning Records Service (LRS) to match someone's learning record or unique learner number (ULN), or identify if they do not have a ULN.",
       href: config.serviceUrls.matchLearnerRecord.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.MatchLearnerRecord], roles),
+      enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
     },
   ]
     .filter(service => service.enabled())

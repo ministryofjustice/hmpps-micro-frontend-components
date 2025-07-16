@@ -188,6 +188,7 @@ export default {
     },
     matchLearnerRecord: {
       url: get('MATCH_LEARNER_RECORD_URL', 'http://localhost:3001', requiredInProduction),
+      enabled: get('MATCH_LEARNER_RECORD_ENABLED', 'false') === 'true',
     },
     manageOffences: {
       url: get('MANAGE_OFFENCES_URL', 'http://localhost:3001', requiredInProduction),

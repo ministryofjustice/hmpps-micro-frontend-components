@@ -53,7 +53,7 @@ jest.mock('../../config', () => ({
     createAnEMOrder: { url: 'url' },
     allocateKeyWorkers: { url: 'url' },
     allocatePersonalOfficers: { url: 'url' },
-    matchLearnerRecord: { url: 'url' },
+    matchLearnerRecord: { url: 'url', enabled: true },
   },
 }))
 
