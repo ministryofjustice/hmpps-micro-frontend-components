@@ -55,6 +55,7 @@ generic-service:
     LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
     CAS2_URL: https://community-accommodation-tier-2-dev.hmpps.service.justice.gov.uk
+    CAS2_BAIL_URL: https://community-accommodation-tier-2-bail-dev.hmpps.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-dev.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-dev.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-dev.hmpps.service.justice.gov.uk

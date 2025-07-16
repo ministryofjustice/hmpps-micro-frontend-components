@@ -408,13 +408,21 @@ export default (
     },
     {
       id: 'cas2',
-      heading: 'CAS2 - Short-Term Accommodation',
-      description: 'Apply for accommodation and support for someone leaving prison on Home Detention Curfew',
+      heading: 'CAS2 for HDC - short-term accommodation',
+      description: 'Apply for accommodation for someone leaving prison on home detention curfew.',
       href: config.serviceUrls.cas2.url,
       navEnabled: true,
       enabled: () =>
         userHasRoles([Role.PomUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CAS2, activeServices, false),
+    },
+    {
+      id: 'cas2-bail',
+      heading: 'CAS2 for bail - short-term accommodation',
+      description: 'Apply for accommodation and support for someone being bailed from Court or Prison.',
+      href: config.serviceUrls.cas2Bail.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.Cas2PrisonBailReferrer], roles),
     },
     {
       id: 'accredited-programmes',
