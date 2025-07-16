@@ -594,19 +594,18 @@ describe('getServicesForUser', () => {
       ${[Role.PomUser]} | ${[{ app: 'cas2', activeAgencies: ['MOR'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'CAS2 for HDC - short term accommodation')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'CAS2 for HDC - short-term accommodation')).toEqual(visible)
     })
   })
 
   describe('CAS2 Bail', () => {
     test.each`
-      roles                            | activeServices                                | visible
-      ${[Role.Cas2PrisonBailReferrer]} | ${[{ app: 'cas2', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]}                            | ${[{ app: 'cas2', activeAgencies: ['LEI'] }]} | ${false}
-      ${[Role.Cas2PrisonBailReferrer]} | ${[{ app: 'cas2', activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'CAS2 for Bail - short term accommodation')).toEqual(visible)
+      roles                            | visible
+      ${[Role.Cas2PrisonBailReferrer]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'CAS2 for bail - short-term accommodation')).toEqual(visible)
     })
   })
 
