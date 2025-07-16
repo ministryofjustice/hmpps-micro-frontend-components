@@ -53,6 +53,7 @@ jest.mock('../../config', () => ({
     createAnEMOrder: { url: 'url' },
     allocateKeyWorkers: { url: 'url' },
     allocatePersonalOfficers: { url: 'url' },
+    matchLearnerRecord: { url: 'url' },
   },
 }))
 
@@ -530,6 +531,16 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Work after leaving prison')).toEqual(visible)
+    })
+  })
+  describe('Match learner record', () => {
+    test.each`
+      roles                        | visible
+      ${[Role.MatchLearnerRecord]} | ${true}
+      ${[]}                        | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.id === 'match-learner-record')).toEqual(visible)
     })
   })
 
