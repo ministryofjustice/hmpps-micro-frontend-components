@@ -83,6 +83,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
+    allocationsApi: {
+      url: get('ALLOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('ALLOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
+    },
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
@@ -178,6 +186,10 @@ export default {
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
+    matchLearnerRecord: {
+      url: get('MATCH_LEARNER_RECORD_URL', 'http://localhost:3001', requiredInProduction),
+      enabled: get('MATCH_LEARNER_RECORD_ENABLED', 'false') === 'true',
+    },
     manageOffences: {
       url: get('MANAGE_OFFENCES_URL', 'http://localhost:3001', requiredInProduction),
     },
@@ -189,6 +201,9 @@ export default {
     },
     cas2: {
       url: get('CAS2_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    cas2Bail: {
+      url: get('CAS2_BAIL_URL', 'http://localhost:3001', requiredInProduction),
     },
     changeSomeonesCell: {
       url: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3001', requiredInProduction),
@@ -230,6 +245,12 @@ export default {
     },
     createAnEMOrder: {
       url: get('CEMO_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    allocateKeyWorkers: {
+      url: get('ALLOCATE_KEY_WORKERS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    allocatePersonalOfficers: {
+      url: get('ALLOCATE_PERSONAL_OFFICERS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
   features: {

@@ -3,6 +3,7 @@ import { Role, userHasRoles } from './roles'
 import { Location } from '../../interfaces/location'
 import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
+import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
 
 const ALL_PRISONS_STRING = '***'
 
@@ -37,6 +38,7 @@ function isActiveInEstablishmentWithLegacyFallback(
 export default (
   roles: string[],
   isKeyworker: boolean,
+  allocationPolicies: StaffAllocationPolicies,
   activeCaseLoadId: string,
   staffId: number,
   locations: Location[],
@@ -64,7 +66,9 @@ export default (
       description: 'View your key worker cases.',
       href: `${config.serviceUrls.omic.url}/key-worker/${staffId}`,
       navEnabled: true,
-      enabled: () => isKeyworker,
+      enabled: () =>
+        isKeyworker &&
+        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'manage-prisoner-whereabouts',
@@ -159,7 +163,9 @@ export default (
       description: 'Add and remove key workers from prisoners and manage individuals.',
       href: config.serviceUrls.omic.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles),
+      enabled: () =>
+        userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles) &&
+        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'pom',
@@ -402,13 +408,21 @@ export default (
     },
     {
       id: 'cas2',
-      heading: 'CAS2 - Short-Term Accommodation',
-      description: 'Apply for accommodation and support for someone leaving prison on Home Detention Curfew',
+      heading: 'CAS2 for HDC - short-term accommodation',
+      description: 'Apply for accommodation for someone leaving prison on home detention curfew.',
       href: config.serviceUrls.cas2.url,
       navEnabled: true,
       enabled: () =>
         userHasRoles([Role.PomUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CAS2, activeServices, false),
+    },
+    {
+      id: 'cas2-bail',
+      heading: 'CAS2 for bail - short-term accommodation',
+      description: 'Apply for accommodation and support for someone being bailed from Court or Prison.',
+      href: config.serviceUrls.cas2Bail.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.Cas2PrisonBailReferrer], roles),
     },
     {
       id: 'accredited-programmes',
@@ -469,7 +483,7 @@ export default (
     {
       id: 'incident-reporting',
       heading: 'Incident reporting',
-      description: 'View, create and edit incident reports.',
+      description: 'Create, update and search reports for incidents that happen in prison.',
       href: config.serviceUrls.incidentReporting.url,
       navEnabled: true,
       enabled: () =>
@@ -482,7 +496,9 @@ export default (
       description: 'Log, action and reply to prisoner applications.',
       href: config.serviceUrls.manageApplications.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ManagePrisonerApps], roles),
+      enabled: () =>
+        userHasRoles([Role.PrisonUser], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.MANAGE_APPLICATIONS, activeServices, false),
     },
     {
       id: 'dietary-requirements',
@@ -501,6 +517,55 @@ export default (
       enabled: () =>
         userHasRoles([Role.CreateAnEMOrder], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CEMO, activeServices, false),
+    },
+    {
+      id: 'allocate-key-workers',
+      heading: 'Key workers',
+      description: 'Allocate key workers to prisoners and manage key work in your establishment.',
+      href: config.serviceUrls.allocateKeyWorkers.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
+    },
+    {
+      id: 'my-key-worker-allocations',
+      heading: 'My key worker allocations',
+      description: 'View your key worker allocations and personal statistics.',
+      href: `${config.serviceUrls.allocateKeyWorkers.url}/staff-profile/${staffId}`,
+      navEnabled: true,
+      enabled: () =>
+        allocationPolicies.policies.includes('KEY_WORKER') &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
+    },
+    {
+      id: 'allocate-personal-officers',
+      heading: 'Personal officers',
+      description: 'Allocate personal officers to prisoners and manage officer work in your establishment.',
+      href: config.serviceUrls.allocatePersonalOfficers.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.PersonalOfficerView, Role.PersonalOfficerAllocate], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
+    },
+    {
+      id: 'my-personal-officer-allocations',
+      heading: 'My personal officer allocations',
+      description: 'View your personal officer allocations and personal statistics.',
+      href: `${config.serviceUrls.allocatePersonalOfficers.url}/staff-profile/${staffId}`,
+      navEnabled: true,
+      enabled: () =>
+        allocationPolicies.policies.includes('PERSONAL_OFFICER') &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
+    },
+    {
+      id: 'match-learner-record',
+      heading: "Match someone's learning record",
+      description:
+        "Search the Learning Records Service (LRS) to match someone's learning record or unique learner number (ULN), or identify if they do not have a ULN.",
+      href: config.serviceUrls.matchLearnerRecord.url,
+      navEnabled: true,
+      enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
     },
   ]
     .filter(service => service.enabled())

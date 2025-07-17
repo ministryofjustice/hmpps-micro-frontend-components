@@ -13,6 +13,7 @@ context('Header', () => {
     cy.task('stubKeyworkerRoles')
     cy.task('stubSearchPage')
     cy.task('stubCaseloadSwitcherPage')
+    cy.task('stubGetStaffAllocationPolicies')
   })
 
   it('Phase banner visible in header', () => {

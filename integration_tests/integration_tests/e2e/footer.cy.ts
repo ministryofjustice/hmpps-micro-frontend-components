@@ -9,6 +9,7 @@ context('Footer', () => {
     cy.task('stubCaseloads')
     cy.task('stubLocations')
     cy.task('stubKeyworkerRoles')
+    cy.task('stubGetStaffAllocationPolicies')
   })
 
   it('Services menu visible in footer', () => {

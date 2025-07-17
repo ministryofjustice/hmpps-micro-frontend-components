@@ -13,6 +13,7 @@ const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 const caseNotesApiUrl = 'https://dev.offender-case-notes.service.justice.gov.uk'
 const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 const cemoUrl = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
+const manageApplicationsUrl = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
 const allUrls = [
   residentialLocationUrl,
   reportingUrl,
@@ -25,6 +26,7 @@ const allUrls = [
   caseNotesApiUrl,
   prepareSomeoneForReleaseUrl,
   cemoUrl,
+  manageApplicationsUrl,
 ]
 
 function setMockSuccess(urls, body = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }) {
@@ -85,6 +87,7 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -123,6 +126,7 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -153,6 +157,7 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
       ]
 
       const [residentialLocationUrl, ...restUrls] = allUrls
@@ -176,6 +181,7 @@ describe('Get release status script', () => {
           { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
@@ -206,6 +212,7 @@ describe('Get release status script', () => {
           { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })

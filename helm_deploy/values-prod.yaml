@@ -52,10 +52,12 @@ generic-service:
     CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence.hmpps.service.justice.gov.uk
     HISTORICAL_PRISONER_APPLICATION_URL: https://historical-prisoner.prison.service.justice.gov.uk
     WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work.hmpps.service.justice.gov.uk
+    MATCH_LEARNER_RECORD_URL: https://match-learner-record.hmpps.service.justice.gov.uk
     MANAGE_OFFENCES_URL: https://manage-offences.hmpps.service.justice.gov.uk
     LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress.hmpps.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
     CAS2_URL: https://short-term-accommodation-cas-2.hmpps.service.justice.gov.uk
+    CAS2_BAIL_URL: https://short-term-accommodation-cas-2-bail.hmpps.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api.hmpps.service.justice.gov.uk
@@ -67,20 +69,26 @@ generic-service:
     CSIP_UI_URL: https://csip.hmpps.service.justice.gov.uk
     INCIDENT_REPORTING_URL: https://incident-reporting.hmpps.service.justice.gov.uk
     CASE_NOTES_API_URL: https://offender-case-notes.service.justice.gov.uk
-    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-ui.hmpps.service.justice.gov.uk
+    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count.hmpps.service.justice.gov.uk
     CEMO_URL: https://hmpps-electronic-monitoring-create-an-order.hmpps.service.justice.gov.uk
+    ALLOCATIONS_API_URL: https://keyworker-api.prison.service.justice.gov.uk
+    ALLOCATE_KEY_WORKERS_API_URL: https://keyworker-api.prison.service.justice.gov.uk/KEY_WORKER
+    ALLOCATE_KEY_WORKERS_UI_URL: https://allocate-key-workers.hmpps.service.justice.gov.uk/key-worker
+    ALLOCATE_PERSONAL_OFFICERS_API_URL: https://keyworker-api.prison.service.justice.gov.uk/PERSONAL_OFFICER
+    ALLOCATE_PERSONAL_OFFICERS_UI_URL: https://allocate-key-workers.hmpps.service.justice.gov.uk/personal-officer
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
     APPOINTMENTS_ENABLED_PRISONS: "RSI,LPI"
-    USE_OF_FORCE_PRISONS: "ACI,AGI,ASI,AYI,BAI,BCI,BFI,BHI,BLI,BMI,BNI,BRI,BSI,BWI,BXI,BZI,CDI,CFI,CKI,CLI,CWI,DAI,DGI,DHI,DMI,DNI,DTI,DWI,EEI,EHI,ESI,EWI,EXI,EYI,FBI,FDI,FEI,FHI,FKI,FMI,FNI,FSI,FWI,GHI,GMI,GNI,GTI,HBI,HCI,HDI,HEI,HHI,HII,HLI,HMI,HOI,HPI,HVI,ISI,IWI,KMI,KVI,LCI,LEI,LFI,LGI,LHI,LII,LLI,LNI,LPI,LTI,LWI,LYI,MDI,MHI,MRI,MSI,MTI,NHI,NLI,NMI,NSI,NWI,ONI,OWI,PBI,PDI,PFI,PNI,PRI,PVI,RCI,RHI,RNI,RSI,SDI,SFI,SHI,SKI,SLI,SNI,SPI,STI,SUI,SWI,TCI,TSI,UKI,UPI,VEI,WCI,WDI,WEI,WHI,WII,WLI,WMI,WRI,WSI,WTI,WWI"
+    USE_OF_FORCE_PRISONS: "ACI,AGI,ASI,AYI,BAI,BCI,BFI,BHI,BLI,BMI,BNI,BRI,BSI,BWI,BXI,BZI,CDI,CFI,CKI,CLI,CWI,DAI,DGI,DHI,DMI,DNI,DTI,DWI,EEI,EHI,ESI,EWI,EXI,EYI,FBI,FDI,FEI,FHI,FKI,FMI,FNI,FSI,FWI,GHI,GMI,GNI,GTI,HBI,HCI,HDI,HEI,HHI,HII,HLI,HMI,HOI,HPI,HVI,ISI,IWI,KMI,KVI,LCI,LEI,LFI,LGI,LHI,LII,LLI,LNI,LPI,LTI,LWI,LYI,MDI,MHI,MKI,MRI,MSI,MTI,NHI,NLI,NMI,NSI,NWI,ONI,OWI,PBI,PDI,PFI,PNI,PRI,PVI,RCI,RHI,RNI,RSI,SDI,SFI,SHI,SKI,SLI,SNI,SPI,STI,SUI,SWI,TCI,TSI,UKI,UPI,VEI,WCI,WDI,WEI,WHI,WII,WLI,WMI,WRI,WSI,WTI,WWI"
     MANAGE_ADJUDICATIONS_ENABLED: "RNI,WLI,MDI,EXI,BXI,PVI,NHI,DMI,BLI,LFI,NSI,SWI,BNI,STI,SPI,SUI,BSI,LWI,CFI,DTI,EEI,FSI,FNI,HMI,LHI,LLI,NMI,ONI,RCI,SKI,WNI,WCI,AGI,BWI,DWI,DHI,ESI,FMI,FHI,HDI,HOI,HHI,HLI,ISI,KVI,LEI,LNI,UPI,RSI,SDI,WWI,WII,WEI,WSI,FYI,UKI,WYI"
     WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
     COVID_UNITS_ENABLED: false
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
+    MATCH_LEARNER_RECORD_ENABLED: "false"
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
