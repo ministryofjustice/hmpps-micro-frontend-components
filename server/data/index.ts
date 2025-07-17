@@ -42,4 +42,4 @@ export const dataAccess = {
 
 export type DataAccess = typeof dataAccess
 
-export { RestClientBuilder }
+export type { RestClientBuilder }
