@@ -162,7 +162,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
-    "audit-ci": "^6.6.1",
+    "audit-ci": "^7.1.0",
     "concurrently": "^8.2.2",
     "cookie-session": "^2.1.0",
     "cypress": "^13.17.0",
