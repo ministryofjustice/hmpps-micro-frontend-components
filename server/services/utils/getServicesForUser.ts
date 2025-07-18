@@ -514,9 +514,7 @@ export default (
       description: '',
       href: config.serviceUrls.createAnEMOrder.url,
       navEnabled: true,
-      enabled: () =>
-        userHasRoles([Role.CreateAnEMOrder], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.CEMO, activeServices, false),
+      enabled: () => userHasRoles([Role.CreateAnEMOrder], roles),
     },
     {
       id: 'allocate-key-workers',
