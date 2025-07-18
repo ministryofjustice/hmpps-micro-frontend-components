@@ -790,9 +790,9 @@ describe('getServicesForUser', () => {
 
   describe('Create an electronic monitoring order', () => {
     test.each`
-      roles                            | visible
-      ${[Role.DietAndAllergiesReport]} | ${true}
-      ${[]}                            | ${false}
+      roles                     | visible
+      ${[Role.CreateAnEMOrder]} | ${true}
+      ${[]}                     | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
       expect(
