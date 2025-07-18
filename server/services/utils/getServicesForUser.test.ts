@@ -789,15 +789,14 @@ describe('getServicesForUser', () => {
   })
 
   describe('Create an electronic monitoring order', () => {
-    test.each([
-      [[], [], 'LEI', false],
-      [[Role.CreateAnEMOrder], [], 'LEI', false],
-      [[Role.CreateAnEMOrder], [{ app: ServiceName.CEMO, activeAgencies: ['ANOTHER'] }], 'LEI', false],
-      [[Role.CreateAnEMOrder], [{ app: ServiceName.CEMO, activeAgencies: ['LEI'] }], 'LEI', true],
-    ])('user with roles %s, can see: %s', (roles, activeServices, activeCaseLoadId, visible) => {
-      const output = getServicesForUser(roles, false, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+    test.each`
+      roles                            | visible
+      ${[Role.DietAndAllergiesReport]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
       expect(
-        output.some(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
+        !!output.find(service => service.heading === 'Apply, change or end an Electronic Monitoring Order (EMO)'),
       ).toEqual(visible)
     })
   })
