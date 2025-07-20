@@ -90,7 +90,7 @@
     "connect-flash": "^0.1.1",
     "connect-redis": "^7.1.1",
     "csurf": "^1.11.0",
-    "cypress": "^13.8.1",
+    "cypress": "^13.17.0",
     "express": "^4.21.2",
     "express-session": "^1.18.0",
     "govuk-frontend": "^4.8.0",
