@@ -82,8 +82,8 @@ export default class UserService {
     return this.cacheService.getData<PrisonUserAccess>(`${user.username}_meta_data`)
   }
 
-  private setCache(user: PrisonUser, access: PrisonUserAccess): Promise<string> {
-    return this.cacheService.setData(`${user.username}_meta_data`, access)
+  private async setCache(user: PrisonUser, access: PrisonUserAccess): Promise<string> {
+    return (await this.cacheService.setData(`${user.username}_meta_data`, access))?.toString()
   }
 
   private activeCaseLoadHasNotChanged(activeCaseLoad: CaseLoad, cache: PrisonUserAccess): boolean {

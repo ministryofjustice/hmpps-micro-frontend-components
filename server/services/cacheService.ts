@@ -26,7 +26,7 @@ export default class CacheService {
   public async getData<T>(key: string): Promise<T | null> {
     try {
       await this.ensureConnected()
-      const redisData = await this.redisClient.get(key)
+      const redisData = (await this.redisClient.get(key))?.toString()
       if (!redisData) return null
 
       return JSON.parse(redisData)
