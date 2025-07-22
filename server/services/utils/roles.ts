@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow,import/prefer-default-export
 export enum Role {
   UpdateAlert = 'UPDATE_ALERT',
   InactiveBookings = 'INACTIVE_BOOKINGS',

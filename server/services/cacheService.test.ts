@@ -15,8 +15,8 @@ describe('CacheService', () => {
   describe('setData', () => {
     it('should set the data in redis', async () => {
       await service.setData('key', { key: 'value' })
-      expect(redisClient.set).toBeCalledTimes(1)
-      expect(redisClient.set).toBeCalledWith('key', '{"key":"value"}', { EX: 600 })
+      expect(redisClient.set).toHaveBeenCalledTimes(1)
+      expect(redisClient.set).toHaveBeenCalledWith('key', '{"key":"value"}', { EX: 600 })
     })
   })
 
@@ -26,8 +26,8 @@ describe('CacheService', () => {
       const result = await service.getData('key')
 
       expect(result).toEqual({ key: 'value' })
-      expect(redisClient.get).toBeCalledTimes(1)
-      expect(redisClient.get).toBeCalledWith('key')
+      expect(redisClient.get).toHaveBeenCalledTimes(1)
+      expect(redisClient.get).toHaveBeenCalledWith('key')
     })
   })
 })
