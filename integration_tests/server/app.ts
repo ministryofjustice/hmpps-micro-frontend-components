@@ -36,7 +36,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
-  app.get('*', getFrontendComponents(services))
+  app.get('*pathName', getFrontendComponents(services))
 
   app.use(routes(services))
 
