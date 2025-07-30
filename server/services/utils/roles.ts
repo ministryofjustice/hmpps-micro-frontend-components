@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow,import/prefer-default-export
 export enum Role {
   UpdateAlert = 'UPDATE_ALERT',
   InactiveBookings = 'INACTIVE_BOOKINGS',
@@ -83,7 +82,8 @@ export enum Role {
   CreateAnEMOrder = 'EM_CEMO__CREATE_ORDER',
   PersonalOfficerView = 'PERSONAL_OFFICER_VIEW',
   PersonalOfficerAllocate = 'PERSONAL_OFFICER_ALLOCATE',
-  MatchLearnerRecord = 'ROLE_MATCH_LEARNER_RECORD_RW',
+  Cas2PrisonBailReferrer = 'CAS2_PRISON_BAIL_REFERRER',
+  MatchLearnerRecord = 'MATCH_LEARNER_RECORD_RW',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))

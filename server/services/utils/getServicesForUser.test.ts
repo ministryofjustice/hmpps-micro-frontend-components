@@ -39,6 +39,7 @@ jest.mock('../../config', () => ({
     learningAndWorkProgress: { url: 'url' },
     prepareSomeoneForReleaseUi: { url: 'url' },
     cas2: { url: 'url' },
+    cas2Bail: { url: 'url' },
     changeSomeonesCell: { url: 'url' },
     accreditedProgrammes: { url: 'url' },
     alerts: { url: 'url' },
@@ -52,7 +53,7 @@ jest.mock('../../config', () => ({
     createAnEMOrder: { url: 'url' },
     allocateKeyWorkers: { url: 'url' },
     allocatePersonalOfficers: { url: 'url' },
-    matchLearnerRecord: { url: 'url' },
+    matchLearnerRecord: { url: 'url', enabled: true },
   },
 }))
 
@@ -604,7 +605,18 @@ describe('getServicesForUser', () => {
       ${[Role.PomUser]} | ${[{ app: 'cas2', activeAgencies: ['MOR'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'CAS2 - Short-Term Accommodation')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'CAS2 for HDC - short-term accommodation')).toEqual(visible)
+    })
+  })
+
+  describe('CAS2 Bail', () => {
+    test.each`
+      roles                            | visible
+      ${[Role.Cas2PrisonBailReferrer]} | ${true}
+      ${[]}                            | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      const output = getServicesForUser(roles, false, { policies: [] }, 'LEI', 12345, [], null)
+      expect(!!output.find(service => service.heading === 'CAS2 for bail - short-term accommodation')).toEqual(visible)
     })
   })
 

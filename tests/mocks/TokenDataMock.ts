@@ -1,6 +1,5 @@
 import { TokenData } from '../../server/@types/Users'
 
-// eslint-disable-next-line import/prefer-default-export
 export const getTokenDataMock = (overrides: Partial<TokenData> = {}): TokenData => {
   return {
     name: 'Token User',
