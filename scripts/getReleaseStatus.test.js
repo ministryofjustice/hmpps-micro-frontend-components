@@ -47,15 +47,13 @@ jest.mock('redis', () => {
     get: jest.fn().mockResolvedValue(null),
     disconnect: jest.fn().mockResolvedValue('OK'),
     connect: jest.fn().mockResolvedValue('OK'),
+    destroy: jest.fn(),
     isOpen: false,
+    on: jest.fn().mockReturnThis(),
   }
 
-  const createClientMock = jest.fn().mockReturnValue({
-    on: jest.fn().mockResolvedValue(mockRedisClientMock),
-  })
-
   return {
-    createClient: createClientMock,
+    createClient: () => mockRedisClientMock,
     mockRedisClientMock, // Export the mockRedisClientMock for access in tests
   }
 })
