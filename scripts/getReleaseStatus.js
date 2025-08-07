@@ -27,11 +27,14 @@ const endpoints = [
   { application: 'allocatePersonalOfficers', urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
 ]
 
-function getApplicationInfo(url) {
-  return superagent.get(url).set('Accept', 'application/json').retry(2)
+function getApplicationInfo(appLabel, url) {
+  return superagent.get(url).set('Accept', 'application/json').retry(2, (err, res) => {
+    console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
+  })
 }
 
-function getRedisClient() {
+async function getRedisClient() {
+  console.log('Creating redis client')
   return redis
     .createClient({
       url: `rediss://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
@@ -44,6 +47,15 @@ function getRedisClient() {
           return nextDelay
         },
       },
+    })
+    .on('connect', () => {
+      console.log('Redis client is connecting')
+    })
+    .on('ready', () => {
+      console.log('Redis client is ready for use')
+    })
+    .on('end', () => {
+      console.log('Redis client connection closed')
     })
     .on('error', err => {
       console.log(`Redis Error`, err)
@@ -92,7 +104,7 @@ const getData = async () => {
           return undefined
         }
 
-        return getApplicationInfo(url)
+        return getApplicationInfo(app.application, url)
       })
       .filter(Boolean),
   )
@@ -139,6 +151,7 @@ const getData = async () => {
     : newData
 
   await cacheResponses(body, redisClient)
+  await redisClient.destroy()
   process.exit()
 }
 

@@ -60,6 +60,6 @@ spec:
                   secretKeyRef:
                     name: elasticache-redis
                     key: auth_token
-              command: ["npm", "run", "getAppsStatus"]
+              command: ["npm", "run", "getAppsStatus", "--loglevel", "verbose"]
           restartPolicy: Never
           activeDeadlineSeconds: 300
