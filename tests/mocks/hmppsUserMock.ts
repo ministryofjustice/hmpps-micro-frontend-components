@@ -42,7 +42,7 @@ export const servicesMock: Service[] = [
   {
     id: 'submit-an-intelligence-report',
     heading: 'Submit an Intelligence Report',
-    description: 'Access to the new Mercury submission form',
+    description: 'Submit an intelligence report',
     href: 'http://localhost:3001',
     navEnabled: true,
   },
