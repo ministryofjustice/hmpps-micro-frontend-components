@@ -45,11 +45,7 @@ describe('User service', () => {
         }),
       )
 
-      userService = new UserService(
-        () => prisonApiClient,
-        () => allocationsApiClient,
-        cacheServiceMock,
-      )
+      userService = new UserService(prisonApiClient, allocationsApiClient, cacheServiceMock)
     })
 
     describe('with no cached data', () => {

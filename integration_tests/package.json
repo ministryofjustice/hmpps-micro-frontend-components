@@ -81,6 +81,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^1.8.1",
+    "@ministryofjustice/hmpps-rest-client": "^0.0.1",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.9.5",
     "body-parser": "^1.20.2",

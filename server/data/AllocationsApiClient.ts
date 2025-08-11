@@ -1,17 +1,11 @@
-import RestClient from './restClient'
+import { RestClient } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
 
 export type StaffAllocationPolicies = {
   policies: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
 }
 
-export default class AllocationsApiClient {
-  constructor(private restClient: RestClient) {}
-
-  private async get<T>(args: object): Promise<T> {
-    return this.restClient.get<T>(args)
-  }
-
+export default class AllocationsApiClient extends RestClient {
   async getStaffAllocationPolicies(prisonCode: string, staffId: number) {
     try {
       return await this.get<StaffAllocationPolicies>({

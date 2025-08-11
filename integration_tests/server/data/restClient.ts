@@ -3,9 +3,9 @@ import { Readable } from 'stream'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import superagent from 'superagent'
 
+import { ApiConfig } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
-import type { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
 
 interface Request {

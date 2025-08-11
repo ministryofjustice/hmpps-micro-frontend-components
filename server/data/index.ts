@@ -3,6 +3,7 @@
  * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
  * In particular, applicationinsights automatically collects bunyan logs
  */
+import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import applicationInfoProvider from '../applicationInfo'
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 
@@ -13,33 +14,25 @@ buildAppInsightsClient(applicationInfo)
 import { systemTokenBuilder } from './hmppsAuthClient'
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
-import config, { ApiConfig } from '../config'
-import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
+import config from '../config'
 import PrisonApiClient from './prisonApiClient'
 import AllocationsApiClient from './AllocationsApiClient'
+import logger from '../../logger'
 
-type RestClientBuilder<T> = (token: string) => T
-
-export default function restClientBuilder<T>(
-  name: string,
-  options: ApiConfig,
-  constructor: new (client: RestClient) => T,
-): RestClientBuilder<T> {
-  const restClient = CreateRestClientBuilder(name, options)
-  return token => new constructor(restClient(token))
-}
+const hmppsAuthClient = new AuthenticationClient(
+  config.apis.hmppsAuth,
+  logger,
+  config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
+)
 
 export const dataAccess = {
-  prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiClient),
-  allocationsApiClientBuilder: restClientBuilder<AllocationsApiClient>(
+  prisonApiClient: new PrisonApiClient('Prison API', config.apis.prisonApi, logger, hmppsAuthClient),
+  allocationsApiClient: new AllocationsApiClient(
     'Allocations API',
     config.apis.allocationsApi,
-    AllocationsApiClient,
+    logger,
+    hmppsAuthClient,
   ),
   getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
   applicationInfo,
 }
-
-export type DataAccess = typeof dataAccess
-
-export type { RestClientBuilder }

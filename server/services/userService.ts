@@ -1,4 +1,3 @@
-import { RestClientBuilder } from '../data'
 import PrisonApiClient from '../data/prisonApiClient'
 import logger from '../../logger'
 import getServicesForUser from './utils/getServicesForUser'
@@ -23,8 +22,8 @@ export default class UserService {
   private errorCount = 0
 
   constructor(
-    private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
-    private readonly allocationsApiClientBuilder: RestClientBuilder<AllocationsApiClient>,
+    private readonly prisonApiClient: PrisonApiClient,
+    private readonly allocationsApiClient: AllocationsApiClient,
     private readonly cacheService: CacheService,
   ) {}
 
@@ -35,9 +34,7 @@ export default class UserService {
     if (cache?.caseLoads.length === 1) return cache
 
     try {
-      const prisonApiClient = this.prisonApiClientBuilder(user.token)
-      const allocationsApiClient = this.allocationsApiClientBuilder(user.token)
-      const caseLoads = await prisonApiClient.getUserCaseLoads()
+      const caseLoads = await this.prisonApiClient.getUserCaseLoads()
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS
@@ -52,13 +49,13 @@ export default class UserService {
       const services = await this.getServicesForUser(
         user,
         activeCaseLoad?.caseLoadId,
-        prisonApiClient,
-        allocationsApiClient,
+        this.prisonApiClient,
+        this.allocationsApiClient,
       )
       const allocationPolicies = await this.getAllocationPolicies(
         user,
         activeCaseLoad?.caseLoadId,
-        allocationsApiClient,
+        this.allocationsApiClient,
       )
       const userAccess: PrisonUserAccess = {
         caseLoads,
