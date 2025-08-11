@@ -2,7 +2,16 @@ import hmppsConfig from '@ministryofjustice/eslint-config-hmpps'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
 
-const ignorePaths = ['node_modules', 'public', 'assets', 'cypress.json', 'reporter-config.json', 'dist/', 'scripts/']
+const ignorePaths = [
+  'node_modules',
+  'public',
+  'assets',
+  'cypress.json',
+  'reporter-config.json',
+  'dist/',
+  'scripts/',
+  'esbuild/',
+]
 
 const defaultConfig = hmppsConfig({
   extraIgnorePaths: [
