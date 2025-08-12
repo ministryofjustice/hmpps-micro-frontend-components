@@ -41,6 +41,7 @@ export default {
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      healthPath: '/health/ping',
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
@@ -54,6 +55,7 @@ export default {
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
@@ -63,6 +65,7 @@ export default {
     },
     prisonApi: {
       url: get('PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('PRISON_API_TIMEOUT_RESPONSE', 20000)),
         deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000)),
@@ -71,6 +74,7 @@ export default {
     },
     allocationsApi: {
       url: get('ALLOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('ALLOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
         deadline: Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000)),

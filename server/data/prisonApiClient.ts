@@ -1,4 +1,4 @@
-import { RestClient } from '@ministryofjustice/hmpps-rest-client'
+import { RestClient, SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { CaseLoad } from '../interfaces/caseLoad'
 import { Location } from '../interfaces/location'
 
@@ -8,15 +8,15 @@ export default class PrisonApiClient extends RestClient {
   }
 
   async getIsKeyworker(activeCaseloadId: string, staffId: number): Promise<boolean> {
-    try {
-      return await this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
-    } catch (error) {
-      if (error.status === 403 || error.status === 404) {
-        // can happen for CADM (central admin) users
-        return false
-      }
-      throw error
-    }
+    return this.get<boolean>({
+      path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW`,
+      errorHandler: <ERROR>(path: string, verb: string, error: SanitisedError<ERROR>) => {
+        if (error.responseStatus === 403 || error.responseStatus === 404) {
+          return false
+        }
+        throw error
+      },
+    })
   }
 
   async getUserLocations(): Promise<Location[]> {

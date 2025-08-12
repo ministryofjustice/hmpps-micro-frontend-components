@@ -1,5 +1,3 @@
-import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
-
 const production = process.env.NODE_ENV === 'production'
 
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
@@ -13,6 +11,23 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 }
 
 const requiredInProduction = { requireInProduction: true }
+
+export class AgentConfig {
+  timeout: number
+
+  constructor(timeout = 8000) {
+    this.timeout = timeout
+  }
+}
+
+export interface ApiConfig {
+  url: string
+  timeout: {
+    response: number
+    deadline: number
+  }
+  agent: AgentConfig
+}
 
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),

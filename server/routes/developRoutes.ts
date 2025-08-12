@@ -4,7 +4,6 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
 import { AVAILABLE_COMPONENTS } from '../@types/AvailableComponent'
 import auth from '../authentication/auth'
-import tokenVerifier from '../data/tokenVerification'
 import componentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 
@@ -13,7 +12,7 @@ export default function developRoutes(services: Services): Router {
   const controller = componentsController(services.contentfulService)
 
   router.use(authorisationMiddleware())
-  router.use(auth.authenticationMiddleware(tokenVerifier))
+  router.use(auth.authenticationMiddleware())
 
   router.get('/', (req, res, next) => {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
