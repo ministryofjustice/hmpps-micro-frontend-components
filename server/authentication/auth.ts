@@ -1,26 +1,14 @@
-import passport from 'passport'
-import { Strategy } from 'passport-oauth2'
 import type { RequestHandler } from 'express'
-
+import { VerificationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
-import generateOauthClientToken from './clientCredentials'
-import type { TokenVerifier } from '../data/tokenVerification'
+import logger from '../../logger'
 
-passport.serializeUser((user, done) => {
-  // Not used but required for Passport
-  done(null, user)
-})
+export type AuthenticationMiddleware = () => RequestHandler
 
-passport.deserializeUser((user, done) => {
-  // Not used but required for Passport
-  done(null, user as Express.User)
-})
-
-export type AuthenticationMiddleware = (tokenVerifier: TokenVerifier) => RequestHandler
-
-const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
+const authenticationMiddleware: AuthenticationMiddleware = () => {
+  const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
   return async (req, res, next) => {
-    if (req.isAuthenticated() && (await verifyToken(req))) {
+    if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req))) {
       return next()
     }
     req.session.returnTo = req.originalUrl
@@ -28,26 +16,4 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
   }
 }
 
-function init(): void {
-  const strategy = new Strategy(
-    {
-      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-      clientID: config.apis.hmppsAuth.apiClientId,
-      clientSecret: config.apis.hmppsAuth.apiClientSecret,
-      callbackURL: `${config.domain}/develop/sign-in/callback`,
-      state: true,
-      customHeaders: { Authorization: generateOauthClientToken() },
-    },
-    (token, refreshToken, params, profile, done) => {
-      return done(null, { token, username: params.user_name, authSource: params.auth_source })
-    },
-  )
-
-  passport.use(strategy)
-}
-
-export default {
-  authenticationMiddleware,
-  init,
-}
+export default { authenticationMiddleware }

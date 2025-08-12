@@ -5,6 +5,7 @@ import type { HealthCheckCallback, HealthCheckService } from './healthCheck'
 describe('Healthcheck', () => {
   const testAppInfo: ApplicationInfo = {
     applicationName: 'test',
+    productId: 'DPS001',
     buildNumber: '1',
     gitRef: 'long ref',
     gitShortHash: 'short ref',
