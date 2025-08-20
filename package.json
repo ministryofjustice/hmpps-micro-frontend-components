@@ -105,7 +105,6 @@
     "@contentful/rich-text-types": "^17.1.0",
     "@ministryofjustice/frontend": "^5.1.5",
     "@ministryofjustice/hmpps-auth-clients": "^0.0.1",
-    "@ministryofjustice/hmpps-monitoring": "^0.0.1",
     "@ministryofjustice/hmpps-rest-client": "^0.0.1",
     "@parcel/watcher": "^2.5.1",
     "agentkeepalive": "^4.6.0",
