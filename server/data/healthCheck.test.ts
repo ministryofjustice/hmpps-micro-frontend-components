@@ -1,6 +1,6 @@
+import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 import nock from 'nock'
 import { serviceCheckFactory } from './healthCheck'
-import { AgentConfig } from '../config'
 
 describe('Service healthcheck', () => {
   const healthcheck = serviceCheckFactory('externalService', 'http://test-service.com/ping', new AgentConfig(), {

@@ -1,12 +1,11 @@
 import UserService, { API_COOL_OFF_MINUTES, API_ERROR_LIMIT, DEFAULT_USER_ACCESS } from './userService'
-import { prisonApiClientMock } from '../../tests/mocks/prisonApiClientMock'
 import { CaseLoad } from '../interfaces/caseLoad'
 import PrisonApiClient from '../data/prisonApiClient'
 import CacheService from './cacheService'
 import { prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
 import { PrisonUserAccess } from '../interfaces/hmppsUser'
 import { Location } from '../interfaces/location'
-import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
+import AllocationsApiClient from '../data/AllocationsApiClient'
 
 const expectedCaseLoads: CaseLoad[] = [
   { caseloadFunction: '', caseLoadId: '1', currentlyActive: true, description: '', type: '' },
@@ -33,23 +32,20 @@ describe('User service', () => {
   let userService: UserService
 
   describe('getPrisonUserAccess', () => {
-    const prisonApiClient = prisonApiClientMock() as undefined as PrisonApiClient
-    const allocationsApiClient = { getStaffAllocationPolicies: jest.fn() } as unknown as AllocationsApiClient
-    beforeEach(() => {
-      prisonApiClient.getUserCaseLoads = jest.fn(async () => expectedCaseLoads)
-      prisonApiClient.getUserLocations = jest.fn(async () => [] as Location[])
-      prisonApiClient.getIsKeyworker = jest.fn(async () => true)
-      allocationsApiClient.getStaffAllocationPolicies = jest.fn(
-        async (_prisonCode: string, _staffId: number): Promise<StaffAllocationPolicies> => ({
-          policies: ['KEY_WORKER'],
-        }),
-      )
+    let prisonApiClient: PrisonApiClient
+    let allocationsApiClient: AllocationsApiClient
 
-      userService = new UserService(
-        () => prisonApiClient,
-        () => allocationsApiClient,
-        cacheServiceMock,
-      )
+    beforeEach(() => {
+      prisonApiClient = {
+        getUserCaseLoads: jest.fn().mockResolvedValue(expectedCaseLoads),
+        getUserLocations: jest.fn().mockResolvedValue([] as Location[]),
+        getIsKeyworker: jest.fn().mockResolvedValue(true),
+      } as undefined as PrisonApiClient
+      allocationsApiClient = {
+        getStaffAllocationPolicies: jest.fn().mockResolvedValue({ policies: ['KEY_WORKER'] }),
+      } as unknown as AllocationsApiClient
+
+      userService = new UserService(prisonApiClient, allocationsApiClient, cacheServiceMock)
     })
 
     describe('with no cached data', () => {
