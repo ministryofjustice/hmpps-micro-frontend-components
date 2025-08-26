@@ -9,6 +9,12 @@
 
 ### Run tests
 
+Some of the unit tests currently depend on Redis. Start a redis container:
+
+`docker compose -f docker-compose-test.yml up redis`
+
+Then run the unit tests:
+
 `npm run test`
 
 ### Running integration tests

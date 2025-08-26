@@ -1,3 +1,5 @@
+import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
+
 const production = process.env.NODE_ENV === 'production'
 
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
@@ -12,23 +14,6 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 
 const requiredInProduction = { requireInProduction: true }
 
-export class AgentConfig {
-  timeout: number
-
-  constructor(timeout = 8000) {
-    this.timeout = timeout
-  }
-}
-
-export interface ApiConfig {
-  url: string
-  timeout: {
-    response: number
-    deadline: number
-  }
-  agent: AgentConfig
-}
-
 export default {
   ingressUrl: get('INGRESS_URL', 'localhost', requiredInProduction),
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
@@ -39,6 +24,7 @@ export default {
   https: production,
   staticResourceCacheDuration: '1h',
   redis: {
+    enabled: get('REDIS_ENABLED', 'false', requiredInProduction) === 'true',
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_AUTH_TOKEN,
