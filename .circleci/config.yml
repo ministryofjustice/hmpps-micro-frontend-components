@@ -50,7 +50,7 @@ jobs:
             - node_modules
             - build
             - dist
-            - assets/stylesheets
+            - assets
 
   build-int-test:
     executor:

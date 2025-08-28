@@ -14,6 +14,7 @@ import componentsController, {
 import { AvailableComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
+import { assetMap } from '../utils/utils'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -48,8 +49,8 @@ export default function componentRoutes(services: Services): Router {
       res.render('components/header', viewModel, (_, html) => {
         resolve({
           html,
-          css: [`${config.ingressUrl}/assets/stylesheets/header.css`],
-          javascript: [`${config.ingressUrl}/assets/js/header.js`],
+          css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
+          javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
         })
       })
     })
@@ -61,7 +62,7 @@ export default function componentRoutes(services: Services): Router {
       res.render('components/footer', viewModel, (_, html) => {
         resolve({
           html,
-          css: [`${config.ingressUrl}/assets/stylesheets/footer.css`],
+          css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
           javascript: [],
         })
       })

@@ -69,13 +69,13 @@ describe('GET /components', () => {
             'a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]',
           ).text(),
         ).toContain('Digital Prison Services')
-        expect(body.header.css).toEqual(['localhost/assets/stylesheets/header.css'])
+        expect(body.header.css).toEqual(['localhost/assets/css/header.css'])
         expect(body.header.javascript).toEqual(['localhost/assets/js/header.js'])
 
         const $footer = cheerio.load(body.footer.html)
         const feedbackLink = $footer('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]')
         expect(feedbackLink.text()).toContain('Feedback')
-        expect(body.footer.css).toEqual(['localhost/assets/stylesheets/footer.css'])
+        expect(body.footer.css).toEqual(['localhost/assets/css/footer.css'])
         expect(body.footer.javascript).toEqual([])
       })
   })

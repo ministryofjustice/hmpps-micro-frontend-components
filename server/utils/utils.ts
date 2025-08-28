@@ -1,3 +1,7 @@
+import path from 'path'
+import fs from 'fs'
+import logger from '../../logger'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -20,4 +24,17 @@ export const initialiseName = (fullName?: string): string | null => {
 
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
+}
+
+export const assetMap = (url: string) => {
+  let assetManifest: Record<string, string> = {}
+
+  try {
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
+  } catch (_e) {
+    logger.error('Could not read asset manifest file')
+  }
+
+  return assetManifest[url] || url
 }
