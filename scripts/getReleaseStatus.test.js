@@ -63,6 +63,7 @@ describe('Get release status script', () => {
     jest.spyOn(process, 'exit').mockImplementation(() => {})
     jest.clearAllMocks()
     nock.cleanAll()
+    process.env.INFO_DISABLED_APPS = undefined
   })
 
   it('should get application info for all apps', async () => {
@@ -129,6 +130,30 @@ describe('Get release status script', () => {
     )
   })
 
+  it('should not check apps which have had the info check disabled', async () => {
+    const { mockRedisClientMock } = require('redis')
+    setMockSuccess(allUrls)
+    process.env.INFO_DISABLED_APPS = 'alerts,whereabouts'
+
+    await getData()
+
+    expect(mockRedisClientMock.set).toHaveBeenCalledWith(
+      'applicationInfo',
+      JSON.stringify([
+        { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
+      ]),
+    )
+  })
+
   describe('when redis is available', () => {
     it('should use the stored data if it exists and no new data', async () => {
       const { mockRedisClientMock } = require('redis')
@@ -144,6 +169,49 @@ describe('Get release status script', () => {
 
     it('should use the stored data for app if it exists and no new data', async () => {
       const { mockRedisClientMock } = require('redis')
+      const storedData = [
+        { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+        { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
+      ]
+
+      const [residentialLocationUrl, ...restUrls] = allUrls
+      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      setMockError(restUrls, 404)
+
+      mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
+
+      await getData()
+
+      expect(mockRedisClientMock.set).toHaveBeenCalledWith(
+        'applicationInfo',
+        JSON.stringify([
+          { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
+          { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
+        ]),
+      )
+    })
+
+    it('should use the stored data for app with the info check disabled', async () => {
+      const { mockRedisClientMock } = require('redis')
+      process.env.INFO_DISABLED_APPS = 'alerts,whereabouts'
       const storedData = [
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
