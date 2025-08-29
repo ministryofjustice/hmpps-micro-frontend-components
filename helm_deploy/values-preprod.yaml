@@ -19,6 +19,9 @@ generic-service:
     ENVIRONMENT_NAME: PRE-PRODUCTION
     CACHE_TIMOUT: 600
 
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    INFO_DISABLED_APPS: ""
+
     DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk

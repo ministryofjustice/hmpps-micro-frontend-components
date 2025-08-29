@@ -28,9 +28,12 @@ const endpoints = [
 ]
 
 function getApplicationInfo(appLabel, url) {
-  return superagent.get(url).set('Accept', 'application/json').retry(2, (err, res) => {
-    console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
-  })
+  return superagent
+    .get(url)
+    .set('Accept', 'application/json')
+    .retry(2, (err, res) => {
+      console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
+    })
 }
 
 async function getRedisClient() {
@@ -93,10 +96,16 @@ const getData = async () => {
   await ensureConnected(redisClient)
 
   const storedData = await getStoredData(redisClient)
+  const disabledApps = process.env.INFO_DISABLED_APPS?.split(',') ?? []
 
   const responses = await Promise.allSettled(
     endpoints
       .map(app => {
+        if (disabledApps.includes(app.application)) {
+          console.log(`Application info check disabled for ${app.application}`)
+          return undefined
+        }
+
         const url = getUrlForApp(app)
 
         if (!url) {

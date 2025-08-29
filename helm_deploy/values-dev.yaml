@@ -21,6 +21,8 @@ generic-service:
     ENVIRONMENT_NAME: DEV
     CACHE_TIMOUT: 3
 
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    INFO_DISABLED_APPS: ""
 
     DPS_URL: https://digital-dev.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps-dev.prison.service.justice.gov.uk
