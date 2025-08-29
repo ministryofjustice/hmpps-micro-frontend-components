@@ -39,7 +39,7 @@ context('Header', () => {
 
     indexPage.header.services.toggle().click()
     indexPage.header.services.menu().should('be.visible')
-    indexPage.header.services.list().should('have.length', 8)
+    indexPage.header.services.list().should('have.length', 9)
 
     indexPage.header.services.toggle().click()
     indexPage.header.services.menu().should('not.be.visible')

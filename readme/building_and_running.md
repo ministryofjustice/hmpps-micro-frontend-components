@@ -53,7 +53,7 @@ CONTENTFUL_SPACE_ID=
 ```
 </details>
 
-3/ And then, to build the assets and start the app with nodemon:
+3/ And then, to build the assets and start the app with esbuild:
 ```
 npm run start:dev
 ```

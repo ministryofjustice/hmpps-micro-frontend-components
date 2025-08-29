@@ -19,20 +19,28 @@ Then run the unit tests:
 
 ### Running integration tests
 
-For local running, start a test db and wiremock instance and build the components application by:
+#### Setup redis and wiremock using Docker:
 
-`docker compose -f docker-compose-test.yml up --build`
+`docker compose -f docker-compose-test.yml up`
 
-To recreate the client use of the components, there is a separate application in the integration_tests folder that calls the components endpoint running in docker and implements the response.
+#### Start the Micro Frontend Components service in integration test mode:
 
-Run this server in test mode by:
+`npm run start-feature:dev`
 
-`npm run start-feature-test-app`
+#### Build and run the test service:
 
-And then either, run tests in headless mode with:
+To recreate the client use of the components, there is a separate application in the integration_tests folder that
+calls the components endpoint and implements the response.
 
-`npm run int-test`
+Build and run the test application:
 
-Or run tests with the cypress UI:
+```shell
+npm -prefix integration_tests install
+npm -prefix integration_tests run build
+npm run start-feature-test-app
+```
 
-`npm run int-test-ui`
+#### Run the integration test suite:
+
+In headless mode: `npm run int-test`
+or with the cypress UI: `npm run int-test-ui`

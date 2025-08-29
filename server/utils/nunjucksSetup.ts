@@ -1,30 +1,16 @@
 /* eslint-disable no-param-reassign */
 import nunjucks from 'nunjucks'
 import express from 'express'
-import * as pathModule from 'path'
-import { initialiseName } from './utils'
+import path from 'path'
+import { assetMap, initialiseName } from './utils'
 import config from '../config'
 
-const production = process.env.NODE_ENV === 'production'
-
-export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
+export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Frontend Components'
   app.locals.config = config
-
-  // Cachebusting version string
-  if (production) {
-    // Version only changes with new commits
-    app.locals.version = Date.now().toString()
-  } else {
-    // Version changes every request
-    app.use((req, res, next) => {
-      res.locals.version = Date.now().toString()
-      return next()
-    })
-  }
 
   const njkEnv = nunjucks.configure(
     [
@@ -41,4 +27,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('assetMap', assetMap)
 }

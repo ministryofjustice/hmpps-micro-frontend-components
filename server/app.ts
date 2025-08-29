@@ -2,7 +2,6 @@ import express from 'express'
 
 import createError from 'http-errors'
 
-import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 
@@ -36,7 +35,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   setUpEnvironmentName(app)
-  nunjucksSetup(app, path)
+  nunjucksSetup(app)
   app.use(setUpAuthentication())
   app.use(setUpCsrf())
   setUpSwagger(app)

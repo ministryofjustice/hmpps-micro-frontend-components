@@ -18,6 +18,7 @@ export default defineConfig({
   },
   taskTimeout: 60000,
   e2e: {
+    experimentalRunAllSpecs: true,
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
