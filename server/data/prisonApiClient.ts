@@ -4,6 +4,7 @@ import { CaseLoad } from '../interfaces/caseLoad'
 import { Location } from '../interfaces/location'
 import config from '../config'
 import logger from '../../logger'
+import { errorHasStatus } from '../utils/errorHelpers'
 
 export default class PrisonApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -15,15 +16,18 @@ export default class PrisonApiClient extends RestClient {
   }
 
   async getIsKeyworker(token: string, activeCaseloadId: string, staffId: number): Promise<boolean> {
-    try {
-      return await this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` }, asUser(token))
-    } catch (error) {
-      if (error.status === 403 || error.status === 404) {
-        // can happen for CADM (central admin) users
-        return false
-      }
-      throw error
-    }
+    return this.get<boolean>(
+      {
+        path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW`,
+        errorHandler: (_path, _method, error) => {
+          if (errorHasStatus(error, 403) || errorHasStatus(error, 404)) {
+            return false
+          }
+          throw error
+        },
+      },
+      asUser(token),
+    )
   }
 
   async getUserLocations(token: string): Promise<Location[]> {
