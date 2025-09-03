@@ -54,6 +54,7 @@ jest.mock('../../config', () => ({
     allocateKeyWorkers: { url: 'url' },
     allocatePersonalOfficers: { url: 'url' },
     matchLearnerRecord: { url: 'url', enabled: true },
+    supportAdditionalNeeds: { url: 'url', enabled: true },
   },
 }))
 
@@ -864,5 +865,22 @@ describe('getServicesForUser', () => {
       )
       expect(!!output.find(service => service.heading === 'My personal officer allocations')).toEqual(visible)
     })
+  })
+
+  describe('Support additional needs', () => {
+    test.each`
+      activeServices                                                                 | activeCaseLoadId | visible
+      ${[{ app: 'supportAdditionalNeeds' as ServiceName, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[{ app: 'supportAdditionalNeeds' as ServiceName, activeAgencies: ['***'] }]} | ${'LEI'}         | ${true}
+      ${[{ app: 'supportAdditionalNeeds' as ServiceName, activeAgencies: ['MDI'] }]} | ${'MDI'}         | ${true}
+      ${[{ app: 'supportAdditionalNeeds' as ServiceName, activeAgencies: ['LEI'] }]} | ${'MDI'}         | ${true}
+      ${[]}                                                                          | ${'LEI'}         | ${true}
+    `(
+      'user with activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ activeServices, activeCaseLoadId, visible }) => {
+        const output = getServicesForUser([], false, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Support for additional needs')).toEqual(visible)
+      },
+    )
   })
 })

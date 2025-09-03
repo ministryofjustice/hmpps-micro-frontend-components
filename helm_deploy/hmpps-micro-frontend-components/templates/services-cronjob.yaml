@@ -50,6 +50,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
+              - name: SUPPORT_ADDITIONAL_NEEDS_URL
+                value: "{{ index .Values "generic-service" "env" "SUPPORT_ADDITIONAL_NEEDS_URL" }}"
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:
