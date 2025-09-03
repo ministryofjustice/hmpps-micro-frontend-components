@@ -567,6 +567,14 @@ export default (
       navEnabled: true,
       enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
     },
+    {
+      id: 'support-additional-needs',
+      heading: 'Support additional needs',
+      description: 'TODO - get correct description here',
+      href: config.serviceUrls.supportAdditionalNeeds.url,
+      navEnabled: true,
+      enabled: () => config.serviceUrls.supportAdditionalNeeds.enabled,
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {

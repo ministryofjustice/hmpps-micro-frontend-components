@@ -10,3 +10,5 @@ process.env.CASE_NOTES_API_URL = 'https://dev.offender-case-notes.service.justic
 process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 process.env.CEMO_URL = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
 process.env.MANAGE_APPLICATIONS_URL = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
+process.env.SUPPORT_ADDITIONAL_NEEDS_URL =
+  'https://https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk'

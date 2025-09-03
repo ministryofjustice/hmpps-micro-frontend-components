@@ -25,6 +25,7 @@ const endpoints = [
   { application: 'manageApplications', urlEnv: 'MANAGE_APPLICATIONS_URL' },
   { application: 'allocateKeyWorkers', urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
   { application: 'allocatePersonalOfficers', urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
+  { application: 'supportAdditionalNeeds', urlEnv: 'SUPPORT_ADDITIONAL_NEEDS_URL' },
 ]
 
 function getApplicationInfo(appLabel, url) {
