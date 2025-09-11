@@ -1,24 +1,26 @@
 .connect-dps-common-header {
-  [hidden] { display: none !important; }
+  [hidden] {
+    display: none !important;
+  }
 
   background-color: govuk-colour('black');
   color: govuk-colour('white');
 
   &__logo {
-    @include govuk-responsive-margin(3, 'right');
     position: relative;
     top: -2px;
     fill: govuk-colour('white');
     padding: 20px 0;
+    @include govuk-responsive-margin(3, 'right');
   }
 
   &__title {
     display: flex;
     &__organisation-name {
-      @include govuk-responsive-margin(2, 'right');
-      @include govuk-font($size: 24, $weight: 'bold');
       display: flex;
       align-items: center;
+      @include govuk-responsive-margin(2, 'right');
+      @include govuk-font($size: 24, $weight: 'bold');
     }
 
     .govuk-tag {
@@ -108,9 +110,9 @@
         cursor: pointer;
         color: govuk-colour("white");
         background: govuk-colour("black");
-        @include govuk-font(16);
         height: 100%;
         overflow: hidden;
+        @include govuk-font(16);
 
         &:hover {
           color: govuk-colour("mid-grey") !important;
