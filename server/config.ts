@@ -238,6 +238,10 @@ export default {
     allocatePersonalOfficers: {
       url: get('ALLOCATE_PERSONAL_OFFICERS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    supportAdditionalNeeds: {
+      url: get('SUPPORT_ADDITIONAL_NEEDS_URL', 'http://localhost:3001', requiredInProduction),
+      enabled: get('SUPPORT_ADDITIONAL_NEEDS_ENABLED', 'false') === 'true',
+    },
   },
   features: {
     servicesStore: {
