@@ -1,39 +1,39 @@
 .connect-dps-external-header {
-  @include govuk-responsive-padding(3, 'top');
-  @include govuk-responsive-padding(3, 'bottom');
   background-color: govuk-colour('black');
   color: govuk-colour('white');
+  @include govuk-responsive-padding(3, 'top');
+  @include govuk-responsive-padding(3, 'bottom');
 
   &__container {
-    @include govuk-width-container;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @include govuk-width-container;
   }
 
   &__logo {
-    @include govuk-responsive-margin(2, 'right');
     position: relative;
     top: -2px;
     fill: govuk-colour('white');
+    @include govuk-responsive-margin(2, 'right');
   }
 
   &__title {
-    @include govuk-responsive-padding(3, 'right');
     display: flex;
     align-items: center;
+    @include govuk-responsive-padding(3, 'right');
 
     &__organisation-name {
-      @include govuk-responsive-margin(2, 'right');
-      @include govuk-font($size: 24, $weight: 'bold');
       display: flex;
       align-items: center;
+      @include govuk-responsive-margin(2, 'right');
+      @include govuk-font($size: 24, $weight: 'bold');
     }
 
     &__service-name {
+      display: none;
       @include govuk-responsive-margin(2, 'right');
       @include govuk-font(24);
-      display: none;
 
       @include govuk-media-query($from: desktop) {
         display: flex;
@@ -45,8 +45,10 @@
   &__link {
     @include govuk-link-common;
     @include govuk-link-style-default;
-
-    text-underline-offset: 0.1em;
+    // this declaration should be below govuk-link includes so is wrapped to prevent mixed-decls sass warning
+    & {
+      text-underline-offset: 0.1em;
+    }
 
     &:link,
     &:visited,
@@ -68,8 +70,8 @@
     }
 
     &__sub-text {
-      @include govuk-font(16);
       display: none;
+      @include govuk-font(16);
 
       @include govuk-media-query($from: tablet) {
         display: block;
@@ -91,15 +93,15 @@
     }
 
     &__item {
-      @include govuk-font(19);
-      margin-bottom: govuk-spacing(1);
       text-align: right;
+      margin-bottom: govuk-spacing(1);
+      @include govuk-font(19);
 
       @include govuk-media-query($from: tablet) {
-        @include govuk-responsive-margin(4, 'right');
-        @include govuk-responsive-padding(4, 'right');
         margin-bottom: 0;
         border-right: 1px solid govuk-colour('white');
+        @include govuk-responsive-margin(4, 'right');
+        @include govuk-responsive-padding(4, 'right');
       }
 
       a {
