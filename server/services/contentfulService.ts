@@ -1,15 +1,15 @@
-import { ApolloClient, gql } from '@apollo/client/core'
-import { ManagedPage, ManagedPageLink } from '../interfaces/managedPage'
+import { ApolloClient, gql, TypedDocumentNode } from '@apollo/client'
+import { ManagedPageLink, ManagedPagesQuery } from '../interfaces/managedPage'
 import config from '../config'
 
 export default class ContentfulService {
-  constructor(private readonly apolloClient: ApolloClient<unknown>) {}
+  constructor(private readonly apolloClient: ApolloClient) {}
 
   /**
    * Get list of `managedPage` links.
    */
   public async getManagedPages(): Promise<ManagedPageLink[]> {
-    const getManagedPagesQuery = gql`
+    const getManagedPagesQuery: TypedDocumentNode<ManagedPagesQuery, Record<string, never>> = gql`
       query ManagedPages {
         managedPageCollection(limit: 100, order: seq_ASC) {
           items {
@@ -26,6 +26,6 @@ export default class ContentfulService {
       })
     ).data.managedPageCollection
 
-    return items.map((page: ManagedPage) => ({ href: `${config.serviceUrls.dps.url}/${page.slug}`, text: page.title }))
+    return items.map(page => ({ href: `${config.serviceUrls.dps.url}/${page.slug}`, text: page.title }))
   }
 }
