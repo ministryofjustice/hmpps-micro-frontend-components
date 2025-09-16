@@ -18,3 +18,9 @@ export interface ManagedPageApollo {
     json: Document
   }
 }
+
+export interface ManagedPagesQuery {
+  managedPageCollection: {
+    items: ManagedPage[]
+  }
+}
