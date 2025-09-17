@@ -3,12 +3,12 @@ import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import { CaseLoad } from '../interfaces/caseLoad'
 import { Location } from '../interfaces/location'
 import config from '../config'
-import logger from '../../logger'
+import logger, { warnLevelLogger } from '../../logger'
 import { errorHasStatus } from '../utils/errorHelpers'
 
 export default class PrisonApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
-    super('Prison API', config.apis.prisonApi, logger, authenticationClient)
+    super('Prison API', config.apis.prisonApi, config.production ? warnLevelLogger : logger, authenticationClient)
   }
 
   async getUserCaseLoads(token: string): Promise<CaseLoad[]> {
