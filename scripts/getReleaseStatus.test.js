@@ -1,6 +1,6 @@
 const nock = require('nock')
-const { getData } = require('./getReleaseStatus')
 const { mockRedisClientMock } = require('redis')
+const { getData } = require('./getReleaseStatus')
 
 const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
@@ -67,7 +67,6 @@ describe('Get release status script', () => {
   })
 
   it('should get application info for all apps', async () => {
-    const { mockRedisClientMock } = require('redis')
     setMockSuccess(allUrls)
 
     await getData()
@@ -92,7 +91,6 @@ describe('Get release status script', () => {
   })
 
   it('should store the data it gets if others fail', async () => {
-    const { mockRedisClientMock } = require('redis')
     const [residentialLocationUrl, ...restUrls] = allUrls
     setMockSuccess([residentialLocationUrl])
     setMockError(restUrls, 404)
@@ -106,7 +104,6 @@ describe('Get release status script', () => {
   })
 
   it('should not fail if it cant find the data in response', async () => {
-    const { mockRedisClientMock } = require('redis')
     const [residentialLocationUrl, ...restUrls] = allUrls
     setMockSuccess([residentialLocationUrl], { some: 'stuff' })
     setMockSuccess(restUrls)
@@ -131,7 +128,6 @@ describe('Get release status script', () => {
   })
 
   it('should not check apps which have had the info check disabled', async () => {
-    const { mockRedisClientMock } = require('redis')
     setMockSuccess(allUrls)
     process.env.INFO_DISABLED_APPS = 'alerts,whereabouts'
 
@@ -156,7 +152,6 @@ describe('Get release status script', () => {
 
   describe('when redis is available', () => {
     it('should use the stored data if it exists and no new data', async () => {
-      const { mockRedisClientMock } = require('redis')
       setMockError(allUrls, 500)
 
       const storedData = [{ app: 'adjudications', activeAgencies: ['agency1', 'agency2'] }]
@@ -168,7 +163,6 @@ describe('Get release status script', () => {
     })
 
     it('should use the stored data for app if it exists and no new data', async () => {
-      const { mockRedisClientMock } = require('redis')
       const storedData = [
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
@@ -210,7 +204,6 @@ describe('Get release status script', () => {
     })
 
     it('should use the stored data for app with the info check disabled', async () => {
-      const { mockRedisClientMock } = require('redis')
       process.env.INFO_DISABLED_APPS = 'alerts,whereabouts'
       const storedData = [
         { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
@@ -253,7 +246,6 @@ describe('Get release status script', () => {
     })
 
     it('should use new app data if it does not exist on stored data', async () => {
-      const { mockRedisClientMock } = require('redis')
       const storedData = [{ app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] }]
 
       const [residentialLocationUrl, ...restUrls] = allUrls

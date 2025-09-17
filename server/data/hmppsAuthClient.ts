@@ -30,6 +30,7 @@ function getSystemClientTokenFromHmppsAuth(username?: string): Promise<superagen
     .timeout(timeoutSpec)
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export const systemTokenBuilder =
   (tokenStore: TokenStore) =>
   async (username?: string): Promise<string> => {

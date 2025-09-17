@@ -3,7 +3,7 @@ import { ManagedPageLink, ManagedPagesQuery } from '../interfaces/managedPage'
 import config from '../config'
 
 export default class ContentfulService {
-  constructor(private readonly apolloClient: ApolloClient) {}
+  constructor(readonly apolloClient: ApolloClient) {}
 
   /**
    * Get list of `managedPage` links.
