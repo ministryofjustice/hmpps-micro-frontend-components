@@ -15,9 +15,7 @@ describe('ContentfulService', () => {
   })
 
   it('should get managed pages', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue(managedPagesCollectionMock)
+    const apolloSpy = jest.spyOn(contentfulService.apolloClient, 'query').mockResolvedValue(managedPagesCollectionMock)
 
     const pages = await contentfulService.getManagedPages()
 

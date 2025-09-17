@@ -35,6 +35,7 @@ function isActiveInEstablishmentWithLegacyFallback(
 
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
+
 export default (
   roles: string[],
   allocationPolicies: StaffAllocationPolicies,
