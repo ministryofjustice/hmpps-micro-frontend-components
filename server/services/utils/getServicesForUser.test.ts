@@ -385,10 +385,10 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Submit an Intelligence Report', () => {
+  describe('Submit an intelligence report', () => {
     it('should return true', () => {
       const output = getServicesForUser([], false, { policies: [] }, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Submit an Intelligence Report')).toEqual(true)
+      expect(!!output.find(service => service.heading === 'Submit an intelligence report')).toEqual(true)
     })
   })
 
