@@ -91,7 +91,6 @@ export default {
   serviceUrls: {
     dps: { url: get('DPS_URL', 'http://localhost:3001', requiredInProduction) },
     newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },
-    omic: { url: get('OMIC_URL', 'http://localhost:3001', requiredInProduction) },
     activities: {
       url: get('ACTIVITIES_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('ACTIVITIES_ENABLED_PRISONS', '', requiredInProduction),

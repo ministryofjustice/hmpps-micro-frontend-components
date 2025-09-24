@@ -8,7 +8,6 @@ context('Footer', () => {
     cy.task('stubManageUser')
     cy.task('stubCaseloads')
     cy.task('stubLocations')
-    cy.task('stubKeyworkerRoles')
     cy.task('stubGetStaffAllocationPolicies')
   })
 

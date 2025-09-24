@@ -10,7 +10,6 @@ context('Header', () => {
     cy.task('stubManageUser')
     cy.task('stubCaseloads')
     cy.task('stubLocations')
-    cy.task('stubKeyworkerRoles')
     cy.task('stubSearchPage')
     cy.task('stubCaseloadSwitcherPage')
     cy.task('stubGetStaffAllocationPolicies')

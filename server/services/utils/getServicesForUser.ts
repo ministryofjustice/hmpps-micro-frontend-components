@@ -37,7 +37,6 @@ function isActiveInEstablishmentWithLegacyFallback(
 }
 export default (
   roles: string[],
-  isKeyworker: boolean,
   allocationPolicies: StaffAllocationPolicies,
   activeCaseLoadId: string,
   staffId: number,
@@ -59,16 +58,6 @@ export default (
       href: `${config.serviceUrls.dps.url}/global-search`,
       navEnabled: true,
       enabled: () => userHasRoles([Role.GlobalSearch], roles),
-    },
-    {
-      id: 'key-worker-allocations',
-      heading: 'My key worker allocation',
-      description: 'View your key worker cases.',
-      href: `${config.serviceUrls.omic.url}/key-worker/${staffId}`,
-      navEnabled: true,
-      enabled: () =>
-        isKeyworker &&
-        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'manage-prisoner-whereabouts',
@@ -156,16 +145,6 @@ export default (
       href: config.serviceUrls.establishmentRoll.url,
       navEnabled: true,
       enabled: () => locations?.length > 0,
-    },
-    {
-      id: 'manage-key-workers',
-      heading: 'Key workers',
-      description: 'Add and remove key workers from prisoners and manage individuals.',
-      href: config.serviceUrls.omic.url,
-      navEnabled: true,
-      enabled: () =>
-        userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles) &&
-        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'pom',
