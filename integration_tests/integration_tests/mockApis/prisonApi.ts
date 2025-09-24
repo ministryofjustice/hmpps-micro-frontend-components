@@ -1,6 +1,7 @@
 /* eslint-disable import/no-relative-packages */
 import { stubFor } from './wiremock'
 import { CaseLoad } from '../../../server/interfaces/caseLoad'
+import { Location } from '../../../server/interfaces/location'
 
 const stubCaseloads = (
   caseloads: CaseLoad[] = [
@@ -34,18 +35,29 @@ const stubCaseloads = (
     },
   })
 
-const stubLocations = (staffId = '12345', prisonCode = 'MDI', isKeyworker: boolean = true) =>
+const stubLocations = (
+  locations: Location[] = [
+    {
+      locationId: 1,
+      locationType: 'INST',
+      description: 'Moorland (HMP & YOI)',
+      agencyId: 'MDI',
+      currentOccupancy: 1,
+      locationPrefix: 'MDI',
+    },
+  ],
+) =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/prison/api/staff/${staffId}/${prisonCode}/roles/KW`,
+      urlPattern: '/prison/api/users/me/locations',
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: isKeyworker,
+      jsonBody: locations,
     },
   })
 
