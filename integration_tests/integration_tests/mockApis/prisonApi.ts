@@ -35,22 +35,7 @@ const stubCaseloads = (
     },
   })
 
-const stubLocations = (staffId = '12345', prisonCode = 'MDI', isKeyworker: boolean = true) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/prison/api/staff/${staffId}/${prisonCode}/roles/KW`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: isKeyworker,
-    },
-  })
-
-const stubKeyworkerRoles = (
+const stubLocations = (
   locations: Location[] = [
     {
       locationId: 1,
@@ -79,5 +64,4 @@ const stubKeyworkerRoles = (
 export default {
   stubCaseloads,
   stubLocations,
-  stubKeyworkerRoles,
 }

@@ -19,13 +19,6 @@ export const servicesMock: Service[] = [
     navEnabled: true,
   },
   {
-    id: 'key-worker-allocations',
-    heading: 'My key worker allocation',
-    description: 'View your key worker cases.',
-    href: 'http://localhost:3001/key-worker/111111',
-    navEnabled: true,
-  },
-  {
     id: 'pathfinder',
     heading: 'Pathfinder',
     description: 'Manage your Pathfinder caseloads.',

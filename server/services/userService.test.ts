@@ -58,7 +58,6 @@ describe('User service', () => {
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
-        expect(prisonApiClient.getIsKeyworker).toHaveBeenCalledTimes(1)
 
         expect(userAccess).toEqual(expectedUserAccess)
       })
@@ -75,7 +74,6 @@ describe('User service', () => {
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.getUserLocations).not.toHaveBeenCalled()
-        expect(prisonApiClient.getIsKeyworker).not.toHaveBeenCalled()
         expect(cacheServiceMock.setData).not.toHaveBeenCalled()
 
         expect(userAccess).toEqual(DEFAULT_USER_ACCESS)
@@ -149,7 +147,6 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
         expect(prisonApiClient.getUserCaseLoads).not.toHaveBeenCalled()
         expect(prisonApiClient.getUserLocations).not.toHaveBeenCalled()
-        expect(prisonApiClient.getIsKeyworker).not.toHaveBeenCalled()
         expect(output).toEqual(cachedData)
       })
 
@@ -159,7 +156,6 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
-        expect(prisonApiClient.getIsKeyworker).toHaveBeenCalledTimes(0)
         expect(output).toEqual(expectedUserAccess)
       })
 
@@ -180,7 +176,6 @@ describe('User service', () => {
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
-        expect(prisonApiClient.getIsKeyworker).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })
@@ -203,7 +198,6 @@ describe('User service', () => {
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
-        expect(prisonApiClient.getIsKeyworker).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })

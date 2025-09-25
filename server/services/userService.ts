@@ -106,9 +106,8 @@ export default class UserService {
     prisonApiClient: PrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
-    const [locations, isKeyworker, allocationPolicies] = await Promise.all([
+    const [locations, allocationPolicies] = await Promise.all([
       prisonApiClient.getUserLocations(user.token),
-      prisonApiClient.getIsKeyworker(user.token, caseLoadId, user.staffId),
       this.getAllocationPolicies(user, caseLoadId, allocationsApiClient),
     ])
 
@@ -118,7 +117,6 @@ export default class UserService {
 
     return getServicesForUser(
       user.userRoles,
-      isKeyworker,
       allocationPolicies,
       caseLoadId ?? null,
       user.staffId,
