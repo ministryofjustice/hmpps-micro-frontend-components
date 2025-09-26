@@ -18,3 +18,5 @@ export const getTokenDataMock = (overrides: Partial<TokenData> = {}): TokenData 
     ...overrides,
   }
 }
+
+export default { getTokenDataMock }
