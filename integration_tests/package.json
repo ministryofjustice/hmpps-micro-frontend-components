@@ -92,7 +92,7 @@
     "csrf-sync": "^4.2.1",
     "cypress": "^13.8.1",
     "express": "^5.1.0",
-    "express-session": "^1.18.0",
+    "express-session": "^1.18.2",
     "govuk-frontend": "^4.8.0",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
