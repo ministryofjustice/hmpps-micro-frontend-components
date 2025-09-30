@@ -8,7 +8,6 @@ context('Footer', () => {
     cy.task('stubManageUser')
     cy.task('stubCaseloads')
     cy.task('stubLocations')
-    cy.task('stubKeyworkerRoles')
     cy.task('stubGetStaffAllocationPolicies')
   })
 
@@ -16,7 +15,7 @@ context('Footer', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
 
-    indexPage.footer.services.list().should('have.length', 9)
+    indexPage.footer.services.list().should('have.length', 8)
   })
 
   it('Links should be displayed', () => {

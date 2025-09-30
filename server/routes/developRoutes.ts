@@ -15,14 +15,14 @@ export default function developRoutes(services: Services): Router {
   router.use(authorisationMiddleware())
   router.use(auth.authenticationMiddleware(tokenVerifier))
 
-  router.get('/', (req, res, next) => {
+  router.get('/', (_req, res) => {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
   router.get(
     '/header',
     populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
+    asyncMiddleware(async (_req, res) => {
       const viewModel = await controller.getHeaderViewModel(res.locals.user)
       return res.render('pages/componentPreview', viewModel)
     }),
@@ -31,7 +31,7 @@ export default function developRoutes(services: Services): Router {
   router.get(
     '/footer',
     populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
+    asyncMiddleware(async (_req, res) => {
       const viewModel = await controller.getFooterViewModel(res.locals.user)
       return res.render('pages/componentPreview', viewModel)
     }),

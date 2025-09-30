@@ -19,13 +19,6 @@ export const servicesMock: Service[] = [
     navEnabled: true,
   },
   {
-    id: 'key-worker-allocations',
-    heading: 'My key worker allocation',
-    description: 'View your key worker cases.',
-    href: 'http://localhost:3001/key-worker/111111',
-    navEnabled: true,
-  },
-  {
     id: 'pathfinder',
     heading: 'Pathfinder',
     description: 'Manage your Pathfinder caseloads.',
@@ -42,7 +35,7 @@ export const servicesMock: Service[] = [
   {
     id: 'submit-an-intelligence-report',
     heading: 'Submit an intelligence report',
-    description: 'Access to the new Mercury submission form',
+    description: 'Access to the intelligence submission form',
     href: 'http://localhost:3001',
     navEnabled: true,
   },

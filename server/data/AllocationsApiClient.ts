@@ -1,6 +1,6 @@
 import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
-import logger from '../../logger'
+import logger, { warnLevelLogger } from '../../logger'
 import config from '../config'
 
 export type StaffAllocationPolicies = {
@@ -9,7 +9,12 @@ export type StaffAllocationPolicies = {
 
 export default class AllocationsApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
-    super('Allocations API', config.apis.allocationsApi, logger, authenticationClient)
+    super(
+      'Allocations API',
+      config.apis.allocationsApi,
+      config.production ? warnLevelLogger : logger,
+      authenticationClient,
+    )
   }
 
   async getStaffAllocationPolicies(token: string, prisonCode: string, staffId: number) {
