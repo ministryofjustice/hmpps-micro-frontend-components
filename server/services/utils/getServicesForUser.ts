@@ -493,7 +493,7 @@ export default (
       enabled: () =>
         (userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
           isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false)) ||
-        (userHasRoles([Role.IncidentReportingPECS], roles) &&
+        (userHasRoles([Role.IncidentReportingPECS, Role.IncidentReportingApprove], roles) &&
           isActiveInAgencies(['NORTH', 'SOUTH'], ServiceName.INCIDENT_REPORTING, activeServices)) ||
         (userHasRoles([Role.IncidentReportingApprove], roles) &&
           isHasAnyActiveAgency(ServiceName.INCIDENT_REPORTING, activeServices)),
