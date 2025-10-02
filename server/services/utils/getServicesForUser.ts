@@ -24,10 +24,7 @@ function isActiveInEstablishment(
   )
 }
 
-function isHasAnyActiveAgency(
-  service: ServiceName,
-  activeServices: ServiceActiveAgencies[] | null,
-): boolean | undefined {
+function hasAnyActiveAgency(service: ServiceName, activeServices: ServiceActiveAgencies[] | null): boolean | undefined {
   if (!activeServices) return false // no stored data
   const applicationAgencyConfig = activeServices.find(activeService => activeService.app === service)
   if (!applicationAgencyConfig) return false // no stored data for this service
@@ -496,7 +493,7 @@ export default (
         (userHasRoles([Role.IncidentReportingPECS, Role.IncidentReportingApprove], roles) &&
           isActiveInAgencies(['NORTH', 'SOUTH'], ServiceName.INCIDENT_REPORTING, activeServices)) ||
         (userHasRoles([Role.IncidentReportingApprove], roles) &&
-          isHasAnyActiveAgency(ServiceName.INCIDENT_REPORTING, activeServices)),
+          hasAnyActiveAgency(ServiceName.INCIDENT_REPORTING, activeServices)),
     },
     {
       id: 'manage-applications',
