@@ -1,13 +1,11 @@
-import { type RequestHandler, Router } from 'express'
+import { Router } from 'express'
 
 import type { Services } from '../services'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes(_service: Services): Router {
   const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, handler)
 
-  get('/', (req, res, next) => {
+  router.get('/', (_req, res) => {
     res.render('pages/index')
   })
 
