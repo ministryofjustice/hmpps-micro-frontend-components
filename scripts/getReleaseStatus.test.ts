@@ -1,6 +1,7 @@
-const nock = require('nock')
-const { mockRedisClientMock } = require('redis')
-const { getData } = require('./getReleaseStatus')
+import nock from 'nock'
+import redis from 'redis'
+
+import { getData } from './getReleaseStatus'
 
 const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
@@ -29,14 +30,14 @@ const allUrls = [
   manageApplicationsUrl,
 ]
 
-function setMockSuccess(urls, body = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }) {
+function setMockSuccess(urls: string[], body: object = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }): void {
   const urlsToUse = urls || allUrls
   urlsToUse.forEach(url => nock(url).get('/info').reply(200, body))
 }
 
-function setMockError(urls, code = 404) {
+function setMockError(urls: string[], code = 404): void {
   const urlsToUse = urls || allUrls
-  code = 500
+  code == 500
     ? urlsToUse.forEach(url => nock(url).get('/info').replyWithError('ERROR'))
     : urlsToUse.forEach(url => nock(url).get('/info').reply(code))
 }
@@ -54,13 +55,19 @@ jest.mock('redis', () => {
 
   return {
     createClient: () => mockRedisClientMock,
-    mockRedisClientMock, // Export the mockRedisClientMock for access in tests
   }
+})
+
+let mockRedisClientMock: jest.Mocked<ReturnType<typeof redis['createClient']>>
+
+beforeAll(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => undefined)
+  jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
+  mockRedisClientMock = redis.createClient() as unknown as jest.Mocked<ReturnType<typeof redis['createClient']>>
 })
 
 describe('Get release status script', () => {
   beforeEach(() => {
-    jest.spyOn(process, 'exit').mockImplementation(() => {})
     jest.clearAllMocks()
     nock.cleanAll()
     process.env.INFO_DISABLED_APPS = undefined
