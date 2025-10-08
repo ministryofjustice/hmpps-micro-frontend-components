@@ -6,7 +6,7 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-micro-frontend-components
+    repository: ghcr.io/ministryofjustice/hmpps-micro-frontend-components
     tag: app_version    # override at deployment time
     port: 3000
 
@@ -29,7 +29,6 @@ generic-service:
     REDIS_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     MATCH_LEARNER_RECORD_ENABLED: "true"
     SUPPORT_ADDITIONAL_NEEDS_ENABLED: "true"
 
@@ -40,14 +39,18 @@ generic-service:
 
   namespace_secrets:
     hmpps-micro-frontend-components:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      API_CLIENT_ID: "API_CLIENT_ID"
-      API_CLIENT_SECRET: "API_CLIENT_SECRET"
-      SYSTEM_CLIENT_ID: "SYSTEM_CLIENT_ID"
-      SYSTEM_CLIENT_SECRET: "SYSTEM_CLIENT_SECRET"
-      SESSION_SECRET: "SESSION_SECRET"
       CONTENTFUL_SPACE_ID: "CONTENTFUL_SPACE_ID"
       CONTENTFUL_ACCESS_TOKEN: "CONTENTFUL_ACCESS_TOKEN"
+    hmpps-micro-frontend-components-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+    hmpps-micro-frontend-components-auth-code:
+      API_CLIENT_ID: "AUTH_CODE_CLIENT_ID"
+      API_CLIENT_SECRET: "AUTH_CODE_CLIENT_SECRET"
+    hmpps-micro-frontend-components-client-creds:
+      SYSTEM_CLIENT_ID: "CLIENT_CREDS_CLIENT_ID"
+      SYSTEM_CLIENT_SECRET: "CLIENT_CREDS_CLIENT_SECRET"
+    hmpps-micro-frontend-components-session-secret:
+      SESSION_SECRET: "SESSION_SECRET"
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"

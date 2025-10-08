@@ -25,7 +25,7 @@ Here's the process.
 
 1/ Run redis locally using Docker:
 ```
-docker-compose pull && docker-compose up
+docker compose pull && docker compose up
 ```
 
 2/ Create a .env file with environment variables pointing to the development environment
