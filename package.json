@@ -1,7 +1,7 @@
 {
   "name": "hmpps-micro-frontend-components",
   "version": "0.0.1",
-  "description": "Hmpps Micro Frontend Components",
+  "description": "HMPPS Micro Frontend Components",
   "repository": "git@github.com:ministryofjustice/hmpps-micro-frontend-components.git",
   "license": "MIT",
   "scripts": {
