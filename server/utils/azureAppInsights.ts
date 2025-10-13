@@ -10,6 +10,7 @@ import { CorrelationContext } from 'applicationinsights/out/AutoCollection/Corre
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
 import { Request, RequestHandler } from 'express'
 import { ApplicationInfo } from '../applicationInfo'
+import { HmppsUser } from '../interfaces/hmppsUser'
 
 const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GET /info']
 const dependencyPrefixesToIgnore = ['sqs']
@@ -44,13 +45,18 @@ export function buildAppInsightsClient(applicationInfo: ApplicationInfo): Teleme
 function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObjects: ContextObject) {
   const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString.Request
   if (isRequest) {
-    const { username } = contextObjects?.['http.ServerRequest']?.res?.locals?.user || {}
+    const user = contextObjects?.['http.ServerRequest']?.res?.locals?.user || ({} as HmppsUser)
+    const { username } = user
     if (username) {
+      let activeCaseLoadId: string | undefined
+      if ('activeCaseLoad' in user) {
+        activeCaseLoadId = user.activeCaseLoad?.caseLoadId
+      }
       const { properties } = envelope.data.baseData
       // eslint-disable-next-line no-param-reassign
       envelope.data.baseData.properties = {
         username,
-        activeCaseLoadId: undefined, // TODO: do we want to populate this with middleware?
+        activeCaseLoadId,
         ...properties,
       }
     }
