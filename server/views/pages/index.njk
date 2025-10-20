@@ -5,7 +5,7 @@
 
 {% block content %}
 
-  <h1>Front end components</h1>
+  <h1 class="govuk-heading-l">Front end components</h1>
   <p>This service makes front end components available to be incorporated into your project using the server side includes.</p>
   <p>Available components: </p>
   <ul class="govuk-list govuk-list--bullet">
@@ -16,9 +16,9 @@
       {% endfor %}
   </ul>
 
-  <h2>Auth</h2>
+  <h2 class="govuk-heading-m">Auth</h2>
   <p>The / directory of this application is reserved for the components. These will contain the minimum code required for the parent applications to use them. They do not use the standard HMPPS auth flow, they attempt to retrieve tokens from the central storage API. If you navigate to the components from this application you will receive a 404 error.</p>
   <p>The /develop directory is used for development of the components and will use the auth flow. This allows you to log in and see the components as they will be displayed in a parent application.</p>
-  <h3>Signing out</h3>
+  <h3 class="govuk-heading-s">Signing out</h3>
   <p>The sign out link in the header redirects to /sign-out which will not work from this application. <a href="/develop/sign-out">Sign out from HMPPS auth</a></p>
 {% endblock %}
