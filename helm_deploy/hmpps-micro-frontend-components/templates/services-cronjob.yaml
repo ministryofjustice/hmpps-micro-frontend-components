@@ -48,6 +48,8 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
               - name: ALLOCATE_KEY_WORKERS_API_URL
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
+              - name: EXTERNAL_MOVEMENTS_API_URL
+                value: "{{ index .Values "generic-service" "env" "EXTERNAL_MOVEMENTS_API_URL" }}"
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
               - name: SUPPORT_ADDITIONAL_NEEDS_URL

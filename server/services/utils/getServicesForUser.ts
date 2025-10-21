@@ -580,6 +580,14 @@ export default (
       navEnabled: true,
       enabled: () => config.serviceUrls.supportAdditionalNeeds.enabled,
     },
+    {
+      id: 'external-movements',
+      heading: 'External movements',
+      description: 'Create, edit and view temporary absences (external movements).',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: true,
+      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {

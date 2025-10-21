@@ -80,6 +80,8 @@ generic-service:
     ALLOCATE_PERSONAL_OFFICERS_API_URL: https://keyworker-api.prison.service.justice.gov.uk/PERSONAL_OFFICER
     ALLOCATE_PERSONAL_OFFICERS_UI_URL: https://allocate-key-workers.hmpps.service.justice.gov.uk/personal-officer
     SUPPORT_ADDITIONAL_NEEDS_URL: https://support-for-additional-needs.hmpps.service.justice.gov.uk
+    EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api.hmpps.service.justice.gov.uk
+    EXTERNAL_MOVEMENTS_UI_URL: https://external-movements.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
