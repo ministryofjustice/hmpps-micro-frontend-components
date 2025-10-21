@@ -241,6 +241,9 @@ export default {
       url: get('SUPPORT_ADDITIONAL_NEEDS_URL', 'http://localhost:3001', requiredInProduction),
       enabled: get('SUPPORT_ADDITIONAL_NEEDS_ENABLED', 'false') === 'true',
     },
+    externalMovements: {
+      url: get('EXTERNAL_MOVEMENTS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   features: {
     servicesStore: {
