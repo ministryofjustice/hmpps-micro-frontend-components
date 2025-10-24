@@ -32,14 +32,18 @@ jobs:
     secrets: inherit
   node_unit_tests:
     name: node unit tests
-    uses: ./.github/workflows/node_unit_tests_redis.yml # LOCAL_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
+    with:
+      redis_tag: '7'
   node_integration_tests:
     name: node integration tests
-    uses: ./.github/workflows/node_integration_tests_redis_wiremock.yml # LOCAL_VERSION
+    uses: ./.github/workflows/node_integration_tests.yml # LOCAL_VERSION
     needs: [node_build]
     secrets: inherit
+    with:
+      redis_tag: '7'
   helm_lint:
     strategy:
       matrix:
