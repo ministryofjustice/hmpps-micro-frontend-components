@@ -19,8 +19,8 @@ Code samples have been provided for examples. Your requirements may differ.
 
 API swagger docs can be found at
 * dev - https://frontend-components-dev.hmpps.service.justice.gov.uk/api-docs
-*  preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk/api-docs
-*  prod - https://frontend-components.hmpps.service.justice.gov.uk/api-docs
+* preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk/api-docs
+* prod - https://frontend-components.hmpps.service.justice.gov.uk/api-docs
 
 ### Calling the component library API
 
@@ -30,7 +30,7 @@ Add environment variables to the `values-{env}.yaml` files for `COMPONENT_API_UR
 * preprod - https://frontend-components-preprod.hmpps.service.justice.gov.uk
 * prod - https://frontend-components.hmpps.service.justice.gov.uk
 
-You can also add this to your `.env` file with the `dev` url 
+You can also add this to your `.env` file with the `dev` url
 
 Add a block for the component library in the `apis` section of `config.ts`, for example:
 
@@ -69,7 +69,7 @@ async getComponents<T extends AvailableComponent[]>(
 
 The components api will return stringified html along with links to any css and javascript files required for the component.
 
-Add a call for these components for each page that requires them. As the header and footer will likely be used on all pages, 
+Add a call for these components for each page that requires them. As the header and footer will likely be used on all pages,
 it is recommended to add a middleware function to call the endpoint and make available to the view using `res.locals`.
 
 ```typescript
@@ -77,7 +77,7 @@ export default function getFrontendComponents({ componentService }: Services): R
   return async (req, res, next) => {
     try {
       const { header, footer } = await componentService.getComponents(['header', 'footer'], res.locals.user.token)
-      
+
       res.locals.feComponents = {
         header: header.html,
         footer: footer.html,
@@ -105,7 +105,7 @@ The following code should be used in the `layout.njk` file within your applicati
 
 **Note**: the `header.njk` and `footer.njk` templates used in the following code fragments are fallback HTML in case the component service is unavailable or the API call fails for some reason. These templates should be copied from the `_fallbacks` directory in this repo, and configuration added as described in the Fallbacks section at the end of this document.
 
-```typescript
+```nunjucks
 {% block header %}
   {% if feComponents.header %}
     {{ feComponents.header | safe }}
@@ -114,7 +114,7 @@ The following code should be used in the `layout.njk` file within your applicati
   {% endif %}
 {% endblock %}
 ```
-```typescript
+```nunjucks
 {% block footer %}
   {% if feComponents.footer %}
     {{ feComponents.footer | safe }}
@@ -126,14 +126,14 @@ The following code should be used in the `layout.njk` file within your applicati
 
 The js and css values should be incorporated into the head block of the layout:
 
-```typescript
+```nunjucks
 {% if feComponents.jsIncludes %}
     {% for js in feComponents.jsIncludes %}
       <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
     {% endfor %}
 {% endif %}
 ```
-```typescript
+```nunjucks
 {% if feComponents.cssIncludes %}
   {% for css in feComponents.cssIncludes %}
     <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
@@ -141,7 +141,7 @@ The js and css values should be incorporated into the head block of the layout:
 {% endif %}
 ```
 
-Web security needs to be updated to allow access to the syles and scripts from the components application. 
+Web security needs to be updated to allow access to the syles and scripts from the components application.
 
 NOTE: you will also need to include the Digital Prison Services url in the formAction list to enable the global search form to be submitted.
 
@@ -231,10 +231,10 @@ You will need to use your own existing config property and environment variable 
 the DPS homepage (e.g. for Production, `https://digital.prison.service.justice.gov.uk`)
 or create new ones for this purpose.
 
-The header component and fallback header include an environment 'badge' to display the name of the deployed environment 
-(e.g. DEV, PRE-PRODUCTION). In order to support this in the fallback header, copy the `setUpEnvironmentName.ts.txt` file 
-from the `_fallbacks` directory into your `/server/middleware` directory, removing the `.txt` extension, and add the 
-following line to your `/server/app.ts`, immediately before the `nunjucksSetup` line: 
+The header component and fallback header include an environment 'badge' to display the name of the deployed environment
+(e.g. DEV, PRE-PRODUCTION). In order to support this in the fallback header, copy the `setUpEnvironmentName.ts.txt` file
+from the `_fallbacks` directory into your `/server/middleware` directory, removing the `.txt` extension, and add the
+following line to your `/server/app.ts`, immediately before the `nunjucksSetup` line:
 
 ```typescript
   setUpEnvironmentName(app)
@@ -273,7 +273,7 @@ Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/co
 @import './components/footer';
 ```
 
-The fallback header for prison services (`dpsHeader.njk`) includes a link to the DPS homepage, and the fallback header 
+The fallback header for prison services (`dpsHeader.njk`) includes a link to the DPS homepage, and the fallback header
 for external services (`externalHeader.njk`) includes a link to the HMPPS Auth homepage.
 
 These links use config properties created from environment variables to ensure it works for each deployed environment (dev, pre-production and production).
@@ -294,7 +294,7 @@ For `externalHeader.njk` there are 2:
 <a class="hmpps-header__link hmpps-header__title__service-name" href="{{ config.apis.hmppsAuth.url }}">Digital Services</a>
 ```
 
-You will need to use your own existing config properties and environment variables that point to 
+You will need to use your own existing config properties and environment variables that point to
 the DPS homepage (e.g. for Production, `https://digital.prison.service.justice.gov.uk`) and
 the HMPPS Auth homepage (e.g. for Production, `https://sign-in.hmpps.service.justice.gov.uk/auth`)
 or create new ones for this purpose.
@@ -347,4 +347,3 @@ The same `isPrisonUser` flag can be used to set the right breadcrumb label.
 For prison users, the "root" breadcrumb label should be `Digital Prison Services`
 
 For non-prison users, the "root" breadcrumb label should be `HMPPS Digital Services`
-

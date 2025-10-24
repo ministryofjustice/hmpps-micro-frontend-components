@@ -1,20 +1,11 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json",
-  "compileOnSave": true,
   "compilerOptions": {
-    "outDir": "./dist",
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "noEmit": false,
-    "allowJs": false,
-    "strict": false,
-    "resolveJsonModule": true,
+    "target": "es5",
+    "noEmit": true,
+    "lib": ["es5", "dom", "es2015.promise"],
+    "types": ["cypress", "express", "express-session"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "assets/**/*.js", "integration_tests", "dist", "cypress.config.ts"],
-  "include": ["**/*.js", "**/*.ts"]
+  "include": ["**/*.ts"]
 }
