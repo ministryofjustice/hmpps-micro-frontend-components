@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const superagent = require('superagent')
 const redis = require('redis')
 
@@ -153,10 +154,9 @@ const getData = async () => {
   // if we have no stored data use new data for all
   const body = storedData
     ? storedData
-        .map(stored => {
-          const newApp = newData.find(newApp => newApp.app === stored.app)
-          if (!newApp) return stored
-          return newApp
+        .map(storedApp => {
+          const updatedApp = newData.find(newApp => newApp.app === storedApp.app)
+          return updatedApp ?? storedApp
         })
         .concat(newData.filter(newApp => !storedData.find(stored => stored.app === newApp.app)))
     : newData

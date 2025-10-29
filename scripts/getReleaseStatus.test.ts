@@ -30,16 +30,19 @@ const allUrls = [
   manageApplicationsUrl,
 ]
 
-function setMockSuccess(urls: string[], body: object = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] }): void {
-  const urlsToUse = urls || allUrls
-  urlsToUse.forEach(url => nock(url).get('/info').reply(200, body))
+function setMockSuccess(
+  urls: string[],
+  body: object = { some: 'stuff', activeAgencies: ['agency1', 'agency2'] },
+): void {
+  urls.forEach(url => nock(url).get('/info').reply(200, body))
 }
 
 function setMockError(urls: string[], code = 404): void {
-  const urlsToUse = urls || allUrls
-  code == 500
-    ? urlsToUse.forEach(url => nock(url).get('/info').replyWithError('ERROR'))
-    : urlsToUse.forEach(url => nock(url).get('/info').reply(code))
+  if (code === 500) {
+    urls.forEach(url => nock(url).get('/info').replyWithError('ERROR'))
+  } else {
+    urls.forEach(url => nock(url).get('/info').reply(code))
+  }
 }
 
 jest.mock('redis', () => {
@@ -58,12 +61,13 @@ jest.mock('redis', () => {
   }
 })
 
-let mockRedisClientMock: jest.Mocked<ReturnType<typeof redis['createClient']>>
+type RedisClient = ReturnType<(typeof redis)['createClient']>
+let mockRedisClientMock: jest.Mocked<RedisClient>
 
 beforeAll(() => {
   jest.spyOn(console, 'log').mockImplementation(() => undefined)
   jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
-  mockRedisClientMock = redis.createClient() as unknown as jest.Mocked<ReturnType<typeof redis['createClient']>>
+  mockRedisClientMock = redis.createClient() as unknown as jest.Mocked<RedisClient>
 })
 
 describe('Get release status script', () => {
@@ -98,8 +102,8 @@ describe('Get release status script', () => {
   })
 
   it('should store the data it gets if others fail', async () => {
-    const [residentialLocationUrl, ...restUrls] = allUrls
-    setMockSuccess([residentialLocationUrl])
+    const [firstUrl, ...restUrls] = allUrls
+    setMockSuccess([firstUrl])
     setMockError(restUrls, 404)
 
     await getData()
@@ -111,8 +115,8 @@ describe('Get release status script', () => {
   })
 
   it('should not fail if it cant find the data in response', async () => {
-    const [residentialLocationUrl, ...restUrls] = allUrls
-    setMockSuccess([residentialLocationUrl], { some: 'stuff' })
+    const [firstUrl, ...restUrls] = allUrls
+    setMockSuccess([firstUrl], { some: 'stuff' })
     setMockSuccess(restUrls)
 
     await getData()
@@ -184,8 +188,8 @@ describe('Get release status script', () => {
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      const [residentialLocationUrl, ...restUrls] = allUrls
-      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      const [firstUrl, ...restUrls] = allUrls
+      setMockSuccess([firstUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
       setMockError(restUrls, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
@@ -226,8 +230,8 @@ describe('Get release status script', () => {
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      const [residentialLocationUrl, ...restUrls] = allUrls
-      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      const [firstUrl, ...restUrls] = allUrls
+      setMockSuccess([firstUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
       setMockError(restUrls, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
@@ -255,8 +259,8 @@ describe('Get release status script', () => {
     it('should use new app data if it does not exist on stored data', async () => {
       const storedData = [{ app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] }]
 
-      const [residentialLocationUrl, ...restUrls] = allUrls
-      setMockError([residentialLocationUrl], 500)
+      const [firstUrl, ...restUrls] = allUrls
+      setMockError([firstUrl], 500)
       setMockSuccess(restUrls)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
