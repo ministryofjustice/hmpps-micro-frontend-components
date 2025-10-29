@@ -66,7 +66,6 @@ let mockRedisClientMock: jest.Mocked<RedisClient>
 
 beforeAll(() => {
   jest.spyOn(console, 'log').mockImplementation(() => undefined)
-  jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
   mockRedisClientMock = redis.createClient() as unknown as jest.Mocked<RedisClient>
 })
 

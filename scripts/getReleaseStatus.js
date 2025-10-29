@@ -41,9 +41,12 @@ function getApplicationInfo(appLabel, url) {
 
 async function getRedisClient() {
   console.log('Creating redis client')
+  const host = process.env.REDIS_HOST || 'localhost'
+  const protocol = process.env.REDIS_TLS_ENABLED === 'true' ? 'rediss' : 'redis'
+  const port = parseInt(process.env.REDIS_PORT, 10) || 6379
   return redis
     .createClient({
-      url: `rediss://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
+      url: `${protocol}://${host}:${port}`,
       password: process.env.REDIS_AUTH_TOKEN,
       socket: {
         reconnectStrategy: attempts => {
@@ -162,8 +165,7 @@ const getData = async () => {
     : newData
 
   await cacheResponses(body, redisClient)
-  await redisClient.destroy()
-  process.exit()
+  redisClient.destroy()
 }
 
 module.exports = { getData }
