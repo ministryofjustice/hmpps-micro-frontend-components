@@ -1,8 +1,10 @@
 {
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "strict": false,
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
+    "target": "es2021",
+    "lib": ["dom", "es2021"],
     "types": ["cypress", "express", "express-session"],
     "esModuleInterop": true,
     "skipLibCheck": true
