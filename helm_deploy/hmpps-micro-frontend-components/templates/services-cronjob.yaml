@@ -64,6 +64,8 @@ spec:
                   secretKeyRef:
                     name: elasticache-redis
                     key: auth_token
+              - name: REDIS_TLS_ENABLED
+                value: "{{ index .Values "generic-service" "env" "REDIS_TLS_ENABLED" }}"
               command: ["npm", "run", "getAppsStatus", "--loglevel", "verbose"]
           restartPolicy: Never
           activeDeadlineSeconds: 300
