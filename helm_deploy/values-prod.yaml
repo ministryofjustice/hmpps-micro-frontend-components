@@ -6,6 +6,11 @@ generic-service:
   ingress:
     host: frontend-components.hmpps.service.justice.gov.uk
 
+  strategy:
+    rollingUpdate:
+      maxSurge: 4
+      maxUnavailable: 2
+
   autoscaling:
     enabled: true
     minReplicas: 8
