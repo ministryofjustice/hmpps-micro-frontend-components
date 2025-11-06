@@ -464,8 +464,16 @@ export default (
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.ViewLocation, Role.ChangeLocation, Role.ManageResidentialLocations], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+        userHasRoles(
+          [
+            Role.ResiLocationViewer,
+            Role.ResiCellStatusManager,
+            Role.ResiCertificateViewer,
+            Role.ResiCertificateReviewer,
+            Role.ResiCertificateAdmin,
+          ],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
     },
     {
       id: 'reporting',
