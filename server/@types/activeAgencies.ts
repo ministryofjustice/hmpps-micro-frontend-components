@@ -15,6 +15,7 @@ export enum ServiceName {
   MANAGE_APPLICATIONS = 'manageApplications',
   ALLOCATE_KEY_WORKERS = 'allocateKeyWorkers',
   ALLOCATE_PERSONAL_OFFICERS = 'allocatePersonalOfficers',
+  EXTERNAL_MOVEMENTS = 'externalMovements',
 }
 
 export interface ServiceActiveAgencies {

@@ -4,7 +4,6 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import componentsController, {
   ComponentsData,
@@ -90,14 +89,10 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get(
-    '/header',
-    populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
-      const response = await getHeaderResponseBody(res)
-      res.send(response)
-    }),
-  )
+  router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
+    const response = await getHeaderResponseBody(res)
+    res.send(response)
+  })
 
   /**
    * @swagger
@@ -120,14 +115,10 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get(
-    '/footer',
-    populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
-      const response = await getFooterResponseBody(res)
-      res.send(response)
-    }),
-  )
+  router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
+    const response = await getFooterResponseBody(res)
+    res.send(response)
+  })
 
   /**
    * @swagger
@@ -169,48 +160,44 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Components'
    */
-  router.get(
-    '/components',
-    populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
-      const componentMethods: Record<
-        AvailableComponent,
-        (r: Response, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
-      > = {
-        header: getHeaderResponseBody,
-        footer: getFooterResponseBody,
-      }
+  router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
+    const componentMethods: Record<
+      AvailableComponent,
+      (r: Response, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
+    > = {
+      header: getHeaderResponseBody,
+      footer: getFooterResponseBody,
+    }
 
-      const componentsRequested = [req.query.component]
-        .flat()
-        .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
+    const componentsRequested = [req.query.component]
+      .flat()
+      .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
 
-      if (!componentsRequested.length) return res.send({})
-      const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
+    if (!componentsRequested.length) return res.send({})
+    const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
 
-      const renders = await Promise.all(
-        componentsRequested.map(component =>
-          componentMethods[component as AvailableComponent](res, viewModels[component]),
-        ),
-      )
+    const renders = await Promise.all(
+      componentsRequested.map(component =>
+        componentMethods[component as AvailableComponent](res, viewModels[component]),
+      ),
+    )
 
-      const responseBody = componentsRequested.reduce<
-        Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
-      >(
-        (output, componentName, index) => {
-          return {
-            ...output,
-            [componentName]: renders[index],
-          }
-        },
-        { meta: viewModels.meta },
-      )
+    const responseBody = componentsRequested.reduce<
+      Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
+    >(
+      (output, componentName, index) => {
+        return {
+          ...output,
+          [componentName]: renders[index],
+        }
+      },
+      { meta: viewModels.meta },
+    )
 
-      return res.send(responseBody)
-    }),
-  )
+    return res.send(responseBody)
+  })
 
-  router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  router.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {
       res.status(401).send('Unauthorised')
     } else {
