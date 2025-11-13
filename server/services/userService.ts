@@ -110,6 +110,9 @@ export default class UserService {
   }
 
   private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {
+    // Prevent Prison API traffic spike upon initial deployment:
+    if (!cache?.userRoles) return true
+
     return cache?.userRoles?.sort()?.join(',') === userRoles?.sort()?.join(',')
   }
 
