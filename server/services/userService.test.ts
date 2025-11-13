@@ -248,7 +248,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
 
         expect(output).toEqual(expectedUserAccess)
       })
