@@ -237,6 +237,21 @@ describe('User service', () => {
 
         expect(output).toEqual(expectedUserAccess)
       })
+
+      it('handles cache with no user roles data', async () => {
+        const cachedData: UserAccessCache = {
+          ...expectedUserAccess,
+        }
+
+        cacheServiceMock.getData.mockResolvedValue(cachedData)
+
+        const output = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
+        expect(prisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+
+        expect(output).toEqual(expectedUserAccess)
+      })
     })
   })
 })

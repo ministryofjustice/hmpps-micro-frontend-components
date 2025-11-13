@@ -10,7 +10,7 @@ import { CaseLoad } from '../interfaces/caseLoad'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
 
-export type UserAccessCache = PrisonUserAccess & { userRoles: string[] }
+export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
 export const API_COOL_OFF_MINUTES = 5
 export const API_ERROR_LIMIT = 100
@@ -110,7 +110,7 @@ export default class UserService {
   }
 
   private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {
-    return cache?.userRoles?.sort().join(',') === userRoles.sort().join(',')
+    return cache?.userRoles?.sort()?.join(',') === userRoles?.sort()?.join(',')
   }
 
   private async getServicesForUser(
