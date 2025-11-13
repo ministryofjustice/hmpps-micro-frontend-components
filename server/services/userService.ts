@@ -8,6 +8,9 @@ import { PrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
 import { Service } from '../interfaces/Service'
 import { CaseLoad } from '../interfaces/caseLoad'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
+import { Role } from './utils/roles'
+
+export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
 export const API_COOL_OFF_MINUTES = 5
 export const API_ERROR_LIMIT = 100
@@ -30,8 +33,10 @@ export default class UserService {
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
     if (this.errorCount >= API_ERROR_LIMIT) return DEFAULT_USER_ACCESS
 
-    const cache: PrisonUserAccess = await this.getCache(user)
-    if (cache?.caseLoads.length === 1) return cache
+    const cache: UserAccessCache = await this.getCache(user)
+    const { userRoles, ...cachedResponse } = cache || ({} as UserAccessCache)
+
+    if (cache?.caseLoads.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
 
     try {
       const caseLoads = await this.prisonApiClient.getUserCaseLoads(user.token)
@@ -41,9 +46,10 @@ export default class UserService {
       if (
         cache &&
         this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
-        this.caseLoadsHaveNotChanged(caseLoads, cache)
+        this.caseLoadsHaveNotChanged(caseLoads, cache) &&
+        this.rolesHaveNotChanged(user.userRoles, cache)
       ) {
-        return cache
+        return cachedResponse
       }
 
       const services = await this.getServicesForUser(
@@ -52,18 +58,21 @@ export default class UserService {
         this.prisonApiClient,
         this.allocationsApiClient,
       )
+
       const allocationPolicies = await this.getAllocationPolicies(
         user,
         activeCaseLoad?.caseLoadId,
         this.allocationsApiClient,
       )
+
       const userAccess: PrisonUserAccess = {
         caseLoads,
         activeCaseLoad,
         services,
         allocationJobResponsibilities: allocationPolicies.policies,
       }
-      await this.setCache(user, userAccess)
+
+      await this.setCache(user, { ...userAccess, userRoles: user.userRoles })
 
       // successfully retrieved user access, reset error counter
       this.errorCount = 0
@@ -75,11 +84,11 @@ export default class UserService {
     }
   }
 
-  private getCache(user: PrisonUser): Promise<PrisonUserAccess> {
-    return this.cacheService.getData<PrisonUserAccess>(`${user.username}_meta_data`)
+  private getCache(user: PrisonUser): Promise<UserAccessCache> {
+    return this.cacheService.getData<UserAccessCache>(`${user.username}_meta_data`)
   }
 
-  private async setCache(user: PrisonUser, access: PrisonUserAccess): Promise<string> {
+  private async setCache(user: PrisonUser, access: UserAccessCache): Promise<string> {
     return (await this.cacheService.setData(`${user.username}_meta_data`, access))?.toString()
   }
 
@@ -98,6 +107,10 @@ export default class UserService {
         .sort()
         .join(',')
     )
+  }
+
+  private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {
+    return cache?.userRoles?.sort()?.join(',') === userRoles?.sort()?.join(',')
   }
 
   private async getServicesForUser(
