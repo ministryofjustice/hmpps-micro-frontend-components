@@ -24,7 +24,7 @@
         Digital Prison Services
       </a>
 
-      {% if environmentName !== 'PRODUCTION' %}
+      {% if environmentName %}
           {{ govukTag({
             text: environmentName,
             classes: environmentNameColour
