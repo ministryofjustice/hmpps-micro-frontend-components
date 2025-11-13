@@ -37,7 +37,7 @@
 
       <a class="connect-dps-external-header__link connect-dps-external-header__title__service-name" href="{{ config.apis.hmppsAuth.url }}">Digital Services</a>
 
-      {% if environmentName !== 'PRODUCTION' %}
+      {% if environmentName %}
           {{ govukTag({
             text: environmentName,
             classes: environmentNameColour

@@ -18,7 +18,8 @@ generic-service:
     CONTENTFUL_HOST: https://graphql.eu.contentful.com
     CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
-    ENVIRONMENT_NAME: DEV
+    ENVIRONMENT: dev      # k8s namespace suffix & github environment
+    ENVIRONMENT_NAME: DEV # Phase banner tag label
     CACHE_TIMOUT: 3
 
     # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"

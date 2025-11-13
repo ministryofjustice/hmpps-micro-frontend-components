@@ -16,6 +16,8 @@ spec:
             - name: hmpps-micro-frontend-components-services-cronjob
               image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
               env:
+              - name: ENVIRONMENT
+                value: "{{ index .Values "generic-service" "env" "ENVIRONMENT" }}"
               - name: ENVIRONMENT_NAME
                 value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
               - name: ACTIVITIES_URL

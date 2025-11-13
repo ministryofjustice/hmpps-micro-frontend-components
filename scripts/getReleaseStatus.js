@@ -6,9 +6,9 @@ const endpoints = [
   {
     application: 'adjudications',
     infoUrl: {
-      PRODUCTION: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
-      'PRE-PRODUCTION': 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
-      DEV: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
+      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
+      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
+      dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
     },
   },
   { application: 'activities', urlEnv: 'ACTIVITIES_URL' },
@@ -94,7 +94,7 @@ function getUrlForApp(appData) {
   if (appData.urlEnv) {
     return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
   }
-  return appData.infoUrl[process.env.ENVIRONMENT_NAME]
+  return appData.infoUrl[process.env.ENVIRONMENT]
 }
 
 const getData = async () => {
@@ -133,8 +133,7 @@ const getData = async () => {
       const { body, request } = response.value
 
       const applicationName = endpoints.find(
-        app =>
-          request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT_NAME]),
+        app => request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT]),
       )?.application
       if (!applicationName) return undefined
 
