@@ -436,7 +436,7 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Appointments scheduling and attendance', () => {
+  describe('Appointments', () => {
     test.each`
       desc                                                         | activeCaseLoad      | visible  | activeServices
       ${'In cache, not env var (activities)'} | ${'CACHE'} | ${true} | ${[
@@ -451,7 +451,7 @@ describe('getServicesForUser', () => {
       ${'No application data cached, not in env var (activities)'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
     `('caseload: $desc, can see: $visible', ({ activeCaseLoad, visible, activeServices }) => {
       const output = getServicesForUser([], { policies: [] }, activeCaseLoad, 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Appointments scheduling and attendance')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Appointments')).toEqual(visible)
     })
   })
 
