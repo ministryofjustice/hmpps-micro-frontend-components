@@ -342,7 +342,7 @@ export default (
     },
     {
       id: 'appointments',
-      heading: 'Appointments scheduling and attendance',
+      heading: 'Appointments',
       description: 'Create, manage and edit appointments. Print movement slips. Record appointment attendance.',
       href: `${config.serviceUrls.appointments.url}/appointments`,
       navEnabled: true,
