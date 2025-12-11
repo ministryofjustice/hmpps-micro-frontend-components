@@ -87,6 +87,8 @@ export enum Role {
   PersonalOfficerAllocate = 'PERSONAL_OFFICER_ALLOCATE',
   Cas2PrisonBailReferrer = 'CAS2_PRISON_BAIL_REFERRER',
   MatchLearnerRecord = 'MATCH_LEARNER_RECORD_RW',
+  ExternalMovementsTapView = 'EXTERNAL_MOVEMENTS__TAP__RO',
+  ExternalMovementsTapManage = 'EXTERNAL_MOVEMENTS__TAP__RW',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))
