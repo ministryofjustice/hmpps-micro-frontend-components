@@ -858,13 +858,14 @@ describe('getServicesForUser', () => {
 
   describe('External movements', () => {
     test.each`
-      activeServices                                                        | activeCaseLoadId | visible
-      ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
-      ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+      roles                              | activeServices                                                        | activeCaseLoadId | visible
+      ${[Role.ExternalMovementsTapView]} | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                              | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.ExternalMovementsTapView]} | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
     `(
-      'user with activeCaseLoadId: $activeCaseLoadId, can see: $visible',
-      ({ activeCaseLoadId, visible, activeServices }) => {
-        const output = getServicesForUser([], { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'External movements')).toEqual(visible)
       },
     )

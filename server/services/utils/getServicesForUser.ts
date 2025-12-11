@@ -591,10 +591,14 @@ export default (
     {
       id: 'external-movements',
       heading: 'External movements',
-      description: 'Create, edit and view temporary absences (external movements).',
+      description: userHasRoles([Role.ExternalMovementsTapManage], roles)
+        ? 'Add, edit and manage temporary absences.'
+        : 'View temporary absences for prisoners in your establishment.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
+      enabled: () =>
+        userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
     },
   ]
     .filter(service => service.enabled())
