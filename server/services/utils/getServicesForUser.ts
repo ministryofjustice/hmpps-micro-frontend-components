@@ -1,6 +1,6 @@
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
-import { Location } from '../../interfaces/location'
+import { PrisonHierarchyDto } from '../../interfaces/location'
 import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
@@ -62,7 +62,7 @@ export default (
   allocationPolicies: StaffAllocationPolicies,
   activeCaseLoadId: string,
   staffId: number,
-  locations: Location[],
+  locations: PrisonHierarchyDto[],
   activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
   const isActivitiesEnabled = isActiveInEstablishmentWithLegacyFallback(

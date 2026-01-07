@@ -16,8 +16,8 @@ describe('PrisonAPIClient', () => {
 
   describe('getUserCaseLoads', () => {
     it('Returns response when successful', async () => {
-      api.get(`/api/users/me/caseLoads`, '').reply(200, () => true)
-      const response = await new PrisonApiClient(null).getUserCaseLoads('token')
+      api.get(`/api/staff/123/caseloads`, '').reply(200, () => true)
+      const response = await new PrisonApiClient(null).getUserCaseLoads(123)
       expect(response).toEqual(true)
     })
   })
