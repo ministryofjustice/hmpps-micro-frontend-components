@@ -1,22 +1,10 @@
 services_cronjob_schedule: "0 * * * *"
 
 generic-service:
-  replicaCount: 4
+  replicaCount: 8
 
   ingress:
     host: frontend-components.hmpps.service.justice.gov.uk
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 4
-      maxUnavailable: 2
-
-  autoscaling:
-    enabled: true
-    minReplicas: 8
-    maxReplicas: 16
-    targetCPUUtilizationPercentage: 1600
 
   env:
     INGRESS_URL: "https://frontend-components.hmpps.service.justice.gov.uk"
