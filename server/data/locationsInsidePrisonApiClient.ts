@@ -7,11 +7,19 @@ import { CaseLoad } from '../interfaces/caseLoad'
 
 export default class LocationsInsidePrisonApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
-    super('Locations Inside Prison API', config.apis.locationsInsidePrisonApi, config.production ? warnLevelLogger : logger, authenticationClient)
+    super(
+      'Locations Inside Prison API',
+      config.apis.locationsInsidePrisonApi,
+      config.production ? warnLevelLogger : logger,
+      authenticationClient,
+    )
   }
 
   async getUserLocations(caseLoad: CaseLoad): Promise<PrisonHierarchyDto[]> {
     if (caseLoad.caseloadFunction === 'ADMIN') return [] as PrisonHierarchyDto[]
-    return this.get<PrisonHierarchyDto[]>({ path: `/locations/prison/${caseLoad.caseLoadId}/residential-first-level` }, asSystem())
+    return this.get<PrisonHierarchyDto[]>(
+      { path: `/locations/prison/${caseLoad.caseLoadId}/residential-first-level` },
+      asSystem(),
+    )
   }
 }

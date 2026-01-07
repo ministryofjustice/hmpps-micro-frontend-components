@@ -50,7 +50,12 @@ describe('User service', () => {
         getUserLocations: jest.fn().mockResolvedValue([] as PrisonHierarchyDto[]),
       } as unknown as LocationsInsidePrisonApiClient
 
-      userService = new UserService(prisonApiClient, allocationsApiClient, cacheServiceMock, locationsInsidePrisonApiClient)
+      userService = new UserService(
+        prisonApiClient,
+        allocationsApiClient,
+        cacheServiceMock,
+        locationsInsidePrisonApiClient,
+      )
     })
 
     describe('with no cached data', () => {
@@ -62,7 +67,7 @@ describe('User service', () => {
         const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
 
         expect(userAccess).toEqual(expectedUserAccess)
       })
@@ -81,7 +86,7 @@ describe('User service', () => {
         const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).not.toHaveBeenCalled()
+        expect(locationsInsidePrisonApiClient.getUserLocations).not.toHaveBeenCalled()
         expect(cacheServiceMock.setData).not.toHaveBeenCalled()
 
         expect(userAccess).toEqual(DEFAULT_USER_ACCESS)
@@ -153,7 +158,7 @@ describe('User service', () => {
 
         const output = await userService.getPrisonUserAccess(prisonUserMock)
         expect(prisonApiClient.getUserCaseLoads).not.toHaveBeenCalled()
-        expect( locationsInsidePrisonApiClient.getUserLocations).not.toHaveBeenCalled()
+        expect(locationsInsidePrisonApiClient.getUserLocations).not.toHaveBeenCalled()
         expect(output).toEqual(cachedResponse)
       })
 
@@ -170,7 +175,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })
@@ -180,7 +185,7 @@ describe('User service', () => {
 
         const output = await userService.getPrisonUserAccess(prisonUserMock)
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
         expect(output).toEqual(expectedUserAccess)
       })
 
@@ -201,7 +206,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })
@@ -224,7 +229,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })
@@ -237,7 +242,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
 
         expect(output).toEqual(expectedUserAccess)
       })
@@ -252,7 +257,7 @@ describe('User service', () => {
         const output = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(prisonApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
-        expect( locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(0)
 
         expect(output).toEqual(expectedUserAccess)
       })
