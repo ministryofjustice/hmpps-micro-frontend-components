@@ -148,7 +148,7 @@ describe('GET /footer', () => {
           caseLoadId: 'LEI',
           description: 'Leeds',
           type: '',
-          caseloadFunction: '',
+          caseloadFunction: 'GENERAL',
           currentlyActive: true,
         },
       ])

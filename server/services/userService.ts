@@ -56,7 +56,7 @@ export default class UserService {
 
       const services = await this.getServicesForUser(
         user,
-        activeCaseLoad?.caseLoadId,
+        activeCaseLoad,
         this.locationsInsidePrisonApiClient,
         this.allocationsApiClient,
       )
@@ -120,13 +120,13 @@ export default class UserService {
 
   private async getServicesForUser(
     user: PrisonUser,
-    caseLoadId: string,
+    activeCaseLoad: CaseLoad,
     locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
     const [locations, allocationPolicies] = await Promise.all([
-      locationsInsidePrisonApiClient.getUserLocations(user.activeCaseLoad),
-      this.getAllocationPolicies(user, caseLoadId, allocationsApiClient),
+      locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad),
+      this.getAllocationPolicies(user, activeCaseLoad.caseLoadId, allocationsApiClient),
     ])
 
     const activeServices = config.features.servicesStore.enabled
@@ -136,7 +136,7 @@ export default class UserService {
     return getServicesForUser(
       user.userRoles,
       allocationPolicies,
-      caseLoadId ?? null,
+      activeCaseLoad.caseLoadId ?? null,
       user.staffId,
       locations,
       activeServices,
