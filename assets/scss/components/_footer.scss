@@ -21,7 +21,11 @@
   }
 
   &__help {
-    flex-basis: 50%;
+    @include govuk-media-query($until: tablet) {
+      h2 {
+        padding-top: 25px;
+      }
+    }
   }
 
   &__support-links {
@@ -53,6 +57,11 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px 15px;
       justify-items: start;
+
+      @include govuk-media-query($until: desktop) {
+        grid-template-columns: 1fr 1fr;
+      }
+
       li a {
         color: $govuk-text-colour;
         font-size: 16px;
