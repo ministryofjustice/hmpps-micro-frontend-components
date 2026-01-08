@@ -1,6 +1,6 @@
 import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/interfaces/caseLoad'
-import { Location } from '../../server/interfaces/location'
+import { PrisonHierarchyDto } from '../../server/interfaces/location'
 
 const stubCaseloads = (
   caseloads: CaseLoad[] = [
@@ -35,14 +35,16 @@ const stubCaseloads = (
   })
 
 const stubLocations = (
-  locations: Location[] = [
+  locations: PrisonHierarchyDto[] = [
     {
-      locationId: 1,
-      locationType: 'INST',
-      description: 'Moorland (HMP & YOI)',
-      agencyId: 'MDI',
-      currentOccupancy: 1,
-      locationPrefix: 'MDI',
+      locationId: '2475f250-434a-4257-afe7-b911f1773a4d',
+      locationType: 'CELL',
+      locationCode: '001',
+      fullLocationPath: 'A-1-001',
+      localName: 'Wing A',
+      level: 1,
+      status: 'ACTIVE',
+      subLocations: [],
     },
   ],
 ) =>
