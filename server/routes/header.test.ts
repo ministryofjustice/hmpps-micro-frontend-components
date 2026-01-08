@@ -81,7 +81,7 @@ describe('GET /header', () => {
         },
       ])
       prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, { locations: [] })
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
       allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
     })
 
@@ -128,7 +128,7 @@ describe('GET /header', () => {
   describe('case load switcher', () => {
     beforeEach(() => {
       prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, { locations: [] })
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
     it('should display case load link if user has multiple caseloads', () => {
@@ -240,7 +240,7 @@ describe('GET /header', () => {
         },
       ])
       prisonApi.get('/api/staff/11111/LEI/roles').reply(200, 'true')
-      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, { locations: [] })
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
     it('should render external title', () => {

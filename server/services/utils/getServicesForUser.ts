@@ -71,7 +71,6 @@ export default (
     activeServices,
     config.serviceUrls.activities.enabledPrisons,
   )
-
   return [
     {
       id: 'global-search',
