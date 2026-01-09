@@ -18,7 +18,7 @@ const stubLocations = (
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/locations/prison/[^/]+/residential-first-level',
+      urlPattern: '/locations-inside-prison/locations/prison/[^/]+/residential-first-level',
     },
     response: {
       status: 200,
