@@ -139,7 +139,7 @@ describe('GET /footer', () => {
 
   describe('services links', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
+      prisonApi.get('/api/staff/11111/caseloads').reply(200, [
         {
           caseLoadId: 'LEI',
           description: 'Leeds',
