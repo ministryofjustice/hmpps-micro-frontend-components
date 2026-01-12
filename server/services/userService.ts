@@ -9,6 +9,7 @@ import { Service } from '../interfaces/Service'
 import { CaseLoad } from '../interfaces/caseLoad'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
+import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
 
 export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
@@ -28,6 +29,7 @@ export default class UserService {
     private readonly prisonApiClient: PrisonApiClient,
     private readonly allocationsApiClient: AllocationsApiClient,
     private readonly cacheService: CacheService,
+    private readonly locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
   ) {}
 
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
@@ -39,7 +41,7 @@ export default class UserService {
     if (cache?.caseLoads.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
 
     try {
-      const caseLoads = await this.prisonApiClient.getUserCaseLoads(user.token)
+      const caseLoads = await this.prisonApiClient.getUserCaseLoads(user.staffId)
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS
@@ -54,8 +56,8 @@ export default class UserService {
 
       const services = await this.getServicesForUser(
         user,
-        activeCaseLoad?.caseLoadId,
-        this.prisonApiClient,
+        activeCaseLoad,
+        this.locationsInsidePrisonApiClient,
         this.allocationsApiClient,
       )
 
@@ -118,13 +120,13 @@ export default class UserService {
 
   private async getServicesForUser(
     user: PrisonUser,
-    caseLoadId: string,
-    prisonApiClient: PrisonApiClient,
+    activeCaseLoad: CaseLoad,
+    locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
     const [locations, allocationPolicies] = await Promise.all([
-      prisonApiClient.getUserLocations(user.token),
-      this.getAllocationPolicies(user, caseLoadId, allocationsApiClient),
+      locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad),
+      this.getAllocationPolicies(user, activeCaseLoad.caseLoadId, allocationsApiClient),
     ])
 
     const activeServices = config.features.servicesStore.enabled
@@ -134,7 +136,7 @@ export default class UserService {
     return getServicesForUser(
       user.userRoles,
       allocationPolicies,
-      caseLoadId ?? null,
+      activeCaseLoad.caseLoadId ?? null,
       user.staffId,
       locations,
       activeServices,
@@ -149,7 +151,7 @@ export default class UserService {
     const allocationCacheKey = `${user.username}_${caseLoadId}_allocation`
     let allocation = await this.cacheService.getData<StaffAllocationPolicies>(allocationCacheKey)
     if (!allocation?.policies) {
-      allocation = await allocationsApiClient.getStaffAllocationPolicies(user.token, caseLoadId, user.staffId)
+      allocation = await allocationsApiClient.getStaffAllocationPolicies(caseLoadId, user.staffId)
       await this.cacheService.setData(allocationCacheKey, allocation)
     }
     return allocation

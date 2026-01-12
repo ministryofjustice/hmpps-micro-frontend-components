@@ -45,7 +45,7 @@ export const activeCaseLoadMock: CaseLoad = {
   caseLoadId: 'LEI',
   description: 'Leeds',
   type: '',
-  caseloadFunction: '',
+  caseloadFunction: 'GENERAL',
   currentlyActive: true,
 }
 
