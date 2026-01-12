@@ -1,4 +1,4 @@
-import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
+import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import logger, { warnLevelLogger } from '../../logger'
 import config from '../config'
@@ -17,13 +17,13 @@ export default class AllocationsApiClient extends RestClient {
     )
   }
 
-  async getStaffAllocationPolicies(prisonCode: string, staffId: number) {
+  async getStaffAllocationPolicies(token: string, prisonCode: string, staffId: number) {
     try {
       return await this.get<StaffAllocationPolicies>(
         {
           path: `/prisons/${prisonCode}/staff/${staffId}/job-classifications`,
         },
-        asSystem(),
+        asUser(token),
       )
     } catch (e) {
       logger.error('Error retrieving Staff Allocation Policies', e)
