@@ -10,6 +10,7 @@ import { CaseLoad } from '../interfaces/caseLoad'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
+import ManageUsersApiClient from '../data/manageUsersApiClient'
 
 export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
@@ -30,6 +31,7 @@ export default class UserService {
     private readonly allocationsApiClient: AllocationsApiClient,
     private readonly cacheService: CacheService,
     private readonly locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
+    private readonly manageUsersApiClient: ManageUsersApiClient
   ) {}
 
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
@@ -41,7 +43,8 @@ export default class UserService {
     if (cache?.caseLoads.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
 
     try {
-      const caseLoads = await this.prisonApiClient.getUserCaseLoads(user.staffId)
+      const caseLoads = await this.manageUsersApiClient.getUserCaseLoads(user.username);
+      logger.warn(`Caseloads for user ${user.username}: ${JSON.stringify(caseLoads)}`);
       const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS

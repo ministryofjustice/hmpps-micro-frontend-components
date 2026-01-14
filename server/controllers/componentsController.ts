@@ -50,7 +50,7 @@ export default (
   async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
-      changeCaseLoadLink: `${config.serviceUrls.dps.url}/change-caseload`,
+      changeCaseLoadLink: `https://digital-dev.prison.service.justice.gov.uk/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',

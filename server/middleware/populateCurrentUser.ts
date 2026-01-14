@@ -37,6 +37,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
       }
 
       if (res.locals.user.authSource === 'nomis') {
+        logger.warn('user', res.locals.user)
         res.locals.user.staffId = parseInt(userId, 10) || undefined
         res.locals.user = {
           ...res.locals.user,
