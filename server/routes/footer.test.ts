@@ -41,8 +41,8 @@ const contentfulServiceMock = {
 } as undefined as ContentfulService
 
 let app: App
+let authApi: nock.Scope
 let prisonApi: nock.Scope
-let locationsApi: nock.Scope
 
 const redisClient = createRedisClient()
 
@@ -52,14 +52,8 @@ async function ensureConnected() {
   }
 }
 beforeEach(async () => {
+  authApi = nock(config.apis.hmppsAuth.url)
   prisonApi = nock(config.apis.prisonApi.url)
-  locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
-
-  nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
-    access_token: 'system-token',
-    token_type: 'Bearer',
-    expires_in: 5000,
-  })
 
   await ensureConnected()
   redisClient.del('TOKEN_USER_meta_data')
@@ -73,6 +67,8 @@ afterEach(() => {
 
 describe('GET /footer', () => {
   it('should render a link to the feedback survey', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -86,6 +82,8 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to accessibility guidelines', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -99,6 +97,8 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Terms and conditions', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -112,6 +112,8 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Privacy policy', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -125,6 +127,8 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Cookies policy', () => {
+    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -139,20 +143,22 @@ describe('GET /footer', () => {
 
   describe('services links', () => {
     beforeEach(() => {
-      prisonApi.get('/api/staff/11111/caseloads').reply(200, [
+      prisonApi.get('/api/users/me/caseLoads').reply(200, [
         {
           caseLoadId: 'LEI',
           description: 'Leeds',
           type: '',
-          caseloadFunction: 'GENERAL',
+          caseloadFunction: '',
           currentlyActive: true,
         },
       ])
       prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
+      prisonApi.get('/api/users/me/locations').reply(200, [])
     })
 
     it('should display a list of services', () => {
+      authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
+
       return request(app)
         .get('/footer')
         .set('x-user-token', token)
