@@ -2,6 +2,6 @@ export interface CaseLoad {
   caseLoadId: string
   description: string
   type: string
-  caseloadFunction: 'GENERAL' | 'ADMIN'
+  caseloadFunction: string
   currentlyActive: boolean
 }

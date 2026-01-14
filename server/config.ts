@@ -78,14 +78,6 @@ export default {
       },
       agent: new AgentConfig(Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
     },
-    locationsInsidePrisonApi: {
-      url: get('RESIDENTIAL_LOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
-      timeout: {
-        response: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
-        deadline: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
-      },
-      agent: new AgentConfig(Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
-    },
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

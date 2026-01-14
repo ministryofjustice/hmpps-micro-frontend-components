@@ -41,13 +41,11 @@ const contentfulServiceMock = {
 
 let app: App
 let prisonApi: nock.Scope
-let locationsApi: nock.Scope
 
 beforeEach(() => {
   prisonApi = nock(config.apis.prisonApi.url)
-  locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
-  prisonApi.get('/api/staff/11111/caseloads').reply(200, [])
-  locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
+  prisonApi.get('/api/users/me/caseLoads').reply(200, [])
+  prisonApi.get('/api/users/me/locations').reply(200, [])
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
 
