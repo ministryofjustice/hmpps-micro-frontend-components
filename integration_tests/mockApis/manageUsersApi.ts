@@ -75,5 +75,5 @@ export default {
   stubManageUser: stubUser,
   stubManageUsersPing: ping,
   stubManageUserRoles: stubUserRoles,
-  stubUserCaseloads,
+  stubCaseloads: stubUserCaseloads,
 }
