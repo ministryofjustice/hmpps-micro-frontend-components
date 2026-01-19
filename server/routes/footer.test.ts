@@ -41,7 +41,6 @@ const contentfulServiceMock = {
 } as undefined as ContentfulService
 
 let app: App
-let prisonApi: nock.Scope
 let locationsApi: nock.Scope
 let manageUsersApi: nock.Scope
 
@@ -53,7 +52,6 @@ async function ensureConnected() {
   }
 }
 beforeEach(async () => {
-  prisonApi = nock(config.apis.prisonApi.url)
   manageUsersApi = nock(config.apis.manageUsersApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
 
@@ -149,7 +147,6 @@ describe('GET /footer', () => {
         caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
       })
 
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 

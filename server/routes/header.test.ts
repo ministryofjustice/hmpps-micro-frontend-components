@@ -35,7 +35,6 @@ jest.mock('express-jwt', () => ({
 }))
 
 let app: App
-let prisonApi: nock.Scope
 let allocationsApi: nock.Scope
 let locationsApi: nock.Scope
 let manageUsersApi: nock.Scope
@@ -48,7 +47,6 @@ async function ensureConnected() {
 }
 
 beforeEach(async () => {
-  prisonApi = nock(config.apis.prisonApi.url)
   allocationsApi = nock(config.apis.allocationsApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   manageUsersApi = nock(config.apis.manageUsersApi.url)
@@ -80,7 +78,6 @@ describe('GET /header', () => {
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
         caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
       })
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
       allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
     })
@@ -127,7 +124,6 @@ describe('GET /header', () => {
 
   describe('case load switcher', () => {
     beforeEach(() => {
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
@@ -221,7 +217,6 @@ describe('GET /header', () => {
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
         caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
       })
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, 'true')
       locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
