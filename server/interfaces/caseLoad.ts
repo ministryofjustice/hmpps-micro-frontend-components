@@ -1,6 +1,15 @@
-export interface CaseLoad {
-  caseLoadId: string
-  description: string
-  caseloadFunction: 'GENERAL' | 'ADMIN'
-  currentlyActive: boolean
+type CaseloadFunction = 'GENERAL' | 'ADMIN'
+
+export interface PrisonCaseload {
+  id: string
+  name: string
+  function: CaseloadFunction
+}
+
+export interface UserCaseloadDetail {
+  username: string
+  active: boolean
+  accountType: string
+  activeCaseload?: PrisonCaseload
+  caseloads: PrisonCaseload[]
 }

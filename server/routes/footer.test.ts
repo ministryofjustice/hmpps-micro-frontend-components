@@ -43,6 +43,7 @@ const contentfulServiceMock = {
 let app: App
 let prisonApi: nock.Scope
 let locationsApi: nock.Scope
+let manageUsersApi: nock.Scope
 
 const redisClient = createRedisClient()
 
@@ -53,6 +54,7 @@ async function ensureConnected() {
 }
 beforeEach(async () => {
   prisonApi = nock(config.apis.prisonApi.url)
+  manageUsersApi = nock(config.apis.manageUsersApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
 
   nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
@@ -139,15 +141,14 @@ describe('GET /footer', () => {
 
   describe('services links', () => {
     beforeEach(() => {
-      prisonApi.get('/api/staff/11111/caseloads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: 'GENERAL',
-          currentlyActive: true,
-        },
-      ])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+      })
+
       prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
       locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })

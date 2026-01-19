@@ -2,7 +2,7 @@ import nock from 'nock'
 import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import LocationsInsidePrisonApiClient from './locationsInsidePrisonApiClient'
-import { CaseLoad } from '../interfaces/caseLoad'
+import { PrisonCaseload } from '../interfaces/caseLoad'
 
 describe('LocationsInsidePrisonApiClient', () => {
   let api: nock.Scope
@@ -23,14 +23,14 @@ describe('LocationsInsidePrisonApiClient', () => {
 
   describe('getUserLocations', () => {
     it('Returns empty array when caseload function is ADMIN', async () => {
-      const caseLoad = { caseLoadId: 'MDI', caseloadFunction: 'ADMIN' } as CaseLoad
+      const caseLoad = { id: 'MDI', name: 'MDI', function: 'ADMIN' } as PrisonCaseload
       const response = await new LocationsInsidePrisonApiClient(hmppsAuthClient).getUserLocations(caseLoad)
       expect(response).toEqual([])
       expect(hmppsAuthClient.getToken).not.toHaveBeenCalled()
     })
 
     it('Returns response when successful', async () => {
-      const caseLoad = { caseLoadId: 'MDI', caseloadFunction: 'GENERAL' } as CaseLoad
+      const caseLoad = { id: 'MDI', name: 'MDI', function: 'GENERAL' } as PrisonCaseload
 
       api
         .get('/locations/prison/MDI/residential-first-level')
