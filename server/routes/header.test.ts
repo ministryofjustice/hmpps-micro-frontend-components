@@ -35,8 +35,9 @@ jest.mock('express-jwt', () => ({
 }))
 
 let app: App
-let prisonApi: nock.Scope
 let allocationsApi: nock.Scope
+let locationsApi: nock.Scope
+let manageUsersApi: nock.Scope
 
 const redisClient = createRedisClient()
 async function ensureConnected() {
@@ -46,8 +47,15 @@ async function ensureConnected() {
 }
 
 beforeEach(async () => {
-  prisonApi = nock(config.apis.prisonApi.url)
   allocationsApi = nock(config.apis.allocationsApi.url)
+  locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
+  manageUsersApi = nock(config.apis.manageUsersApi.url)
+
+  nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
+    access_token: 'system-token',
+    token_type: 'Bearer',
+    expires_in: 5000,
+  })
 
   await ensureConnected()
   redisClient.del('TOKEN_USER_meta_data')
@@ -63,17 +71,14 @@ afterEach(() => {
 describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: true,
-        },
-      ])
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      prisonApi.get('/api/users/me/locations').reply(200, [])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+      })
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
       allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
     })
 
@@ -119,27 +124,20 @@ describe('GET /header', () => {
 
   describe('case load switcher', () => {
     beforeEach(() => {
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      prisonApi.get('/api/users/me/locations').reply(200, [])
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
     it('should display case load link if user has multiple caseloads', () => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: true,
-        },
-        {
-          caseLoadId: 'DEE',
-          description: 'Deerbolt',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: false,
-        },
-      ])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [
+          { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+          { id: 'DEE', name: 'Deerbolt', function: 'GENERAL' },
+        ],
+      })
       return request(app)
         .get('/header')
         .set('x-user-token', prisonUserToken)
@@ -152,15 +150,13 @@ describe('GET /header', () => {
     })
 
     it('should not display case load link if user has one caseload', () => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: true,
-        },
-      ])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+      })
       return request(app)
         .get('/header')
         .set('x-user-token', prisonUserToken)
@@ -174,31 +170,23 @@ describe('GET /header', () => {
 
     describe('caching', () => {
       it('should use cached caseloads the second time if 1 active caseload', async () => {
-        prisonApi.get('/api/users/me/caseLoads').reply(200, [
-          {
-            caseLoadId: 'LEI',
-            description: 'Leeds',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: true,
-          },
-        ])
-        prisonApi.get('/api/users/me/caseLoads').reply(200, [
-          {
-            caseLoadId: 'LEI',
-            description: 'Leeds',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: true,
-          },
-          {
-            caseLoadId: 'DEE',
-            description: 'Deerbolt',
-            type: '',
-            caseloadFunction: '',
-            currentlyActive: false,
-          },
-        ])
+        manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+          username: 'TOKEN_USER',
+          active: true,
+          accountType: '',
+          activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+          caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+        })
+        manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+          username: 'TOKEN_USER',
+          active: true,
+          accountType: '',
+          activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+          caseloads: [
+            { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+            { id: 'DEE', name: 'Deerbolt', function: 'GENERAL' },
+          ],
+        })
         // make first call with 1 active caseload
         await request(app)
           .get('/header')
@@ -222,17 +210,14 @@ describe('GET /header', () => {
 
   describe('non-prison user', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: true,
-        },
-      ])
-      prisonApi.get('/api/staff/11111/LEI/roles').reply(200, 'true')
-      prisonApi.get('/api/users/me/locations').reply(200, [])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+      })
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
     it('should render external title', () => {
