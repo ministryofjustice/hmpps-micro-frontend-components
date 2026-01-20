@@ -50,7 +50,7 @@ function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObjects: Cont
     if (username) {
       let activeCaseLoadId: string | undefined
       if ('activeCaseLoad' in user) {
-        activeCaseLoadId = user.activeCaseLoad?.caseLoadId
+        activeCaseLoadId = user.activeCaseLoad?.id
       }
       const { properties } = envelope.data.baseData
       // eslint-disable-next-line no-param-reassign

@@ -1,5 +1,5 @@
 import { Role } from '../services/utils/roles'
-import { CaseLoad } from './caseLoad'
+import { PrisonCaseload } from './caseLoad'
 import { Service } from './Service'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
@@ -18,8 +18,8 @@ export interface BaseUser {
 }
 
 export interface PrisonUserAccess {
-  caseLoads: CaseLoad[]
-  activeCaseLoad: CaseLoad | null
+  caseLoads: PrisonCaseload[]
+  activeCaseLoad: PrisonCaseload | null
   services: Service[]
   allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
 }
