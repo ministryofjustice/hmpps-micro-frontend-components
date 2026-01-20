@@ -1,6 +1,6 @@
 import { HmppsUser, PrisonUser } from '../../server/interfaces/hmppsUser'
 import { Role } from '../../server/services/utils/roles'
-import { PrisonCaseload } from '../../server/interfaces/caseLoad'
+import { CaseLoad } from '../../server/interfaces/caseLoad'
 import { Service } from '../../server/interfaces/Service'
 
 export const servicesMock: Service[] = [
@@ -41,10 +41,12 @@ export const servicesMock: Service[] = [
   },
 ]
 
-export const activeCaseLoadMock: PrisonCaseload = {
-  id: 'LEI',
-  name: 'Leeds',
-  function: 'GENERAL',
+export const activeCaseLoadMock: CaseLoad = {
+  caseLoadId: 'LEI',
+  description: 'Leeds',
+  type: '',
+  caseloadFunction: '',
+  currentlyActive: true,
 }
 
 export const prisonUserMock: PrisonUser = {
