@@ -62,6 +62,14 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    prisonApi: {
+      url: get('PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
+    },
     allocationsApi: {
       url: get('ALLOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
@@ -69,22 +77,6 @@ export default {
         deadline: Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
       },
       agent: new AgentConfig(Number(get('ALLOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
-    },
-    locationsInsidePrisonApi: {
-      url: get('RESIDENTIAL_LOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
-      timeout: {
-        response: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
-        deadline: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
-      },
-      agent: new AgentConfig(Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_DEADLINE', 3000))),
-    },
-    manageUsersApi: {
-      url: get('MANAGE_USERS_API_URL', 'http://localhost:9091/manage-users-api', requiredInProduction),
-      timeout: {
-        response: Number(get('MANAGE_USERS_API_TIMEOUT_RESPONSE', 3000)),
-        deadline: Number(get('MANAGE_USERS_API_TIMEOUT_DEADLINE', 3000)),
-      },
-      agent: new AgentConfig(Number(get('MANAGE_USERS_API_TIMEOUT_DEADLINE', 3000))),
     },
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
