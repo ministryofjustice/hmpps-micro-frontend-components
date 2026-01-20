@@ -17,6 +17,7 @@ export interface BaseUser {
   token: string
 }
 
+// for internal use as opposed to PrisonUserAccessMeta
 export interface PrisonUserAccess {
   caseLoads: PrisonCaseload[]
   activeCaseLoad: PrisonCaseload | null

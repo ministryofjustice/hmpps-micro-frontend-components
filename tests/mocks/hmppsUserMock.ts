@@ -2,6 +2,7 @@ import { HmppsUser, PrisonUser } from '../../server/interfaces/hmppsUser'
 import { Role } from '../../server/services/utils/roles'
 import { PrisonCaseload } from '../../server/interfaces/caseLoad'
 import { Service } from '../../server/interfaces/Service'
+import { CaseLoad } from '../../server/controllers/componentsController'
 
 export const servicesMock: Service[] = [
   {
@@ -41,10 +42,18 @@ export const servicesMock: Service[] = [
   },
 ]
 
-export const activeCaseLoadMock: PrisonCaseload = {
+export const prisonCaseloadMock: PrisonCaseload = {
   id: 'LEI',
   name: 'Leeds',
   function: 'GENERAL',
+}
+
+export const activeCaseLoadMock: CaseLoad = {
+  caseLoadId: 'LEI',
+  description: 'Leeds',
+  type: 'INST',
+  caseloadFunction: 'GENERAL',
+  currentlyActive: true,
 }
 
 export const prisonUserMock: PrisonUser = {
@@ -56,8 +65,8 @@ export const prisonUserMock: PrisonUser = {
   userRoles: [Role.PathfinderStdPrison],
   token: 'abc.def.ghi',
   staffId: 111111,
-  caseLoads: [activeCaseLoadMock],
-  activeCaseLoad: activeCaseLoadMock,
+  caseLoads: [prisonCaseloadMock],
+  activeCaseLoad: prisonCaseloadMock,
   services: servicesMock,
   allocationJobResponsibilities: [],
 }
