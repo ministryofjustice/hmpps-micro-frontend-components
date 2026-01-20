@@ -4,7 +4,6 @@ import { AvailableComponent } from '../@types/AvailableComponent'
 import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../interfaces/Service'
-import { PrisonCaseload } from '../interfaces/caseLoad'
 
 export interface HeaderViewModel {
   isPrisonUser: boolean
