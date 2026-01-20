@@ -33,6 +33,7 @@ generic-service:
     PATHFINDER_URL: https://preprod.pathfinder.service.justice.gov.uk
     LICENCES_URL: https://licences-preprod.prison.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
+    MANAGE_USERS_API_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
     MANAGE_AUTH_ACCOUNTS_URL: https://manage-users-preprod.hmpps.service.justice.gov.uk
     CATEGORISATION_URL: https://preprod.offender-categorisation.service.justice.gov.uk
     PECS_URL: https://hmpps-book-secure-move-frontend-preprod.apps.cloud-platform.service.justice.gov.uk
