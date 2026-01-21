@@ -1,9 +1,9 @@
 import config from '../config'
 import { ManagedPageLink } from '../interfaces/managedPage'
 import { AvailableComponent } from '../@types/AvailableComponent'
-import { HmppsUser, isPrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
-import { DEFAULT_USER_ACCESS } from '../services/userService'
+import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
+import { Service } from '../interfaces/Service'
 
 export interface HeaderViewModel {
   isPrisonUser: boolean
@@ -39,6 +39,30 @@ const defaultFooterLinks: ManagedPageLink[] = [
     text: 'Cookies policy',
   },
 ]
+
+// This interface is assumed by other services - do not change without care
+export interface PrisonUserAccessMeta {
+  caseLoads: CaseLoad[]
+  activeCaseLoad: CaseLoad | null
+  services: Service[]
+  allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
+}
+
+// This interface is assumed by other services - do not change without care
+export interface CaseLoad {
+  caseLoadId: string
+  description: string
+  type: string
+  caseloadFunction: string
+  currentlyActive: boolean
+}
+
+const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
+  caseLoads: [],
+  activeCaseLoad: null,
+  services: [],
+  allocationJobResponsibilities: [],
+}
 
 export default (
   contentfulService: ContentfulService,
@@ -92,8 +116,22 @@ export default (
         meta:
           user.authSource === 'nomis'
             ? {
-                caseLoads: user.caseLoads,
-                activeCaseLoad: user.activeCaseLoad,
+                caseLoads: user.caseLoads.map(c => ({
+                  caseLoadId: c.id,
+                  description: c.name,
+                  type: 'INST',
+                  caseloadFunction: c.function,
+                  currentlyActive: c.id === user.activeCaseLoad?.id,
+                })) as CaseLoad[],
+                activeCaseLoad: (user.activeCaseLoad
+                  ? {
+                      caseLoadId: user.activeCaseLoad.id,
+                      description: user.activeCaseLoad.name,
+                      type: 'INST',
+                      caseloadFunction: user.activeCaseLoad.function,
+                      currentlyActive: true,
+                    }
+                  : null) as CaseLoad | null,
                 services: user.services,
                 allocationJobResponsibilities: user.allocationJobResponsibilities,
               }
@@ -104,5 +142,5 @@ export default (
 })
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
-  meta: PrisonUserAccess
+  meta: PrisonUserAccessMeta
 }

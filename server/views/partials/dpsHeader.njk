@@ -70,7 +70,7 @@
                   <a data-qa="connect-dps-caseload-switcher" class="connect-dps-common-header__link govuk-link--no-visited-state" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
                     <span>
                        {{ caseloadSwitcherSvg | safe }}
-                      <span>{{ user.activeCaseLoad.description }}</span>
+                      <span>{{ user.activeCaseLoad.name }}</span>
                     </span>
                   </a>
                 </div>
@@ -167,7 +167,7 @@
                 </div>
 
               </form>
-              <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.description }}</a>.
+              <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.name }}</a>.
             </div>
           </div>
 
