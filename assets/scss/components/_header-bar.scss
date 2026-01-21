@@ -1,3 +1,12 @@
+.logo  { grid-area: logo; width: fit-content; display: flex;}
+.logo > a { position: relative; }
+.caseload { grid-area: caseload; }
+.account { grid-area: account; }
+.menu    { grid-area: menu; }
+.menu-dropdown  { grid-area: menu-dropdown; }
+.search { grid-area: search; }
+.search-dropdown { grid-area: search-dropdown; }
+
 .connect-dps-common-header {
   [hidden] {
     display: none !important;
@@ -5,6 +14,14 @@
 
   background-color: govuk-colour('black');
   color: govuk-colour('white');
+
+  display: grid;
+  grid-template-columns: auto fit-content(100%) fit-content(100%) fit-content(100%) fit-content(100%);
+  grid-template-rows: 70px 0fr 0fr;
+  grid-template-areas:
+    "logo             caseload         account          menu             search"
+    "menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown"
+    "search-dropdown  search-dropdown  search-dropdown  search-dropdown  search-dropdown";
 
   &__logo {
     position: relative;
@@ -451,4 +468,34 @@
   @media print {
     display: none;
   }
+}
+
+.connect-dps-common-header::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: govuk-colour('black');
+  z-index: 0;
+}
+
+.header-wrapper {
+  background-color: govuk-colour('light-grey');
+}
+
+.service-menu-open {
+  grid-template-rows: 70px 1fr 0fr;
+}
+
+.search-menu-open {
+  grid-template-rows: 70px 0fr 1fr;
+}
+
+.govuk-tag {
+  height: min-content;
+  align-self: anchor-center;
+  z-index: 1;
 }
