@@ -55,9 +55,9 @@
         </svg>
         Digital Prison Services
       </a>
-      {% if true %}
+      {% if environmentName %}
           {{ govukTag({
-            text: "DEV",
+            text: environmentName,
             classes: environmentNameColour,
             attributes: {
               'data-qa': 'connect-dps-common-environment-tag'
@@ -127,20 +127,18 @@
 
     <div class="menu-dropdown">
       <div id="connect-dps-common-header-services-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__services-menu" hidden="hidden">
-        <div class="govuk-width-container">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-three-quarters">
-              <h3 class="govuk-heading-m">
-                Services
-              </h3>
-              <ul class='govuk-list'>
-                {% for service in user.services %}
-                  {% if service.navEnabled %}
-                    <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-three-quarters">
+            <h3 class="govuk-heading-m">
+              Services
+            </h3>
+            <ul class='govuk-list'>
+              {% for service in user.services %}
+                {% if service.navEnabled %}
+                  <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>
@@ -185,7 +183,7 @@
                 </div>
 
               </form>
-              <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.name }}</a>.
+              <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.description }}</a>.
             </div>
           </div>
 

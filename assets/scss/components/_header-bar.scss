@@ -12,11 +12,10 @@
     display: none !important;
   }
 
-  background-color: govuk-colour('black');
   color: govuk-colour('white');
 
   display: grid;
-  grid-template-columns: auto fit-content(100%) fit-content(100%) fit-content(100%) fit-content(100%);
+  grid-template-columns: 1fr fit-content(100%) fit-content(100%) min-content min-content;
   grid-template-rows: 70px 0fr 0fr;
   grid-template-areas:
     "logo             caseload         account          menu             search"
@@ -468,6 +467,32 @@
   @media print {
     display: none;
   }
+}
+
+@media (max-width: 925px) {
+  .connect-dps-common-header {
+    grid-template-columns: 1fr 1fr min-content min-content;
+    grid-template-rows: 70px 70px 0fr 0fr;
+    grid-template-areas:
+      "logo    logo    logo    logo"
+      "caseload account menu   search"
+      "menu-dropdown   menu-dropdown   menu-dropdown   menu-dropdown"
+      "search-dropdown search-dropdown search-dropdown search-dropdown";
+  }
+
+  .connect-dps-common-header::before {
+    height: 140px !important;
+  }
+
+  .service-menu-open {
+    grid-template-rows: 70px 70px 1fr 0fr !important;
+  }
+
+  .search-menu-open {
+    grid-template-rows: 70px 70px 0fr 1fr !important;
+  }
+
+
 }
 
 .connect-dps-common-header::before {
