@@ -232,7 +232,7 @@ function cleanPlugin(patterns = []) {
       }
 
       registerOnStartCallback(() => {
-        // deleteSync(patterns)
+        deleteSync(patterns)
       })
     },
   }
