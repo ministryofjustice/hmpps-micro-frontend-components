@@ -4,9 +4,9 @@ import auth from './integration_tests/mockApis/auth'
 import manageUsersApi from './integration_tests/mockApis/manageUsersApi'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import exampleApi from './integration_tests/mockApis/exampleApi'
-import prisonApi from './integration_tests/mockApis/prisonApi'
 import dps from './integration_tests/mockApis/dps'
 import allocationsApi from './integration_tests/mockApis/allocationsApi'
+import locationsInsidePrisonApi from './integration_tests/mockApis/locationsInsidePrisonApi'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -25,11 +25,11 @@ export default defineConfig({
         reset: resetStubs,
         ...auth,
         ...manageUsersApi,
-        ...prisonApi,
         ...tokenVerification,
         ...exampleApi,
         ...dps,
         ...allocationsApi,
+        ...locationsInsidePrisonApi,
       })
     },
     baseUrl: 'http://localhost:3007',

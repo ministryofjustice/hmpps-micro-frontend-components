@@ -1,9 +1,8 @@
-import componentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
+import componentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
 import { DEFAULT_USER_ACCESS } from '../services/userService'
-import { PrisonUserAccess } from '../interfaces/hmppsUser'
 
 const contentfulServiceMock = {
   getManagedPages: () => [
@@ -47,7 +46,7 @@ const expectedFooterViewModel: FooterViewModel = {
   component: 'footer',
 }
 
-const expectedMeta: PrisonUserAccess = {
+const expectedMeta: PrisonUserAccessMeta = {
   activeCaseLoad: activeCaseLoadMock,
   caseLoads: [activeCaseLoadMock],
   services: servicesMock,

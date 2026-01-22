@@ -78,7 +78,7 @@
               <a data-qa="connect-dps-caseload-switcher" class="connect-dps-common-header__link govuk-link--no-visited-state" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
                 <span>
                   {{ caseloadSwitcherSvg | safe }}
-                  <span>{{ user.activeCaseLoad.description }}</span>
+                  <span>{{ user.activeCaseLoad.name }}</span>
                 </span>
               </a>
             </div>
@@ -188,7 +188,7 @@
                   </div>
 
                 </form>
-                <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.description }}</a>.
+                <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.name }}</a>.
               </div>
             </div>
           </div>
@@ -198,33 +198,3 @@
     </nav>
   </div>
 </header>
-
-
-<main class="govuk-width-container" id="main-content" role="main" style="padding-top: 50px !important;">
-
-        <h1 class="govuk-heading-xl">I am a heading</h1>
-        <p class="govuk-body">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet turpis et nunc ullamcorper volutpat. 
-            Vivamus convallis, nulla non ultrices pharetra, nisl mauris facilisis nibh, vel tristique sapien magna ut risus.
-        </p>
-
-        <h2 class="govuk-heading-l">I am also a heading</h2>
-        <p class="govuk-body">
-            Phasellus vehicula, justo ut cursus pretium, sapien felis facilisis magna, nec sodales elit lacus eget neque. 
-            Curabitur euismod leo sed mauris fermentum, sit amet porttitor ligula aliquam.
-        </p>
-
-        <h3 class="govuk-heading-m">Do I count as a heading</h3>
-        <p class="govuk-body">
-            Donec sit amet ante nec sapien ullamcorper ullamcorper. Aliquam erat volutpat. Integer feugiat diam id 
-            ipsum tincidunt, a malesuada elit gravida.
-        </p>
-
-        <h4 class="govuk-heading-s">I surely dont'?</h4>
-        <p class="govuk-body">
-            Morbi at magna sit amet lacus finibus laoreet. Vestibulum a libero ut purus luctus malesuada. Sed sed 
-            arcu sed nisi ultricies porttitor.
-        </p>
-
-    </main>
-
