@@ -18,7 +18,7 @@
   </svg>
 {% endset %}
 
-<header class="header-wrapper">
+<header class="header-wrapper govuk-!-display-none-print" role="banner">
   <div class="connect-dps-common-header header govuk-width-container">
 
     <div class="logo">
@@ -66,130 +66,136 @@
       {% endif %}
     </div>
 
-    <div class="caseload">
-      {% if user.caseLoads.length > 1 %}
+    <nav aria-labelledby="connect-dps-common-navigation-heading">
+      <h2 id="connect-dps-common-navigation-heading" class="govuk-visually-hidden">
+        DPS navigation menu
+      </h2>
+
+      <div class="caseload">
+        {% if user.caseLoads.length > 1 %}
+          <div class="connect-dps-common-header__navigation__item">
+            <div class="connect-dps-common-header__icon-link-wrapper">
+              <a data-qa="connect-dps-caseload-switcher" class="connect-dps-common-header__link govuk-link--no-visited-state" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
+                <span>
+                  {{ caseloadSwitcherSvg | safe }}
+                  <span>{{ user.activeCaseLoad.description }}</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="account">
         <div class="connect-dps-common-header__navigation__item">
-          <div class="connect-dps-common-header__icon-link-wrapper">
-            <a data-qa="connect-dps-caseload-switcher" class="connect-dps-common-header__link govuk-link--no-visited-state" href="{{ changeCaseLoadLink }}" data-test="change-case-load-link" referrerpolicy="no-referrer-when-downgrade">
+          <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" type="button" hidden='hidden'>
               <span>
-                {{ caseloadSwitcherSvg | safe }}
-                <span>{{ user.activeCaseLoad.description }}</span>
+                {{ userSvg | safe }}
+                <span data-qa="connect-dps-common-header-user-name">{{ user.displayName | initialiseName }}</span>
+                <span class="govuk-visually-hidden">Account menu</span>
               </span>
+          </button>
+          <ul id="connect-dps-common-header-user-menu" class="govuk-list connect-dps-common-header__user-menu" hidden="hidden">
+            <li><a class="connect-dps-common-header__submenu-link" href="{{ manageDetailsLink }}">Your account</a></li>
+            <li><a class="connect-dps-common-header__submenu-link" href="/sign-out">Sign out</a></li>
+          </ul>
+
+          <div class="connect-dps-common-header__icon-link-wrapper connect-dps-common-header__user-menu-link">
+              <a class="connect-dps-common-header__link" href="{{ manageDetailsLink }}">
+                <span>
+                  <span class="govuk-visually-hidden"> Manage your account or sign out</span>
+                  <span>{{ user.displayName | initialiseName }}</span>
+                </span>
+              </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu">
+        <div class="connect-dps-common-header__navigation__item">
+          <button data-qa="connect-dps-common-service-menu-toggle" class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" data-text-for-show="Show services menu" data-text-for-hide="Hide services menu" type="button" hidden='hidden'>
+              <span>
+                <span class='govuk-!-font-size-19 govuk-!-font-weight-bold'>Menu</span>
+              </span>
+          </button>
+
+          <div class="connect-dps-common-header__icon-link-wrapper connect-dps-common-header__services-menu-link">
+            <a class="connect-dps-common-header__link" href="{{ menuLink }}">
+                <span>
+                  <span class="govuk-visually-hidden"> Services</span>
+                  <span>Menu</span>
+                </span>
             </a>
           </div>
         </div>
-      {% endif %}
-    </div>
+      </div>
 
-    <div class="account">
-      <div class="connect-dps-common-header__navigation__item">
-        <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" type="button" hidden='hidden'>
-            <span>
-              {{ userSvg | safe }}
-              <span data-qa="connect-dps-common-header-user-name">{{ user.displayName | initialiseName }}</span>
-              <span class="govuk-visually-hidden">Account menu</span>
-            </span>
-        </button>
-        <ul id="connect-dps-common-header-user-menu" class="govuk-list connect-dps-common-header__user-menu" hidden="hidden">
-          <li><a class="connect-dps-common-header__submenu-link" href="{{ manageDetailsLink }}">Your account</a></li>
-          <li><a class="connect-dps-common-header__submenu-link" href="/sign-out">Sign out</a></li>
-        </ul>
-
-        <div class="connect-dps-common-header__icon-link-wrapper connect-dps-common-header__user-menu-link">
-            <a class="connect-dps-common-header__link" href="{{ manageDetailsLink }}">
-              <span>
-                <span class="govuk-visually-hidden"> Manage your account or sign out</span>
-                <span>{{ user.displayName | initialiseName }}</span>
-              </span>
-            </a>
+      <div class="menu-dropdown">
+        <div id="connect-dps-common-header-services-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__services-menu" hidden="hidden">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-three-quarters">
+              <h3 class="govuk-heading-m">
+                Services
+              </h3>
+              <ul class='govuk-list'>
+                {% for service in user.services %}
+                  {% if service.navEnabled %}
+                    <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      
+      <div class="search">
+        <div class="connect-dps-common-header__navigation__item">
+          <button data-qa="connect-dps-common-search-toggle" class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" data-text-for-show="Show search menu" data-text-for-hide="Hide search menu" hidden="hidden" type="button">
+            <span class="govuk-visually-hidden"> Search for prisoner</span>
+            {{ searchSvg() | safe }}
+            <span aria-hidden="true" class="connect-dps-common-header__search-menu-toggle__close-icon" focusable="false"> × </span>
+          </button>
 
-    <div class="menu">
-      <div class="connect-dps-common-header__navigation__item">
-        <button data-qa="connect-dps-common-service-menu-toggle" class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" data-text-for-show="Show services menu" data-text-for-hide="Hide services menu" type="button" hidden='hidden'>
-            <span>
-              <span class='govuk-!-font-size-19 govuk-!-font-weight-bold'>Menu</span>
-            </span>
-        </button>
-
-        <div class="connect-dps-common-header__icon-link-wrapper connect-dps-common-header__services-menu-link">
-          <a class="connect-dps-common-header__link" href="{{ menuLink }}">
-              <span>
-                <span class="govuk-visually-hidden"> Services</span>
-                <span>Menu</span>
-              </span>
+          <a class="connect-dps-common-header__search-menu-link" href="{{ dpsSearchLink }}">
+            <span class="govuk-visually-hidden"> Search for prisoner</span>
           </a>
         </div>
       </div>
-    </div>
 
-    <div class="menu-dropdown">
-      <div id="connect-dps-common-header-services-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__services-menu" hidden="hidden">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-three-quarters">
-            <h3 class="govuk-heading-m">
-              Services
-            </h3>
-            <ul class='govuk-list'>
-              {% for service in user.services %}
-                {% if service.navEnabled %}
-                  <li><a href='{{ service.href }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="search">
-      <div class="connect-dps-common-header__navigation__item">
-        <button data-qa="connect-dps-common-search-toggle" class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" data-text-for-show="Show search menu" data-text-for-hide="Hide search menu" hidden="hidden" type="button">
-          <span class="govuk-visually-hidden"> Search for prisoner</span>
-          {{ searchSvg() | safe }}
-          <span aria-hidden="true" class="connect-dps-common-header__search-menu-toggle__close-icon" focusable="false"> × </span>
-        </button>
-
-        <a class="connect-dps-common-header__search-menu-link" href="{{ dpsSearchLink }}">
-          <span class="govuk-visually-hidden"> Search for prisoner</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="search-dropdown">
-      <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__pushdown-menu" hidden="hidden">
-        <div class="govuk-width-container">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              <form action="{{ dpsSearchLink }}">
-                <h3 class="govuk-label-wrapper">
-                  <label class="govuk-label govuk-label--m" for="connect-dps-common-header-prisoner-search">
-                    Search for a prisoner
-                  </label>
-                </h3>
-                <div id="connect-dps-common-header-prisoner-search-hint" class="govuk-hint">
-                  Enter a prisoner’s name or prison number.
-                </div>
-                <div class="connect-dps-common-header__search-input-wrapper">
-                  <input enterkeyhint="search" id="connect-dps-common-header-prisoner-search" class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-input" name="keywords" title="Search for a prisoner" type="search" aria-describedby="connect-dps-common-header-prisoner-search-hint">
-                  <div class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-submit-wrapper">
-                    <button class="connect-dps-common-header__search-menu-submit-btn" type="submit" enterkeyhint="search">
+      <div class="search-dropdown">
+        <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__pushdown-menu" hidden="hidden">
+          <div class="govuk-width-container">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half">
+                <form action="{{ dpsSearchLink }}">
+                  <h3 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--m" for="connect-dps-common-header-prisoner-search">
                       Search for a prisoner
-                      {{ searchSvg(27, 27) }}
-                    </button>
+                    </label>
+                  </h3>
+                  <div id="connect-dps-common-header-prisoner-search-hint" class="govuk-hint">
+                    Enter a prisoner’s name or prison number.
                   </div>
-                </div>
+                  <div class="connect-dps-common-header__search-input-wrapper">
+                    <input enterkeyhint="search" id="connect-dps-common-header-prisoner-search" class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-input" name="keywords" title="Search for a prisoner" type="search" aria-describedby="connect-dps-common-header-prisoner-search-hint">
+                    <div class="connect-dps-common-header__search-item connect-dps-common-header__search-menu-submit-wrapper">
+                      <button class="connect-dps-common-header__search-menu-submit-btn" type="submit" enterkeyhint="search">
+                        Search for a prisoner
+                        {{ searchSvg(27, 27) }}
+                      </button>
+                    </div>
+                  </div>
 
-              </form>
-              <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.description }}</a>.
+                </form>
+                <a href="{{ dpsSearchLink }}" class="govuk-link govuk-!-margin-bottom-0 govuk-!-font-size-19 govuk-link--no-visited-state">View all prisoners in {{ user.activeCaseLoad.description }}</a>.
+              </div>
             </div>
           </div>
-
         </div>
       </div>
-    </div>
+
+    </nav>
   </div>
 </header>
 
