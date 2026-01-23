@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', initHeader, false)
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
+  const header = document.querySelector('.header')
+
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -68,10 +70,18 @@ function closeTabs(tabTuples) {
 
 function toggleMenu(toggle, menu) {
   const isOpen = !menu.getAttribute('hidden')
-
+  const header = document.querySelector('.header')
+  header.classList.remove('service-menu-open')
+  header.classList.remove('search-menu-open')
   if (isOpen) {
     closeTabs([[toggle, menu]])
   } else {
+    if (menu.id === 'connect-dps-common-header-services-menu') {
+      header.classList.add('service-menu-open')
+    }
+    if (menu.id === 'connect-dps-common-header-search-menu') {
+      header.classList.add('search-menu-open')
+    }
     menu.removeAttribute('hidden')
     toggle.classList.add(tabOpenClass)
     toggle.parentElement.classList.add('item-open')

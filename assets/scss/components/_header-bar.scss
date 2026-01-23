@@ -1,10 +1,33 @@
+.logo  { grid-area: logo; width: fit-content; display: flex;}
+.logo > a { position: relative; }
+.caseload { grid-area: caseload; }
+.account {
+  grid-area: account;
+  button,
+  button > span {
+    width: 100%;
+  }
+}
+.menu    { grid-area: menu; }
+.menu-dropdown  { grid-area: menu-dropdown; }
+.search { grid-area: search; }
+.search-dropdown { grid-area: search-dropdown; }
+
 .connect-dps-common-header {
   [hidden] {
     display: none !important;
   }
 
-  background-color: govuk-colour('black');
+  background-color: govuk-colour('black'); 
   color: govuk-colour('white');
+
+  display: grid;
+  grid-template-columns: 1fr fit-content(100%) fit-content(100%) min-content min-content;
+  grid-template-rows: 70px 0fr 0fr;
+  grid-template-areas:
+    "logo             caseload         account          menu             search"
+    "menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown"
+    "search-dropdown  search-dropdown  search-dropdown  search-dropdown  search-dropdown";
 
   &__logo {
     position: relative;
@@ -21,14 +44,6 @@
       align-items: center;
       @include govuk-responsive-margin(2, 'right');
       @include govuk-font($size: 24, $weight: 'bold');
-    }
-
-    .govuk-tag {
-      margin: auto 0;
-
-      @include govuk-media-query($until: 985px) {
-        display: none;
-      }
     }
   }
 
@@ -450,5 +465,68 @@
 
   @media print {
     display: none;
+  }
+  
+  nav {
+    display: contents;
+  };
+}
+
+.connect-dps-common-header::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: govuk-colour('black');
+  z-index: 0;
+}
+
+.header-wrapper {
+  background-color: govuk-colour('light-grey');
+}
+
+.service-menu-open {
+  grid-template-rows: 70px 1fr 0fr;
+}
+
+.search-menu-open {
+  grid-template-rows: 70px 0fr 1fr;
+}
+
+.govuk-tag {
+  height: min-content;
+  align-self: anchor-center;
+  z-index: 1;
+  margin: auto 0;
+
+  @include govuk-media-query($until: 985px) {
+    display: none;
+  }
+}
+
+@media (max-width: 925px) {
+  .connect-dps-common-header {
+    grid-template-columns: 1fr 1fr min-content min-content;
+    grid-template-rows: 70px 70px 0fr 0fr;
+    grid-template-areas:
+      "logo    logo    logo    logo"
+      "caseload account menu   search"
+      "menu-dropdown   menu-dropdown   menu-dropdown   menu-dropdown"
+      "search-dropdown search-dropdown search-dropdown search-dropdown";
+  }
+
+  .connect-dps-common-header::before {
+    height: 140px !important;
+  }
+
+  .service-menu-open {
+    grid-template-rows: 70px 70px 1fr 0fr !important;
+  }
+
+  .search-menu-open {
+    grid-template-rows: 70px 70px 0fr 1fr !important;
   }
 }
