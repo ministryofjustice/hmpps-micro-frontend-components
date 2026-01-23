@@ -1,17 +1,17 @@
-.logo  { grid-area: logo; width: fit-content; display: flex;}
-.logo > a { position: relative; }
-.caseload { grid-area: caseload; }
-.account {
-  grid-area: account;
+.connect-dps-grid-logo  { grid-area: connect-dps-grid-logo; width: fit-content; display: flex;}
+.connect-dps-grid-logo > a { position: relative; }
+.connect-dps-grid-caseload { grid-area: connect-dps-grid-caseload; }
+.connect-dps-grid-account {
+  grid-area: connect-dps-grid-account;
   button,
   button > span {
     width: 100%;
   }
 }
-.menu    { grid-area: menu; }
-.menu-dropdown  { grid-area: menu-dropdown; }
-.search { grid-area: search; }
-.search-dropdown { grid-area: search-dropdown; }
+.connect-dps-grid-menu    { grid-area: connect-dps-grid-menu; }
+.connect-dps-grid-menu-dropdown  { grid-area: connect-dps-grid-menu-dropdown; }
+.connect-dps-grid-search { grid-area: connect-dps-grid-search; }
+.connect-dps-grid-search-dropdown { grid-area: connect-dps-grid-search-dropdown; }
 
 .connect-dps-common-header {
   [hidden] {
@@ -25,9 +25,9 @@
   grid-template-columns: 1fr fit-content(100%) fit-content(100%) min-content min-content;
   grid-template-rows: 70px 0fr 0fr;
   grid-template-areas:
-    "logo             caseload         account          menu             search"
-    "menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown    menu-dropdown"
-    "search-dropdown  search-dropdown  search-dropdown  search-dropdown  search-dropdown";
+    "connect-dps-grid-logo             connect-dps-grid-caseload         connect-dps-grid-account          connect-dps-grid-menu             connect-dps-grid-search"
+    "connect-dps-grid-menu-dropdown    connect-dps-grid-menu-dropdown    connect-dps-grid-menu-dropdown    connect-dps-grid-menu-dropdown    connect-dps-grid-menu-dropdown"
+    "connect-dps-grid-search-dropdown  connect-dps-grid-search-dropdown  connect-dps-grid-search-dropdown  connect-dps-grid-search-dropdown  connect-dps-grid-search-dropdown";
 
   &__logo {
     position: relative;
@@ -488,15 +488,15 @@
   background-color: govuk-colour('light-grey');
 }
 
-.service-menu-open {
+.connect-dps-service-menu-open {
   grid-template-rows: 70px 1fr 0fr;
 }
 
-.search-menu-open {
+.connect-dps-search-menu-open {
   grid-template-rows: 70px 0fr 1fr;
 }
 
-.govuk-tag {
+.connect-dps-common-header .govuk-tag {
   height: min-content;
   align-self: anchor-center;
   z-index: 1;
@@ -512,21 +512,21 @@
     grid-template-columns: 1fr 1fr min-content min-content;
     grid-template-rows: 70px 70px 0fr 0fr;
     grid-template-areas:
-      "logo    logo    logo    logo"
-      "caseload account menu   search"
-      "menu-dropdown   menu-dropdown   menu-dropdown   menu-dropdown"
-      "search-dropdown search-dropdown search-dropdown search-dropdown";
+      "connect-dps-grid-logo    connect-dps-grid-logo    connect-dps-grid-logo    connect-dps-grid-logo"
+      "connect-dps-grid-caseload connect-dps-grid-account connect-dps-grid-menu   connect-dps-grid-search"
+      "connect-dps-grid-menu-dropdown   connect-dps-grid-menu-dropdown   connect-dps-grid-menu-dropdown   connect-dps-grid-menu-dropdown"
+      "connect-dps-grid-search-dropdown connect-dps-grid-search-dropdown connect-dps-grid-search-dropdown connect-dps-grid-search-dropdown";
   }
 
   .connect-dps-common-header::before {
     height: 140px !important;
   }
 
-  .service-menu-open {
+  .connect-dps-service-menu-open {
     grid-template-rows: 70px 70px 1fr 0fr !important;
   }
 
-  .search-menu-open {
+  .connect-dps-search-menu-open {
     grid-template-rows: 70px 70px 0fr 1fr !important;
   }
 }

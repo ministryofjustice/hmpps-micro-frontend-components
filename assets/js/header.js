@@ -70,17 +70,17 @@ function closeTabs(tabTuples) {
 
 function toggleMenu(toggle, menu) {
   const isOpen = !menu.getAttribute('hidden')
-  const header = document.querySelector('.header')
-  header.classList.remove('service-menu-open')
-  header.classList.remove('search-menu-open')
+  const header = document.querySelector('.connect-dps-common-header')
+  header.classList.remove('connect-dps-service-menu-open')
+  header.classList.remove('connect-dps-search-menu-open')
   if (isOpen) {
     closeTabs([[toggle, menu]])
   } else {
     if (menu.id === 'connect-dps-common-header-services-menu') {
-      header.classList.add('service-menu-open')
+      header.classList.add('connect-dps-service-menu-open')
     }
     if (menu.id === 'connect-dps-common-header-search-menu') {
-      header.classList.add('search-menu-open')
+      header.classList.add('connect-dps-search-menu-open')
     }
     menu.removeAttribute('hidden')
     toggle.classList.add(tabOpenClass)

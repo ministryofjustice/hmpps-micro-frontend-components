@@ -19,9 +19,9 @@
 {% endset %}
 
 <header class="header-wrapper govuk-!-display-none-print" role="banner">
-  <div class="connect-dps-common-header header govuk-width-container">
+  <div class="connect-dps-common-header govuk-width-container">
 
-    <div class="logo">
+    <div class="connect-dps-grid-logo">
       <a
         class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"
         href="{{ config.serviceUrls.dps.url }}"
@@ -71,7 +71,7 @@
         DPS navigation menu
       </h2>
 
-      <div class="caseload">
+      <div class="connect-dps-grid-caseload">
         {% if user.caseLoads.length > 1 %}
           <div class="connect-dps-common-header__navigation__item">
             <div class="connect-dps-common-header__icon-link-wrapper">
@@ -86,7 +86,7 @@
         {% endif %}
       </div>
 
-      <div class="account">
+      <div class="connect-dps-grid-account">
         <div class="connect-dps-common-header__navigation__item">
           <button class="connect-dps-common-header__menu-toggle connect-dps-common-header__user-menu-toggle" aria-controls="connect-dps-common-header-user-menu" aria-expanded="false" type="button" hidden='hidden'>
               <span>
@@ -111,7 +111,7 @@
         </div>
       </div>
 
-      <div class="menu">
+      <div class="connect-dps-grid-menu">
         <div class="connect-dps-common-header__navigation__item">
           <button data-qa="connect-dps-common-service-menu-toggle" class="connect-dps-common-header__menu-toggle connect-dps-common-header__services-menu-toggle" aria-controls="connect-dps-common-header-services-menu" aria-expanded="false" data-text-for-show="Show services menu" data-text-for-hide="Hide services menu" type="button" hidden='hidden'>
               <span>
@@ -130,7 +130,7 @@
         </div>
       </div>
 
-      <div class="menu-dropdown">
+      <div class="connect-dps-grid-menu-dropdown">
         <div id="connect-dps-common-header-services-menu" class="connect-dps-common-header__pushdown-menu connect-dps-common-header__services-menu" hidden="hidden">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-three-quarters">
@@ -149,7 +149,7 @@
         </div>
       </div>
       
-      <div class="search">
+      <div class="connect-dps-grid-search">
         <div class="connect-dps-common-header__navigation__item">
           <button data-qa="connect-dps-common-search-toggle" class="connect-dps-common-header__search-menu-toggle" aria-controls="connect-dps-common-header-search-menu" aria-expanded="true" data-text-for-show="Show search menu" data-text-for-hide="Hide search menu" hidden="hidden" type="button">
             <span class="govuk-visually-hidden"> Search for prisoner</span>
@@ -163,7 +163,7 @@
         </div>
       </div>
 
-      <div class="search-dropdown">
+      <div class="connect-dps-grid-search-dropdown">
         <div id="connect-dps-common-header-search-menu" class="connect-dps-common-header__pushdown-menu" hidden="hidden">
           <div class="govuk-width-container">
             <div class="govuk-grid-row">
