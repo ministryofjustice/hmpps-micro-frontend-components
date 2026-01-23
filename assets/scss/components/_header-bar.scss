@@ -1,7 +1,13 @@
 .logo  { grid-area: logo; width: fit-content; display: flex;}
 .logo > a { position: relative; }
 .caseload { grid-area: caseload; }
-.account { grid-area: account; }
+.account {
+  grid-area: account;
+  button,
+  button > span {
+    width: 100%;
+  }
+}
 .menu    { grid-area: menu; }
 .menu-dropdown  { grid-area: menu-dropdown; }
 .search { grid-area: search; }
