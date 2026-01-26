@@ -131,6 +131,34 @@ describe('User service', () => {
 
         jest.useRealTimers()
       })
+
+      it('Handles the API returning a user with no active caseload', async () => {
+        manageUsersApiClient.getUserCaseLoads = jest.fn(
+          async () =>
+            ({
+              activeCaseload: undefined,
+              caseloads: expectedCaseLoads,
+            }) as UserCaseloadDetail,
+        )
+
+        const res = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(res.activeCaseLoad).toEqual(expectedCaseLoads[0])
+      })
+
+      it('Handles the API returning a user with no active caseload and no potential caseload', async () => {
+        manageUsersApiClient.getUserCaseLoads = jest.fn(
+          async () =>
+            ({
+              activeCaseload: undefined,
+              caseloads: [{ function: 'ADMIN', id: '___', name: 'An invalid caseload' }],
+            }) as UserCaseloadDetail,
+        )
+
+        const res = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(res).toEqual(DEFAULT_USER_ACCESS)
+      })
     })
 
     describe('with cached allocation data', () => {
