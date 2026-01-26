@@ -42,6 +42,15 @@ export default class UserService {
 
     try {
       const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
+      if (!userCaseloadDetail.activeCaseload) {
+        const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
+
+        // if there's no potential caseload we should return the default access
+        if (!potentialCaseLoad) return DEFAULT_USER_ACCESS
+
+        userCaseloadDetail.activeCaseload = potentialCaseLoad
+      }
+
       const activeCaseLoad = userCaseloadDetail.activeCaseload
       const caseLoads = userCaseloadDetail.caseloads
 
