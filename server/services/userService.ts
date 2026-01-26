@@ -10,6 +10,7 @@ import AllocationsApiClient, { StaffAllocationPolicies } from '../data/Allocatio
 import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
 import ManageUsersApiClient from '../data/manageUsersApiClient'
+import PrisonApiClient from '../data/prisonApiClient'
 
 export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
@@ -30,6 +31,7 @@ export default class UserService {
     private readonly cacheService: CacheService,
     private readonly locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     private readonly manageUsersApiClient: ManageUsersApiClient,
+    private readonly prisonApiClient: PrisonApiClient,
   ) {}
 
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
@@ -47,6 +49,13 @@ export default class UserService {
 
         // if there's no potential caseload we should return the default access
         if (!potentialCaseLoad) return DEFAULT_USER_ACCESS
+
+        await this.prisonApiClient.setActiveCaseload(user.token, {
+          caseLoadId: potentialCaseLoad.id,
+          description: potentialCaseLoad.name,
+          caseloadFunction: potentialCaseLoad.function,
+          currentlyActive: true,
+        })
 
         userCaseloadDetail.activeCaseload = potentialCaseLoad
       }

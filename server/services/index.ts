@@ -7,7 +7,7 @@ import { createRedisClient } from '../data/redisClient'
 import CacheService from './cacheService'
 
 export const services = () => {
-  const { allocationsApiClient, locationsInsidePrisonApiClient, manageUsersApiClient } = dataAccess()
+  const { allocationsApiClient, locationsInsidePrisonApiClient, manageUsersApiClient, prisonApiClient } = dataAccess()
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -32,6 +32,7 @@ export const services = () => {
     cacheService,
     locationsInsidePrisonApiClient,
     manageUsersApiClient,
+    prisonApiClient,
   )
 
   return {
