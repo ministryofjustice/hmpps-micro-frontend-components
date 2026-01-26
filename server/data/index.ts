@@ -19,6 +19,7 @@ import AllocationsApiClient from './AllocationsApiClient'
 import logger from '../../logger'
 import LocationsInsidePrisonApiClient from './locationsInsidePrisonApiClient'
 import ManageUsersApiClient from './manageUsersApiClient'
+import PrisonApiClient from './prisonApiClient'
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
@@ -31,6 +32,7 @@ export const dataAccess = () => {
     allocationsApiClient: new AllocationsApiClient(hmppsAuthClient),
     manageUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
     locationsInsidePrisonApiClient: new LocationsInsidePrisonApiClient(hmppsAuthClient),
+    prisonApiClient: new PrisonApiClient(hmppsAuthClient),
     getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
     applicationInfo,
   }

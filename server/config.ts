@@ -86,6 +86,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('MANAGE_USERS_API_TIMEOUT_DEADLINE', 3000))),
     },
+    prisonApi: {
+      url: get('PRISON_API_URL', 'http://localhost:9091/prison-api', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 3000))),
+    },
   },
   supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
