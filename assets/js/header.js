@@ -1,7 +1,8 @@
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+
 document.addEventListener('DOMContentLoaded', initHeader, false)
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
-  const header = document.querySelector('.header')
 
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
@@ -56,6 +57,9 @@ function initHeader() {
       window.location.href = submitUrl + '?keywords=' + parsed
     })
   }
+
+  initTelemetry();
+
 }
 
 function closeTabs(tabTuples) {
@@ -97,4 +101,57 @@ function hideFallbackLinks() {
   searchLink.setAttribute('hidden', 'hidden')
   userLink.setAttribute('hidden', 'hidden')
   servicesLink.setAttribute('hidden', 'hidden')
+}
+
+function initTelemetry() {
+  // Not a regular app-insights setup (azureAppInsights.ts)
+  // It's initialised on the client side + configured via data attributes available in the DOM.
+  // Allows services using this header to provide app insights with minimal config on their side.
+
+  const {
+    activeCaseload,
+    clientId,
+    hashedUserId,
+    buildNumber,
+    connectionString,
+  } = document.querySelector('#dps-header-app-insights-config').dataset;
+
+  const snippet = {
+    config: {
+      connectionString: connectionString,
+      autoTrackPageVisitTime: false, // no need
+      disableFetchTracking: true, // otherwise we get spammed with GA fetch requests being incorrectly reported as failing
+    }
+  }
+  
+  const init = new ApplicationInsights(snippet)
+  const appInsights = init.loadAppInsights();
+
+  appInsights.addTelemetryInitializer(function (envelope) {
+    envelope.tags["ai.cloud.role"] = "Frontend Components"
+    envelope.tags["ai.application.ver"] = buildNumber
+  });
+
+  const headerEl = document.querySelector('.connect-dps-header-wrapper');
+
+  const menuToggleBtn = headerEl.querySelector('.connect-dps-common-header__services-menu-toggle');
+  menuToggleBtn.addEventListener('click', () => {
+    const expanded = menuToggleBtn.getAttribute('aria-expanded') === 'true';
+    appInsights.trackEvent({
+      name: expanded ? 'frontend-components-service-menu-expanded' : 'frontend-components-service-menu-collapsed',
+      properties: { activeCaseload, clientId, hashedUserId }
+    });
+    appInsights.flush(); // forces immediate send
+  });
+
+  headerEl.querySelectorAll('.connect-dps-service-menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const serviceId = link.getAttribute('data-service-id');
+      appInsights.trackEvent({
+        name: 'frontend-components-service-clicked',
+        properties: { service: serviceId, activeCaseload, clientId, hashedUserId }
+      });
+      appInsights.flush(); // forces immediate send
+    });
+  });
 }

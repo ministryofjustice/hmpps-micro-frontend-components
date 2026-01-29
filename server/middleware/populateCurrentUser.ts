@@ -22,15 +22,24 @@ export default function populateCurrentUser(userService: UserService): RequestHa
         name,
         user_id: userId,
         authorities: roles = [],
+        client_id: clientId,
       } = jwtDecode(res.locals.user.token) as {
         name?: string
         user_id?: string
         authorities?: string[]
+        client_id?: string
       }
+
+      const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(userId));
+      const hashedUserId = Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
 
       res.locals.user = {
         ...res.locals.user,
+        clientId,
         userId,
+        hashedUserId,
         name,
         displayName: convertToTitleCase(name),
         userRoles: roles.map(role => role.substring(role.indexOf('_') + 1) as Role),
