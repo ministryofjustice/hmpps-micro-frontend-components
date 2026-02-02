@@ -2,7 +2,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web'
 
 document.addEventListener('DOMContentLoaded', initHeader, false)
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
-async function initHeader() {
+function initHeader() {
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -57,11 +57,14 @@ async function initHeader() {
     })
   }
 
-  const { activeCaseload, enabledCaseloads } = document.querySelector('#dps-header-app-insights-config').dataset
+  const { connectionString, activeCaseload, enabledCaseloads } = document.querySelector(
+    '#dps-header-app-insights-config',
+  ).dataset
 
   if (
-    enabledCaseloads.split(',').includes(activeCaseload) ||
-    enabledCaseloads.split(',').includes('ENABLE_ALL_CASELOADS')
+    (enabledCaseloads.split(',').includes(activeCaseload) ||
+      enabledCaseloads.split(',').includes('ENABLE_ALL_CASELOADS')) &&
+    connectionString !== ''
   ) {
     tryTelemetry()
   }
@@ -109,23 +112,19 @@ function hideFallbackLinks() {
 }
 
 async function tryTelemetry() {
-  const { connectionString } = document.querySelector('#dps-header-app-insights-config').dataset
-  console.log(connectionString)
-  if (connectionString !== '') {
-    try {
-      // Test fetch to see if app insights is allowed by content security policy
-      await fetch('https://js.monitor.azure.com/scripts/b/ai.config.1.cfg.json', { method: 'GET' })
-      await fetch('https://northeurope-0.in.applicationinsights.azure.com/v2/track', { method: 'POST' })
-    } catch (e) {
-      console.warn(
-        'hmpps-micro-frontend-components: Component app insights disabled due to content security policy. ' +
-          'Serverside app insights instances are unaffected. ' +
-          'To enable, either update hmpps-connect-dps-components dependency or allow connect-src ' +
-          "'https://northeurope-0.in.applicationinsights.azure.com' and '*.monitor.azure.com'",
-      )
-    }
-    initAppInsights()
+  try {
+    // Test fetch to see if app insights is allowed by content security policy
+    await fetch('https://js.monitor.azure.com/scripts/b/ai.config.1.cfg.json', { method: 'GET' })
+    await fetch('https://northeurope-0.in.applicationinsights.azure.com/v2/track', { method: 'POST' })
+  } catch (e) {
+    console.warn(
+      'hmpps-micro-frontend-components: Component app insights disabled due to content security policy. ' +
+        'Serverside app insights instances are unaffected. ' +
+        'To enable, either update hmpps-connect-dps-components dependency or allow connect-src ' +
+        "'https://northeurope-0.in.applicationinsights.azure.com' and '*.monitor.azure.com'",
+    )
   }
+  initAppInsights()
 }
 
 function initAppInsights() {
