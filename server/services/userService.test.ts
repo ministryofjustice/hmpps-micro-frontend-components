@@ -8,6 +8,7 @@ import { PrisonHierarchyDto } from '../interfaces/location'
 import AllocationsApiClient from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
+import PrisonApiClient from '../data/prisonApiClient'
 
 const expectedCaseLoads: PrisonCaseload[] = [
   { function: 'ADMIN', id: 'ADM_TEST', name: 'An Admin Caseload' },
@@ -37,6 +38,7 @@ describe('User service', () => {
     let allocationsApiClient: AllocationsApiClient
     let locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient
     let manageUsersApiClient: ManageUsersApiClient
+    let prisonApiClient: PrisonApiClient
 
     beforeEach(() => {
       allocationsApiClient = {
@@ -52,11 +54,16 @@ describe('User service', () => {
           .mockResolvedValue({ activeCaseload: expectedCaseLoads[0], caseloads: expectedCaseLoads }),
       } as unknown as ManageUsersApiClient
 
+      prisonApiClient = {
+        setActiveCaseload: jest.fn(),
+      } as unknown as PrisonApiClient
+
       userService = new UserService(
         allocationsApiClient,
         cacheServiceMock,
         locationsInsidePrisonApiClient,
         manageUsersApiClient,
+        prisonApiClient,
       )
     })
 
@@ -70,7 +77,7 @@ describe('User service', () => {
 
         expect(manageUsersApiClient.getUserCaseLoads).toHaveBeenCalledTimes(1)
         expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
-
+        expect(prisonApiClient.setActiveCaseload).not.toHaveBeenCalled()
         expect(userAccess).toEqual(expectedUserAccess)
       })
 
@@ -130,6 +137,41 @@ describe('User service', () => {
         expect(manageUsersApiClient.getUserCaseLoads).toHaveBeenCalledTimes(API_ERROR_LIMIT + 1)
 
         jest.useRealTimers()
+      })
+
+      it('Handles the API returning a user with no active caseload', async () => {
+        manageUsersApiClient.getUserCaseLoads = jest.fn(
+          async () =>
+            ({
+              activeCaseload: undefined,
+              caseloads: expectedCaseLoads,
+            }) as UserCaseloadDetail,
+        )
+
+        const res = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(prisonApiClient.setActiveCaseload).toHaveBeenCalled()
+        expect(prisonApiClient.setActiveCaseload).toHaveBeenCalledWith(prisonUserMock.token, {
+          caseLoadId: expectedCaseLoads[0].id,
+          description: expectedCaseLoads[0].name,
+          caseloadFunction: expectedCaseLoads[0].function,
+          currentlyActive: true,
+        })
+        expect(res.activeCaseLoad).toEqual(expectedCaseLoads[0])
+      })
+
+      it('Handles the API returning a user with no active caseload and no potential caseload', async () => {
+        manageUsersApiClient.getUserCaseLoads = jest.fn(
+          async () =>
+            ({
+              activeCaseload: undefined,
+              caseloads: [{ function: 'ADMIN', id: '___', name: 'An invalid caseload' }],
+            }) as UserCaseloadDetail,
+        )
+
+        const res = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(res).toEqual(DEFAULT_USER_ACCESS)
       })
     })
 
