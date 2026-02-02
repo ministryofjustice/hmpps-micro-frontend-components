@@ -169,7 +169,7 @@ function initAppInsights() {
   })
 
   // Force send when leaving page
-  addEventListener('beforeunload', () => {
+  addEventListener('pagehide', () => {
     appInsights.flush()
   })
 }
