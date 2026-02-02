@@ -257,7 +257,8 @@ export default {
       url: get('EXTERNAL_MOVEMENTS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
-  appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', 'testing', requiredInProduction),
+  appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
+  clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', [], requiredInProduction),
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',

@@ -48,8 +48,8 @@ export default function componentRoutes(services: Services): Router {
       res.render('components/header', viewModel, (_, html) => {
         resolve({
           html,
-          css: [`http://localhost:3005${assetMap('/assets/css/header.css')}`],
-          javascript: [`http://localhost:3005${assetMap('/assets/js/header.js')}`],
+          css: [`localhost${assetMap('/assets/css/header.css')}`],
+          javascript: [`localhost${assetMap('/assets/js/header.js')}`],
         })
       })
     })

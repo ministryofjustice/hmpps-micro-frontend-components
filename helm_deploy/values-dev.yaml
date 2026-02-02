@@ -92,6 +92,7 @@ generic-service:
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
+    CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-micro-frontend-components-non-prod
