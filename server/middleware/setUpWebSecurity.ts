@@ -2,7 +2,6 @@ import express, { Router, Request, Response, NextFunction } from 'express'
 import helmet from 'helmet'
 import crypto from 'crypto'
 import config from '../config'
-import { connect } from 'http2'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -37,7 +36,7 @@ export default function setUpWebSecurity(): Router {
           // page by an attacker.
           connectSrc: [
             "'self'",
-            ...azureDomains,
+            ...azureDomains
           ],
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: [
