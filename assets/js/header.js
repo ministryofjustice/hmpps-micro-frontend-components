@@ -62,8 +62,7 @@ function initHeader() {
   ).dataset
 
   if (
-    (enabledCaseloads.split(',').includes(activeCaseload) ||
-      enabledCaseloads.split(',').includes('ENABLE_ALL_CASELOADS')) &&
+    (enabledCaseloads.split(',').includes(activeCaseload) || enabledCaseloads.split(',').includes('***')) &&
     connectionString !== ''
   ) {
     tryTelemetry()
@@ -116,6 +115,7 @@ async function tryTelemetry() {
     // Test fetch to see if app insights is allowed by content security policy
     await fetch('https://js.monitor.azure.com/scripts/b/ai.config.1.cfg.json', { method: 'GET' })
     await fetch('https://northeurope-0.in.applicationinsights.azure.com/v2/track', { method: 'POST' })
+    initAppInsights()
   } catch (e) {
     console.warn(
       'hmpps-micro-frontend-components: Component app insights disabled due to content security policy. ' +
@@ -124,7 +124,6 @@ async function tryTelemetry() {
         "'https://northeurope-0.in.applicationinsights.azure.com' and '*.monitor.azure.com'",
     )
   }
-  initAppInsights()
 }
 
 function initAppInsights() {
