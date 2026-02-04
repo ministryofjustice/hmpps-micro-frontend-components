@@ -12,7 +12,6 @@ export interface BaseUser {
   username: string
   clientId?: string
   userId: string
-  hashedUserId?: string
   name: string
   displayName: string
   userRoles: Role[]

@@ -18,18 +18,6 @@
   </svg>
 {% endset %}
 
-<span
-  id="dps-header-app-insights-config"
-  aria-hidden="true"
-  hidden="hidden"
-  data-hashed-user-id="{{ user.hashedUserId }}"
-  data-active-caseload="{{ user.activeCaseLoad.id }}"
-  data-client-id="{{ user.clientId }}"
-  data-connection-string="{{ config.appInsightsConnectionString }}"
-  data-build-number="{{ config.buildNumber }}"
-  data-enabled-caseloads="{{ config.clientsideAppInsightsEnabledCaseloads }}"
-></span>
-
 <header class="connect-dps-header-wrapper govuk-!-display-none-print" role="banner">
   <div class="connect-dps-common-header govuk-width-container">
 
@@ -152,7 +140,13 @@
               <ul class='govuk-list'>
                 {% for service in user.services %}
                   {% if service.navEnabled %}
-                    <li><a href='{{ service.href }}' data-service-id='{{ service.id }}' class='connect-dps-common-header__submenu-link connect-dps-service-menu-link'>{{ service.heading }}</a></li>
+                  
+                    {% set serviceLink = service.href %}
+                    {% if (user.activeCaseLoad.id in config.clientsideAppInsightsEnabledCaseloads) or ('***' in config.clientsideAppInsightsEnabledCaseloads) %}
+                      {% set serviceLink = serviceLink + ('?' if '?' not in serviceLink else '&') + 'mfeReferralClientId=' + user.clientId %}
+                    {% endif %}
+
+                    <li><a href='{{ serviceLink }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
                   {% endif %}
                 {% endfor %}
               </ul>
