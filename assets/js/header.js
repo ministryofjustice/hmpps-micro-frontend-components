@@ -1,8 +1,8 @@
-import { ApplicationInsights } from '@microsoft/applicationinsights-web'
-
 document.addEventListener('DOMContentLoaded', initHeader, false)
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
+  const header = document.querySelector('.header')
+
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -56,17 +56,6 @@ function initHeader() {
       window.location.href = submitUrl + '?keywords=' + parsed
     })
   }
-
-  const { connectionString, activeCaseload, enabledCaseloads } = document.querySelector(
-    '#dps-header-app-insights-config',
-  ).dataset
-
-  if (
-    (enabledCaseloads.split(',').includes(activeCaseload) || enabledCaseloads.split(',').includes('***')) &&
-    connectionString !== ''
-  ) {
-    tryTelemetry()
-  }
 }
 
 function closeTabs(tabTuples) {
@@ -108,70 +97,4 @@ function hideFallbackLinks() {
   searchLink.setAttribute('hidden', 'hidden')
   userLink.setAttribute('hidden', 'hidden')
   servicesLink.setAttribute('hidden', 'hidden')
-}
-
-async function tryTelemetry() {
-  try {
-    // Test fetch to see if app insights is allowed by content security policy
-    await fetch('https://js.monitor.azure.com/scripts/b/ai.config.1.cfg.json', { method: 'GET' })
-    await fetch('https://northeurope-0.in.applicationinsights.azure.com/v2/track', { method: 'POST' })
-    initAppInsights()
-  } catch (e) {
-    console.warn(
-      'hmpps-micro-frontend-components: Component app insights disabled due to content security policy. ' +
-        'Serverside app insights instances are unaffected. ' +
-        'To enable, either update hmpps-connect-dps-components dependency or allow connect-src ' +
-        "'https://northeurope-0.in.applicationinsights.azure.com' and '*.monitor.azure.com'",
-    )
-  }
-}
-
-function initAppInsights() {
-  const { hashedUserId, activeCaseload, clientId, connectionString, buildNumber } = document.querySelector(
-    '#dps-header-app-insights-config',
-  ).dataset
-
-  const snippet = {
-    config: {
-      connectionString: connectionString,
-      autoTrackPageVisitTime: false, // no need
-      disableFetchTracking: true, // otherwise we get spammed with GA fetch requests being incorrectly reported as failing
-    },
-  }
-
-  const init = new ApplicationInsights(snippet)
-  const appInsights = init.loadAppInsights()
-
-  appInsights.addTelemetryInitializer(function (envelope) {
-    envelope.tags['ai.cloud.role'] = 'hmpps-micro-frontend-components'
-    envelope.tags['ai.application.ver'] = buildNumber
-    if (t.baseType == 'Event') return true // only allow custom events to be tracked
-    return false // disable everything else
-  })
-
-  const headerEl = document.querySelector('.connect-dps-header-wrapper')
-
-  const menuToggleBtn = headerEl.querySelector('.connect-dps-common-header__services-menu-toggle')
-  menuToggleBtn.addEventListener('click', () => {
-    const expanded = menuToggleBtn.getAttribute('aria-expanded') === 'true'
-    appInsights.trackEvent({
-      name: expanded ? 'frontend-components-service-menu-expanded' : 'frontend-components-service-menu-collapsed',
-      properties: { activeCaseload, clientId, hashedUserId },
-    })
-  })
-
-  headerEl.querySelectorAll('.connect-dps-service-menu-link').forEach(link => {
-    link.addEventListener('click', () => {
-      const serviceId = link.getAttribute('data-service-id')
-      appInsights.trackEvent({
-        name: 'frontend-components-service-clicked',
-        properties: { service: serviceId, activeCaseload, clientId, hashedUserId },
-      })
-    })
-  })
-
-  // Force send when leaving page
-  addEventListener('pagehide', () => {
-    appInsights.flush()
-  })
 }

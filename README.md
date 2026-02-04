@@ -15,10 +15,6 @@ The `/develop/` path displays the component in an HTML page including the requir
 * Header
 * Footer
 
-### CSP and App Insights
-
-The header component creates an app insights instance on the client side to track menu usage events. To do so properly, the content security policy must allow the following patterns for connect-src: ['https://northeurope-0.in.applicationinsights.azure.com', '*.monitor.azure.com']. This is handled automatically by `hmpps-connect-dps-components`, which dynamically updates the CSP. It will, however, still function without it.
-
 ## Contents
 
 1. [Incorporating components](readme/incorporating.md)

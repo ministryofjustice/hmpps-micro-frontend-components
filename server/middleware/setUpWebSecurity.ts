@@ -21,8 +21,6 @@ export default function setUpWebSecurity(): Router {
     "'sha256-RL3ie0nH+Lzz2YNqQN83mnU0J1ot4QL7b99vMdIX99w='",
   ]
 
-  const azureDomains = ['https://northeurope-0.in.applicationinsights.azure.com', '*.monitor.azure.com']
-
   router.use(
     helmet({
       contentSecurityPolicy: {
@@ -34,7 +32,6 @@ export default function setUpWebSecurity(): Router {
           // <link href="http://example.com/" rel="stylesheet" nonce="{{ cspNonce }}">
           // This ensures only scripts we trust are loaded, and not anything injected into the
           // page by an attacker.
-          connectSrc: ["'self'", ...azureDomains],
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: [
             "'self'",
