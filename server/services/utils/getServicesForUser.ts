@@ -458,8 +458,8 @@ export default (
     },
     {
       id: 'residential-locations',
-      heading: 'Residential locations',
-      description: 'View and manage residential locations in the establishment.',
+      heading: 'Locations',
+      description: 'View or manage residential and non-residential locations.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
       enabled: () =>
