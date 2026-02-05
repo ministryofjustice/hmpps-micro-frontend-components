@@ -10,6 +10,7 @@ export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 export interface BaseUser {
   authSource: AuthSource
   username: string
+  clientId?: string
   userId: string
   name: string
   displayName: string

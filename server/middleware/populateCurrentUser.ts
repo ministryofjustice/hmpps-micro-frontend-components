@@ -22,14 +22,17 @@ export default function populateCurrentUser(userService: UserService): RequestHa
         name,
         user_id: userId,
         authorities: roles = [],
+        client_id: clientId,
       } = jwtDecode(res.locals.user.token) as {
         name?: string
         user_id?: string
         authorities?: string[]
+        client_id?: string
       }
 
       res.locals.user = {
         ...res.locals.user,
+        clientId,
         userId,
         name,
         displayName: convertToTitleCase(name),
