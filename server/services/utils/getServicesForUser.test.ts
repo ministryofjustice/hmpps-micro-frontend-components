@@ -663,7 +663,7 @@ describe('getServicesForUser', () => {
 ]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Residential locations')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Locations')).toEqual(visible)
     })
   })
 
