@@ -142,7 +142,7 @@
                   {% if service.navEnabled %}
                     {% set serviceLink = service.href %}
                     {% if (user.activeCaseLoad.id in config.clientsideAppInsightsEnabledCaseloads) or ('***' in config.clientsideAppInsightsEnabledCaseloads) %}
-                      {% set serviceLink = serviceLink + ('?' if '?' not in serviceLink else '&') + 'mfeReferralClientId=' + user.clientId + '&mfeReferral=true' %}
+                      {% set serviceLink = serviceLink + ('?' if '?' not in serviceLink else '&') + 'mfeReferralClientId=' + user.clientId %}
                     {% endif %}
                     <li><a href='{{ serviceLink }}' class='connect-dps-common-header__submenu-link'>{{ service.heading }}</a></li>
                   {% endif %}
