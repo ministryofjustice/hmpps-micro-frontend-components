@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', initHeader, false)
 const itemOpenClass = 'connect-dps-common-header__navigation__item-open'
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
-  const header = document.querySelector('.header')
-
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -28,21 +26,21 @@ function initHeader() {
       [servicesToggle, servicesMenu],
     ])
 
-    searchToggle.addEventListener('click', function (event) {
+    searchToggle.addEventListener('click', function () {
       closeTabs([
         [userToggle, userMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(searchToggle, searchMenu)
     })
-    userToggle.addEventListener('click', function (event) {
+    userToggle.addEventListener('click', function () {
       closeTabs([
         [searchToggle, searchMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(userToggle, userMenu)
     })
-    servicesToggle.addEventListener('click', function (event) {
+    servicesToggle.addEventListener('click', function () {
       closeTabs([
         [searchToggle, searchMenu],
         [userToggle, userMenu],
