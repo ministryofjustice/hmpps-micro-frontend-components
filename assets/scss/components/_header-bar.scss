@@ -32,7 +32,6 @@
   &__logo {
     position: relative;
     top: -2px;
-    fill: govuk-colour('white');
     padding: 20px 0;
     @include govuk-responsive-margin(3, 'right');
   }
@@ -77,10 +76,6 @@
         left: 15px;
         right: 15px;
         top: auto;
-      }
-
-      svg {
-        fill: govuk-colour('black');
       }
     }
 
