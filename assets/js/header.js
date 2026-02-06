@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', initHeader, false)
+const itemOpenClass = 'connect-dps-common-header__navigation__item-open'
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
 function initHeader() {
-  const header = document.querySelector('.header')
-
   const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
   const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
 
@@ -27,21 +26,21 @@ function initHeader() {
       [servicesToggle, servicesMenu],
     ])
 
-    searchToggle.addEventListener('click', function (event) {
+    searchToggle.addEventListener('click', function () {
       closeTabs([
         [userToggle, userMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(searchToggle, searchMenu)
     })
-    userToggle.addEventListener('click', function (event) {
+    userToggle.addEventListener('click', function () {
       closeTabs([
         [searchToggle, searchMenu],
         [servicesToggle, servicesMenu],
       ])
       toggleMenu(userToggle, userMenu)
     })
-    servicesToggle.addEventListener('click', function (event) {
+    servicesToggle.addEventListener('click', function () {
       closeTabs([
         [searchToggle, searchMenu],
         [userToggle, userMenu],
@@ -62,7 +61,7 @@ function closeTabs(tabTuples) {
   tabTuples.forEach(([toggle, menu]) => {
     menu.setAttribute('hidden', 'hidden')
     toggle.classList.remove(tabOpenClass)
-    toggle.parentElement.classList.remove('item-open')
+    toggle.parentElement.classList.remove(itemOpenClass)
     toggle.setAttribute('aria-expanded', 'false')
     if (toggle.dataset.textForShow) toggle.setAttribute('aria-label', toggle.dataset.textForShow)
   })
@@ -84,7 +83,7 @@ function toggleMenu(toggle, menu) {
     }
     menu.removeAttribute('hidden')
     toggle.classList.add(tabOpenClass)
-    toggle.parentElement.classList.add('item-open')
+    toggle.parentElement.classList.add(itemOpenClass)
     toggle.setAttribute('aria-expanded', 'true')
     if (toggle.dataset.textForHide) toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }
