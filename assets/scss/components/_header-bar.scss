@@ -277,7 +277,6 @@
       }
     }
 
-
     &__close-icon {
       display: none;
       font-size: 36px;
@@ -300,7 +299,12 @@
       .connect-dps-common-header__search-toggle-button-icon {
         display: none;
       }
+    }
+  }
 
+  @media (forced-colors: active) and (prefers-color-scheme: dark) {
+    .connect-dps-common-header__search-menu-toggle:focus {
+      color: govuk-colour('white') !important;
     }
   }
 
