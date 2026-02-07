@@ -64,13 +64,9 @@ const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
   allocationJobResponsibilities: [],
 }
 
-export default (
-  contentfulService: ContentfulService,
-): {
-  getHeaderViewModel: (user: HmppsUser) => Promise<HeaderViewModel>
-  getFooterViewModel: (user: HmppsUser) => Promise<FooterViewModel>
-  getViewModels: (components: AvailableComponent[], user: HmppsUser) => Promise<ComponentsData>
-} => ({
+export default class {
+  constructor(private readonly contentfulService: ContentfulService) {}
+
   async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
@@ -81,11 +77,11 @@ export default (
       ingressUrl: config.ingressUrl,
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
     }
-  },
+  }
 
   async getFooterViewModel(user: HmppsUser): Promise<FooterViewModel> {
     const managedPages = config.contentfulFooterLinksEnabled
-      ? await contentfulService.getManagedPages()
+      ? await this.contentfulService.getManagedPages()
       : defaultFooterLinks
 
     return {
@@ -93,7 +89,7 @@ export default (
       isPrisonUser: isPrisonUser(user),
       component: 'footer',
     }
-  },
+  }
 
   async getViewModels(components: AvailableComponent[], user: HmppsUser) {
     const accessMethods = {
@@ -138,8 +134,8 @@ export default (
             : DEFAULT_USER_ACCESS,
       },
     )
-  },
-})
+  }
+}
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
   meta: PrisonUserAccessMeta
