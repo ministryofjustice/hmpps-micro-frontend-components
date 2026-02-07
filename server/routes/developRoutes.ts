@@ -18,12 +18,14 @@ export default function developRoutes(services: Services): Router {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
-  router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
+  router.use(populateCurrentUser(services.userService))
+
+  router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
     return res.render('pages/componentPreview', viewModel)
   })
 
-  router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/footer', async (_req, res) => {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     return res.render('pages/componentPreview', viewModel)
   })
