@@ -20,6 +20,15 @@ export default function developRoutes(services: Services): Router {
 
   router.use(populateCurrentUser(services.userService))
 
+  router.get('/all', async (_req, res) => {
+    const [header, footer] = await Promise.all([
+      controller.getHeaderViewModel(res.locals.user),
+      controller.getFooterViewModel(res.locals.user),
+    ])
+    // TODO: overlapping properties of component models
+    return res.render('pages/previewAll', { ...header, ...footer })
+  })
+
   router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
     return res.render('pages/componentPreview', viewModel)
