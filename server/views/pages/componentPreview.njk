@@ -14,17 +14,19 @@
     <link rel="apple-touch-icon" href="{{ assetPath | default('/assets') }}/images/govuk-apple-touch-icon.png">
 
     <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
-    <script src={{ "/assets/js/header.js" | assetMap }}></script>
+    {% if component === 'header' %}
+      <script src={{ '/assets/js/header.js' | assetMap }}></script>
+    {% endif %}
 
     {# OpenGraph images needs to be absolute, so we need either a URL for the image or for assetUrl to be set #}
     {% if opengraphImageUrl or assetUrl %}
-        <meta property="og:image" content="{{ opengraphImageUrl | default(assetUrl + '/images/govuk-opengraph-image.png') }}">
+      <meta property="og:image" content="{{ opengraphImageUrl | default(assetUrl + '/images/govuk-opengraph-image.png') }}" />
     {% endif %}
   </head>
-  <body class="govuk-template__body {{ bodyClasses }}" {%- for attribute, value in bodyAttributes %} {{attribute}}="{{value}}"{% endfor %}>
+  <body class="govuk-template__body {{ bodyClasses }}" {%- for attribute, value in bodyAttributes %} {{ attribute }}="{{ value }}"{% endfor %}>
 
     {% block component %}
-        {% include "../components/" + component + ".njk" %}
+      {% include 'components/' + component + '.njk' %}
     {% endblock %}
 
   </body>
