@@ -71,6 +71,6 @@ export interface AzureADUser extends BaseUser {
 
 export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
 
-export const isPrisonUser = (user: HmppsUser): boolean => {
+export const isPrisonUser = (user: HmppsUser): user is PrisonUser => {
   return user.authSource === 'nomis'
 }

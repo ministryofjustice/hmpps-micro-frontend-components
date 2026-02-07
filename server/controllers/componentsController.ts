@@ -8,7 +8,7 @@ import { Service } from '../interfaces/Service'
 export interface HeaderViewModel {
   isPrisonUser: boolean
   changeCaseLoadLink: string
-  component: string
+  component: 'header'
   ingressUrl: string
   dpsSearchLink: string
   manageDetailsLink: string
@@ -18,7 +18,7 @@ export interface HeaderViewModel {
 export interface FooterViewModel {
   isPrisonUser: boolean
   managedPages: ManagedPageLink[]
-  component: string
+  component: 'footer'
 }
 
 const defaultFooterLinks: ManagedPageLink[] = [
