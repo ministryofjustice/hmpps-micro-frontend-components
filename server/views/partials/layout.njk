@@ -10,6 +10,10 @@
   {% include 'partials/externalHeader.njk' %}
 {% endblock %}
 
+{% block footer %}
+  {% include 'partials/externalFooter.njk' %}
+{% endblock %}
+
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
 {% endblock %}
