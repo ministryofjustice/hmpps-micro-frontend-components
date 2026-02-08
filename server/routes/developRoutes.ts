@@ -22,11 +22,20 @@ export default function developRoutes(services: Services): Router {
 
   router.get('/all', async (_req, res) => {
     const [header, footer] = await Promise.all([
-      controller.getHeaderViewModel(res.locals.user),
-      controller.getFooterViewModel(res.locals.user),
+      controller.getHeaderViewModel(res.locals.user).then(
+        viewModel =>
+          new Promise<string>((resolve, reject) => {
+            res.render('components/header.njk', viewModel, (error, html) => (error ? reject(error) : resolve(html)))
+          }),
+      ),
+      controller.getFooterViewModel(res.locals.user).then(
+        viewModel =>
+          new Promise<string>((resolve, reject) => {
+            res.render('components/footer.njk', viewModel, (error, html) => (error ? reject(error) : resolve(html)))
+          }),
+      ),
     ])
-    // TODO: overlapping properties of component models
-    return res.render('pages/previewAll', { ...header, ...footer })
+    return res.render('pages/previewAll', { header, footer })
   })
 
   router.get('/header', async (_req, res) => {
