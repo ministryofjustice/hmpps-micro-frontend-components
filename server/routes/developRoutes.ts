@@ -4,12 +4,12 @@ import authorisationMiddleware from '../middleware/authorisationMiddleware'
 import { AVAILABLE_COMPONENTS } from '../@types/AvailableComponent'
 import auth from '../authentication/auth'
 import tokenVerifier from '../data/tokenVerification'
-import componentsController from '../controllers/componentsController'
+import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services.contentfulService)
+  const controller = new ComponentsController(services.contentfulService)
 
   router.use(authorisationMiddleware())
   router.use(auth.authenticationMiddleware(tokenVerifier))
@@ -18,12 +18,25 @@ export default function developRoutes(services: Services): Router {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
-  router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
+  router.use(populateCurrentUser(services.userService))
+
+  router.get('/all', async (req, res) => {
+    const [headerViewModel, footerViewModel] = await Promise.all([
+      controller.getHeaderViewModel(res.locals.user),
+      controller.getFooterViewModel(res.locals.user),
+    ])
+    const nunjucks = req.app.get('nunjucksEnv')
+    const header = nunjucks.render('components/header.njk', headerViewModel)
+    const footer = nunjucks.render('components/footer.njk', footerViewModel)
+    return res.render('pages/previewAll', { header, footer })
+  })
+
+  router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
     return res.render('pages/componentPreview', viewModel)
   })
 
-  router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/footer', async (_req, res) => {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     return res.render('pages/componentPreview', viewModel)
   })

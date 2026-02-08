@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController, {
+import ComponentsController, {
   ComponentsData,
   FooterViewModel,
   HeaderViewModel,
@@ -17,7 +17,7 @@ import { assetMap } from '../utils/utils'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services.contentfulService)
+  const controller = new ComponentsController(services.contentfulService)
 
   const jwksIssuer = jwksRsa.expressJwtSecret({
     cache: true,

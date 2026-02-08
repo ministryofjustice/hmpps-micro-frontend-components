@@ -4,13 +4,14 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 
 {% block header %}
-  {% include "./externalHeader.njk" %}
+  {% include 'partials/externalHeader.njk' %}
 {% endblock %}
 
-{% block bodyStart %}
+{% block footer %}
+  {% include 'partials/externalFooter.njk' %}
 {% endblock %}
 
 {% block bodyEnd %}

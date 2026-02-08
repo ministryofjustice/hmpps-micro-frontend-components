@@ -1,4 +1,4 @@
-import componentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
+import ComponentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
@@ -11,7 +11,7 @@ const contentfulServiceMock = {
   ],
 } as undefined as ContentfulService
 
-const controller = componentsController(contentfulServiceMock)
+const controller = new ComponentsController(contentfulServiceMock)
 
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
