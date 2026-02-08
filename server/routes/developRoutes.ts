@@ -20,13 +20,15 @@ export default function developRoutes(services: Services): Router {
 
   router.use(populateCurrentUser(services.userService))
 
-  router.get('/all', async (_req, res) => {
-    const [header, footer] = await Promise.all([
+  router.get('/all', async (req, res) => {
+    const [headerViewModel, footerViewModel] = await Promise.all([
       controller.getHeaderViewModel(res.locals.user),
       controller.getFooterViewModel(res.locals.user),
     ])
-    // TODO: overlapping properties of component models
-    return res.render('pages/previewAll', { ...header, ...footer })
+    const nunjucks = req.app.get('nunjucksEnv')
+    const header = nunjucks.render('components/header.njk', headerViewModel)
+    const footer = nunjucks.render('components/footer.njk', footerViewModel)
+    return res.render('pages/previewAll', { header, footer })
   })
 
   router.get('/header', async (_req, res) => {

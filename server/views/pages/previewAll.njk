@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block header %}
-  {% include 'components/header.njk' %}
+  {{ header | safe }}
 {% endblock %}
 
 {% block content %}
@@ -26,5 +26,5 @@
 {% endblock %}
 
 {% block footer %}
-  {% include 'components/footer.njk' %}
+  {{ footer | safe }}
 {% endblock %}
