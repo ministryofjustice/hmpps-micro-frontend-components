@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " – Home" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -12,11 +12,11 @@
       <ul class="govuk-list govuk-list--bullet">
         {% for component in components %}
           <li>
-            <a class="govuk-link" href="/develop/{{ component }}">{{ component}}</a>
+            <a href="/develop/{{ component }}">{{ component}}</a>
           </li>
         {% endfor %}
       </ul>
-      <p>This page uses the external header and footer.</p>
+      <p>This page shows the external header and footer.</p>
       <p><a href="/develop/all">Preview all components</a> on one page as would be seen in HMPPS services.</p>
 
       <h2 class="govuk-heading-m">Auth</h2>
