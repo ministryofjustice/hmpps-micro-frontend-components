@@ -264,6 +264,9 @@ export default {
     externalMovements: {
       url: get('EXTERNAL_MOVEMENTS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    contacts: {
+      url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', [], requiredInProduction),
   features: {

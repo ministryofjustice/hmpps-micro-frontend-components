@@ -599,6 +599,14 @@ export default (
         userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
     },
+    {
+      id: 'contacts',
+      heading: 'Contacts',
+      description: 'Search for prisoner contacts.',
+      href: config.serviceUrls.contacts.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {

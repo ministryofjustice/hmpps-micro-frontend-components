@@ -81,6 +81,7 @@ generic-service:
     SUPPORT_ADDITIONAL_NEEDS_URL: https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api-dev.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements-dev.hmpps.service.justice.gov.uk
+    CONTACTS_UI_URL: https://contacts-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

@@ -55,6 +55,7 @@ jest.mock('../../config', () => ({
     matchLearnerRecord: { url: 'url', enabled: true },
     supportAdditionalNeeds: { url: 'url', enabled: true },
     externalMovements: { url: 'url' },
+    contacts: { url: 'url' },
   },
 }))
 
