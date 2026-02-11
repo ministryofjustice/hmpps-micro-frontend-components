@@ -54,6 +54,18 @@ function initHeader() {
       const parsed = searchTerms.replace(' ', '+')
       window.location.href = submitUrl + '?keywords=' + parsed
     })
+
+    function closeUserMenuOnEscape(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeTabs([
+          [userToggle, userMenu],
+        ])
+        userToggle.focus()
+      }
+    }
+    userToggle.addEventListener('keydown', closeUserMenuOnEscape)
+    userMenu.addEventListener('keydown', closeUserMenuOnEscape)
   }
 }
 
