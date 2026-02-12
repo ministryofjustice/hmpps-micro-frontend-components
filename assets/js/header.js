@@ -54,6 +54,38 @@ function initHeader() {
       const parsed = searchTerms.replace(' ', '+')
       window.location.href = submitUrl + '?keywords=' + parsed
     })
+
+    function closeUserMenuOnEscape(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeTabs([
+          [userToggle, userMenu],
+        ])
+        userToggle.focus()
+      }
+    }
+    userToggle.addEventListener('keydown', closeUserMenuOnEscape)
+    userMenu.addEventListener('keydown', closeUserMenuOnEscape)
+
+    let closeUserMenuTimer = null
+    function cancelCloseUserMenu() {
+      if (closeUserMenuTimer) {
+        clearTimeout(closeUserMenuTimer)
+      }
+    }
+    function closeUserMenuSoon() {
+      closeUserMenuTimer = setTimeout(() => {
+        closeTabs([
+          [userToggle, userMenu],
+        ])
+      }, 100)
+    }
+    userToggle.addEventListener('focus', cancelCloseUserMenu)
+    userToggle.addEventListener('blur', closeUserMenuSoon)
+    userMenu.querySelectorAll('.connect-dps-common-header__submenu-link').forEach(userMenuLink => {
+      userMenuLink.addEventListener('focus', cancelCloseUserMenu)
+      userMenuLink.addEventListener('blur', closeUserMenuSoon)
+    })
   }
 }
 
