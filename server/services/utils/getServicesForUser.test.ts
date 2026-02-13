@@ -629,42 +629,23 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Residential Locations', () => {
+  describe('Locations', () => {
     test.each`
-      roles | visible | activeServices
-      ${[]} | ${false} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
-      ${['VIEW_INTERNAL_LOCATION']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
-      ${['VIEW_INTERNAL_LOCATION']} | ${false} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['PVI'],
-  },
-]}
-      ${['MANAGE_RESIDENTIAL_LOCATIONS']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['***'],
-  },
-]}
-      ${['MANAGE_RES_LOCATIONS_OP_CAP']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['***'],
-  },
-]}
+      roles                               | visible  | activeServices
+      ${[]}                               | ${false} | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['LEI', 'CACHE'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${false} | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['PVI'] }]}
+      ${['MANAGE_RESIDENTIAL_LOCATIONS']} | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['***'] }]}
+      ${['MANAGE_RES_LOCATIONS_OP_CAP']}  | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['***'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${true}  | ${[{ app: 'nonResidentialLocations' as ServiceName, activeAgencies: ['LEI'] }]}
+      ${['NONRESI__MAINTAIN_LOCATION']}   | ${true}  | ${[{ app: 'nonResidentialLocations' as ServiceName, activeAgencies: ['LEI'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${false} | ${[{ app: 'nonResidentialLocations' as ServiceName, activeAgencies: ['PVI'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${true}  | ${[{ app: 'residentialLocations' as ServiceName, activeAgencies: ['LEI'] }, { app: 'nonResidentialLocations' as ServiceName, activeAgencies: ['LEI'] }]}
+      ${['VIEW_INTERNAL_LOCATION']}       | ${false} | ${[]}
+      ${[]}                               | ${false} | ${[{ app: 'nonResidentialLocations' as ServiceName, activeAgencies: ['LEI'] }]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Residential locations')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Locations')).toEqual(visible)
     })
   })
 

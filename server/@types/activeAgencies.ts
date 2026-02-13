@@ -7,6 +7,7 @@ export enum ServiceName {
   CASE_NOTES = 'caseNotesApi',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
+  NON_RESIDENTIAL_LOCATIONS = 'nonResidentialLocations',
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   WHEREABOUTS = 'whereabouts',
   INCIDENT_REPORTING = 'incidentReporting',

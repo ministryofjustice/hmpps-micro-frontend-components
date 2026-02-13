@@ -77,6 +77,7 @@ export enum Role {
   ResiCellStatusManager = 'MANAGE_RESIDENTIAL_LOCATIONS',
   ResiCertificateViewer = 'RESI__CERT_VIEWER',
   ResiCertificateReviewer = 'RESI__CERT_REVIEWER',
+  NonResiLocationManager = 'NONRESI__MAINTAIN_LOCATION',
   IncidentReportingRO = 'INCIDENT_REPORTS__RO',
   IncidentReportingRW = 'INCIDENT_REPORTS__RW',
   IncidentReportingApprove = 'INCIDENT_REPORTS__APPROVE',

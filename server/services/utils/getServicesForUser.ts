@@ -457,9 +457,9 @@ export default (
       enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
     },
     {
-      id: 'residential-locations',
-      heading: 'Residential locations',
-      description: 'View and manage residential locations in the establishment.',
+      id: 'locations',
+      heading: 'Locations',
+      description: 'View and manage locations in the establishment.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
       enabled: () =>
@@ -470,9 +470,12 @@ export default (
             Role.ResiCertificateViewer,
             Role.ResiCertificateReviewer,
             Role.ResiCertificateAdmin,
+            Role.NonResiLocationManager,
           ],
           roles,
-        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+        ) &&
+        (isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false) ||
+          isActiveInEstablishment(activeCaseLoadId, ServiceName.NON_RESIDENTIAL_LOCATIONS, activeServices, false)),
     },
     {
       id: 'reporting',
