@@ -59,7 +59,6 @@
     "govuk-frontend": "5.14.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
-    "jquery": "4.0.0",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "3.2.2",
     "jwt-decode": "^4.0.0",
