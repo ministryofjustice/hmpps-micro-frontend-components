@@ -1,18 +1,18 @@
-document.addEventListener('DOMContentLoaded', initHeader, false)
 const itemOpenClass = 'connect-dps-common-header__navigation__item-open'
 const tabOpenClass = 'connect-dps-common-header__toggle-open'
+
 function initHeader() {
-  const searchToggle = document.querySelector('.connect-dps-common-header__search-menu-toggle')
-  const searchMenu = document.querySelector('#connect-dps-common-header-search-menu')
+  const searchToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__search-menu-toggle')
+  const searchMenu = document.querySelector<HTMLDivElement>('#connect-dps-common-header-search-menu')!
 
-  const userToggle = document.querySelector('.connect-dps-common-header__user-menu-toggle')
-  const userMenu = document.querySelector('#connect-dps-common-header-user-menu')
+  const userToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__user-menu-toggle')!
+  const userMenu = document.querySelector<HTMLUListElement>('#connect-dps-common-header-user-menu')!
 
-  const servicesToggle = document.querySelector('.connect-dps-common-header__services-menu-toggle')
-  const servicesMenu = document.querySelector('#connect-dps-common-header-services-menu')
+  const servicesToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__services-menu-toggle')!
+  const servicesMenu = document.querySelector<HTMLDivElement>('#connect-dps-common-header-services-menu')!
 
-  const searchSubmitBtn = searchMenu && searchMenu.querySelector('button[type="submit"]')
-  const submitUrl = searchMenu && searchMenu.querySelector('form').getAttribute('action')
+  const searchSubmitBtn = searchMenu && searchMenu.querySelector<HTMLButtonElement>('button[type="submit"]')
+  const submitUrl = searchMenu && searchMenu.querySelector('form')?.getAttribute('action')
 
   if (searchToggle) {
     hideFallbackLinks()
@@ -48,26 +48,24 @@ function initHeader() {
       toggleMenu(servicesToggle, servicesMenu)
     })
 
-    searchSubmitBtn.addEventListener('click', function (event) {
+    searchSubmitBtn?.addEventListener('click', function (event) {
       event.preventDefault()
-      const searchTerms = searchMenu.querySelector('#connect-dps-common-header-prisoner-search').value
+      const searchTerms = searchMenu.querySelector<HTMLInputElement>('#connect-dps-common-header-prisoner-search')!.value
       const parsed = searchTerms.replace(' ', '+')
       window.location.href = submitUrl + '?keywords=' + parsed
     })
 
-    function closeUserMenuOnEscape(event) {
+    function closeUserMenuOnEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        closeTabs([
-          [userToggle, userMenu],
-        ])
+        closeTabs([[userToggle, userMenu]])
         userToggle.focus()
       }
     }
     userToggle.addEventListener('keydown', closeUserMenuOnEscape)
     userMenu.addEventListener('keydown', closeUserMenuOnEscape)
 
-    let closeUserMenuTimer = null
+    let closeUserMenuTimer: number | null = null
     function cancelCloseUserMenu() {
       if (closeUserMenuTimer) {
         clearTimeout(closeUserMenuTimer)
@@ -75,33 +73,33 @@ function initHeader() {
     }
     function closeUserMenuSoon() {
       closeUserMenuTimer = setTimeout(() => {
-        closeTabs([
-          [userToggle, userMenu],
-        ])
-      }, 100)
+        closeTabs([[userToggle, userMenu]])
+      }, 100) as unknown as number
     }
     userToggle.addEventListener('focus', cancelCloseUserMenu)
     userToggle.addEventListener('blur', closeUserMenuSoon)
-    userMenu.querySelectorAll('.connect-dps-common-header__submenu-link').forEach(userMenuLink => {
+    userMenu.querySelectorAll<HTMLAnchorElement>('.connect-dps-common-header__submenu-link').forEach(userMenuLink => {
       userMenuLink.addEventListener('focus', cancelCloseUserMenu)
       userMenuLink.addEventListener('blur', closeUserMenuSoon)
     })
   }
 }
 
-function closeTabs(tabTuples) {
+function closeTabs(tabTuples: [toggle: HTMLButtonElement, menu: HTMLElement][]) {
   tabTuples.forEach(([toggle, menu]) => {
     menu.setAttribute('hidden', 'hidden')
     toggle.classList.remove(tabOpenClass)
-    toggle.parentElement.classList.remove(itemOpenClass)
+    toggle.parentElement!.classList.remove(itemOpenClass)
     toggle.setAttribute('aria-expanded', 'false')
-    if (toggle.dataset.textForShow) toggle.setAttribute('aria-label', toggle.dataset.textForShow)
+    if (toggle.dataset.textForShow) {
+      toggle.setAttribute('aria-label', toggle.dataset.textForShow)
+    }
   })
 }
 
-function toggleMenu(toggle, menu) {
+function toggleMenu(toggle: HTMLButtonElement, menu: HTMLElement) {
   const isOpen = !menu.getAttribute('hidden')
-  const header = document.querySelector('.connect-dps-common-header')
+  const header = document.querySelector<HTMLDivElement>('.connect-dps-common-header')!
   header.classList.remove('connect-dps-service-menu-open')
   header.classList.remove('connect-dps-search-menu-open')
   if (isOpen) {
@@ -115,17 +113,19 @@ function toggleMenu(toggle, menu) {
     }
     menu.removeAttribute('hidden')
     toggle.classList.add(tabOpenClass)
-    toggle.parentElement.classList.add(itemOpenClass)
+    toggle.parentElement!.classList.add(itemOpenClass)
     toggle.setAttribute('aria-expanded', 'true')
     if (toggle.dataset.textForHide) toggle.setAttribute('aria-label', toggle.dataset.textForHide)
   }
 }
 
 function hideFallbackLinks() {
-  const searchLink = document.querySelector('.connect-dps-common-header__search-menu-link')
-  const userLink = document.querySelector('.connect-dps-common-header__user-menu-link')
-  const servicesLink = document.querySelector('.connect-dps-common-header__services-menu-link')
+  const searchLink = document.querySelector<HTMLAnchorElement>('.connect-dps-common-header__search-menu-link')!
+  const userLink = document.querySelector<HTMLDivElement>('.connect-dps-common-header__user-menu-link')!
+  const servicesLink = document.querySelector<HTMLDivElement>('.connect-dps-common-header__services-menu-link')!
   searchLink.setAttribute('hidden', 'hidden')
   userLink.setAttribute('hidden', 'hidden')
   servicesLink.setAttribute('hidden', 'hidden')
 }
+
+document.addEventListener('DOMContentLoaded', initHeader, false)
