@@ -96,7 +96,7 @@ generic-service:
     CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-micro-frontend-components-non-prod
+  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
 
   elastiCacheAlertsClusterIds:
     cp-98b777d6bc652977-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"
