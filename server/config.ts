@@ -268,7 +268,7 @@ export default {
       url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
-  clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', [], requiredInProduction),
+  clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
