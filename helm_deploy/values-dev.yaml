@@ -95,6 +95,13 @@ generic-service:
     REPORTING_ENABLED_PRISONS: "***"
     CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - prisons
+      - accessibility-testing-1
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
 
