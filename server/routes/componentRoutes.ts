@@ -10,7 +10,7 @@ import ComponentsController, {
   FooterViewModel,
   HeaderViewModel,
 } from '../controllers/componentsController'
-import { AvailableComponent } from '../@types/AvailableComponent'
+import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
 import { assetMap } from '../utils/utils'
@@ -44,27 +44,31 @@ export default function componentRoutes(services: Services): Router {
   async function getHeaderResponseBody(res: Response, viewModelCached?: HeaderViewModel): Promise<Component> {
     const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
 
-    return new Promise(resolve => {
-      res.render('components/header', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
-          javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
-        })
-      })
+    return new Promise((resolve, reject) => {
+      res.render('components/header', viewModel, (error, html) =>
+        error
+          ? reject(error)
+          : resolve({
+              html: html.trim(),
+              css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
+              javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
+            }),
+      )
     })
   }
 
   async function getFooterResponseBody(res: Response, viewModelCached?: FooterViewModel): Promise<Component> {
     const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
-    return new Promise(resolve => {
-      res.render('components/footer', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
-          javascript: [],
-        })
-      })
+    return new Promise((resolve, reject) => {
+      res.render('components/footer', viewModel, (error, html) =>
+        error
+          ? reject(error)
+          : resolve({
+              html: html.trim(),
+              css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
+              javascript: [],
+            }),
+      )
     })
   }
 
@@ -169,17 +173,14 @@ export default function componentRoutes(services: Services): Router {
       footer: getFooterResponseBody,
     }
 
-    const componentsRequested = [req.query.component]
-      .flat()
-      .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
+    const componentsRequested = [req.query.component].flat().filter(isComponent)
+    if (!componentsRequested.length) {
+      return res.send({})
+    }
 
-    if (!componentsRequested.length) return res.send({})
     const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
-
     const renders = await Promise.all(
-      componentsRequested.map(component =>
-        componentMethods[component as AvailableComponent](res, viewModels[component]),
-      ),
+      componentsRequested.map(component => componentMethods[component](res, viewModels[component])),
     )
 
     const responseBody = componentsRequested.reduce<
