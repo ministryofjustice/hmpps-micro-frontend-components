@@ -5,9 +5,10 @@ import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../interfaces/Service'
 
-interface ViewModel {
+export interface ViewModel {
   component: string
   isPrisonUser: boolean
+  hasJavascript: boolean
 }
 
 export interface HeaderViewModel extends ViewModel {
@@ -77,6 +78,7 @@ export default class {
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
+      hasJavascript: true,
       ingressUrl: config.ingressUrl,
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
     }
@@ -91,6 +93,7 @@ export default class {
       managedPages,
       isPrisonUser: isPrisonUser(user),
       component: 'footer',
+      hasJavascript: false,
     }
   }
 

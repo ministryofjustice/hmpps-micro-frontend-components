@@ -5,11 +5,7 @@ import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import ComponentsController, {
-  ComponentsData,
-  FooterViewModel,
-  HeaderViewModel,
-} from '../controllers/componentsController'
+import ComponentsController, { ComponentsData, ViewModel } from '../controllers/componentsController'
 import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
@@ -41,32 +37,23 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
-  async function getHeaderResponseBody(res: Response, viewModelCached?: HeaderViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
+  async function renderComponent(
+    component: AvailableComponent,
+    res: Response,
+    viewModelCached?: ViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels([component], res.locals.user))[component]
 
     return new Promise((resolve, reject) => {
-      res.render('components/header', viewModel, (error, html) =>
+      res.render(`components/${component}`, viewModel, (error, html) =>
         error
           ? reject(error)
           : resolve({
               html: html.trim(),
-              css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
-              javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
-            }),
-      )
-    })
-  }
-
-  async function getFooterResponseBody(res: Response, viewModelCached?: FooterViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
-    return new Promise((resolve, reject) => {
-      res.render('components/footer', viewModel, (error, html) =>
-        error
-          ? reject(error)
-          : resolve({
-              html: html.trim(),
-              css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
-              javascript: [],
+              css: [`${config.ingressUrl}${assetMap(`/assets/css/${component}.css`)}`],
+              javascript: viewModel.hasJavascript
+                ? [`${config.ingressUrl}${assetMap(`/assets/js/${component}.js`)}`]
+                : [],
             }),
       )
     })
@@ -94,7 +81,7 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getHeaderResponseBody(res)
+    const response = await renderComponent('header', res)
     res.send(response)
   })
 
@@ -120,7 +107,7 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getFooterResponseBody(res)
+    const response = await renderComponent('footer', res)
     res.send(response)
   })
 
@@ -165,14 +152,6 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Components'
    */
   router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
-    const componentMethods: Record<
-      AvailableComponent,
-      (r: Response, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
-    > = {
-      header: getHeaderResponseBody,
-      footer: getFooterResponseBody,
-    }
-
     const componentsRequested = [req.query.component].flat().filter(isComponent)
     if (!componentsRequested.length) {
       return res.send({})
@@ -180,7 +159,7 @@ export default function componentRoutes(services: Services): Router {
 
     const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
     const renders = await Promise.all(
-      componentsRequested.map(component => componentMethods[component](res, viewModels[component])),
+      componentsRequested.map(component => renderComponent(component, res, viewModels[component])),
     )
 
     const responseBody = componentsRequested.reduce<
