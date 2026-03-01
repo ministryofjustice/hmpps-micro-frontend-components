@@ -2,11 +2,6 @@
 
 {% set pageTitle = applicationName + " – Previewing all components" %}
 
-{% block head %}
-  {{ super() }}
-  <script src="{{ '/assets/js/header.js' | assetMap }}"></script>
-{% endblock %}
-
 {% block header %}
   {{ header | safe }}
 {% endblock %}
