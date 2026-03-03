@@ -16,9 +16,11 @@ const getBuildConfig = () => {
 
     app: {
       outDir: path.join(cwd, 'dist'),
-      entryPoints: globSync([path.join(cwd, '*.ts'), path.join(cwd, 'server/**/*.ts')]).filter(
-        file => !file.endsWith('.test.ts') && !file.endsWith('.config.ts'),
-      ),
+      entryPoints: globSync([
+        path.join(cwd, '*.ts'),
+        path.join(cwd, 'server/**/*.ts'),
+        path.join(cwd, 'server/**/*.json'),
+      ]).filter(file => !file.endsWith('.test.ts') && !file.endsWith('.config.ts')),
       copy: [
         {
           from: path.join(cwd, 'server/views/**/*'),
