@@ -124,18 +124,22 @@ export default function componentRoutes(services: Services): Router {
    *           type: array
    *           items:
    *             type: string
+   *             enum:
+   *               - header
+   *               - footer
    *         description: The component(s) to retrieve. Available components are 'header' and 'footer'
    *         required: true
+   *         style: form
    *         explode: true
    *         examples:
    *           header:
-   *             value: header
+   *             value: [header]
    *             summary: Request the header component
    *           footer:
-   *             value: footer
+   *             value: [footer]
    *             summary: Request the footer component
    *           headerAndFooter:
-   *             value: ['header', 'footer']
+   *             value: [header, footer]
    *             summary: Request both the header and footer components
    *       - in: header
    *         name: x-user-token
@@ -209,15 +213,20 @@ export default function componentRoutes(services: Services): Router {
  *     Service:
  *       type: object
  *       properties:
- *         id: string
- *         heading: string
- *         description: string
- *         href: string
+ *         id:
+ *           type: string
+ *         heading:
+ *           type: string
+ *         description:
+ *           type: string
+ *         href:
+ *           type: string
  *
  *     Component:
  *       type: object
  *       properties:
- *         html: string
+ *         html:
+ *           type: string
  *         css:
  *           type: array
  *           items:
@@ -235,8 +244,10 @@ export default function componentRoutes(services: Services): Router {
  *           description: Component name (header, footer) as the key with the component html and links to JS and CSS for the component
  *           example:
  *             html: <div>...</div>
- *             css: ['https://example.com/styles.css']
- *             javascript: ['https://example.com/scripts.js']
+ *             css:
+ *               - https://example.com/styles.css
+ *             javascript:
+ *               - https://example.com/scripts.js
  *         meta:
  *           type: object
  *           description: Data about the user caseloads and services they have access to
@@ -253,37 +264,33 @@ export default function componentRoutes(services: Services): Router {
  *                $ref: '#/components/schemas/Service'
  *       example:
  *         header:
- *           html: <div>...</div>
- *           css: ['https://example.com/header-styles.css']
- *           javascript: ['https://example.com/header-scripts.js']
+ *           html: <header>...</header>
+ *           css:
+ *             - https://example.com/header-styles.css
+ *           javascript:
+ *             - https://example.com/header-scripts.js
  *         footer:
- *           html: <div>...</div>
- *           css: ['https://example.com/footer-styles.css']
- *           javascript: ['https://example.com/footer-scripts.js']
- *         meta: {
- *           activeCaseLoad: {
- *              caseLoadId: "FNI",
- *              description: "Full Sutton (HMP)",
- *              type: "INST",
- *              caseloadFunction: "GENERAL",
- *              currentlyActive: true
- *           },
- *           caseLoads: [
- *              {
- *                 caseLoadId: "FNI",
- *                 description: "Full Sutton (HMP)",
- *                 type: "INST",
- *                 caseloadFunction: "GENERAL",
- *                 currentlyActive: true
- *              },
- *           ],
- *           services: [
- *             {
- *               id: 'create-and-vary-a-licence',
- *               heading: 'Create and vary a licence',
- *               description: 'Create and vary standard determinate licences and post sentence supervision orders.',
- *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk,
- *             }
- *           ]
- *         }
+ *           html: <footer>...</footer>
+ *           css:
+ *             - https://example.com/footer-styles.css
+ *           javascript:
+ *             - https://example.com/footer-scripts.js
+ *         meta:
+ *           activeCaseLoad:
+ *             caseLoadId: FNI
+ *             description: Full Sutton (HMP)
+ *             type: INST
+ *             caseloadFunction: GENERAL
+ *             currentlyActive: true
+ *           caseLoads:
+ *             - caseLoadId: FNI
+ *               description: Full Sutton (HMP)
+ *               type: INST
+ *               caseloadFunction: GENERAL
+ *               currentlyActive: true
+ *           services:
+ *             - id: create-and-vary-a-licence
+ *               heading: Create and vary a licence
+ *               description: Create and vary standard determinate licences and post sentence supervision orders.
+ *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
  */

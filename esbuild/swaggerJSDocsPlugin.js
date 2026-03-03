@@ -14,13 +14,16 @@ const options = {
     },
     servers: [
       {
-        url: 'frontend-components-dev.hmpps.service.justice.gov.uk',
+        url: 'https://frontend-components-dev.hmpps.service.justice.gov.uk',
+        description: 'dev',
       },
       {
-        url: 'frontend-components-preprod.hmpps.service.justice.gov.uk',
+        url: 'https://frontend-components-preprod.hmpps.service.justice.gov.uk',
+        description: 'preprod',
       },
       {
-        url: 'frontend-components.hmpps.service.justice.gov.uk',
+        url: 'https://frontend-components.hmpps.service.justice.gov.uk',
+        description: 'prod',
       },
     ],
   },
