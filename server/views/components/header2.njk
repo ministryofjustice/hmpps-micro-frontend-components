@@ -1,0 +1,6 @@
+{# NB: this will replace `./header.njk` #}
+{% if isPrisonUser %}
+  {% include "partials/dpsHeader2.njk" %}
+{% else %}
+  {% include "partials/externalHeader.njk" %}
+{% endif %}

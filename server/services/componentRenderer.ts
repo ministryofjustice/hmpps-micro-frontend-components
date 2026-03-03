@@ -8,6 +8,11 @@ export class ComponentRenderer {
   constructor(private readonly res: Response) {}
 
   renderComponent(viewModel: ViewModel): Promise<Component> {
+    if (viewModel.component === 'header' && config.features.useNewDpsHeader) {
+      // eslint-disable-next-line no-param-reassign
+      viewModel.component = 'header2'
+    }
+
     return new Promise((resolve, reject) => {
       this.res.render(`components/${viewModel.component}.njk`, viewModel, (error, html) =>
         error

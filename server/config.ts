@@ -273,5 +273,6 @@ export default {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
+    useNewDpsHeader: get('USE_NEW_DPS_HEADER', 'false') === 'true',
   },
 }
