@@ -16,7 +16,7 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 const requiredInProduction = { requireInProduction: true }
 
 export default {
-  ingressUrl: get('INGRESS_URL', 'localhost', requiredInProduction),
+  ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),

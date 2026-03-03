@@ -16,7 +16,7 @@ const controller = new ComponentsController(contentfulServiceMock)
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
   hasJavascript: true,
-  ingressUrl: 'localhost',
+  ingressUrl: 'http://localhost:3000',
   isPrisonUser: true,
   changeCaseLoadLink: 'http://localhost:3001/change-caseload',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
