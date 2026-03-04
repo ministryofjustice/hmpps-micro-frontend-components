@@ -1,10 +1,10 @@
 {% extends "govuk/template.njk" %}
 
+{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
+
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
 {% endblock %}
-
-{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
 
 {% block header %}
   {% include 'partials/externalHeader.njk' %}

@@ -2,15 +2,20 @@
 
 {% set pageTitle = applicationName + " – Previewing " + component %}
 
-{% block bodyEnd %}
-  {{ super() }}
-  {% if component === 'header' %}
-    <script src={{ '/assets/js/header.js' | assetMap }}></script>
-  {% endif %}
+{# components do NOT bundle all necessary govuk styles so global styles are required still
+{% block head %}
+  <link href="{{ ('/assets/css/' + component + '.css') | assetMap }}" rel="stylesheet"/>
 {% endblock %}
+#}
 
 {% block bodyStart %}
   {% include 'components/' + component + '.njk' %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {% if component !== 'footer' %}
+    <script src={{ ('/assets/js/' + component + '.js') | assetMap }}></script>
+  {% endif %}
 {% endblock %}
 
 {% block skipLink %}{% endblock %}

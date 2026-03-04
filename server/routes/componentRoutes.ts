@@ -5,12 +5,8 @@ import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
 import populateCurrentUser from '../middleware/populateCurrentUser'
-import ComponentsController, {
-  ComponentsData,
-  FooterViewModel,
-  HeaderViewModel,
-} from '../controllers/componentsController'
-import { AvailableComponent } from '../@types/AvailableComponent'
+import ComponentsController, { ComponentsData, ViewModel } from '../controllers/componentsController'
+import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
 import { assetMap } from '../utils/utils'
@@ -41,30 +37,25 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
-  async function getHeaderResponseBody(res: Response, viewModelCached?: HeaderViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
+  async function renderComponent(
+    component: AvailableComponent,
+    res: Response,
+    viewModelCached?: ViewModel,
+  ): Promise<Component> {
+    const viewModel = viewModelCached ?? (await controller.getViewModels([component], res.locals.user))[component]
 
-    return new Promise(resolve => {
-      res.render('components/header', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
-          javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
-        })
-      })
-    })
-  }
-
-  async function getFooterResponseBody(res: Response, viewModelCached?: FooterViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
-    return new Promise(resolve => {
-      res.render('components/footer', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
-          javascript: [],
-        })
-      })
+    return new Promise((resolve, reject) => {
+      res.render(`components/${component}`, viewModel, (error, html) =>
+        error
+          ? reject(error)
+          : resolve({
+              html: html.trim(),
+              css: [`${config.ingressUrl}${assetMap(`/assets/css/${component}.css`)}`],
+              javascript: viewModel.hasJavascript
+                ? [`${config.ingressUrl}${assetMap(`/assets/js/${component}.js`)}`]
+                : [],
+            }),
+      )
     })
   }
 
@@ -90,7 +81,7 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getHeaderResponseBody(res)
+    const response = await renderComponent('header', res)
     res.send(response)
   })
 
@@ -116,7 +107,7 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getFooterResponseBody(res)
+    const response = await renderComponent('footer', res)
     res.send(response)
   })
 
@@ -133,18 +124,22 @@ export default function componentRoutes(services: Services): Router {
    *           type: array
    *           items:
    *             type: string
+   *             enum:
+   *               - header
+   *               - footer
    *         description: The component(s) to retrieve. Available components are 'header' and 'footer'
    *         required: true
+   *         style: form
    *         explode: true
    *         examples:
    *           header:
-   *             value: header
+   *             value: [header]
    *             summary: Request the header component
    *           footer:
-   *             value: footer
+   *             value: [footer]
    *             summary: Request the footer component
    *           headerAndFooter:
-   *             value: ['header', 'footer']
+   *             value: [header, footer]
    *             summary: Request both the header and footer components
    *       - in: header
    *         name: x-user-token
@@ -161,25 +156,14 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Components'
    */
   router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
-    const componentMethods: Record<
-      AvailableComponent,
-      (r: Response, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
-    > = {
-      header: getHeaderResponseBody,
-      footer: getFooterResponseBody,
+    const componentsRequested = [req.query.component].flat().filter(isComponent)
+    if (!componentsRequested.length) {
+      return res.send({})
     }
 
-    const componentsRequested = [req.query.component]
-      .flat()
-      .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
-
-    if (!componentsRequested.length) return res.send({})
     const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
-
     const renders = await Promise.all(
-      componentsRequested.map(component =>
-        componentMethods[component as AvailableComponent](res, viewModels[component]),
-      ),
+      componentsRequested.map(component => renderComponent(component, res, viewModels[component])),
     )
 
     const responseBody = componentsRequested.reduce<
@@ -229,15 +213,20 @@ export default function componentRoutes(services: Services): Router {
  *     Service:
  *       type: object
  *       properties:
- *         id: string
- *         heading: string
- *         description: string
- *         href: string
+ *         id:
+ *           type: string
+ *         heading:
+ *           type: string
+ *         description:
+ *           type: string
+ *         href:
+ *           type: string
  *
  *     Component:
  *       type: object
  *       properties:
- *         html: string
+ *         html:
+ *           type: string
  *         css:
  *           type: array
  *           items:
@@ -255,8 +244,10 @@ export default function componentRoutes(services: Services): Router {
  *           description: Component name (header, footer) as the key with the component html and links to JS and CSS for the component
  *           example:
  *             html: <div>...</div>
- *             css: ['https://example.com/styles.css']
- *             javascript: ['https://example.com/scripts.js']
+ *             css:
+ *               - https://example.com/styles.css
+ *             javascript:
+ *               - https://example.com/scripts.js
  *         meta:
  *           type: object
  *           description: Data about the user caseloads and services they have access to
@@ -273,37 +264,33 @@ export default function componentRoutes(services: Services): Router {
  *                $ref: '#/components/schemas/Service'
  *       example:
  *         header:
- *           html: <div>...</div>
- *           css: ['https://example.com/header-styles.css']
- *           javascript: ['https://example.com/header-scripts.js']
+ *           html: <header>...</header>
+ *           css:
+ *             - https://example.com/header-styles.css
+ *           javascript:
+ *             - https://example.com/header-scripts.js
  *         footer:
- *           html: <div>...</div>
- *           css: ['https://example.com/footer-styles.css']
- *           javascript: ['https://example.com/footer-scripts.js']
- *         meta: {
- *           activeCaseLoad: {
- *              caseLoadId: "FNI",
- *              description: "Full Sutton (HMP)",
- *              type: "INST",
- *              caseloadFunction: "GENERAL",
- *              currentlyActive: true
- *           },
- *           caseLoads: [
- *              {
- *                 caseLoadId: "FNI",
- *                 description: "Full Sutton (HMP)",
- *                 type: "INST",
- *                 caseloadFunction: "GENERAL",
- *                 currentlyActive: true
- *              },
- *           ],
- *           services: [
- *             {
- *               id: 'create-and-vary-a-licence',
- *               heading: 'Create and vary a licence',
- *               description: 'Create and vary standard determinate licences and post sentence supervision orders.',
- *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk,
- *             }
- *           ]
- *         }
+ *           html: <footer>...</footer>
+ *           css:
+ *             - https://example.com/footer-styles.css
+ *           javascript:
+ *             - https://example.com/footer-scripts.js
+ *         meta:
+ *           activeCaseLoad:
+ *             caseLoadId: FNI
+ *             description: Full Sutton (HMP)
+ *             type: INST
+ *             caseloadFunction: GENERAL
+ *             currentlyActive: true
+ *           caseLoads:
+ *             - caseLoadId: FNI
+ *               description: Full Sutton (HMP)
+ *               type: INST
+ *               caseloadFunction: GENERAL
+ *               currentlyActive: true
+ *           services:
+ *             - id: create-and-vary-a-licence
+ *               heading: Create and vary a licence
+ *               description: Create and vary standard determinate licences and post sentence supervision orders.
+ *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
  */

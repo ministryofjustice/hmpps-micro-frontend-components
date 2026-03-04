@@ -5,8 +5,13 @@ import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../interfaces/Service'
 
-export interface HeaderViewModel {
+export interface ViewModel {
+  component: string
   isPrisonUser: boolean
+  hasJavascript: boolean
+}
+
+export interface HeaderViewModel extends ViewModel {
   changeCaseLoadLink: string
   component: 'header'
   ingressUrl: string
@@ -15,10 +20,9 @@ export interface HeaderViewModel {
   menuLink: string
 }
 
-export interface FooterViewModel {
-  isPrisonUser: boolean
-  managedPages: ManagedPageLink[]
+export interface FooterViewModel extends ViewModel {
   component: 'footer'
+  managedPages: ManagedPageLink[]
 }
 
 const defaultFooterLinks: ManagedPageLink[] = [
@@ -74,6 +78,7 @@ export default class {
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
+      hasJavascript: true,
       ingressUrl: config.ingressUrl,
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
     }
@@ -88,20 +93,19 @@ export default class {
       managedPages,
       isPrisonUser: isPrisonUser(user),
       component: 'footer',
+      hasJavascript: false,
     }
   }
 
-  async getViewModels(components: AvailableComponent[], user: HmppsUser) {
+  async getViewModels(components: AvailableComponent[], user: HmppsUser): Promise<ComponentsData> {
     const accessMethods = {
       header: this.getHeaderViewModel,
       footer: this.getFooterViewModel,
     }
 
-    const viewModels = await Promise.all(
-      components.map(component => accessMethods[component as AvailableComponent](user)),
-    )
+    const viewModels = await Promise.all(components.map(component => accessMethods[component](user)))
 
-    return components.reduce<ComponentsData>(
+    return components.reduce(
       (output, componentName, index) => {
         return {
           ...output,
@@ -112,13 +116,13 @@ export default class {
         meta:
           user.authSource === 'nomis'
             ? {
-                caseLoads: user.caseLoads.map(c => ({
+                caseLoads: user.caseLoads.map<CaseLoad>(c => ({
                   caseLoadId: c.id,
                   description: c.name,
                   type: 'INST',
                   caseloadFunction: c.function,
                   currentlyActive: c.id === user.activeCaseLoad?.id,
-                })) as CaseLoad[],
+                })),
                 activeCaseLoad: (user.activeCaseLoad
                   ? {
                       caseLoadId: user.activeCaseLoad.id,
@@ -127,7 +131,7 @@ export default class {
                       caseloadFunction: user.activeCaseLoad.function,
                       currentlyActive: true,
                     }
-                  : null) as CaseLoad | null,
+                  : null) satisfies CaseLoad | null,
                 services: user.services,
                 allocationJobResponsibilities: user.allocationJobResponsibilities,
               }

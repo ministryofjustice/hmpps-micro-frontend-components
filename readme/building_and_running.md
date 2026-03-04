@@ -3,8 +3,6 @@
 
 ## Building and Running
 
-
-
 To use the same version of NodeJS locally as is used in CI and production, follow [these notes](nvm.md).
 
 First, build the project by running:

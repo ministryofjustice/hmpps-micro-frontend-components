@@ -15,6 +15,7 @@ const controller = new ComponentsController(contentfulServiceMock)
 
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
+  hasJavascript: true,
   ingressUrl: 'localhost',
   isPrisonUser: true,
   changeCaseLoadLink: 'http://localhost:3001/change-caseload',
@@ -44,6 +45,7 @@ const expectedFooterViewModel: FooterViewModel = {
   ],
   isPrisonUser: true,
   component: 'footer',
+  hasJavascript: false,
 }
 
 const expectedMeta: PrisonUserAccessMeta = {
@@ -81,6 +83,7 @@ describe('componentsController', () => {
         ],
         isPrisonUser: true,
         component: 'footer',
+        hasJavascript: false,
       })
     })
 
