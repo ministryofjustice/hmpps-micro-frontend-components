@@ -24,7 +24,7 @@ export default function componentRoutes(services: Services): Router {
   }) as GetVerificationKey
 
   router.use((req, res, next) => {
-    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV === 'inttest') {
+    if (process.env.NODE_ENV === 'inttest') {
       req.auth = jwt.decode(req.headers['x-user-token'] as string) as TokenData
       next()
     } else {
