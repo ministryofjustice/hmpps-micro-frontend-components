@@ -1,5 +1,486 @@
 // NB: this will replace `./_header-bar.scss`
 
+@use '../cdps-utils';
+
+$cdps-header-height: 70px;
+$cdps-header-collapse-width: 985px;
+$cdps-header-minimal-width: 400px;
+$cdps-header-hover-colour: #a8abad; // TODO: can this be calculated in terms of GDS colours?
+
+@property --cdps-header-bg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('black');
+}
+
+@property --cdps-header-fg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('white');
+}
+
 .cdps-header {
-  background: red;
+  position: relative;
+  forced-color-adjust: none;
+  background: govuk-colour('light-grey');
+  @include govuk-font($size: 19);
+
+  @include cdps-utils.forced-dark-colours {
+    background: #222;
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.cdps-header__container {
+  display: grid;
+  grid-template-columns: max-content auto max-content max-content max-content $cdps-header-height;
+  grid-template-rows: $cdps-header-height repeat(2, auto);
+  grid-template-areas:
+    'cdps-header__item--crest cdps-header__item--spacer cdps-header__item--caseload cdps-header__item--user cdps-header__item--services cdps-header__item--search'
+    'cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services'
+    'cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search';
+  gap: 0;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: $cdps-header-height;
+    background: govuk-colour('black');
+
+    @include cdps-utils.forced-dark-colours {
+      background: #000;
+    }
+  }
+
+  @media (max-width: $cdps-header-collapse-width) {
+    grid-template-columns: repeat(3, auto) $cdps-header-height;
+    grid-template-rows: repeat(2, $cdps-header-height) repeat(2, auto);
+    grid-template-areas:
+      'cdps-header__item--crest cdps-header__item--crest cdps-header__item--spacer cdps-header__item--spacer'
+      'cdps-header__item--caseload cdps-header__item--user cdps-header__item--services cdps-header__item--search'
+      'cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services'
+      'cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search';
+
+    &::before {
+      height: #{$cdps-header-height * 2};
+    }
+  }
+
+  @media (max-width: $cdps-header-minimal-width) {
+    grid-template-columns: repeat(2, auto) $cdps-header-height;
+    grid-template-rows: repeat(3, $cdps-header-height) repeat(2, auto);
+    grid-template-areas:
+      'cdps-header__item--crest cdps-header__item--crest cdps-header__item--crest'
+      'cdps-header__item--caseload cdps-header__item--caseload cdps-header__item--spacer'
+      'cdps-header__item--user cdps-header__item--services cdps-header__item--search'
+      'cdps-header__menu--services cdps-header__menu--services cdps-header__menu--services'
+      'cdps-header__menu--search cdps-header__menu--search cdps-header__menu--search';
+
+    &::before {
+      height: #{$cdps-header-height * 3};
+    }
+  }
+}
+
+.cdps-header__item {
+  --cdps-header-bg-colour: #{govuk-colour('black')};
+  --cdps-header-fg-colour: #{govuk-colour('white')};
+
+  @include cdps-utils.forced-dark-colours {
+    --cdps-header-bg-colour: #000;
+  }
+
+  display: block;
+  position: relative;
+  align-content: center;
+  min-height: $cdps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  @include govuk-font-size($size: 16);
+}
+
+.cdps-header__link {
+  display: block;
+  align-content: center;
+  min-height: $cdps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  text-decoration: none;
+  outline: none;
+}
+
+a.cdps-header__link {
+  &:link,
+  &:active,
+  &:visited,
+  &:focus {
+    background: var(--cdps-header-bg-colour);
+    color: var(--cdps-header-fg-colour);
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+.cdps-header__link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: $cdps-header-height;
+  border-bottom: 3px solid transparent;
+}
+
+.cdps-header__item--with-open-menu,
+.cdps-header__link:hover,
+.cdps-header__link:focus {
+  .cdps-header__link-wrapper {
+    border-bottom-color: var(--cdps-header-fg-colour);
+  }
+}
+
+.cdps-header__item--crest {
+  grid-area: cdps-header__item--crest;
+  @include govuk-font-size($size: 24); // TODO: design has both 24px and 26px
+
+  .cdps-header__link {
+    span {
+      display: inline-block;
+
+      @media #{govuk-until-breakpoint(tablet)} {
+        padding-top: 7px;
+      }
+    }
+
+    &:hover span {
+      text-decoration: underline;
+    }
+  }
+
+  .cdps-header__icon--crest {
+    margin-right: 15px;
+    vertical-align: top;
+  }
+}
+
+.cdps-header__item--spacer {
+  grid-area: cdps-header__item--spacer;
+  padding: 0 15px;
+
+  @media (max-width: $cdps-header-collapse-width) {
+    padding-right: 0;
+    text-align: right;
+  }
+}
+
+.cdps-header__item--caseload {
+  grid-area: cdps-header__item--caseload;
+}
+
+.cdps-header__item--user {
+  grid-area: cdps-header__item--user;
+
+  &.cdps-header__item--with-menu {
+    min-width: 140px;
+  }
+}
+
+.cdps-header__item--services {
+  grid-area: cdps-header__item--services;
+  @include govuk-font-size($size: 19);
+  @include govuk-typography-weight-bold;
+}
+
+.cdps-header__item--caseload,
+.cdps-header__item--user,
+.cdps-header__item--services {
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 1px;
+    height: 70%;
+    background: govuk-colour('white');
+  }
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{$cdps-header-hover-colour};
+    }
+  }
+
+  .cdps-header__link-wrapper {
+    margin: 0 15px;
+    padding: 13px 0 14px 0;
+  }
+}
+
+.cdps-header__item--few-caseloads {
+  &::before {
+    display: none;
+  }
+}
+
+.cdps-header__item--search {
+  grid-area: cdps-header__item--search;
+
+  --cdps-header-bg-colour: #{govuk-colour('blue')};
+  --cdps-header-fg-colour: #{govuk-colour('white')};
+
+  @include cdps-utils.forced-dark-colours {
+    --cdps-header-bg-colour: #333;
+  }
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{$cdps-header-hover-colour};
+    }
+  }
+
+  .cdps-header__icon--search,
+  .cdps-header__icon--close {
+    /* NB: search & close icons are 55px × 55px */
+    padding: #{($cdps-header-height - 55px) / 2};
+  }
+
+  .cdps-header__icon--search {
+    display: block;
+  }
+
+  .cdps-header__icon--close {
+    display: none;
+  }
+
+  &.cdps-header__item--with-open-menu {
+    --cdps-header-fg-colour: #{govuk-colour('black')};
+
+    @include cdps-utils.forced-dark-colours {
+      --cdps-header-fg-colour: #fff;
+    }
+
+    .cdps-header__icon--search {
+      display: none;
+    }
+
+    .cdps-header__icon--close {
+      display: block;
+    }
+  }
+}
+
+.cdps-header__item--with-menu {
+  .cdps-header__link-wrapper {
+    position: relative;
+    padding-left: 25px;
+
+    @media #{govuk-until-breakpoint(tablet)} {
+      padding-left: 15px;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      transform: rotate(45deg);
+      width: 6px;
+      height: 6px;
+      top: calc(50% - 6px);
+      left: 0;
+      border-bottom: 2px solid var(--cdps-header-fg-colour);
+      border-right: 2px solid var(--cdps-header-fg-colour);
+    }
+  }
+}
+
+.cdps-header__item--with-open-menu {
+  --cdps-header-bg-colour: #{govuk-colour('light-grey')};
+  --cdps-header-fg-colour: #{govuk-colour('blue')};
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{govuk-colour('dark-grey')};
+    }
+  }
+
+  @include cdps-utils.forced-dark-colours {
+    --cdps-header-bg-colour: #000;
+    --cdps-header-fg-colour: #fff;
+
+    .cdps-header__link {
+      &:hover {
+        --cdps-header-fg-colour: #ccc;
+      }
+    }
+  }
+
+  .cdps-header__link-wrapper::before {
+    transform: translateY(3px) rotate(225deg);
+  }
+}
+
+.cdps-header__item {
+  .cdps-header__link {
+    &:focus {
+      --cdps-header-bg-colour: #{$govuk-focus-colour};
+      --cdps-header-fg-colour: #{$govuk-focus-text-colour};
+
+      @include cdps-utils.forced-dark-colours {
+        --cdps-header-bg-colour: #000;
+        --cdps-header-fg-colour: #{$govuk-focus-colour};
+      }
+    }
+  }
+}
+
+@media #{govuk-until-breakpoint(tablet)} {
+  .cdps-header__icon--caseload,
+  .cdps-header__icon--user {
+    display: none;
+  }
+}
+
+.cdps-header__menu {
+  background: govuk-colour('light-grey');
+  color: govuk-colour('black');
+
+  @include cdps-utils.forced-dark-colours {
+    background: #222;
+    color: #fff;
+
+    .govuk-label {
+      color: #fff;
+    }
+
+    .govuk-link,
+    .govuk-link--no-visited-state {
+      color: #fd0;
+
+      &:focus {
+        background: #000;
+        box-shadow: none;
+        outline: $govuk-focus-width solid $govuk-focus-colour;
+        outline-offset: $govuk-focus-width;
+      }
+    }
+  }
+}
+
+.cdps-header__menu--user {
+  position: absolute;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+
+  .govuk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  li {
+    @include govuk-font-size($size: 16);
+    @include govuk-typography-weight-bold;
+  }
+}
+
+.cdps-header__menu--services {
+  grid-area: cdps-header__menu--services;
+}
+
+.cdps-header__services-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: auto;
+  gap: 15px 20px;
+
+  a {
+    font-weight: bold;
+  }
+
+  @media #{govuk-until-breakpoint(tablet)} {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cdps-header__menu--search {
+  grid-area: cdps-header__menu--search;
+
+  .govuk-hint {
+    color: govuk-colour('black');
+
+    @include cdps-utils.forced-dark-colours {
+      color: #fff;
+    }
+  }
+
+  @include cdps-utils.forced-dark-colours {
+    .govuk-input {
+      color: #fff;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+@property --cdps-header-search-button-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('blue');
+}
+
+.cdps-header__search-button {
+  --cdps-header-search-button-colour: #{govuk-colour('blue')};
+
+  appearance: none;
+  outline: none;
+  background: var(--cdps-header-search-button-colour);
+  border-color: var(--cdps-header-search-button-colour);
+  color: govuk-colour('white');
+  cursor: pointer;
+
+  @include cdps-utils.forced-dark-colours {
+    --cdps-header-search-button-colour: #333;
+  }
+
+  .cdps-header__icon--search-button {
+    display: block;
+  }
+
+  &:hover {
+    --cdps-header-search-button-colour: #{govuk-shade(govuk-colour('blue'), 20%)};
+
+    @include cdps-utils.forced-dark-colours {
+      --cdps-header-search-button-colour: #444;
+    }
+  }
+
+  &:focus {
+    --cdps-header-search-button-colour: #{$govuk-focus-colour};
+    color: $govuk-focus-text-colour;
+
+    @include cdps-utils.forced-dark-colours {
+      --cdps-header-search-button-colour: #000;
+      color: $govuk-focus-colour;
+      outline: $govuk-focus-width solid $govuk-focus-colour;
+      outline-offset: $govuk-focus-width;
+    }
+  }
 }
