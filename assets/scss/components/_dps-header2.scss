@@ -5,7 +5,7 @@
 $cdps-header-height: 70px;
 $cdps-header-collapse-width: 985px;
 $cdps-header-minimal-width: 400px;
-$cdps-header-hover-colour: #a8abad; // TODO: can this be calculated in terms of GDS colours?
+$cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #aaa9a9 close to design #a8abad
 
 @property --cdps-header-bg-colour {
   syntax: '<color>';
@@ -154,7 +154,7 @@ a.cdps-header__link {
 
 .cdps-header__item--crest {
   grid-area: cdps-header__item--crest;
-  @include govuk-font-size($size: 24); // TODO: design has both 24px and 26px
+  @include govuk-font-size($size: 24);
 
   .cdps-header__link {
     span {
@@ -368,7 +368,7 @@ a.cdps-header__link {
 
     .govuk-link,
     .govuk-link--no-visited-state {
-      color: #fd0;
+      color: $govuk-focus-colour;
 
       &:focus {
         background: #000;
