@@ -4,8 +4,8 @@ TODO:
   - rename data-qa attrs
 #}
 
-{% from "govuk/components/hint/macro.njk" import govukHint %}
-{% from "govuk/components/label/macro.njk" import govukLabel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
 <header class="cdps-header" data-module="cdps-header">
@@ -115,27 +115,53 @@ TODO:
       <div class="govuk-grid-row">
         <search class="govuk-grid-column-three-quarters">
           <form action="{{ dpsSearchLink }}" method="get" role="search" novalidate>
-            <div class="govuk-form-group">
-              {{ govukLabel({
+            {% set buttonHtml %}
+              <svg class="cdps-header__icon--search-button" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="m16.352 17.975-4.596-4.8a6.577 6.577 0 0 1-4.102 1.403q-2.94 0-4.979-2.037Q.638 10.504.638 7.563t2.037-4.979T7.655.547q2.94 0 4.978 2.037t2.037 4.979a6.58 6.58 0 0 1-1.403 4.101l4.514 4.883zM7.654 12.42q2.024 0 3.44-1.417 1.417-1.416 1.417-3.44t-1.417-3.44Q9.68 2.705 7.654 2.705t-3.44 1.416Q2.797 5.54 2.797 7.562q0 2.025 1.417 3.441 1.415 1.417 3.44 1.417"/>
+              </svg>
+              <span class="govuk-visually-hidden">
+                Search for a prisoner
+              </span>
+            {% endset %}
+
+            {% set buttonHtml %}
+              {{ govukButton({
+                html: buttonHtml,
+                type: 'submit',
+                preventDoubleClick: true,
+                classes: 'cdps-header__search-button',
+                attributes: {
+                  enterkeyhint: 'search'
+                }
+              }) }}
+            {% endset %}
+
+            {{ govukInput({
+              label: {
                 text: 'Search for a prisoner',
-                classes: 'govuk-label--m govuk-!-margin-bottom-4',
-                for: 'cdps-header-prisoner-search'
-              }) }}
-              {{ govukHint({
+                classes: 'govuk-label--m govuk-!-margin-bottom-4'
+              },
+              hint: {
                 text: 'Enter a prisoner’s name or prison number.'
-              }) }}
-              <div class="govuk-input__wrapper">
-                <input class="govuk-input govuk-!-width-three-quarters" id="cdps-header-prisoner-search" name="keywords" type="search" enterkeyhint="search" spellcheck="false">
-                <button class="govuk-input__suffix cdps-header__search-button" data-module="govuk-button" data-prevent-double-click="true" type="submit" enterkeyhint="search">
-                  <svg class="cdps-header__icon--search-button" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="m18.444 20-7-7a6.774 6.774 0 0 1-4.222 1.444q-3.027 0-5.125-2.097T0 7.222t2.097-5.125T7.222 0t5.125 2.097 2.097 5.125A6.77 6.77 0 0 1 13 11.444l7 7zM7.222 12.222q2.085 0 3.542-1.458 1.458-1.458 1.458-3.542t-1.458-3.541Q9.306 2.22 7.222 2.222T3.681 3.681Q2.22 5.139 2.222 7.222t1.459 3.542q1.458 1.458 3.541 1.458"/>
-                  </svg>
-                  <span class="govuk-visually-hidden">
-                    Search for a prisoner
-                  </span>
-                </button>
-              </div>
-            </div>
+              },
+              name: 'keywords',
+              id: 'cdps-header-prisoner-search',
+              classes: 'govuk-!-width-three-quarters cdps-header__search-input',
+              type: 'search',
+              inputmode: 'search',
+              spellcheck: false,
+              attributes: {
+                enterkeyhint: 'search'
+              },
+              formGroup: {
+                afterInput: {
+                  html: buttonHtml
+                }
+              },
+              inputWrapper: {
+                classes: 'cdps-header__search-wrapper'
+              }
+            }) }}
           </form>
           <p class="govuk-body">
             <a href="{{ dpsSearchLink }}" class="govuk-link govuk-link--no-visited-state">

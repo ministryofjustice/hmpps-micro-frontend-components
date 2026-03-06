@@ -440,47 +440,31 @@ a.cdps-header__link {
   }
 }
 
-@property --cdps-header-search-button-colour {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: govuk-colour('blue');
+.cdps-header__search-wrapper {
+  align-items: stretch;
+}
+
+.cdps-header__search-input {
+  margin-right: govuk-spacing(3);
+  max-width: 600px;
 }
 
 .cdps-header__search-button {
-  --cdps-header-search-button-colour: #{govuk-colour('blue')};
-
-  appearance: none;
-  outline: none;
-  background: var(--cdps-header-search-button-colour);
-  border-color: var(--cdps-header-search-button-colour);
-  color: govuk-colour('white');
-  cursor: pointer;
+  background-color: govuk-colour('blue');
+  box-shadow: none;
+  flex: 0 1 auto;
+  margin: 0;
+  padding: 0 9px;
 
   @include cdps-utils.forced-dark-colours {
-    --cdps-header-search-button-colour: #333;
-  }
-
-  .cdps-header__icon--search-button {
-    display: block;
+    background-color: #333;
   }
 
   &:hover {
-    --cdps-header-search-button-colour: #{govuk-shade(govuk-colour('blue'), 20%)};
+    background-color: govuk-shade(govuk-colour('blue'), 20%);
 
     @include cdps-utils.forced-dark-colours {
-      --cdps-header-search-button-colour: #444;
-    }
-  }
-
-  &:focus {
-    --cdps-header-search-button-colour: #{$govuk-focus-colour};
-    color: $govuk-focus-text-colour;
-
-    @include cdps-utils.forced-dark-colours {
-      --cdps-header-search-button-colour: #000;
-      color: $govuk-focus-colour;
-      outline: $govuk-focus-width solid $govuk-focus-colour;
-      outline-offset: $govuk-focus-width;
+      background-color: #444;
     }
   }
 }
