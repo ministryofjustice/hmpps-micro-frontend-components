@@ -213,10 +213,10 @@ Appropriate fallback components should be included within your application. For 
 
 Place the `header.njk` and `footer.njk` files into your `/server/views/partials` directory, overwriting the existing `header.njk` file if applicable.
 
-Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/components` directory, overwriting the existing `_header-bar.scss` file if applicable, and update your `/assets/scss/application.scss` file to include these stylesheets, i.e.
+Place the `_header.scss` and `_footer.scss` files into your `/assets/scss/components` directory, overwriting the existing `_header.scss` file if applicable, and update your `/assets/scss/application.scss` file to include these stylesheets, i.e.
 
 ```scss
-@import './components/header-bar';
+@import './components/header';
 @import './components/footer';
 ```
 
@@ -266,10 +266,10 @@ For the header and footer, templates are provided in the `_fallbacks/external-us
 
 Place all of the `.njk` files from `_fallbacks/external-users` into your `/server/views/partials` directory, overwriting the existing `header.njk` file if applicable. (Do not copy the `.njk` files from the parent `_fallbacks` directory)
 
-Place the `_header-bar.scss` and `_footer.scss` files into your `/assets/scss/components` directory, overwriting the existing `_header-bar.scss` file if applicable, and update your `/assets/scss/application.scss` file to include these stylesheets, i.e.
+Place the `_header.scss` and `_footer.scss` files into your `/assets/scss/components` directory, overwriting the existing `_header.scss` file if applicable, and update your `/assets/scss/application.scss` file to include these stylesheets, i.e.
 
 ```scss
-@import './components/header-bar';
+@import './components/header';
 @import './components/footer';
 ```
 

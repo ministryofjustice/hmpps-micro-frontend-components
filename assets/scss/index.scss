@@ -9,7 +9,6 @@ $govuk-page-width: $moj-page-width;
 
 @import './overrides/local';
 
-@import './components/external-header-bar';
-@import './components/header-bar';
-@import './components/dps-header2';
+@import './components/external-header';
+@import './components/dps-header';
 @import './components/footer';
