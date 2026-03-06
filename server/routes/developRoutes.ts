@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { Services } from '../services'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
 import { AVAILABLE_COMPONENTS, type AvailableComponent } from '../@types/AvailableComponent'
-import config from '../config'
 import auth from '../authentication/auth'
 import tokenVerifier from '../data/tokenVerification'
 import ComponentsController from '../controllers/componentsController'
@@ -40,10 +39,6 @@ export default function developRoutes(services: Services): Router {
 
   router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
-    if (config.features.useNewDpsHeader) {
-      // @ts-expect-error this is temporary
-      viewModel.component = 'header2'
-    }
     return res.render('pages/componentPreview', viewModel)
   })
 

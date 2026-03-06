@@ -63,11 +63,7 @@ describe('GET /components', () => {
         const body = JSON.parse(res.text)
 
         const $header = cheerio.load(body.header.html)
-        expect(
-          $header(
-            'a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]',
-          ).text(),
-        ).toContain('Digital Prison Services')
+        expect($header('.cdps-header__item--crest').text()).toContain('Digital Prison Services')
         expect(body.header.css).toEqual(['http://localhost:3000/assets/css/header.css'])
         expect(body.header.javascript).toEqual(['http://localhost:3000/assets/js/header.js'])
 
@@ -115,11 +111,7 @@ describe('GET /components', () => {
         const $header = cheerio.load(body.header.html)
         const $footer = cheerio.load(body.footer.html)
 
-        expect(
-          $header(
-            'a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]',
-          ).text(),
-        ).toContain('Digital Prison Services')
+        expect($header('.cdps-header__item--crest').text()).toContain('Digital Prison Services')
         const feedbackLink = $footer('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]')
         expect(feedbackLink.text()).toContain('Feedback')
       })

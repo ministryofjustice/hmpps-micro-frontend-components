@@ -1,4 +1,4 @@
-import Page, { PageElement } from './page'
+import Page, { type PageElement } from './page'
 
 export default class IndexPage extends Page {
   constructor() {
@@ -6,42 +6,106 @@ export default class IndexPage extends Page {
   }
 
   header = {
-    headerPhaseBanner: (): PageElement => cy.get('[data-qa=connect-dps-common-environment-tag]'),
+    get environmentTag(): PageElement {
+      return cy.get('[data-qa="cdps-header-environment-tag"]')
+    },
 
-    caseloadSwitcher: (): PageElement => cy.get('[data-qa=connect-dps-caseload-switcher]'),
+    caseload: {
+      get button(): PageElement<HTMLAnchorElement> {
+        return cy.get('[data-qa="cdps-header-caseload"]')
+      },
+
+      get name(): PageElement<HTMLSpanElement> {
+        return cy.get('[data-qa="cdps-header-caseload-name"]')
+      },
+    },
 
     user: {
-      name: (): PageElement => cy.get('[data-qa=connect-dps-common-header-user-name]'),
-      toggle: (): PageElement => this.header.user.name().parent(),
-      menu: (): PageElement => cy.get('#connect-dps-common-header-user-menu'),
-      signOutLink: (): PageElement => cy.get('#connect-dps-common-header-user-menu').find('a[href="/sign-out"]'),
-      manageDetailsLink: (): PageElement =>
-        cy.get('#connect-dps-common-header-user-menu').find('a[href="http://localhost:9091/auth/account-details"]'),
+      get button(): PageElement<HTMLAnchorElement> {
+        return cy.get('[data-qa="cdps-header-user"]')
+      },
+
+      get name(): PageElement<HTMLSpanElement> {
+        return cy.get('[data-qa="cdps-header-user-name"]')
+      },
+
+      get menu(): PageElement<HTMLDivElement> {
+        return cy.get('#cdps-header__menu--user')
+      },
+
+      get signOutLink(): PageElement<HTMLAnchorElement> {
+        return this.menu.find('a[href="/sign-out"]')
+      },
+
+      get manageDetailsLink(): PageElement<HTMLAnchorElement> {
+        return this.menu.find('a[href="http://localhost:9091/auth/account-details"]')
+      },
     },
 
     services: {
-      toggle: (): PageElement => cy.get('[data-qa=connect-dps-common-service-menu-toggle]'),
-      menu: (): PageElement => cy.get('#connect-dps-common-header-services-menu'),
-      list: (): PageElement => cy.get('#connect-dps-common-header-services-menu ul li'),
+      get button(): PageElement<HTMLAnchorElement> {
+        return cy.get('[data-qa="cdps-header-services"]')
+      },
+
+      get menu(): PageElement<HTMLDivElement> {
+        return cy.get('#cdps-header__menu--services')
+      },
+
+      get list(): PageElement<HTMLLIElement> {
+        return this.menu.find('li')
+      },
     },
 
     search: {
-      toggle: (): PageElement => cy.get('[data-qa=connect-dps-common-search-toggle]'),
-      menu: (): PageElement => cy.get('#connect-dps-common-header-search-menu'),
-      input: (): PageElement => cy.get('#connect-dps-common-header-prisoner-search'),
-      submit: (): PageElement => cy.get('.connect-dps-common-header__search-menu-submit-btn'),
+      get button(): PageElement<HTMLAnchorElement> {
+        return cy.get('[data-qa="cdps-header-search"]')
+      },
+
+      get menu(): PageElement<HTMLDivElement> {
+        return cy.get('#cdps-header__menu--search')
+      },
+
+      get input(): PageElement<HTMLInputElement> {
+        return this.menu.find('input')
+      },
+
+      get submit(): PageElement<HTMLButtonElement> {
+        return this.menu.find('button')
+      },
     },
   }
 
   footer = {
     services: {
-      list: (): PageElement => cy.get('#connect-dps-common-footer-services ul li'),
+      get list(): PageElement<HTMLLIElement> {
+        return cy.get('#connect-dps-common-footer-services ul li')
+      },
     },
 
-    feedbackSurveyLink: (): PageElement => cy.get('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]'),
-    accessibilityLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/accessibility-statement"]'),
-    termsAndConditionsLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/terms-and-conditions"]'),
-    privacyPolicyLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/privacy-policy"]'),
-    cookiesPolicyLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/cookies-policy"]'),
+    supportLinks: {
+      get list() {
+        return cy.get('.connect-dps-common-footer__support-links')
+      },
+
+      get feedbackSurveyLink(): PageElement<HTMLAnchorElement> {
+        return this.list.find('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]')
+      },
+
+      get accessibilityLink(): PageElement<HTMLAnchorElement> {
+        return this.list.find('a[href="http://localhost:9091/new-dps/accessibility-statement"]')
+      },
+
+      get termsAndConditionsLink(): PageElement<HTMLAnchorElement> {
+        return this.list.find('a[href="http://localhost:9091/new-dps/terms-and-conditions"]')
+      },
+
+      get privacyPolicyLink(): PageElement<HTMLAnchorElement> {
+        return this.list.find('a[href="http://localhost:9091/new-dps/privacy-policy"]')
+      },
+
+      get cookiesPolicyLink(): PageElement<HTMLAnchorElement> {
+        return this.list.find('a[href="http://localhost:9091/new-dps/cookies-policy"]')
+      },
+    },
   }
 }

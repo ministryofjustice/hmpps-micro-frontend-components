@@ -27,7 +27,6 @@ export default function nunjucksSetup(app: express.Express): void {
     },
   )
 
-  njkEnv.addGlobal('useNewDpsHeader', config.features.useNewDpsHeader)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', assetMap)
 }

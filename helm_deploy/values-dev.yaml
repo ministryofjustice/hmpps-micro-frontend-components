@@ -94,7 +94,6 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
     CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
-    USE_NEW_DPS_HEADER: "true"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
