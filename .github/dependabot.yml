@@ -12,6 +12,9 @@ updates:
       - dependency-name: "govuk-frontend"
         versions:
           - ">=6"
+      - dependency-name: "@ministryofjustice/frontend"
+        versions:
+          - ">=9"
     schedule:
       interval: weekly
       day: wednesday
