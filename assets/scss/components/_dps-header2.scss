@@ -40,7 +40,7 @@ $cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #
 
 .cdps-header__container {
   display: grid;
-  grid-template-columns: max-content auto max-content max-content max-content $cdps-header-height;
+  grid-template-columns: minmax(auto, 310px) 1fr max-content max-content max-content $cdps-header-height;
   grid-template-rows: $cdps-header-height repeat(2, auto);
   grid-template-areas:
     'cdps-header__item--crest cdps-header__item--spacer cdps-header__item--caseload cdps-header__item--user cdps-header__item--services cdps-header__item--search'
@@ -64,7 +64,7 @@ $cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #
   }
 
   @media (max-width: $cdps-header-collapse-width) {
-    grid-template-columns: repeat(3, auto) $cdps-header-height;
+    grid-template-columns: 1fr 1fr max-content $cdps-header-height;
     grid-template-rows: repeat(2, $cdps-header-height) repeat(2, auto);
     grid-template-areas:
       'cdps-header__item--crest cdps-header__item--crest cdps-header__item--spacer cdps-header__item--spacer'
@@ -78,7 +78,7 @@ $cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #
   }
 
   @media (max-width: $cdps-header-minimal-width) {
-    grid-template-columns: repeat(2, auto) $cdps-header-height;
+    grid-template-columns: 1fr 1fr $cdps-header-height;
     grid-template-rows: repeat(3, $cdps-header-height) repeat(2, auto);
     grid-template-areas:
       'cdps-header__item--crest cdps-header__item--crest cdps-header__item--crest'
@@ -379,6 +379,7 @@ a.cdps-header__link {
   padding: 15px;
   width: 100%;
   box-sizing: border-box;
+  z-index: 10000;
 
   .govuk-list {
     display: flex;
@@ -395,6 +396,10 @@ a.cdps-header__link {
 
 .cdps-header__menu--services {
   grid-area: cdps-header__menu--services;
+}
+
+.cdps-header__services-wrapper {
+  @include govuk-grid-column($width: three-quarters, $at: $cdps-header-collapse-width);
 }
 
 .cdps-header__services-list {
@@ -446,7 +451,7 @@ a.cdps-header__link {
 .cdps-header__search-button {
   background-color: govuk-colour('blue');
   box-shadow: none;
-  flex: 0 1 auto;
+  width: 40px;
   margin: 0;
   padding: 0 9px;
 
