@@ -4,12 +4,12 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
-import populateCurrentUser from '../middleware/populateCurrentUser'
-import ComponentsController, { ComponentsData, ViewModel } from '../controllers/componentsController'
 import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
-import { assetMap } from '../utils/utils'
+import ComponentsController from '../controllers/componentsController'
+import populateCurrentUser from '../middleware/populateCurrentUser'
+import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
@@ -37,28 +37,6 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
-  async function renderComponent(
-    component: AvailableComponent,
-    res: Response,
-    viewModelCached?: ViewModel,
-  ): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels([component], res.locals.user))[component]
-
-    return new Promise((resolve, reject) => {
-      res.render(`components/${component}`, viewModel, (error, html) =>
-        error
-          ? reject(error)
-          : resolve({
-              html: html.trim(),
-              css: [`${config.ingressUrl}${assetMap(`/assets/css/${component}.css`)}`],
-              javascript: viewModel.hasJavascript
-                ? [`${config.ingressUrl}${assetMap(`/assets/js/${component}.js`)}`]
-                : [],
-            }),
-      )
-    })
-  }
-
   /**
    * @swagger
    * /header:
@@ -81,7 +59,8 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await renderComponent('header', res)
+    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
   })
 
@@ -107,7 +86,8 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await renderComponent('footer', res)
+    const viewModel = await controller.getFooterViewModel(res.locals.user)
+    const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
   })
 
@@ -161,24 +141,19 @@ export default function componentRoutes(services: Services): Router {
       return res.send({})
     }
 
+    const renderer = new ComponentRenderer(res)
     const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
-    const renders = await Promise.all(
-      componentsRequested.map(component => renderComponent(component, res, viewModels[component])),
+    const renderedComponents: Record<AvailableComponent, Component> = Object.fromEntries(
+      await Promise.all(
+        componentsRequested.map(componentName =>
+          renderer
+            .renderComponent(viewModels[componentName])
+            .then(renderedComponent => [componentName, renderedComponent]),
+        ),
+      ),
     )
 
-    const responseBody = componentsRequested.reduce<
-      Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
-    >(
-      (output, componentName, index) => {
-        return {
-          ...output,
-          [componentName]: renders[index],
-        }
-      },
-      { meta: viewModels.meta },
-    )
-
-    return res.send(responseBody)
+    return res.send({ meta: viewModels.meta, ...renderedComponents })
   })
 
   router.use((err: Error, _req: Request, res: Response, next: NextFunction) => {

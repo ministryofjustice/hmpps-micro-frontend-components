@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import { Services } from '../services'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
-import { AVAILABLE_COMPONENTS } from '../@types/AvailableComponent'
+import { AVAILABLE_COMPONENTS, type AvailableComponent } from '../@types/AvailableComponent'
+import config from '../config'
 import auth from '../authentication/auth'
 import tokenVerifier from '../data/tokenVerification'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
+import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
@@ -21,25 +23,27 @@ export default function developRoutes(services: Services): Router {
   router.use(populateCurrentUser(services.userService))
 
   router.get('/all', async (_req, res) => {
-    const [header, footer] = await Promise.all([
-      controller.getHeaderViewModel(res.locals.user).then(
-        viewModel =>
-          new Promise<string>((resolve, reject) => {
-            res.render('components/header.njk', viewModel, (error, html) => (error ? reject(error) : resolve(html)))
-          }),
+    const renderer = new ComponentRenderer(res)
+    const viewModels = await controller.getViewModels(AVAILABLE_COMPONENTS, res.locals.user)
+    const renderedComponents: Record<AvailableComponent, string> = Object.fromEntries(
+      await Promise.all(
+        AVAILABLE_COMPONENTS.map(componentName =>
+          renderer
+            .renderComponent(viewModels[componentName])
+            .then(renderedComponent => [componentName, renderedComponent.html]),
+        ),
       ),
-      controller.getFooterViewModel(res.locals.user).then(
-        viewModel =>
-          new Promise<string>((resolve, reject) => {
-            res.render('components/footer.njk', viewModel, (error, html) => (error ? reject(error) : resolve(html)))
-          }),
-      ),
-    ])
-    return res.render('pages/previewAll', { header, footer })
+    )
+
+    return res.render('pages/previewAll', renderedComponents)
   })
 
   router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    if (config.features.useNewDpsHeader) {
+      // @ts-expect-error this is temporary
+      viewModel.component = 'header2'
+    }
     return res.render('pages/componentPreview', viewModel)
   })
 

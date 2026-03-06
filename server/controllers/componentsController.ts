@@ -97,7 +97,7 @@ export default class {
     }
   }
 
-  async getViewModels(components: AvailableComponent[], user: HmppsUser): Promise<ComponentsData> {
+  async getViewModels(components: readonly AvailableComponent[], user: HmppsUser): Promise<ComponentsData> {
     const accessMethods = {
       header: this.getHeaderViewModel,
       footer: this.getFooterViewModel,

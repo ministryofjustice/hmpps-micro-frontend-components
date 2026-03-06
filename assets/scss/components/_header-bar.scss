@@ -1,3 +1,5 @@
+@use '../cdps-utils';
+
 .connect-dps-grid-logo  { grid-area: connect-dps-grid-logo; width: fit-content; display: flex;}
 .connect-dps-grid-logo > a { position: relative; }
 .connect-dps-grid-caseload { grid-area: connect-dps-grid-caseload; }
@@ -302,7 +304,7 @@
     }
   }
 
-  @media (forced-colors: active) and (prefers-color-scheme: dark) {
+  @include cdps-utils.forced-dark-colours {
     .connect-dps-common-header__search-menu-toggle:focus {
       color: govuk-colour('white') !important;
     }
