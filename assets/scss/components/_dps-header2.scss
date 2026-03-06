@@ -140,7 +140,8 @@ a.cdps-header__link {
   align-items: center;
   gap: 10px;
   box-sizing: border-box;
-  min-height: $cdps-header-height;
+  height: $cdps-header-height;
+  margin: 0 15px;
   border-bottom: 3px solid transparent;
 }
 
@@ -223,11 +224,6 @@ a.cdps-header__link {
       --cdps-header-fg-colour: #{$cdps-header-hover-colour};
     }
   }
-
-  .cdps-header__link-wrapper {
-    margin: 0 15px;
-    padding: 13px 0 14px 0;
-  }
 }
 
 .cdps-header__item--few-caseloads {
@@ -252,12 +248,6 @@ a.cdps-header__link {
     }
   }
 
-  .cdps-header__icon--search,
-  .cdps-header__icon--close {
-    /* NB: search & close icons are 55px × 55px */
-    padding: #{($cdps-header-height - 55px) / 2};
-  }
-
   .cdps-header__icon--search {
     display: block;
   }
@@ -267,12 +257,6 @@ a.cdps-header__link {
   }
 
   &.cdps-header__item--with-open-menu {
-    --cdps-header-fg-colour: #{govuk-colour('black')};
-
-    @include cdps-utils.forced-dark-colours {
-      --cdps-header-fg-colour: #fff;
-    }
-
     .cdps-header__icon--search {
       display: none;
     }
@@ -303,6 +287,16 @@ a.cdps-header__link {
       left: 0;
       border-bottom: 2px solid var(--cdps-header-fg-colour);
       border-right: 2px solid var(--cdps-header-fg-colour);
+    }
+  }
+}
+
+.cdps-header__item--search {
+  .cdps-header__link-wrapper {
+    padding: 0;
+
+    &::before {
+      display: none;
     }
   }
 }
