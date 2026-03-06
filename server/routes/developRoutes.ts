@@ -40,10 +40,6 @@ export default function developRoutes(services: Services): Router {
 
   router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
-    if (config.features.useNewDpsHeader) {
-      // @ts-expect-error this is temporary
-      viewModel.component = 'header2'
-    }
     return res.render('pages/componentPreview', viewModel)
   })
 
