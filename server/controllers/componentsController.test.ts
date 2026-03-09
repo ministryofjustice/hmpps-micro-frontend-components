@@ -18,7 +18,7 @@ const expectedHeaderViewModel: HeaderViewModel = {
   hasJavascript: true,
   ingressUrl: 'http://localhost:3000',
   isPrisonUser: true,
-  changeCaseLoadLink: 'http://localhost:3001/change-caseload',
+  changeCaseLoadLink: 'http://localhost:3002/change-caseload',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
   dpsSearchLink: 'http://localhost:3001/prisoner-search',
   menuLink: 'http://localhost:3001#homepage-services',
