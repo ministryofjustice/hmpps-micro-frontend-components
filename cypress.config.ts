@@ -5,6 +5,7 @@ import manageUsersApi from './integration_tests/mockApis/manageUsersApi'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import exampleApi from './integration_tests/mockApis/exampleApi'
 import dps from './integration_tests/mockApis/dps'
+import newDps from './integration_tests/mockApis/newDps'
 import allocationsApi from './integration_tests/mockApis/allocationsApi'
 import locationsInsidePrisonApi from './integration_tests/mockApis/locationsInsidePrisonApi'
 
@@ -28,6 +29,7 @@ export default defineConfig({
         ...tokenVerification,
         ...exampleApi,
         ...dps,
+        ...newDps,
         ...allocationsApi,
         ...locationsInsidePrisonApi,
       })
