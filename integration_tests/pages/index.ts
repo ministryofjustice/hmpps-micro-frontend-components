@@ -39,9 +39,9 @@ export default class IndexPage extends Page {
     },
 
     feedbackSurveyLink: (): PageElement => cy.get('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]'),
-    accessibilityLink: (): PageElement => cy.get('a[href="https://external/new-dps/accessibility-statement"]'),
-    termsAndConditionsLink: (): PageElement => cy.get('a[href="https://external/new-dps/terms-and-conditions"]'),
-    privacyPolicyLink: (): PageElement => cy.get('a[href="https://external/new-dps/privacy-policy"]'),
-    cookiesPolicyLink: (): PageElement => cy.get('a[href="https://external/new-dps/cookies-policy"]'),
+    accessibilityLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/accessibility-statement"]'),
+    termsAndConditionsLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/terms-and-conditions"]'),
+    privacyPolicyLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/privacy-policy"]'),
+    cookiesPolicyLink: (): PageElement => cy.get('a[href="http://localhost:9091/new-dps/cookies-policy"]'),
   }
 }

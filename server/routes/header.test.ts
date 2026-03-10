@@ -50,6 +50,7 @@ beforeEach(async () => {
   allocationsApi = nock(config.apis.allocationsApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   manageUsersApi = nock(config.apis.manageUsersApi.url)
+  config.features.useNewDpsChangeCaseload = true
 
   nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
     access_token: 'system-token',
@@ -145,7 +146,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).text().trim()).toEqual('Leeds')
+          expect($(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`).text().trim()).toEqual('Leeds')
         })
     })
 
@@ -164,7 +165,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
+          expect($(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`).length).toEqual(0)
         })
     })
 
@@ -202,7 +203,7 @@ describe('GET /header', () => {
           .expect(res => {
             const $ = cheerio.load(JSON.parse(res.text).html)
             // using 1 active caseload from first request
-            expect($(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`).length).toEqual(0)
+            expect($(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`).length).toEqual(0)
           })
       })
     })
@@ -241,7 +242,7 @@ describe('GET /header', () => {
           expect(manageDetailsLink.text()).toContain('T. User')
           expect(manageDetailsLink.text()).toContain('Manage your details')
 
-          const caseloadSwitcher = $(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`)
+          const caseloadSwitcher = $(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
         })
     })
@@ -282,7 +283,7 @@ describe('GET /header', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
 
-          const caseloadSwitcher = $(`a[href="${config.serviceUrls.dps.url}/change-caseload"]`)
+          const caseloadSwitcher = $(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`)
           expect(caseloadSwitcher.length).toEqual(0)
         })
     })

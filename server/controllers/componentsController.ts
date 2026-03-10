@@ -74,7 +74,7 @@ export default class {
   async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
-      changeCaseLoadLink: `${config.serviceUrls.dps.url}/change-caseload`,
+      changeCaseLoadLink: `${config.features.useNewDpsChangeCaseload ? config.serviceUrls.newDps.url : config.serviceUrls.dps.url}/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
