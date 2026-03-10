@@ -274,5 +274,6 @@ export default {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
     useNewDpsHeader: get('USE_NEW_DPS_HEADER', 'false') === 'true',
+    useNewDpsChangeCaseload: get('USE_NEW_DPS_CHANGE_CASELOAD', 'false') === 'true',
   },
 }
