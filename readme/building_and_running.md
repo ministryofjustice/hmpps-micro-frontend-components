@@ -3,8 +3,6 @@
 
 ## Building and Running
 
-
-
 To use the same version of NodeJS locally as is used in CI and production, follow [these notes](nvm.md).
 
 First, build the project by running:
@@ -68,8 +66,5 @@ TODO
 
 ### Run linter
 
-After making code changes eslint can be used to ensure code style is maintained
-(although husky ensures this is run as part of the pre-commit hook too)
-```
-npm run lint
-```
+- `npm run lint` runs `eslint`.
+- `npm run typecheck` runs the TypeScript compiler `tsc`.

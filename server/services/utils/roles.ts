@@ -89,6 +89,8 @@ export enum Role {
   MatchLearnerRecord = 'MATCH_LEARNER_RECORD_RW',
   ExternalMovementsTapView = 'EXTERNAL_MOVEMENTS_TAP_RO',
   ExternalMovementsTapManage = 'EXTERNAL_MOVEMENTS_TAP_RW',
+  ContactsAdministrator = 'CONTACTS_ADMINISTRATOR',
+  ContactsAuthoriser = 'CONTACTS_AUTHORISER',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))

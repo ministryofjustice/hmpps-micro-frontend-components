@@ -16,7 +16,7 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 const requiredInProduction = { requireInProduction: true }
 
 export default {
-  ingressUrl: get('INGRESS_URL', 'localhost', requiredInProduction),
+  ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
@@ -264,10 +264,16 @@ export default {
     externalMovements: {
       url: get('EXTERNAL_MOVEMENTS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    contacts: {
+      url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
+  clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
+    useNewDpsHeader: get('USE_NEW_DPS_HEADER', 'false') === 'true',
+    useNewDpsChangeCaseload: get('USE_NEW_DPS_CHANGE_CASELOAD', 'false') === 'true',
   },
 }

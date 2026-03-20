@@ -68,13 +68,13 @@ describe('GET /components', () => {
             'a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]',
           ).text(),
         ).toContain('Digital Prison Services')
-        expect(body.header.css).toEqual(['localhost/assets/css/header.css'])
-        expect(body.header.javascript).toEqual(['localhost/assets/js/header.js'])
+        expect(body.header.css).toEqual(['http://localhost:3000/assets/css/header.css'])
+        expect(body.header.javascript).toEqual(['http://localhost:3000/assets/js/header.js'])
 
         const $footer = cheerio.load(body.footer.html)
         const feedbackLink = $footer('a[href="https://www.smartsurvey.co.uk/s/43EWY0/"]')
         expect(feedbackLink.text()).toContain('Feedback')
-        expect(body.footer.css).toEqual(['localhost/assets/css/footer.css'])
+        expect(body.footer.css).toEqual(['http://localhost:3000/assets/css/footer.css'])
         expect(body.footer.javascript).toEqual([])
       })
   })
@@ -87,8 +87,8 @@ describe('GET /components', () => {
       .expect('Content-Type', /json/)
       .expect(res => {
         const body = JSON.parse(res.text)
-        expect(body.header).toBeUndefined()
-        expect(body.footer).toBeDefined()
+        expect(body).not.toHaveProperty('header')
+        expect(body).toHaveProperty('footer')
       })
   })
 
@@ -133,15 +133,15 @@ describe('GET /components', () => {
       .expect('Content-Type', /json/)
       .expect(res => {
         const body = JSON.parse(res.text)
-        expect(body.header).toBeUndefined()
-        expect(body.golf).toBeUndefined()
+        expect(body).not.toHaveProperty('header')
+        expect(body).not.toHaveProperty('golf')
         expect(body.footer.html).toBeDefined()
       })
   })
 
   describe('auth', () => {
     it('should send 401 if no token provided', () => {
-      return request(app).get('/footer').expect(401)
+      return request(app).get('/components?component=footer').expect(401)
     })
   })
 })

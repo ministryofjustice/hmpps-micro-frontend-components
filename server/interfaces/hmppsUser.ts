@@ -10,6 +10,7 @@ export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 export interface BaseUser {
   authSource: AuthSource
   username: string
+  clientId?: string
   userId: string
   name: string
   displayName: string
@@ -70,6 +71,6 @@ export interface AzureADUser extends BaseUser {
 
 export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
 
-export const isPrisonUser = (user: HmppsUser): boolean => {
+export const isPrisonUser = (user: HmppsUser): user is PrisonUser => {
   return user.authSource === 'nomis'
 }

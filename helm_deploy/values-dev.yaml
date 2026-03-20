@@ -81,6 +81,7 @@ generic-service:
     SUPPORT_ADDITIONAL_NEEDS_URL: https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api-dev.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements-dev.hmpps.service.justice.gov.uk
+    CONTACTS_UI_URL: https://contacts-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
@@ -92,9 +93,12 @@ generic-service:
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
+    CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
+    USE_NEW_DPS_HEADER: "true"
+    USE_NEW_DPS_CHANGE_CASELOAD: "true"
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-micro-frontend-components-non-prod
+  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
 
   elastiCacheAlertsClusterIds:
     cp-98b777d6bc652977-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"

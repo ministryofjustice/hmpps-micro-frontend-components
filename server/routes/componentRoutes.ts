@@ -4,20 +4,16 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
-import populateCurrentUser from '../middleware/populateCurrentUser'
-import componentsController, {
-  ComponentsData,
-  FooterViewModel,
-  HeaderViewModel,
-} from '../controllers/componentsController'
-import { AvailableComponent } from '../@types/AvailableComponent'
+import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
 import Component from '../@types/Component'
 import { TokenData } from '../@types/Users'
-import { assetMap } from '../utils/utils'
+import ComponentsController from '../controllers/componentsController'
+import populateCurrentUser from '../middleware/populateCurrentUser'
+import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services.contentfulService)
+  const controller = new ComponentsController(services.contentfulService)
 
   const jwksIssuer = jwksRsa.expressJwtSecret({
     cache: true,
@@ -41,33 +37,6 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
-  async function getHeaderResponseBody(res: Response, viewModelCached?: HeaderViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['header'], res.locals.user)).header
-
-    return new Promise(resolve => {
-      res.render('components/header', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/header.css')}`],
-          javascript: [`${config.ingressUrl}${assetMap('/assets/js/header.js')}`],
-        })
-      })
-    })
-  }
-
-  async function getFooterResponseBody(res: Response, viewModelCached?: FooterViewModel): Promise<Component> {
-    const viewModel = viewModelCached ?? (await controller.getViewModels(['footer'], res.locals.user)).footer
-    return new Promise(resolve => {
-      res.render('components/footer', viewModel, (_, html) => {
-        resolve({
-          html,
-          css: [`${config.ingressUrl}${assetMap('/assets/css/footer.css')}`],
-          javascript: [],
-        })
-      })
-    })
-  }
-
   /**
    * @swagger
    * /header:
@@ -90,7 +59,8 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getHeaderResponseBody(res)
+    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
   })
 
@@ -116,7 +86,8 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Component'
    */
   router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
-    const response = await getFooterResponseBody(res)
+    const viewModel = await controller.getFooterViewModel(res.locals.user)
+    const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
   })
 
@@ -133,18 +104,22 @@ export default function componentRoutes(services: Services): Router {
    *           type: array
    *           items:
    *             type: string
+   *             enum:
+   *               - header
+   *               - footer
    *         description: The component(s) to retrieve. Available components are 'header' and 'footer'
    *         required: true
+   *         style: form
    *         explode: true
    *         examples:
    *           header:
-   *             value: header
+   *             value: [header]
    *             summary: Request the header component
    *           footer:
-   *             value: footer
+   *             value: [footer]
    *             summary: Request the footer component
    *           headerAndFooter:
-   *             value: ['header', 'footer']
+   *             value: [header, footer]
    *             summary: Request both the header and footer components
    *       - in: header
    *         name: x-user-token
@@ -161,40 +136,24 @@ export default function componentRoutes(services: Services): Router {
    *                $ref: '#/components/schemas/Components'
    */
   router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
-    const componentMethods: Record<
-      AvailableComponent,
-      (r: Response, cachedViewModel: HeaderViewModel | FooterViewModel) => Promise<Component>
-    > = {
-      header: getHeaderResponseBody,
-      footer: getFooterResponseBody,
+    const componentsRequested = [req.query.component].flat().filter(isComponent)
+    if (!componentsRequested.length) {
+      return res.send({})
     }
 
-    const componentsRequested = [req.query.component]
-      .flat()
-      .filter(component => componentMethods[component as AvailableComponent]) as AvailableComponent[]
-
-    if (!componentsRequested.length) return res.send({})
+    const renderer = new ComponentRenderer(res)
     const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
-
-    const renders = await Promise.all(
-      componentsRequested.map(component =>
-        componentMethods[component as AvailableComponent](res, viewModels[component]),
+    const renderedComponents: Record<AvailableComponent, Component> = Object.fromEntries(
+      await Promise.all(
+        componentsRequested.map(componentName =>
+          renderer
+            .renderComponent(viewModels[componentName])
+            .then(renderedComponent => [componentName, renderedComponent]),
+        ),
       ),
     )
 
-    const responseBody = componentsRequested.reduce<
-      Partial<Record<AvailableComponent, Component>> & { meta: ComponentsData['meta'] }
-    >(
-      (output, componentName, index) => {
-        return {
-          ...output,
-          [componentName]: renders[index],
-        }
-      },
-      { meta: viewModels.meta },
-    )
-
-    return res.send(responseBody)
+    return res.send({ meta: viewModels.meta, ...renderedComponents })
   })
 
   router.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
@@ -229,15 +188,20 @@ export default function componentRoutes(services: Services): Router {
  *     Service:
  *       type: object
  *       properties:
- *         id: string
- *         heading: string
- *         description: string
- *         href: string
+ *         id:
+ *           type: string
+ *         heading:
+ *           type: string
+ *         description:
+ *           type: string
+ *         href:
+ *           type: string
  *
  *     Component:
  *       type: object
  *       properties:
- *         html: string
+ *         html:
+ *           type: string
  *         css:
  *           type: array
  *           items:
@@ -255,8 +219,10 @@ export default function componentRoutes(services: Services): Router {
  *           description: Component name (header, footer) as the key with the component html and links to JS and CSS for the component
  *           example:
  *             html: <div>...</div>
- *             css: ['https://example.com/styles.css']
- *             javascript: ['https://example.com/scripts.js']
+ *             css:
+ *               - https://example.com/styles.css
+ *             javascript:
+ *               - https://example.com/scripts.js
  *         meta:
  *           type: object
  *           description: Data about the user caseloads and services they have access to
@@ -273,37 +239,33 @@ export default function componentRoutes(services: Services): Router {
  *                $ref: '#/components/schemas/Service'
  *       example:
  *         header:
- *           html: <div>...</div>
- *           css: ['https://example.com/header-styles.css']
- *           javascript: ['https://example.com/header-scripts.js']
+ *           html: <header>...</header>
+ *           css:
+ *             - https://example.com/header-styles.css
+ *           javascript:
+ *             - https://example.com/header-scripts.js
  *         footer:
- *           html: <div>...</div>
- *           css: ['https://example.com/footer-styles.css']
- *           javascript: ['https://example.com/footer-scripts.js']
- *         meta: {
- *           activeCaseLoad: {
- *              caseLoadId: "FNI",
- *              description: "Full Sutton (HMP)",
- *              type: "INST",
- *              caseloadFunction: "GENERAL",
- *              currentlyActive: true
- *           },
- *           caseLoads: [
- *              {
- *                 caseLoadId: "FNI",
- *                 description: "Full Sutton (HMP)",
- *                 type: "INST",
- *                 caseloadFunction: "GENERAL",
- *                 currentlyActive: true
- *              },
- *           ],
- *           services: [
- *             {
- *               id: 'create-and-vary-a-licence',
- *               heading: 'Create and vary a licence',
- *               description: 'Create and vary standard determinate licences and post sentence supervision orders.',
- *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk,
- *             }
- *           ]
- *         }
+ *           html: <footer>...</footer>
+ *           css:
+ *             - https://example.com/footer-styles.css
+ *           javascript:
+ *             - https://example.com/footer-scripts.js
+ *         meta:
+ *           activeCaseLoad:
+ *             caseLoadId: FNI
+ *             description: Full Sutton (HMP)
+ *             type: INST
+ *             caseloadFunction: GENERAL
+ *             currentlyActive: true
+ *           caseLoads:
+ *             - caseLoadId: FNI
+ *               description: Full Sutton (HMP)
+ *               type: INST
+ *               caseloadFunction: GENERAL
+ *               currentlyActive: true
+ *           services:
+ *             - id: create-and-vary-a-licence
+ *               heading: Create and vary a licence
+ *               description: Create and vary standard determinate licences and post sentence supervision orders.
+ *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
  */

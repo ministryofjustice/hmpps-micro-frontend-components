@@ -1,4 +1,4 @@
-import componentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
+import ComponentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
@@ -11,13 +11,14 @@ const contentfulServiceMock = {
   ],
 } as undefined as ContentfulService
 
-const controller = componentsController(contentfulServiceMock)
+const controller = new ComponentsController(contentfulServiceMock)
 
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
-  ingressUrl: 'localhost',
+  hasJavascript: true,
+  ingressUrl: 'http://localhost:3000',
   isPrisonUser: true,
-  changeCaseLoadLink: 'http://localhost:3001/change-caseload',
+  changeCaseLoadLink: 'http://localhost:3002/change-caseload',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
   dpsSearchLink: 'http://localhost:3001/prisoner-search',
   menuLink: 'http://localhost:3001#homepage-services',
@@ -44,6 +45,7 @@ const expectedFooterViewModel: FooterViewModel = {
   ],
   isPrisonUser: true,
   component: 'footer',
+  hasJavascript: false,
 }
 
 const expectedMeta: PrisonUserAccessMeta = {
@@ -60,11 +62,13 @@ describe('componentsController', () => {
 
   describe('getHeaderViewModel', () => {
     it('should return the HeaderViewModel for a prison user', async () => {
+      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getHeaderViewModel(prisonUserMock)
       expect(output).toEqual({ ...expectedHeaderViewModel, isPrisonUser: true })
     })
 
     it('should return the HeaderViewModel for a non-prison user', async () => {
+      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getHeaderViewModel(hmppsUserMock)
       expect(output).toEqual({ ...expectedHeaderViewModel, isPrisonUser: false })
     })
@@ -81,6 +85,7 @@ describe('componentsController', () => {
         ],
         isPrisonUser: true,
         component: 'footer',
+        hasJavascript: false,
       })
     })
 
@@ -99,6 +104,7 @@ describe('componentsController', () => {
 
   describe('getViewModels', () => {
     it('should get view models for prison users', async () => {
+      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header', 'footer'], prisonUserMock)
 
       expect(output).toEqual({
@@ -109,6 +115,7 @@ describe('componentsController', () => {
     })
 
     it('should get view models for non-prison users', async () => {
+      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header', 'footer'], hmppsUserMock)
 
       expect(output).toEqual({
@@ -119,6 +126,7 @@ describe('componentsController', () => {
     })
 
     it('should work for single components, header', async () => {
+      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header'], prisonUserMock)
 
       expect(output).toEqual({

@@ -5,20 +5,24 @@ import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../interfaces/Service'
 
-export interface HeaderViewModel {
-  isPrisonUser: boolean
-  changeCaseLoadLink: string
+export interface ViewModel {
   component: string
+  isPrisonUser: boolean
+  hasJavascript: boolean
+}
+
+export interface HeaderViewModel extends ViewModel {
+  changeCaseLoadLink: string
+  component: 'header'
   ingressUrl: string
   dpsSearchLink: string
   manageDetailsLink: string
   menuLink: string
 }
 
-export interface FooterViewModel {
-  isPrisonUser: boolean
+export interface FooterViewModel extends ViewModel {
+  component: 'footer'
   managedPages: ManagedPageLink[]
-  component: string
 }
 
 const defaultFooterLinks: ManagedPageLink[] = [
@@ -64,48 +68,44 @@ const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
   allocationJobResponsibilities: [],
 }
 
-export default (
-  contentfulService: ContentfulService,
-): {
-  getHeaderViewModel: (user: HmppsUser) => Promise<HeaderViewModel>
-  getFooterViewModel: (user: HmppsUser) => Promise<FooterViewModel>
-  getViewModels: (components: AvailableComponent[], user: HmppsUser) => Promise<ComponentsData>
-} => ({
+export default class {
+  constructor(private readonly contentfulService: ContentfulService) {}
+
   async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
-      changeCaseLoadLink: `${config.serviceUrls.dps.url}/change-caseload`,
+      changeCaseLoadLink: `${config.features.useNewDpsChangeCaseload ? config.serviceUrls.newDps.url : config.serviceUrls.dps.url}/change-caseload`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
       component: 'header',
+      hasJavascript: true,
       ingressUrl: config.ingressUrl,
       dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
     }
-  },
+  }
 
   async getFooterViewModel(user: HmppsUser): Promise<FooterViewModel> {
     const managedPages = config.contentfulFooterLinksEnabled
-      ? await contentfulService.getManagedPages()
+      ? await this.contentfulService.getManagedPages()
       : defaultFooterLinks
 
     return {
       managedPages,
       isPrisonUser: isPrisonUser(user),
       component: 'footer',
+      hasJavascript: false,
     }
-  },
+  }
 
-  async getViewModels(components: AvailableComponent[], user: HmppsUser) {
+  async getViewModels(components: readonly AvailableComponent[], user: HmppsUser): Promise<ComponentsData> {
     const accessMethods = {
       header: this.getHeaderViewModel,
       footer: this.getFooterViewModel,
     }
 
-    const viewModels = await Promise.all(
-      components.map(component => accessMethods[component as AvailableComponent](user)),
-    )
+    const viewModels = await Promise.all(components.map(component => accessMethods[component](user)))
 
-    return components.reduce<ComponentsData>(
+    return components.reduce(
       (output, componentName, index) => {
         return {
           ...output,
@@ -116,13 +116,13 @@ export default (
         meta:
           user.authSource === 'nomis'
             ? {
-                caseLoads: user.caseLoads.map(c => ({
+                caseLoads: user.caseLoads.map<CaseLoad>(c => ({
                   caseLoadId: c.id,
                   description: c.name,
                   type: 'INST',
                   caseloadFunction: c.function,
                   currentlyActive: c.id === user.activeCaseLoad?.id,
-                })) as CaseLoad[],
+                })),
                 activeCaseLoad: (user.activeCaseLoad
                   ? {
                       caseLoadId: user.activeCaseLoad.id,
@@ -131,15 +131,15 @@ export default (
                       caseloadFunction: user.activeCaseLoad.function,
                       currentlyActive: true,
                     }
-                  : null) as CaseLoad | null,
+                  : null) satisfies CaseLoad | null,
                 services: user.services,
                 allocationJobResponsibilities: user.allocationJobResponsibilities,
               }
             : DEFAULT_USER_ACCESS,
       },
     )
-  },
-})
+  }
+}
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
   meta: PrisonUserAccessMeta

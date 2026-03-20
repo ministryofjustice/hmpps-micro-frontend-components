@@ -1,0 +1,25 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " – Previewing all components" %}
+
+{% block header %}
+  {{ header | safe }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Previewing all components</h1>
+    <p>
+      This page shows the header and footer components as would be seen in HMPPS services.
+      Prison users see the DPS version and other users see the external ones.
+    </p>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+  {{ footer | safe }}
+{% endblock %}

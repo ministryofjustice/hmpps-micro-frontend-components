@@ -1,6 +1,7 @@
 const { globSync } = require('node:fs')
 const { copy } = require('esbuild-plugin-copy')
 const { typecheckPlugin } = require('@jgoz/esbuild-plugin-typecheck')
+const { swaggerJSDocsPlugin } = require('./swaggerJSDocsPlugin')
 const { buildNotificationPlugin } = require('./utils')
 
 /**
@@ -15,6 +16,7 @@ const getAppConfig = buildConfig => ({
   platform: 'node',
   format: 'cjs',
   plugins: [
+    swaggerJSDocsPlugin(),
     typecheckPlugin({ watch: buildConfig.isWatchMode }),
     copy({
       resolveFrom: 'cwd',
