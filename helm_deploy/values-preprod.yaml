@@ -93,7 +93,7 @@ generic-service:
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
     CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
     USE_NEW_DPS_HEADER: "false"
-    USE_NEW_DPS_CHANGE_CASELOAD:: "false"
+    USE_NEW_DPS_CHANGE_CASELOAD: "false"
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
