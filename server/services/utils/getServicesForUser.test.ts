@@ -28,7 +28,7 @@ jest.mock('../../config', () => ({
     secureSocialVideoCalls: { url: 'url' },
     sendLegalMail: { url: 'url' },
     welcomePeopleIntoPrison: { url: 'url', enabledPrisons: 'LEI,LIV' },
-    mercurySubmit: { url: 'url' },
+    submitIntelligenceReport: { url: 'url' },
     manageIntelligence: { url: 'url' },
     manageRestrictedPatients: { url: 'url' },
     createAndVaryALicence: { url: 'url' },
