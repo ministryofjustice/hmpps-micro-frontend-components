@@ -323,7 +323,7 @@ a.cdps-header__link {
 
 .cdps-header__item {
   .cdps-header__link {
-    &:focus {
+    &:focus-visible {
       --cdps-header-bg-colour: #{$govuk-focus-colour};
       --cdps-header-fg-colour: #{$govuk-focus-text-colour};
 
