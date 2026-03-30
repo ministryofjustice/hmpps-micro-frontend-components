@@ -242,12 +242,6 @@ a.cdps-header__link {
     --cdps-header-bg-colour: #333;
   }
 
-  .cdps-header__link {
-    &:hover {
-      --cdps-header-fg-colour: #{$cdps-header-hover-colour};
-    }
-  }
-
   .cdps-header__icon--search {
     display: block;
   }
