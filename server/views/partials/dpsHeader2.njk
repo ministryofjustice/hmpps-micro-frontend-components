@@ -87,7 +87,7 @@ TODO:
               {% if service.navEnabled %}
                 {% set serviceLink = service.href %}
                 {% if (user.activeCaseLoad.id in config.clientsideAppInsightsEnabledCaseloads) or ('***' in config.clientsideAppInsightsEnabledCaseloads) %}
-                  {% set serviceLink = serviceLink + ('&' if '?' in serviceLink else '?') + 'mfeReferralClientId=' + user.clientId %}
+                  {% set serviceLink = serviceLink + ('&' if '?' in serviceLink else '?') + 'fromDpsHeader=true'%}
                 {% endif %}
                 <li><a href="{{ serviceLink }}" class="govuk-link govuk-link--no-visited-state">{{ service.heading }}</a></li>
               {% endif %}
