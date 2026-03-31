@@ -242,12 +242,6 @@ a.cdps-header__link {
     --cdps-header-bg-colour: #333;
   }
 
-  .cdps-header__link {
-    &:hover {
-      --cdps-header-fg-colour: #{$cdps-header-hover-colour};
-    }
-  }
-
   .cdps-header__icon--search {
     display: block;
   }
@@ -329,7 +323,7 @@ a.cdps-header__link {
 
 .cdps-header__item {
   .cdps-header__link {
-    &:focus {
+    &:focus-visible {
       --cdps-header-bg-colour: #{$govuk-focus-colour};
       --cdps-header-fg-colour: #{$govuk-focus-text-colour};
 
