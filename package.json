@@ -40,7 +40,7 @@
     "@contentful/rich-text-types": "^17.2.5",
     "@ministryofjustice/frontend": "8.0.0",
     "@ministryofjustice/hmpps-auth-clients": "1.0.2",
-    "@ministryofjustice/hmpps-rest-client": "1.1.0",
+    "@ministryofjustice/hmpps-rest-client": "1.2.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.1",
