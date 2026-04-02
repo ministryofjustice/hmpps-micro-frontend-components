@@ -19,10 +19,23 @@ class DPSHeader {
         }
       })
       .filter<MenuItem>(menuItem => !!menuItem)
+
+    const $caseloadAnchor = $header.querySelector<HTMLAnchorElement>('.cdps-header__item--caseload .cdps-header__link')
+    if ($caseloadAnchor) {
+      this.setBackUrl($caseloadAnchor)
+    }
   }
 
   closeMenus(except?: string): void {
     this.menuItems.filter(menuItem => menuItem.name !== except).forEach(menuItem => menuItem.close())
+  }
+
+  private setBackUrl($caseloadAnchor: HTMLAnchorElement): void {
+    try {
+      const url = new URL($caseloadAnchor.href)
+      url.searchParams.set('backUrl', window.location.href)
+      $caseloadAnchor.href = url.href
+    } catch {}
   }
 }
 

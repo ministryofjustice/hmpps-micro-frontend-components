@@ -28,6 +28,14 @@ context('Header', () => {
     cy.task('stubCaseloadSwitcherPage')
 
     indexPage.header.caseload.name.should('contain.text', 'Moorland')
+
+    indexPage.header.caseload.button.then($button => {
+      const url = new URL($button.attr('href'))
+      expect(url.host).to.equal('localhost:9091')
+      expect(url.pathname).to.equal('/new-dps/change-caseload')
+      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+    })
+
     indexPage.header.caseload.button.click()
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
