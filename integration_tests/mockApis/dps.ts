@@ -4,7 +4,7 @@ const stubSearchPage = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/dps/prisoner-search.*',
+      urlPattern: '/new-dps/prisoner-search.*',
     },
     response: {
       status: 200,

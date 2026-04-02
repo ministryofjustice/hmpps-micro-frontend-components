@@ -109,7 +109,7 @@ export default {
   /** Phase banner tag label (blank in prod namespace) */
   environmentName: get('ENVIRONMENT_NAME', ''),
   serviceUrls: {
-    dps: { url: get('DPS_URL', 'http://localhost:3001', requiredInProduction) },
+    oldDps: { url: get('OLD_DPS_URL', 'http://localhost:3001', requiredInProduction) },
     newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },
     activities: {
       url: get('ACTIVITIES_URL', 'http://localhost:3001', requiredInProduction),
@@ -274,6 +274,5 @@ export default {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
     useNewDpsHeader: get('USE_NEW_DPS_HEADER', 'false') === 'true',
-    useNewDpsChangeCaseload: get('USE_NEW_DPS_CHANGE_CASELOAD', 'false') === 'true',
   },
 }

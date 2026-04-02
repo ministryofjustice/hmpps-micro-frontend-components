@@ -12,16 +12,17 @@ context('Footer', () => {
     cy.task('stubGetStaffAllocationPolicies')
   })
 
-  it('Services menu visible in footer', () => {
+  let indexPage: IndexPage
+  beforeEach(() => {
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage = Page.verifyOnPage(IndexPage)
+  })
 
+  it('Services menu visible in footer', () => {
     indexPage.footer.services.list().should('have.length', 8)
   })
 
   it('Links should be displayed', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.footer.feedbackSurveyLink().should('be.visible')
     indexPage.footer.accessibilityLink().should('be.visible')
     indexPage.footer.termsAndConditionsLink().should('be.visible')

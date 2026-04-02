@@ -74,13 +74,13 @@ export default class {
   async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
-      changeCaseLoadLink: `${config.features.useNewDpsChangeCaseload ? config.serviceUrls.newDps.url : config.serviceUrls.dps.url}/change-caseload`,
+      ingressUrl: config.ingressUrl,
+      changeCaseLoadLink: `${config.serviceUrls.newDps.url}/change-caseload`,
+      dpsSearchLink: `${config.serviceUrls.newDps.url}/prisoner-search`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
-      menuLink: `${config.serviceUrls.dps.url}#homepage-services`,
+      menuLink: `${config.serviceUrls.newDps.url}#homepage-services`,
       component: 'header',
       hasJavascript: true,
-      ingressUrl: config.ingressUrl,
-      dpsSearchLink: `${config.serviceUrls.dps.url}/prisoner-search`,
     }
   }
 

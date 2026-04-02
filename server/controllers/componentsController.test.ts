@@ -16,12 +16,12 @@ const controller = new ComponentsController(contentfulServiceMock)
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
   hasJavascript: true,
-  ingressUrl: 'http://localhost:3000',
   isPrisonUser: true,
+  ingressUrl: 'http://localhost:3000',
   changeCaseLoadLink: 'http://localhost:3002/change-caseload',
+  dpsSearchLink: 'http://localhost:3002/prisoner-search',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
-  dpsSearchLink: 'http://localhost:3001/prisoner-search',
-  menuLink: 'http://localhost:3001#homepage-services',
+  menuLink: 'http://localhost:3002#homepage-services',
 }
 
 const expectedFooterViewModel: FooterViewModel = {
@@ -62,13 +62,11 @@ describe('componentsController', () => {
 
   describe('getHeaderViewModel', () => {
     it('should return the HeaderViewModel for a prison user', async () => {
-      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getHeaderViewModel(prisonUserMock)
       expect(output).toEqual({ ...expectedHeaderViewModel, isPrisonUser: true })
     })
 
     it('should return the HeaderViewModel for a non-prison user', async () => {
-      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getHeaderViewModel(hmppsUserMock)
       expect(output).toEqual({ ...expectedHeaderViewModel, isPrisonUser: false })
     })
@@ -104,7 +102,6 @@ describe('componentsController', () => {
 
   describe('getViewModels', () => {
     it('should get view models for prison users', async () => {
-      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header', 'footer'], prisonUserMock)
 
       expect(output).toEqual({
@@ -115,7 +112,6 @@ describe('componentsController', () => {
     })
 
     it('should get view models for non-prison users', async () => {
-      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header', 'footer'], hmppsUserMock)
 
       expect(output).toEqual({
@@ -126,7 +122,6 @@ describe('componentsController', () => {
     })
 
     it('should work for single components, header', async () => {
-      config.features.useNewDpsChangeCaseload = true
       const output = await controller.getViewModels(['header'], prisonUserMock)
 
       expect(output).toEqual({
