@@ -101,7 +101,7 @@ class MenuItem {
   closeSoon(): void {
     this.closeTimer = setTimeout(() => {
       this.close()
-    }, 100) as unknown as number
+    }, 100)
   }
 
   cancelCloseSoon(): void {
