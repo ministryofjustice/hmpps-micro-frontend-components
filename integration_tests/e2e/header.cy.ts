@@ -11,29 +11,28 @@ context('Header', () => {
     cy.task('stubManageUser')
     cy.task('stubCaseloads')
     cy.task('stubLocations')
-    cy.task('stubSearchPage')
-    cy.task('stubCaseloadSwitcherPage')
     cy.task('stubGetStaffAllocationPolicies')
   })
 
-  it('Phase banner visible in header', () => {
+  let indexPage: IndexPage
+  beforeEach(() => {
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage = Page.verifyOnPage(IndexPage)
+  })
+
+  it('Phase banner visible in header', () => {
     indexPage.header.headerPhaseBanner().should('contain.text', 'DEV')
   })
 
   it('Active caseload switcher visible in header', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
+    cy.task('stubCaseloadSwitcherPage')
+
     indexPage.header.caseloadSwitcher().should('contain.text', 'Moorland')
     indexPage.header.caseloadSwitcher().click()
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
 
   it('Services menu visible in header', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
     indexPage.header.services.menu().should('not.be.visible')
     indexPage.header.services.toggle().should('contain.text', 'Menu')
 
@@ -46,8 +45,6 @@ context('Header', () => {
   })
 
   it('User menu visible in header', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.header.user.toggle().should('be.visible')
     indexPage.header.user.name().should('contain.text', 'J. Doe')
 
@@ -62,8 +59,6 @@ context('Header', () => {
   })
 
   it('Search toggle visible in header', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.header.search.toggle().should('be.visible')
     indexPage.header.search.menu().should('not.be.visible')
 
@@ -75,8 +70,6 @@ context('Header', () => {
   })
 
   it('Search can be performed', () => {
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.header.search.toggle().should('be.visible')
     indexPage.header.search.menu().should('not.be.visible')
 
@@ -84,6 +77,9 @@ context('Header', () => {
     indexPage.header.search.menu().should('be.visible')
 
     indexPage.header.search.input().type('This is a test')
+
+    cy.task('stubSearchPage')
+
     indexPage.header.search.submit().click()
     Page.verifyOnPage(DpsSearchPage)
     cy.location('search').should('eq', '?keywords=This+is%20a%20test')

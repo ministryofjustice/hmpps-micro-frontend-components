@@ -50,7 +50,6 @@ beforeEach(async () => {
   allocationsApi = nock(config.apis.allocationsApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   manageUsersApi = nock(config.apis.manageUsersApi.url)
-  config.features.useNewDpsChangeCaseload = true
 
   nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
     access_token: 'system-token',
