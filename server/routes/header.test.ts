@@ -82,7 +82,7 @@ describe('GET /header', () => {
       allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
     })
 
-    it('should render digital prison services title', () => {
+    it('should render Digital Prison Services title', () => {
       return request(app)
         .get('/header')
         .set('x-user-token', prisonUserToken)
@@ -90,9 +90,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect(
-            $('a[class="connect-dps-common-header__link connect-dps-common-header__title__organisation-name"]').text(),
-          ).toContain('Digital Prison Services')
+          expect($('.cdps-header__item--crest').text()).toContain('Digital Prison Services')
         })
     })
 
@@ -145,7 +143,7 @@ describe('GET /header', () => {
         .expect('Content-Type', /json/)
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
-          expect($(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`).text().trim()).toEqual('Leeds')
+          expect($(`a[href="${config.serviceUrls.newDps.url}/change-caseload"]`).text()).toContain('Leeds')
         })
     })
 
@@ -229,9 +227,7 @@ describe('GET /header', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           expect(
-            $(
-              `a[class="connect-dps-external-header__link connect-dps-external-header__title__service-name"][href="${config.apis.hmppsAuth.url}"]`,
-            ).text(),
+            $(`a.connect-dps-external-header__title__service-name[href="${config.apis.hmppsAuth.url}"]`).text(),
           ).toContain('Digital Services')
 
           expect($('a[href="/sign-out"]').text()).toEqual('Sign out')

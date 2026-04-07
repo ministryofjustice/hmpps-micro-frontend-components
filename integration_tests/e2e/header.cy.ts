@@ -21,67 +21,77 @@ context('Header', () => {
   })
 
   it('Phase banner visible in header', () => {
-    indexPage.header.headerPhaseBanner().should('contain.text', 'DEV')
+    indexPage.header.environmentTag.should('contain.text', 'DEV')
   })
 
   it('Active caseload switcher visible in header', () => {
     cy.task('stubCaseloadSwitcherPage')
 
-    indexPage.header.caseloadSwitcher().should('contain.text', 'Moorland')
-    indexPage.header.caseloadSwitcher().click()
+    indexPage.header.caseload.name.should('contain.text', 'Moorland')
+
+    indexPage.header.caseload.button.then($button => {
+      const url = new URL($button.attr('href'))
+      expect(url.host).to.equal('localhost:9091')
+      expect(url.pathname).to.equal('/new-dps/change-caseload')
+      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+    })
+
+    indexPage.header.caseload.button.click()
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
 
   it('Services menu visible in header', () => {
-    indexPage.header.services.menu().should('not.be.visible')
-    indexPage.header.services.toggle().should('contain.text', 'Menu')
+    indexPage.header.services.menu.should('not.be.visible')
+    indexPage.header.services.button.should('contain.text', 'Menu')
 
-    indexPage.header.services.toggle().click()
-    indexPage.header.services.menu().should('be.visible')
-    indexPage.header.services.list().should('have.length', 8)
+    indexPage.header.services.button.click()
+    indexPage.header.user.menu.should('not.be.visible')
+    indexPage.header.services.menu.should('be.visible')
+    indexPage.header.search.menu.should('not.be.visible')
+    indexPage.header.services.list.should('have.length', 8)
 
-    indexPage.header.services.toggle().click()
-    indexPage.header.services.menu().should('not.be.visible')
+    indexPage.header.services.button.click()
+    indexPage.header.services.menu.should('not.be.visible')
   })
 
   it('User menu visible in header', () => {
-    indexPage.header.user.toggle().should('be.visible')
-    indexPage.header.user.name().should('contain.text', 'J. Doe')
+    indexPage.header.user.menu.should('not.be.visible')
+    indexPage.header.user.name.should('contain.text', 'J. Doe')
 
-    indexPage.header.user.menu().should('not.be.visible')
-    indexPage.header.user.toggle().click()
-    indexPage.header.user.menu().should('be.visible')
-    indexPage.header.user.signOutLink().should('contain.text', 'Sign out')
-    indexPage.header.user.manageDetailsLink().should('contain.text', 'Your account')
+    indexPage.header.user.button.click()
+    indexPage.header.user.menu.should('be.visible')
+    indexPage.header.services.menu.should('not.be.visible')
+    indexPage.header.search.menu.should('not.be.visible')
 
-    indexPage.header.user.toggle().click()
-    indexPage.header.user.menu().should('not.be.visible')
+    indexPage.header.user.signOutLink.should('contain.text', 'Sign out')
+    indexPage.header.user.manageDetailsLink.should('contain.text', 'Your account')
+
+    indexPage.header.user.button.click()
+    indexPage.header.user.menu.should('not.be.visible')
   })
 
   it('Search toggle visible in header', () => {
-    indexPage.header.search.toggle().should('be.visible')
-    indexPage.header.search.menu().should('not.be.visible')
+    indexPage.header.search.menu.should('not.be.visible')
 
-    indexPage.header.search.toggle().click()
-    indexPage.header.search.menu().should('be.visible')
+    indexPage.header.search.button.click()
+    indexPage.header.user.menu.should('not.be.visible')
+    indexPage.header.services.menu.should('not.be.visible')
+    indexPage.header.search.menu.should('be.visible')
 
-    indexPage.header.search.toggle().click()
-    indexPage.header.search.menu().should('not.be.visible')
+    indexPage.header.search.button.click()
+    indexPage.header.search.menu.should('not.be.visible')
   })
 
   it('Search can be performed', () => {
-    indexPage.header.search.toggle().should('be.visible')
-    indexPage.header.search.menu().should('not.be.visible')
+    indexPage.header.search.button.click()
+    indexPage.header.search.menu.should('be.visible')
 
-    indexPage.header.search.toggle().click()
-    indexPage.header.search.menu().should('be.visible')
-
-    indexPage.header.search.input().type('This is a test')
+    indexPage.header.search.input.type('This is a test')
 
     cy.task('stubSearchPage')
 
-    indexPage.header.search.submit().click()
+    indexPage.header.search.submit.click()
     Page.verifyOnPage(DpsSearchPage)
-    cy.location('search').should('eq', '?keywords=This+is%20a%20test')
+    cy.location('search').should('eq', '?keywords=This+is+a+test')
   })
 })

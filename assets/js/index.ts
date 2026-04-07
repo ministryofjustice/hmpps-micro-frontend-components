@@ -5,4 +5,3 @@ govukFrontend.initAll()
 mojFrontend.initAll()
 
 import './header'
-import './header2'
