@@ -19,7 +19,7 @@ const expectedHeaderViewModel: HeaderViewModel = {
   isPrisonUser: true,
   ingressUrl: 'http://localhost:3000',
   changeCaseLoadLink: 'http://localhost:3002/change-caseload',
-  dpsSearchLink: 'http://localhost:3002/prisoner-search',
+  dpsSearchLink: 'http://localhost:3001/prisoner-search',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
   menuLink: 'http://localhost:3002#homepage-services',
 }

@@ -76,7 +76,7 @@ export default class {
       isPrisonUser: isPrisonUser(user),
       ingressUrl: config.ingressUrl,
       changeCaseLoadLink: `${config.serviceUrls.newDps.url}/change-caseload`,
-      dpsSearchLink: `${config.serviceUrls.newDps.url}/prisoner-search`,
+      dpsSearchLink: `${config.serviceUrls.oldDps.url}/prisoner-search`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.newDps.url}#homepage-services`,
       component: 'header',
