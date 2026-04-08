@@ -115,16 +115,7 @@ export default class UserService {
   }
 
   private caseLoadsHaveNotChanged(caseLoads: PrisonCaseload[], cache: PrisonUserAccess): boolean {
-    return (
-      cache?.caseLoads
-        ?.map(c => c.id)
-        .sort()
-        .join(',') ===
-      caseLoads
-        ?.map(c => c.id)
-        .sort()
-        .join(',')
-    )
+    return cache?.caseLoads?.map(c => c.id)?.join(',') === caseLoads?.map(c => c.id)?.join(',')
   }
 
   private sortCaseLoads(caseLoads: PrisonCaseload[]): void {
