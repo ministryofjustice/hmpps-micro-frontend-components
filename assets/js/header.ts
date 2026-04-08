@@ -1,131 +1,138 @@
-const itemOpenClass = 'connect-dps-common-header__navigation__item-open'
-const tabOpenClass = 'connect-dps-common-header__toggle-open'
+class DPSHeader {
+  static init(): void {
+    const $header = document.querySelector<HTMLElement>('[data-module="cdps-header"]')
+    if ($header) {
+      new this($header)
+    }
+  }
 
-function initHeader() {
-  const searchToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__search-menu-toggle')
-  const searchMenu = document.querySelector<HTMLDivElement>('#connect-dps-common-header-search-menu')!
+  private menuItems: MenuItem[] = []
 
-  const userToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__user-menu-toggle')!
-  const userMenu = document.querySelector<HTMLUListElement>('#connect-dps-common-header-user-menu')!
+  constructor($header: HTMLElement) {
+    this.menuItems = ['user', 'services', 'search']
+      .map(name => {
+        const $item = $header.querySelector<HTMLDivElement>(`.cdps-header__item--${name}`)
+        const $button = $item?.querySelector<HTMLAnchorElement>('.cdps-header__link')
+        const $menu = $header.querySelector<HTMLDivElement>(`.cdps-header__menu--${name}`)
+        if ($item && $button && $menu) {
+          return new MenuItem(this, name, $item, $button, $menu)
+        }
+      })
+      .filter<MenuItem>(menuItem => !!menuItem)
 
-  const servicesToggle = document.querySelector<HTMLButtonElement>('.connect-dps-common-header__services-menu-toggle')!
-  const servicesMenu = document.querySelector<HTMLDivElement>('#connect-dps-common-header-services-menu')!
+    const $caseloadAnchor = $header.querySelector<HTMLAnchorElement>('.cdps-header__item--caseload .cdps-header__link')
+    if ($caseloadAnchor) {
+      this.setBackUrl($caseloadAnchor)
+    }
+  }
 
-  const searchSubmitBtn = searchMenu && searchMenu.querySelector<HTMLButtonElement>('button[type="submit"]')
-  const submitUrl = searchMenu && searchMenu.querySelector('form')?.getAttribute('action')
+  closeMenus(except?: string): void {
+    this.menuItems.filter(menuItem => menuItem.name !== except).forEach(menuItem => menuItem.close())
+  }
 
-  if (searchToggle) {
-    hideFallbackLinks()
-    searchToggle.removeAttribute('hidden')
-    userToggle.removeAttribute('hidden')
-    servicesToggle.removeAttribute('hidden')
+  private setBackUrl($caseloadAnchor: HTMLAnchorElement): void {
+    try {
+      const url = new URL($caseloadAnchor.href)
+      url.searchParams.set('backUrl', window.location.href)
+      $caseloadAnchor.href = url.href
+    } catch {}
+  }
+}
 
-    closeTabs([
-      [searchToggle, searchMenu],
-      [userToggle, userMenu],
-      [servicesToggle, servicesMenu],
-    ])
+class MenuItem {
+  private closeTimer: number | null = null
 
-    searchToggle.addEventListener('click', function () {
-      closeTabs([
-        [userToggle, userMenu],
-        [servicesToggle, servicesMenu],
-      ])
-      toggleMenu(searchToggle, searchMenu)
+  constructor(
+    private readonly header: DPSHeader,
+    readonly name: string,
+    private readonly $item: HTMLDivElement,
+    private readonly $button: HTMLAnchorElement,
+    private readonly $menu: HTMLDivElement,
+  ) {
+    $item.classList.add('cdps-header__item--with-menu')
+
+    $button.role = 'button'
+    $button.ariaControlsElements = [$menu]
+    $button.ariaExpanded = 'false'
+    $button.href = '#'
+    $button.addEventListener('click', event => {
+      this.toggle(event)
     })
-    userToggle.addEventListener('click', function () {
-      closeTabs([
-        [searchToggle, searchMenu],
-        [servicesToggle, servicesMenu],
-      ])
-      toggleMenu(userToggle, userMenu)
-    })
-    servicesToggle.addEventListener('click', function () {
-      closeTabs([
-        [searchToggle, searchMenu],
-        [userToggle, userMenu],
-      ])
-      toggleMenu(servicesToggle, servicesMenu)
+    if (name === 'user') {
+      this.initClosingMenu()
+    }
+  }
+
+  private initClosingMenu(): void {
+    // close on blur
+    const closeSoon = this.closeSoon.bind(this)
+    const cancelCloseSoon = this.cancelCloseSoon.bind(this)
+    this.$button.addEventListener('focus', cancelCloseSoon)
+    this.$button.addEventListener('blur', closeSoon)
+    this.$menu.querySelectorAll('a').forEach($link => {
+      $link.addEventListener('focus', cancelCloseSoon)
+      $link.addEventListener('blur', closeSoon)
     })
 
-    searchSubmitBtn?.addEventListener('click', function (event) {
+    // close on escape press
+    this.$button.addEventListener('keydown', event => {
+      this.closeOnEscape(event)
+    })
+    this.$menu.addEventListener('keydown', event => {
+      this.closeOnEscape(event)
+    })
+  }
+
+  get isOpen(): boolean {
+    return this.$button.ariaExpanded === 'true'
+  }
+
+  toggle(event: PointerEvent | KeyboardEvent): void {
+    event.preventDefault()
+    this.header.closeMenus(this.name)
+    if (this.isOpen) {
+      this.close()
+    } else {
+      this.open()
+    }
+  }
+
+  open(): void {
+    this.$item.classList.add('cdps-header__item--with-open-menu')
+    this.$button.ariaExpanded = 'true'
+    this.$menu.ariaHidden = 'false'
+    this.$menu.removeAttribute('hidden')
+  }
+
+  close(): void {
+    this.$item.classList.remove('cdps-header__item--with-open-menu')
+    this.$button.ariaExpanded = 'false'
+    this.$menu.ariaHidden = 'true'
+    this.$menu.setAttribute('hidden', 'hidden')
+  }
+
+  closeSoon(): void {
+    this.closeTimer = setTimeout(() => {
+      this.close()
+    }, 100)
+  }
+
+  cancelCloseSoon(): void {
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer)
+      this.closeTimer = null
+    }
+  }
+
+  closeOnEscape(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
       event.preventDefault()
-      const searchTerms = searchMenu.querySelector<HTMLInputElement>('#connect-dps-common-header-prisoner-search')!.value
-      const parsed = searchTerms.replace(' ', '+')
-      window.location.href = submitUrl + '?keywords=' + parsed
-    })
-
-    function closeUserMenuOnEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        closeTabs([[userToggle, userMenu]])
-        userToggle.focus()
-      }
+      this.close()
+      this.$button.focus()
     }
-    userToggle.addEventListener('keydown', closeUserMenuOnEscape)
-    userMenu.addEventListener('keydown', closeUserMenuOnEscape)
-
-    let closeUserMenuTimer: number | null = null
-    function cancelCloseUserMenu() {
-      if (closeUserMenuTimer) {
-        clearTimeout(closeUserMenuTimer)
-      }
-    }
-    function closeUserMenuSoon() {
-      closeUserMenuTimer = setTimeout(() => {
-        closeTabs([[userToggle, userMenu]])
-      }, 100) as unknown as number
-    }
-    userToggle.addEventListener('focus', cancelCloseUserMenu)
-    userToggle.addEventListener('blur', closeUserMenuSoon)
-    userMenu.querySelectorAll<HTMLAnchorElement>('.connect-dps-common-header__submenu-link').forEach(userMenuLink => {
-      userMenuLink.addEventListener('focus', cancelCloseUserMenu)
-      userMenuLink.addEventListener('blur', closeUserMenuSoon)
-    })
   }
 }
 
-function closeTabs(tabTuples: [toggle: HTMLButtonElement, menu: HTMLElement][]) {
-  tabTuples.forEach(([toggle, menu]) => {
-    menu.setAttribute('hidden', 'hidden')
-    toggle.classList.remove(tabOpenClass)
-    toggle.parentElement!.classList.remove(itemOpenClass)
-    toggle.setAttribute('aria-expanded', 'false')
-    if (toggle.dataset.textForShow) {
-      toggle.setAttribute('aria-label', toggle.dataset.textForShow)
-    }
-  })
-}
-
-function toggleMenu(toggle: HTMLButtonElement, menu: HTMLElement) {
-  const isOpen = !menu.getAttribute('hidden')
-  const header = document.querySelector<HTMLDivElement>('.connect-dps-common-header')!
-  header.classList.remove('connect-dps-service-menu-open')
-  header.classList.remove('connect-dps-search-menu-open')
-  if (isOpen) {
-    closeTabs([[toggle, menu]])
-  } else {
-    if (menu.id === 'connect-dps-common-header-services-menu') {
-      header.classList.add('connect-dps-service-menu-open')
-    }
-    if (menu.id === 'connect-dps-common-header-search-menu') {
-      header.classList.add('connect-dps-search-menu-open')
-    }
-    menu.removeAttribute('hidden')
-    toggle.classList.add(tabOpenClass)
-    toggle.parentElement!.classList.add(itemOpenClass)
-    toggle.setAttribute('aria-expanded', 'true')
-    if (toggle.dataset.textForHide) toggle.setAttribute('aria-label', toggle.dataset.textForHide)
-  }
-}
-
-function hideFallbackLinks() {
-  const searchLink = document.querySelector<HTMLAnchorElement>('.connect-dps-common-header__search-menu-link')!
-  const userLink = document.querySelector<HTMLDivElement>('.connect-dps-common-header__user-menu-link')!
-  const servicesLink = document.querySelector<HTMLDivElement>('.connect-dps-common-header__services-menu-link')!
-  searchLink.setAttribute('hidden', 'hidden')
-  userLink.setAttribute('hidden', 'hidden')
-  servicesLink.setAttribute('hidden', 'hidden')
-}
-
-document.addEventListener('DOMContentLoaded', initHeader, false)
+document.addEventListener('DOMContentLoaded', (): void => {
+  DPSHeader.init()
+})

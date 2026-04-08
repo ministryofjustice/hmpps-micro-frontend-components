@@ -34,11 +34,7 @@ calls the components endpoint and implements the response.
 
 Build and run the test application:
 
-```shell
-npm -prefix integration_tests install
-npm -prefix integration_tests run build
-npm run start-feature-test-app
-```
+`npm run start-feature-test-app`
 
 #### Run the integration test suite:
 

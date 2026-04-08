@@ -23,7 +23,7 @@ generic-service:
     # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
     INFO_DISABLED_APPS: ""
 
-    DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
+    OLD_DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
     ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk
     APPOINTMENTS_URL: https://activities-preprod.prison.service.justice.gov.uk
@@ -92,8 +92,6 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "EXI,BNI,LYI,LYI"
     CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
-    USE_NEW_DPS_HEADER: "true"
-    USE_NEW_DPS_CHANGE_CASELOAD: "false"
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32
