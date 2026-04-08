@@ -41,7 +41,12 @@ export default function setUpWebSecurity(): Router {
             "'unsafe-hashes'", // needed to allow swagger inline SVG style
           ],
           fontSrc: ["'self'"],
-          formAction: ["'self'", config.apis.hmppsAuth.externalUrl, config.serviceUrls.newDps.url],
+          formAction: [
+            "'self'",
+            config.apis.hmppsAuth.externalUrl,
+            config.serviceUrls.oldDps.url,
+            config.serviceUrls.newDps.url,
+          ],
         },
       },
       crossOriginEmbedderPolicy: true,
