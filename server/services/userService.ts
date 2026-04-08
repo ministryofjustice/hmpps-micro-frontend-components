@@ -37,10 +37,10 @@ export default class UserService {
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
     if (this.errorCount >= API_ERROR_LIMIT) return DEFAULT_USER_ACCESS
 
-    const cache: UserAccessCache = await this.getCache(user)
+    const cache = await this.getCache(user)
     const { userRoles, ...cachedResponse } = cache || ({} as UserAccessCache)
 
-    if (cache?.caseLoads.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
+    if (cache?.caseLoads?.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
 
     try {
       const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
@@ -60,10 +60,11 @@ export default class UserService {
         userCaseloadDetail.activeCaseload = potentialCaseLoad
       }
 
-      const activeCaseLoad = userCaseloadDetail.activeCaseload
-      const caseLoads = userCaseloadDetail.caseloads
+      const { activeCaseload: activeCaseLoad, caseloads: caseLoads } = userCaseloadDetail
 
-      if (!userCaseloadDetail.caseloads.length) return DEFAULT_USER_ACCESS
+      if (!caseLoads.length) return DEFAULT_USER_ACCESS
+      this.sortCaseLoads(caseLoads)
+
       if (
         cache &&
         this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
@@ -101,7 +102,7 @@ export default class UserService {
     }
   }
 
-  private getCache(user: PrisonUser): Promise<UserAccessCache> {
+  private getCache(user: PrisonUser): Promise<UserAccessCache | null> {
     return this.cacheService.getData<UserAccessCache>(`${user.username}_meta_data`)
   }
 
@@ -114,16 +115,11 @@ export default class UserService {
   }
 
   private caseLoadsHaveNotChanged(caseLoads: PrisonCaseload[], cache: PrisonUserAccess): boolean {
-    return (
-      cache?.caseLoads
-        ?.map(c => c.id)
-        .sort()
-        .join(',') ===
-      caseLoads
-        ?.map(c => c.id)
-        .sort()
-        .join(',')
-    )
+    return cache?.caseLoads?.map(c => c.id)?.join(',') === caseLoads?.map(c => c.id)?.join(',')
+  }
+
+  private sortCaseLoads(caseLoads: PrisonCaseload[]): void {
+    caseLoads?.sort(({ name: name1 }, { name: name2 }) => name1?.localeCompare(name2))
   }
 
   private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {

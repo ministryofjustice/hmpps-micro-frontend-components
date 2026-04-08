@@ -14,7 +14,7 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
-const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
+const tokenStore = jest.mocked(new TokenStore(null))
 
 const username = 'Bob'
 const token = { access_token: 'token-1', expires_in: 300 }
