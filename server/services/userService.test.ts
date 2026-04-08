@@ -11,8 +11,8 @@ import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClie
 import PrisonApiClient from '../data/prisonApiClient'
 
 const expectedCaseLoads: PrisonCaseload[] = [
-  { function: 'ADMIN', id: 'ADM_TEST', name: 'An Admin Caseload' },
-  { function: 'GENERAL', id: 'GEN_TEST', name: 'A General Caseload' },
+  { function: 'ADMIN', id: 'ADM_TEST', name: 'Admin Caseload' },
+  { function: 'GENERAL', id: 'GEN_TEST', name: 'General Caseload' },
 ]
 
 const expectedUserAccess: PrisonUserAccess = {
@@ -160,6 +160,27 @@ describe('User service', () => {
         const res = await userService.getPrisonUserAccess(prisonUserMock)
 
         expect(res).toEqual(DEFAULT_USER_ACCESS)
+      })
+
+      it('Sorts user’s caseloads by name', async () => {
+        manageUsersApiClient.getUserCaseLoads.mockResolvedValueOnce({
+          activeCaseload: expectedCaseLoads[0],
+          caseloads: [
+            ...expectedCaseLoads,
+            { function: 'GENERAL', id: 'ESI', name: 'East Sutton Park (HMP & YOI)' },
+            { function: 'GENERAL', id: 'BXI', name: 'Brixton (HMP)' },
+          ],
+        } as UserCaseloadDetail)
+
+        const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(userAccess.caseLoads).toEqual([
+          { function: 'ADMIN', id: 'ADM_TEST', name: 'Admin Caseload' },
+          { function: 'GENERAL', id: 'BXI', name: 'Brixton (HMP)' },
+          { function: 'GENERAL', id: 'ESI', name: 'East Sutton Park (HMP & YOI)' },
+          { function: 'GENERAL', id: 'GEN_TEST', name: 'General Caseload' },
+        ])
+        expect(cacheServiceMock.setData).toHaveBeenCalled()
       })
     })
 

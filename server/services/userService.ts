@@ -63,6 +63,8 @@ export default class UserService {
       const { activeCaseload: activeCaseLoad, caseloads: caseLoads } = userCaseloadDetail
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS
+      this.sortCaseLoads(caseLoads)
+
       if (
         cache &&
         this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
@@ -123,6 +125,10 @@ export default class UserService {
         .sort()
         .join(',')
     )
+  }
+
+  private sortCaseLoads(caseLoads: PrisonCaseload[]): void {
+    caseLoads?.sort(({ name: name1 }, { name: name2 }) => name1?.localeCompare(name2))
   }
 
   private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {
