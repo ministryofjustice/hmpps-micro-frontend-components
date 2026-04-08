@@ -351,7 +351,7 @@ export default (
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
-      href: `${config.serviceUrls.newDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
+      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
       navEnabled: true,
       enabled: () => isActivitiesEnabled,
     },
