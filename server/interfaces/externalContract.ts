@@ -28,12 +28,16 @@ export interface Component {
 }
 
 /**
- * Information about the current prison user
+ * Information about the current user and environment
  */
 export interface SharedData {
+  /** Caseloads available to prison user */
   caseLoads: CaseLoad[]
+  /** Currently active caseload for prison user */
   activeCaseLoad: CaseLoad | null
+  /** Services available to prison user */
   services: Service[]
+  /** Prison user allocated responsibilites */
   allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
 }
 

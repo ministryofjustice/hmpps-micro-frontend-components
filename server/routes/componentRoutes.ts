@@ -214,6 +214,32 @@ export default function componentRoutes(services: Services): Router {
  *           items:
  *             type: string
  *
+ *     SharedData:
+ *       type: object
+ *       description: Information about the current user and environment
+ *       properties:
+ *        activeCaseLoad:
+ *          $ref: '#/components/schemas/CaseLoad'
+ *          description: Currently active caseload for prison user
+ *        caseLoads:
+ *          type: array
+ *          description: Caseloads available to prison user
+ *          items:
+ *            $ref: '#/components/schemas/CaseLoad'
+ *        services:
+ *          type: array
+ *          description: Services available to prison user
+ *          items:
+ *            $ref: '#/components/schemas/Service'
+ *        allocationJobResponsibilities:
+ *          type: array
+ *          description: Prison user allocated responsibilites
+ *          items:
+ *            type: string
+ *            enum:
+ *              - KEY_WORKER
+ *              - PERSONAL_OFFICER
+ *
  *     Components:
  *       type: object
  *       properties:
@@ -228,18 +254,7 @@ export default function componentRoutes(services: Services): Router {
  *               - https://example.com/scripts.js
  *         meta:
  *           type: object
- *           description: Data about the user caseloads and services they have access to
- *           properties:
- *            activeCaseLoad:
- *              $ref: '#/components/schemas/CaseLoad'
- *            caseLoads:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/CaseLoad'
- *            services:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/Service'
+ *           $ref: '#/components/schemas/SharedData'
  *       example:
  *         header:
  *           html: <header>...</header>
@@ -271,4 +286,6 @@ export default function componentRoutes(services: Services): Router {
  *               heading: Create and vary a licence
  *               description: Create and vary standard determinate licences and post sentence supervision orders.
  *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
+ *               navEnabled: true
+ *           allocationJobResponsibilities: []
  */
