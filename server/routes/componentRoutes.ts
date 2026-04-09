@@ -197,6 +197,8 @@ export default function componentRoutes(services: Services): Router {
  *           type: string
  *         href:
  *           type: string
+ *         navEnabled:
+ *           type: boolean
  *
  *     Component:
  *       type: object

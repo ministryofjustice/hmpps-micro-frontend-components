@@ -11,7 +11,7 @@ export type AvailableComponent = 'header' | 'footer'
 /**
  * Rendered requested components and prison user meta information
  */
-export type Components = Partial<Record<AvailableComponent, Component>> & {
+export type Components<C extends AvailableComponent = AvailableComponent> = Record<C, Component> & {
   meta: PrisonUserAccessMeta
 }
 
