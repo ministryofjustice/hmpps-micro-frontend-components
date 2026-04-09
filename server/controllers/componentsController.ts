@@ -1,5 +1,5 @@
 import config from '../config'
-import type { AvailableComponent, PrisonUserAccessMeta, CaseLoad } from '../interfaces/externalContract'
+import type { AvailableComponent, SharedData, CaseLoad } from '../interfaces/externalContract'
 import { type HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import { ManagedPageLink } from '../interfaces/managedPage'
 import ContentfulService from '../services/contentfulService'
@@ -43,7 +43,7 @@ const defaultFooterLinks: ManagedPageLink[] = [
   },
 ]
 
-const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
+const DEFAULT_USER_ACCESS: SharedData = {
   caseLoads: [],
   activeCaseLoad: null,
   services: [],
@@ -124,5 +124,5 @@ export default class {
 }
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
-  meta: PrisonUserAccessMeta
+  meta: SharedData
 }

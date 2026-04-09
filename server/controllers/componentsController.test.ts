@@ -1,5 +1,5 @@
 import ComponentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
-import type { PrisonUserAccessMeta } from '../interfaces/externalContract'
+import type { SharedData } from '../interfaces/externalContract'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
@@ -49,7 +49,7 @@ const expectedFooterViewModel: FooterViewModel = {
   hasJavascript: false,
 }
 
-const expectedMeta: PrisonUserAccessMeta = {
+const expectedMeta: SharedData = {
   activeCaseLoad: activeCaseLoadMock,
   caseLoads: [activeCaseLoadMock],
   services: servicesMock,

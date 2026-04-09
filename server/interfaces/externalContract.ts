@@ -12,7 +12,7 @@ export type AvailableComponent = 'header' | 'footer'
  * Rendered requested components and prison user meta information
  */
 export type Components<C extends AvailableComponent = AvailableComponent> = Record<C, Component> & {
-  meta: PrisonUserAccessMeta
+  meta: SharedData
 }
 
 /**
@@ -30,7 +30,7 @@ export interface Component {
 /**
  * Information about the current prison user
  */
-export interface PrisonUserAccessMeta {
+export interface SharedData {
   caseLoads: CaseLoad[]
   activeCaseLoad: CaseLoad | null
   services: Service[]
