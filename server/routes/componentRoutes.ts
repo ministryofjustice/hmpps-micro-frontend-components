@@ -4,9 +4,9 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
-import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
-import Component from '../@types/Component'
+import { isComponent } from '../@types/AvailableComponent'
 import { TokenData } from '../@types/Users'
+import type { AvailableComponent, Component, Components } from '../interfaces/externalContract'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import { ComponentRenderer } from '../services/componentRenderer'
@@ -152,8 +152,9 @@ export default function componentRoutes(services: Services): Router {
         ),
       ),
     )
+    const components: Components = { meta: viewModels.meta, ...renderedComponents }
 
-    return res.send({ meta: viewModels.meta, ...renderedComponents })
+    return res.send(components)
   })
 
   router.use((err: Error, _req: Request, res: Response, next: NextFunction) => {

@@ -1,4 +1,5 @@
-import ComponentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
+import ComponentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
+import type { PrisonUserAccessMeta } from '../interfaces/externalContract'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'

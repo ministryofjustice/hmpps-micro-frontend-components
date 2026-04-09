@@ -1,9 +1,8 @@
 import config from '../config'
+import type { AvailableComponent, PrisonUserAccessMeta, CaseLoad } from '../interfaces/externalContract'
+import { type HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import { ManagedPageLink } from '../interfaces/managedPage'
-import { AvailableComponent } from '../@types/AvailableComponent'
-import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
-import { Service } from '../interfaces/Service'
 
 export interface ViewModel {
   component: string
@@ -43,23 +42,6 @@ const defaultFooterLinks: ManagedPageLink[] = [
     text: 'Cookies policy',
   },
 ]
-
-// This interface is assumed by other services - do not change without care
-export interface PrisonUserAccessMeta {
-  caseLoads: CaseLoad[]
-  activeCaseLoad: CaseLoad | null
-  services: Service[]
-  allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
-}
-
-// This interface is assumed by other services - do not change without care
-export interface CaseLoad {
-  caseLoadId: string
-  description: string
-  type: string
-  caseloadFunction: string
-  currentlyActive: boolean
-}
 
 const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
   caseLoads: [],

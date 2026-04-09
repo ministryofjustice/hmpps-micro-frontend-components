@@ -1,6 +1,6 @@
 import { Role } from '../services/utils/roles'
 import { PrisonCaseload } from './caseLoad'
-import { Service } from './Service'
+import type { Service } from './externalContract'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 
