@@ -39,7 +39,12 @@ export interface SharedData {
   services: Service[]
   /** Prison user allocated responsibilites */
   allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
+  /** Content-Security-Policy directives needed to use components from a different domain/origin */
+  cspDirectives: CspDirectives
 }
+
+/** Map of CSP directive to necessary URL values */
+export type CspDirectives = Record<string, string[]>
 
 /**
  * Details of a service accessible by a prison user

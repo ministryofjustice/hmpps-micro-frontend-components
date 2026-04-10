@@ -43,12 +43,14 @@ const defaultFooterLinks: ManagedPageLink[] = [
   },
 ]
 
-const DEFAULT_USER_ACCESS: SharedData = {
+/** Empty meta information for non-prison users */
+const defaultUserAccess = (): SharedData => ({
   caseLoads: [],
   activeCaseLoad: null,
   services: [],
   allocationJobResponsibilities: [],
-}
+  cspDirectives: {},
+})
 
 export default class {
   constructor(private readonly contentfulService: ContentfulService) {}
@@ -116,8 +118,9 @@ export default class {
                   : null) satisfies CaseLoad | null,
                 services: user.services,
                 allocationJobResponsibilities: user.allocationJobResponsibilities,
+                cspDirectives: {},
               }
-            : DEFAULT_USER_ACCESS,
+            : defaultUserAccess(),
       },
     )
   }

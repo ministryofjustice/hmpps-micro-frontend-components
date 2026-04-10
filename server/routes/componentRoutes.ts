@@ -6,13 +6,14 @@ import { Services } from '../services'
 import config from '../config'
 import { isComponent } from '../data/availableComponent'
 import { TokenData } from '../@types/Users'
-import type { AvailableComponent, Component, Components } from '../interfaces/externalContract'
+import type { AvailableComponent, Component, Components, SharedData } from '../interfaces/externalContract'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
+  const { contentSecurityPoliciesService } = services
   const controller = new ComponentsController(services.contentfulService)
 
   const jwksIssuer = jwksRsa.expressJwtSecret({
@@ -155,7 +156,11 @@ export default function componentRoutes(services: Services): Router {
         ),
       ),
     )
-    const components: Components = { meta: viewModels.meta, ...renderedComponents }
+    const sharedData: SharedData = {
+      ...viewModels.meta,
+      cspDirectives: contentSecurityPoliciesService.getDirectivesForUser(res.locals.user),
+    }
+    const components: Components = { meta: sharedData, ...renderedComponents }
 
     return res.send(components)
   })
@@ -242,6 +247,13 @@ export default function componentRoutes(services: Services): Router {
  *            enum:
  *              - KEY_WORKER
  *              - PERSONAL_OFFICER
+ *        cspDirectives:
+ *          type: object
+ *          description: Content-Security-Policy directives needed to use components from a different domain/origin
+ *          additionalProperties:
+ *            type: array
+ *            items:
+ *              type: string
  *
  *     Components:
  *       type: object
@@ -291,4 +303,10 @@ export default function componentRoutes(services: Services): Router {
  *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
  *               navEnabled: true
  *           allocationJobResponsibilities: []
+ *           cspDirectives:
+ *             img-src:
+ *               - https://www.justice.gov.uk
+ *             form-action:
+ *               - https://www.justice.gov.uk
+ *               - https://gov.uk
  */

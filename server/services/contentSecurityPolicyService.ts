@@ -1,8 +1,8 @@
 import config from '../config'
+import type { CspDirectives } from '../interfaces/externalContract'
 import { type HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 
-export type CspDirectives = Record<string, string[]>
-
+// eslint-disable-next-line import/prefer-default-export
 export class ContentSecurityPolicyService {
   getDirectivesForUser(user: HmppsUser): CspDirectives {
     const directives = this.minimalNecessaryDirectives()

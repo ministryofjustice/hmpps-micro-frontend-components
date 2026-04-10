@@ -6,6 +6,7 @@ import { App } from 'supertest/types'
 import jwt from 'jsonwebtoken'
 import config from '../config'
 import createApp from '../app'
+import type { Components } from '../interfaces/externalContract'
 import { services } from '../services'
 import ContentfulService from '../services/contentfulService'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
@@ -21,7 +22,7 @@ jest.mock('../applicationInfo', () => () => ({
 const token = jwt.sign(getTokenDataMock(), 'secret')
 
 jest.mock('express-jwt', () => ({
-  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+  expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
     if (req.headers['x-user-token'] !== token) {
       const error = new Error()
       error.name = 'UnauthorizedError'
@@ -60,7 +61,7 @@ describe('GET /components', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
-        const body = JSON.parse(res.text)
+        const body: Components = JSON.parse(res.text)
 
         const $header = cheerio.load(body.header.html)
         expect($header('.cdps-header__item--crest').text()).toContain('Digital Prison Services')
@@ -82,7 +83,7 @@ describe('GET /components', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
-        const body = JSON.parse(res.text)
+        const body: Components<'footer'> = JSON.parse(res.text)
         expect(body).not.toHaveProperty('header')
         expect(body).toHaveProperty('footer')
       })
@@ -95,7 +96,7 @@ describe('GET /components', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
-        const body = JSON.parse(res.text)
+        const body: object = JSON.parse(res.text)
         expect(body).toEqual({})
       })
   })
@@ -107,7 +108,7 @@ describe('GET /components', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
-        const body = JSON.parse(res.text)
+        const body: Components = JSON.parse(res.text)
         const $header = cheerio.load(body.header.html)
         const $footer = cheerio.load(body.footer.html)
 
@@ -124,11 +125,27 @@ describe('GET /components', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
-        const body = JSON.parse(res.text)
+        const body: Components = JSON.parse(res.text)
         expect(body).not.toHaveProperty('header')
         expect(body).not.toHaveProperty('golf')
         expect(body.footer.html).toBeDefined()
       })
+  })
+
+  describe('meta information / shared data', () => {
+    it('should be included', () => {
+      return request(app)
+        .get('/components?component=footer')
+        .set('x-user-token', token)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const body: Components = JSON.parse(res.text)
+          expect(body).toHaveProperty('meta')
+          expect(body.meta.activeCaseLoad).toBeNull()
+          expect(body.meta.cspDirectives).toHaveProperty('img-src')
+        })
+    })
   })
 
   describe('auth', () => {

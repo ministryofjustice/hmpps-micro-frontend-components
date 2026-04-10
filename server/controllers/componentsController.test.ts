@@ -3,7 +3,6 @@ import type { SharedData } from '../interfaces/externalContract'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
-import { DEFAULT_USER_ACCESS } from '../services/userService'
 
 const contentfulServiceMock = {
   getManagedPages: () => [
@@ -54,6 +53,7 @@ const expectedMeta: SharedData = {
   caseLoads: [activeCaseLoadMock],
   services: servicesMock,
   allocationJobResponsibilities: [],
+  cspDirectives: {},
 }
 
 describe('componentsController', () => {
@@ -118,7 +118,13 @@ describe('componentsController', () => {
       expect(output).toEqual({
         header: { ...expectedHeaderViewModel, isPrisonUser: false },
         footer: { ...expectedFooterViewModel, isPrisonUser: false },
-        meta: DEFAULT_USER_ACCESS,
+        meta: {
+          activeCaseLoad: null,
+          caseLoads: [],
+          services: [],
+          allocationJobResponsibilities: [],
+          cspDirectives: {},
+        } satisfies SharedData,
       })
     })
 
