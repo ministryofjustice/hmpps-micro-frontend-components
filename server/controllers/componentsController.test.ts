@@ -9,7 +9,7 @@ const contentfulServiceMock = {
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
 const controller = new ComponentsController(contentfulServiceMock)
 
