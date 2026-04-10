@@ -1,5 +1,5 @@
-import { Role } from '../services/utils/roles'
-import { PrisonCaseload } from './caseLoad'
+import type { Role } from '../services/utils/roles'
+import type { PrisonCaseload } from './caseLoad'
 import type { Service } from './externalContract'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
@@ -18,7 +18,7 @@ export interface BaseUser {
   token: string
 }
 
-// for internal use as opposed to PrisonUserAccessMeta
+// for internal use as opposed to SharedData
 export interface PrisonUserAccess {
   caseLoads: PrisonCaseload[]
   activeCaseLoad: PrisonCaseload | null
