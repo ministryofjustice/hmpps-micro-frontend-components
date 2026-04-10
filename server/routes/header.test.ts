@@ -22,7 +22,7 @@ const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
 const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
 
 jest.mock('express-jwt', () => ({
-  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+  expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
     const token = req.headers['x-user-token']
     if (token !== prisonUserToken && token !== externalUserToken) {
       const error = new Error()
@@ -58,7 +58,7 @@ beforeEach(async () => {
   })
 
   await ensureConnected()
-  redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('TOKEN_USER_meta_data')
 
   app = createApp(services())
 })

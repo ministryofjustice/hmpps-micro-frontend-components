@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 import config from '../config'
 import createApp from '../app'
 import type { Components } from '../interfaces/externalContract'
+import { createRedisClient } from '../data/redisClient'
 import { services } from '../services'
 import ContentfulService from '../services/contentfulService'
 import { getTokenDataMock } from '../../tests/mocks/TokenDataMock'
@@ -18,6 +19,13 @@ jest.mock('../applicationInfo', () => () => ({
   gitShortHash: 'short ref',
   branchName: 'main',
 }))
+
+const redisClient = createRedisClient()
+beforeAll(async () => {
+  if (!redisClient.isOpen) {
+    await redisClient.connect()
+  }
+})
 
 const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
 const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
@@ -40,14 +48,18 @@ const contentfulServiceMock = {
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
 let app: App
+
+let hmppsAuth: nock.Scope
 let allocationsApi: nock.Scope
 let locationsApi: nock.Scope
 let manageUsersApi: nock.Scope
 
-beforeEach(() => {
+beforeEach(async () => {
+  await redisClient.del('TOKEN_USER_meta_data')
+
   allocationsApi = nock(config.apis.allocationsApi.url)
   allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
@@ -60,7 +72,8 @@ beforeEach(() => {
     activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
     caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
   })
-  nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
+  hmppsAuth = nock(config.apis.hmppsAuth.url)
+  hmppsAuth.post('/oauth/token').reply(200, {
     access_token: 'system-token',
     token_type: 'Bearer',
     expires_in: 5000,
@@ -71,6 +84,7 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.resetAllMocks()
+  nock.cleanAll()
 })
 
 describe('GET /components', () => {
@@ -149,6 +163,43 @@ describe('GET /components', () => {
         expect(body).not.toHaveProperty('header')
         expect(body).not.toHaveProperty('golf')
         expect(body.footer.html).toBeDefined()
+      })
+  })
+
+  it('should use cached caseloads for second call', async () => {
+    manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+      username: 'TOKEN_USER',
+      active: true,
+      accountType: '',
+      activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+      caseloads: [
+        { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        { id: 'DEI', name: 'Deerbolt', function: 'GENERAL' },
+      ],
+    })
+
+    // make first call with 1 caseload
+    await request(app)
+      .get('/components?component=header')
+      .set('x-user-token', prisonUserToken)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const body: Components<'header'> = JSON.parse(res.text)
+        // 1 caseload so should not show switch
+        expect(body.header.html).not.toContain('/change-caseload')
+      })
+
+    // make second call but would return 2 caseloads if not cached
+    return request(app)
+      .get('/components?component=header')
+      .set('x-user-token', prisonUserToken)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(res => {
+        const body: Components<'header'> = JSON.parse(res.text)
+        // 1 caseload so should not still show switch
+        expect(body.header.html).not.toContain('/change-caseload')
       })
   })
 
