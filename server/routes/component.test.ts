@@ -19,16 +19,18 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
-const token = jwt.sign(getTokenDataMock(), 'secret')
+const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
+const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
-    if (req.headers['x-user-token'] !== token) {
+    const token = req.headers['x-user-token']
+    if (token !== prisonUserToken && token !== externalUserToken) {
       const error = new Error()
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = getTokenDataMock()
+    req.auth = getTokenDataMock({ auth_source: token === prisonUserToken ? 'nomis' : 'external' })
     return next()
   },
 }))
@@ -41,11 +43,29 @@ const contentfulServiceMock = {
 } as undefined as ContentfulService
 
 let app: App
+let allocationsApi: nock.Scope
 let locationsApi: nock.Scope
+let manageUsersApi: nock.Scope
 
 beforeEach(() => {
+  allocationsApi = nock(config.apis.allocationsApi.url)
+  allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
+  manageUsersApi = nock(config.apis.manageUsersApi.url)
+  manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+    username: 'TOKEN_USER',
+    active: true,
+    accountType: '',
+    activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+    caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+  })
+  nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
+    access_token: 'system-token',
+    token_type: 'Bearer',
+    expires_in: 5000,
+  })
+
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
 
@@ -57,7 +77,7 @@ describe('GET /components', () => {
   it('should return multiple components if requested', () => {
     return request(app)
       .get('/components?component=header&component=footer')
-      .set('x-user-token', token)
+      .set('x-user-token', prisonUserToken)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -79,7 +99,7 @@ describe('GET /components', () => {
   it('should return one component if requested', () => {
     return request(app)
       .get('/components?component=footer')
-      .set('x-user-token', token)
+      .set('x-user-token', prisonUserToken)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -92,7 +112,7 @@ describe('GET /components', () => {
   it('should return empty object if no query params', () => {
     return request(app)
       .get('/components')
-      .set('x-user-token', token)
+      .set('x-user-token', prisonUserToken)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -104,7 +124,7 @@ describe('GET /components', () => {
   it('should not matter the order of params', () => {
     return request(app)
       .get('/components?component=footer&component=header')
-      .set('x-user-token', token)
+      .set('x-user-token', prisonUserToken)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -121,7 +141,7 @@ describe('GET /components', () => {
   it('should filter out undefined components', () => {
     return request(app)
       .get('/components?component=footer&component=golf')
-      .set('x-user-token', token)
+      .set('x-user-token', prisonUserToken)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(res => {
@@ -132,11 +152,11 @@ describe('GET /components', () => {
       })
   })
 
-  describe('meta information / shared data', () => {
-    it('should be included', () => {
+  describe('should include meta information / shared data', () => {
+    it('for external users', () => {
       return request(app)
         .get('/components?component=footer')
-        .set('x-user-token', token)
+        .set('x-user-token', externalUserToken)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
@@ -144,6 +164,21 @@ describe('GET /components', () => {
           expect(body).toHaveProperty('meta')
           expect(body.meta.activeCaseLoad).toBeNull()
           expect(body.meta.cspDirectives).toHaveProperty('img-src')
+          expect(body.meta.cspDirectives).not.toHaveProperty('form-action')
+        })
+    })
+
+    it('for prison users', () => {
+      return request(app)
+        .get('/components?component=footer')
+        .set('x-user-token', prisonUserToken)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          const body: Components = JSON.parse(res.text)
+          expect(body).toHaveProperty('meta')
+          expect(body.meta.activeCaseLoad.caseLoadId).toEqual('LEI')
+          expect(body.meta.cspDirectives).toHaveProperty('form-action')
         })
     })
   })
