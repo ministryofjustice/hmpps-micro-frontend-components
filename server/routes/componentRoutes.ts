@@ -37,6 +37,9 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
+  // all component routes require a user
+  router.use(populateCurrentUser(services.userService))
+
   /**
    * @swagger
    * /header:
@@ -58,7 +61,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
     const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
@@ -85,7 +88,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/footer', async (_req, res) => {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
@@ -135,7 +138,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Components'
    */
-  router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
+  router.get('/components', async (req, res) => {
     const componentsRequested = [req.query.component].flat().filter(isComponent)
     if (!componentsRequested.length) {
       return res.send({})

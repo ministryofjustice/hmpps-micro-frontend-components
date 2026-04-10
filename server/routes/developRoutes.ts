@@ -20,6 +20,7 @@ export default function developRoutes(services: Services): Router {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
+  // all developer preview routes require a user
   router.use(populateCurrentUser(services.userService))
 
   router.get('/all', async (_req, res) => {
