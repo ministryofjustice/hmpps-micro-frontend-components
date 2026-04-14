@@ -24,6 +24,7 @@ jest.mock('../../config', () => ({
     pinPhones: { url: 'url' },
     manageAdjudications: { url: 'url', enabledPrisons: 'LEI,LIV' },
     managePrisonVisits: { url: 'url' },
+    officialVisits: { url: 'url', enabledPrisons: 'LEI,LIV' },
     legacyPrisonVisits: { url: 'url' },
     secureSocialVideoCalls: { url: 'url' },
     sendLegalMail: { url: 'url' },
@@ -310,6 +311,21 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Manage prison visits')).toEqual(visible)
+    })
+  })
+
+  describe('Official visits', () => {
+    test.each`
+      roles                            | activeCaseLoad      | visible
+      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${true}
+      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${true}
+      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${true}
+      ${[Role.OfficialVisitsViewOnly]} | ${'NOT_IN_ENV_VAR'} | ${false}
+      ${[]}                            | ${'LEI'}            | ${false}
+      ${[]}                            | ${'NOT_IN_ENV_VAR'} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible }) => {
+      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], null)
+      expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
     })
   })
 
