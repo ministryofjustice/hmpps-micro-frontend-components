@@ -22,7 +22,7 @@ jest.mock('../applicationInfo', () => () => ({
 const token = jwt.sign(getTokenDataMock(), 'secret')
 
 jest.mock('express-jwt', () => ({
-  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+  expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
     if (req.headers['x-user-token'] !== token) {
       const error = new Error()
       error.name = 'UnauthorizedError'
@@ -38,7 +38,7 @@ const contentfulServiceMock = {
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
 let app: App
 let locationsApi: nock.Scope
@@ -62,7 +62,7 @@ beforeEach(async () => {
   })
 
   await ensureConnected()
-  redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('TOKEN_USER_meta_data')
 
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })

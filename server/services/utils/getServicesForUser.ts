@@ -1,7 +1,7 @@
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
+import type { Service } from '../../interfaces/externalContract'
 import { PrisonHierarchyDto } from '../../interfaces/location'
-import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
 

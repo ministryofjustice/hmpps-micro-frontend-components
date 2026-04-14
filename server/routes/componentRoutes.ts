@@ -4,15 +4,16 @@ import { expressjwt, GetVerificationKey } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { Services } from '../services'
 import config from '../config'
-import { type AvailableComponent, isComponent } from '../@types/AvailableComponent'
-import Component from '../@types/Component'
+import { isComponent } from '../data/availableComponent'
 import { TokenData } from '../@types/Users'
+import type { AvailableComponent, Component, Components, SharedData } from '../interfaces/externalContract'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function componentRoutes(services: Services): Router {
   const router = Router()
+  const { contentSecurityPoliciesService } = services
   const controller = new ComponentsController(services.contentfulService)
 
   const jwksIssuer = jwksRsa.expressJwtSecret({
@@ -37,6 +38,9 @@ export default function componentRoutes(services: Services): Router {
     }
   })
 
+  // all component routes require a user
+  router.use(populateCurrentUser(services.userService))
+
   /**
    * @swagger
    * /header:
@@ -58,7 +62,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get('/header', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/header', async (_req, res) => {
     const viewModel = await controller.getHeaderViewModel(res.locals.user)
     const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
@@ -85,7 +89,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get('/footer', populateCurrentUser(services.userService), async (_req, res) => {
+  router.get('/footer', async (_req, res) => {
     const viewModel = await controller.getFooterViewModel(res.locals.user)
     const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
@@ -135,7 +139,7 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Components'
    */
-  router.get('/components', populateCurrentUser(services.userService), async (req, res) => {
+  router.get('/components', async (req, res) => {
     const componentsRequested = [req.query.component].flat().filter(isComponent)
     if (!componentsRequested.length) {
       return res.send({})
@@ -152,8 +156,13 @@ export default function componentRoutes(services: Services): Router {
         ),
       ),
     )
+    const sharedData: SharedData = {
+      ...viewModels.meta,
+      cspDirectives: contentSecurityPoliciesService.getDirectivesForUser(res.locals.user),
+    }
+    const components: Components = { meta: sharedData, ...renderedComponents }
 
-    return res.send({ meta: viewModels.meta, ...renderedComponents })
+    return res.send(components)
   })
 
   router.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
@@ -196,6 +205,8 @@ export default function componentRoutes(services: Services): Router {
  *           type: string
  *         href:
  *           type: string
+ *         navEnabled:
+ *           type: boolean
  *
  *     Component:
  *       type: object
@@ -211,6 +222,39 @@ export default function componentRoutes(services: Services): Router {
  *           items:
  *             type: string
  *
+ *     SharedData:
+ *       type: object
+ *       description: Information about the current user and environment
+ *       properties:
+ *        activeCaseLoad:
+ *          $ref: '#/components/schemas/CaseLoad'
+ *          description: Currently active caseload for prison user
+ *        caseLoads:
+ *          type: array
+ *          description: Caseloads available to prison user
+ *          items:
+ *            $ref: '#/components/schemas/CaseLoad'
+ *        services:
+ *          type: array
+ *          description: Services available to prison user
+ *          items:
+ *            $ref: '#/components/schemas/Service'
+ *        allocationJobResponsibilities:
+ *          type: array
+ *          description: Prison user allocated responsibilites
+ *          items:
+ *            type: string
+ *            enum:
+ *              - KEY_WORKER
+ *              - PERSONAL_OFFICER
+ *        cspDirectives:
+ *          type: object
+ *          description: Content-Security-Policy directives needed to use components from a different domain/origin
+ *          additionalProperties:
+ *            type: array
+ *            items:
+ *              type: string
+ *
  *     Components:
  *       type: object
  *       properties:
@@ -225,18 +269,7 @@ export default function componentRoutes(services: Services): Router {
  *               - https://example.com/scripts.js
  *         meta:
  *           type: object
- *           description: Data about the user caseloads and services they have access to
- *           properties:
- *            activeCaseLoad:
- *              $ref: '#/components/schemas/CaseLoad'
- *            caseLoads:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/CaseLoad'
- *            services:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/Service'
+ *           $ref: '#/components/schemas/SharedData'
  *       example:
  *         header:
  *           html: <header>...</header>
@@ -268,4 +301,12 @@ export default function componentRoutes(services: Services): Router {
  *               heading: Create and vary a licence
  *               description: Create and vary standard determinate licences and post sentence supervision orders.
  *               href: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
+ *               navEnabled: true
+ *           allocationJobResponsibilities: []
+ *           cspDirectives:
+ *             img-src:
+ *               - https://www.justice.gov.uk
+ *             form-action:
+ *               - https://www.justice.gov.uk
+ *               - https://gov.uk
  */

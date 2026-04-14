@@ -25,7 +25,7 @@ const expectedUserAccess: PrisonUserAccess = {
 const cacheServiceMock = {
   getData: jest.fn(),
   setData: jest.fn(),
-} as undefined as jest.Mocked<CacheService>
+} as unknown as jest.Mocked<CacheService>
 
 afterEach(() => {
   jest.resetAllMocks()
