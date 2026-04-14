@@ -1,7 +1,7 @@
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
+import type { Service } from '../../interfaces/externalContract'
 import { PrisonHierarchyDto } from '../../interfaces/location'
-import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
 
@@ -351,7 +351,7 @@ export default (
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
-      href: `${config.serviceUrls.newDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
+      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
       navEnabled: true,
       enabled: () => isActivitiesEnabled,
     },

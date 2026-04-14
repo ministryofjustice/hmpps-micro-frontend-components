@@ -22,8 +22,8 @@ export default class TokenStore {
     await this.client.set(`${this.prefix}${key}`, token, { EX: durationSeconds })
   }
 
-  public async getToken(key: string): Promise<string> {
+  public async getToken(key: string): Promise<string | null> {
     await this.ensureConnected()
-    return (await this.client.get(`${this.prefix}${key}`))?.toString()
+    return (await this.client.get(`${this.prefix}${key}`))?.toString() ?? null
   }
 }

@@ -1,7 +1,7 @@
 import type { Response } from 'express'
 import config from '../config'
-import type Component from '../@types/Component'
-import { type ViewModel } from '../controllers/componentsController'
+import type { Component } from '../interfaces/externalContract'
+import type { ViewModel } from '../controllers/componentsController'
 import { assetMap } from '../utils/utils'
 
 export class ComponentRenderer {
