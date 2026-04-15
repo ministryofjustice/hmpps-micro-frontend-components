@@ -572,9 +572,9 @@ export default (
     },
     {
       id: 'match-learner-record',
-      heading: "Match someone's learning record",
+      heading: 'Match someone’s learner record',
       description:
-        "Search the Learning Records Service (LRS) to match someone's learning record or unique learner number (ULN), or identify if they do not have a ULN.",
+        'Search the Learning Records Service (LRS) to match someone to their learner record or unique learner number (ULN).',
       href: config.serviceUrls.matchLearnerRecord.url,
       navEnabled: true,
       enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
