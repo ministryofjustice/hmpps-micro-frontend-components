@@ -160,9 +160,11 @@ export default {
     managePrisonVisits: {
       url: get('MANAGE_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),
     },
-    officialVisits: {
-      url: get('OFFICIAL_VISITS_URL', 'http://localhost:3001', requiredInProduction),
-      enabledPrisons: get('OFFICIAL_VISITS_ENABLED_PRISONS', '', requiredInProduction),
+    officialVisitsUi: {
+      url: get('OFFICIAL_VISITS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    officialVisitsApi: {
+      url: get('OFFICIAL_VISITS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
     legacyPrisonVisits: {
       url: get('LEGACY_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),

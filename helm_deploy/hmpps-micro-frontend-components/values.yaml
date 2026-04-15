@@ -54,8 +54,6 @@ generic-service:
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
-    feature-toggles:
-      OFFICIAL_VISITS_ENABLED_PRISONS: "OFFICIAL_VISITS_ENABLED_PRISONS"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-micro-frontend-components

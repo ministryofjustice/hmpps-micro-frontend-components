@@ -256,12 +256,12 @@ export default (
     {
       id: 'official-visits',
       heading: 'Official visits',
-      description: 'Book, complete, cancel and amend a prisoner’s official visits.',
-      href: config.serviceUrls.officialVisits.url,
+      description: 'Book, update, cancel and confirm when an official visit has taken place.',
+      href: config.serviceUrls.officialVisitsUi.url,
       navEnabled: true,
       enabled: () =>
         userHasRoles([Role.OfficialVisitsViewOnly, Role.OfficialVisitsManage, Role.OfficialVisitsAdmin], roles) &&
-        config.serviceUrls.officialVisits.enabledPrisons.split(',').includes(activeCaseLoadId),
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
     },
     {
       id: 'legacy-prison-visit',

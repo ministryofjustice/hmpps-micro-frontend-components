@@ -24,7 +24,8 @@ jest.mock('../../config', () => ({
     pinPhones: { url: 'url' },
     manageAdjudications: { url: 'url', enabledPrisons: 'LEI,LIV' },
     managePrisonVisits: { url: 'url' },
-    officialVisits: { url: 'url', enabledPrisons: 'LEI,LIV' },
+    officialVisitsUi: { url: 'url', enabledPrisons: 'LEI,LIV' },
+    OfficialVisitsApi: { url: 'url' },
     legacyPrisonVisits: { url: 'url' },
     secureSocialVideoCalls: { url: 'url' },
     sendLegalMail: { url: 'url' },
@@ -316,15 +317,18 @@ describe('getServicesForUser', () => {
 
   describe('Official visits', () => {
     test.each`
-      roles                            | activeCaseLoad      | visible
-      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${true}
-      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${true}
-      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${true}
-      ${[Role.OfficialVisitsViewOnly]} | ${'NOT_IN_ENV_VAR'} | ${false}
-      ${[]}                            | ${'LEI'}            | ${false}
-      ${[]}                            | ${'NOT_IN_ENV_VAR'} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible }) => {
-      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], null)
+      roles                            | activeCaseLoad      | activeServices                                                                           | visible
+      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
+      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
+      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
+      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
+      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
+      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
+      ${[Role.OfficialVisitsViewOnly]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
+      ${[]}                            | ${'LEI'}            | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
+      ${[]}                            | ${'NOT_IN_ENV_VAR'} | ${[{ app: 'OfficialVisitsApi' as ServiceName, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
     })
   })
