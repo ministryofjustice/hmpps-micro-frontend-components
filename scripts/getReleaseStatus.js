@@ -28,7 +28,7 @@ const endpoints = [
   { application: 'allocatePersonalOfficers', urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
   { application: 'supportAdditionalNeeds', urlEnv: 'SUPPORT_ADDITIONAL_NEEDS_URL' },
   { application: 'externalMovements', urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
-  { application: 'OfficialVisitsApi', urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: 'officialVisitsApi', urlEnv: 'OFFICIAL_VISITS_API_URL' },
 ]
 
 function getApplicationInfo(appLabel, url) {
