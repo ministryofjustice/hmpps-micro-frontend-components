@@ -10,6 +10,7 @@ export enum ServiceName {
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   WHEREABOUTS = 'whereabouts',
   INCIDENT_REPORTING = 'incidentReporting',
+  OFFICIAL_VISITS_API = 'officialVisitsApi',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
   CEMO = 'cemo',
   MANAGE_APPLICATIONS = 'manageApplications',

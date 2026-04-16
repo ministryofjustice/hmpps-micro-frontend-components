@@ -78,6 +78,8 @@ generic-service:
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements.hmpps.service.justice.gov.uk
     CONTACTS_UI_URL: https://contacts.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_UI_URL: https://official-visits-ui.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_API_URL: https://official-visits-api.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

@@ -48,6 +48,7 @@ CONTENTFUL_ENVIRONMENT=master
 CONTENTFUL_ACCESS_TOKEN=
 CONTENTFUL_SPACE_ID=
 RESIDENTIAL_LOCATIONS_API_URL=https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+OFFICIAL_VISITS_API_URL=https://official-visits-api-dev.hmpps.service.justice.gov.uk
 MANAGE_USERS_API_URL=https://manage-users-api-dev.hmpps.service.justice.gov.uk
 ```
 </details>
