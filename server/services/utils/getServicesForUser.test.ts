@@ -318,6 +318,8 @@ describe('getServicesForUser', () => {
   describe('Official visits', () => {
     test.each`
       roles                            | activeCaseLoad      | activeServices                                                                        | visible
+      ${[Role.PrisonUser]}             | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
+      ${[Role.PrisonUser]}             | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
       ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
       ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
       ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}

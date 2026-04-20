@@ -260,8 +260,10 @@ export default (
       href: config.serviceUrls.officialVisitsUi.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.OfficialVisitsViewOnly, Role.OfficialVisitsManage, Role.OfficialVisitsAdmin], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
+        userHasRoles(
+          [Role.PrisonUser, Role.OfficialVisitsViewOnly, Role.OfficialVisitsManage, Role.OfficialVisitsAdmin],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
     },
     {
       id: 'legacy-prison-visit',
