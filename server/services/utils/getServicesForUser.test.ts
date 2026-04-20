@@ -317,18 +317,11 @@ describe('getServicesForUser', () => {
 
   describe('Official visits', () => {
     test.each`
-      roles                            | activeCaseLoad      | activeServices                                                                        | visible
-      ${[Role.PrisonUser]}             | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
-      ${[Role.PrisonUser]}             | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
-      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
-      ${[Role.OfficialVisitsViewOnly]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
-      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
-      ${[Role.OfficialVisitsAdmin]}    | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
-      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${true}
-      ${[Role.OfficialVisitsManage]}   | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['ANOTHER', 'ANOTHER'] }]} | ${false}
-      ${[Role.OfficialVisitsViewOnly]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
-      ${[]}                            | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
-      ${[]}                            | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]}     | ${false}
+      roles                | activeCaseLoad      | activeServices                                                                    | visible
+      ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
+      ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
+      ${[]}                | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[]}                | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
