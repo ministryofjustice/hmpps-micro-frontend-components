@@ -319,7 +319,7 @@ describe('getServicesForUser', () => {
     test.each`
       roles                | activeCaseLoad      | activeServices                                                                    | visible
       ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
-      ${[Role.PrisonUser]} | ${'NOT_IN_ENV_VAR'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[Role.PrisonUser]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
       ${[]}                | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
       ${[]}                | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
