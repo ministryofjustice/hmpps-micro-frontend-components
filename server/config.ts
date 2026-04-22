@@ -273,6 +273,9 @@ export default {
     contacts: {
       url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
+    courtAppearanceScheduler: {
+      url: get('COURT_APPEARANCE_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
   },
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),
   features: {

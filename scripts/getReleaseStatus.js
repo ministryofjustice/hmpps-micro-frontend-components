@@ -29,6 +29,7 @@ const endpoints = [
   { application: 'supportAdditionalNeeds', urlEnv: 'SUPPORT_ADDITIONAL_NEEDS_URL' },
   { application: 'externalMovements', urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
   { application: 'officialVisitsApi', urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: 'courtAppearanceScheduler', urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
 ]
 
 function getApplicationInfo(appLabel, url) {

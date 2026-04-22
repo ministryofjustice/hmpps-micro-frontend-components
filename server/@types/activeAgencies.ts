@@ -17,6 +17,7 @@ export enum ServiceName {
   ALLOCATE_KEY_WORKERS = 'allocateKeyWorkers',
   ALLOCATE_PERSONAL_OFFICERS = 'allocatePersonalOfficers',
   EXTERNAL_MOVEMENTS = 'externalMovements',
+  COURT_APPEARANCE_SCHEDULER = 'courtAppearanceScheduler',
 }
 
 export interface ServiceActiveAgencies {

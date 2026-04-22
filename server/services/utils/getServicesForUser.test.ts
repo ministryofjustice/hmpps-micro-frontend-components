@@ -57,6 +57,7 @@ jest.mock('../../config', () => ({
     supportAdditionalNeeds: { url: 'url', enabled: true },
     externalMovements: { url: 'url' },
     contacts: { url: 'url' },
+    courtAppearanceScheduler: { url: 'url' },
   },
 }))
 
@@ -882,6 +883,21 @@ describe('getServicesForUser', () => {
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
         const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'External movements')).toEqual(visible)
+      },
+    )
+  })
+
+  describe('Court appearances', () => {
+    test.each`
+      roles                                  | activeServices                                                                | activeCaseLoadId | visible
+      ${[Role.CourtAppearanceSchedulerView]} | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                                  | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.CourtAppearanceSchedulerView]} | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Court appearances')).toEqual(visible)
       },
     )
   })
