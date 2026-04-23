@@ -48,7 +48,7 @@ export default class UserService {
       if (!userCaseloadDetail.activeCaseload) {
         const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
 
-        // if there's no potential caseload we should return the default access
+        // if there's no potential caseload we should return the default access.
         if (!potentialCaseLoad) return DEFAULT_USER_ACCESS
 
         await this.prisonApiClient.setActiveCaseload(user.token, {
