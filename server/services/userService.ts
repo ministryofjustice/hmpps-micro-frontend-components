@@ -44,6 +44,14 @@ export default class UserService {
 
     try {
       const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
+
+      if (userCaseloadDetail.activeCaseload && !userCaseloadDetail.caseloads.length) {
+        logger.warn(
+          `User ${user.username} has an active caseload but no caseloads assigned, returning default access. Occurs due to NOMIS behaviour.`,
+        )
+        return DEFAULT_USER_ACCESS
+      }
+
       if (!userCaseloadDetail.activeCaseload) {
         const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
 
