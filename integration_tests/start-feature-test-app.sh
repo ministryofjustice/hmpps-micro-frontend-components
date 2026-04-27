@@ -14,7 +14,7 @@ git clone https://github.com/ministryofjustice/hmpps-template-typescript.git
 
 info_msg Installing the latest @ministryofjustice/hmpps-connect-dps-components
 cd hmpps-template-typescript
-npx @ministryofjustice/hmpps-connect-dps-components
+npx @ministryofjustice/hmpps-connect-dps-components@latest
 
 info_msg Building template project
 npm run build
