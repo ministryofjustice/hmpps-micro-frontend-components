@@ -68,7 +68,7 @@ async function getRedisClient() {
       console.log('Redis client connection closed')
     })
     .on('error', err => {
-      console.log(`Redis Error`, err)
+      console.error('Redis Error', err)
     })
 }
 
@@ -81,7 +81,7 @@ async function ensureConnected(redisClient) {
 async function cacheResponses(body, redisClient) {
   const resp = await redisClient.set('applicationInfo', JSON.stringify(body))
 
-  console.log(`Successfully cached application info`, body)
+  console.log('Successfully cached application info', body)
   return resp
 }
 
@@ -128,7 +128,7 @@ const getData = async () => {
   const newData = responses
     .map(response => {
       if (response.status !== 'fulfilled') {
-        console.log(`Failed to get application info`, response.reason)
+        console.error('Failed to get application info', response.reason)
         return undefined
       }
       const { body, request } = response.value
@@ -139,7 +139,7 @@ const getData = async () => {
       if (!applicationName) return undefined
 
       if (!Array.isArray(body.activeAgencies)) {
-        console.log(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
         return undefined
       }
 
