@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 
-const Sentry = require('@sentry/node')
+import * as Sentry from '@sentry/node'
+import superagent from 'superagent'
+import redis from 'redis'
 
-let reportError = () => {}
+let reportError: (message: string, context: Record<string, string>) => void = () => {}
 if (process.env.SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
@@ -22,10 +24,25 @@ if (process.env.SENTRY_DSN) {
   }
 }
 
-const superagent = require('superagent')
-const redis = require('redis')
+type Environment = 'dev' | 'preprod' | 'prod'
+export type Endpoint = { application: string } & ({ urlEnv: string } | { infoUrl: Record<Environment, string> })
 
-const endpoints = [
+/**
+ * List of services whose /info endpoint is periodically loaded and cached
+ * to get the agencies/prisons in which they are enabled.
+ *
+ * Add definitions here:
+ * - provide `urlEnv` to look up info url from environment variable
+ * - or provide an environment-to-url map in `infoUrl`
+ *
+ * When using environment variables, also:
+ * - Add urls to
+ *   - `/helm_deploy/values-dev.yaml`
+ *   - `/helm_deploy/values-preprod.yaml`
+ *   - `/helm_deploy/values-prod.yaml`
+ * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
+ */
+const endpoints: Endpoint[] = [
   {
     application: 'adjudications',
     infoUrl: {
@@ -54,7 +71,7 @@ const endpoints = [
   { application: 'courtAppearanceScheduler', urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
 ]
 
-function getApplicationInfo(appLabel, url) {
+function getApplicationInfo(appLabel: string, url: string): superagent.Request {
   return superagent
     .get(url)
     .set('Accept', 'application/json')
@@ -63,7 +80,9 @@ function getApplicationInfo(appLabel, url) {
     })
 }
 
-async function getRedisClient() {
+type RedisClient = ReturnType<typeof redis.createClient>
+
+function getRedisClient(): RedisClient {
   console.log('Creating redis client')
   const host = process.env.REDIS_HOST || 'localhost'
   const protocol = process.env.REDIS_TLS_ENABLED === 'true' ? 'rediss' : 'redis'
@@ -95,34 +114,41 @@ async function getRedisClient() {
     })
 }
 
-async function ensureConnected(redisClient) {
+async function ensureConnected(redisClient: RedisClient): Promise<void> {
   if (!redisClient.isOpen) {
     await redisClient.connect()
   }
 }
 
-async function cacheResponses(body, redisClient) {
-  const resp = await redisClient.set('applicationInfo', JSON.stringify(body))
-
-  console.log('Successfully cached application info', body)
-  return resp
+/**
+ * Service-related information now cached in redis,
+ * see also `/server/@types/activeAgencies.ServiceActiveAgencies`
+ */
+export interface CachedInfo {
+  app: string
+  activeAgencies: string[]
 }
 
-async function getStoredData(redisClient) {
+async function cacheResponses(body: CachedInfo[], redisClient: RedisClient): Promise<void> {
+  await redisClient.set('applicationInfo', JSON.stringify(body))
+  console.log('Successfully cached application info', body)
+}
+
+async function getStoredData(redisClient: RedisClient): Promise<CachedInfo[]> {
   const responseString = await redisClient.get('applicationInfo')
   console.log(`Previous stored application info: ${responseString}`)
-  return JSON.parse(responseString)
+  return JSON.parse(responseString as string)
 }
 
-function getUrlForApp(appData) {
-  if (appData.urlEnv) {
+function getUrlForApp(appData: Endpoint): string | undefined {
+  if ('urlEnv' in appData) {
     return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
   }
-  return appData.infoUrl[process.env.ENVIRONMENT]
+  return appData.infoUrl[process.env.ENVIRONMENT as Environment]
 }
 
-const getData = async () => {
-  const redisClient = await getRedisClient()
+export async function getData(): Promise<void> {
+  const redisClient = getRedisClient()
   await ensureConnected(redisClient)
 
   const storedData = await getStoredData(redisClient)
@@ -149,7 +175,7 @@ const getData = async () => {
       .filter(Boolean),
   )
 
-  const newData = responses
+  const newData: CachedInfo[] = responses
     .map(response => {
       if (response.status !== 'fulfilled') {
         console.error('Failed to get application info', response.reason)
@@ -161,7 +187,9 @@ const getData = async () => {
       const { body, request } = response.value
 
       const applicationName = endpoints.find(
-        app => request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT]),
+        app =>
+          request?.url ===
+          ('urlEnv' in app ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT as Environment]),
       )?.application
       if (!applicationName) {
         console.error('Cannot match response to application')
@@ -204,4 +232,4 @@ const getData = async () => {
   redisClient.destroy()
 }
 
-module.exports = { getData }
+export default { getData }
