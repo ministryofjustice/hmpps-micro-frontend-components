@@ -139,7 +139,8 @@ const getData = async () => {
         const url = getUrlForApp(app)
 
         if (!url) {
-          console.log(`No url found for app: ${app.application}`)
+          console.error(`No url found for app: ${app.application}`)
+          reportError('No url found for app', { application: app.application })
           return undefined
         }
 
@@ -162,7 +163,13 @@ const getData = async () => {
       const applicationName = endpoints.find(
         app => request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT]),
       )?.application
-      if (!applicationName) return undefined
+      if (!applicationName) {
+        console.error('Cannot match response to application')
+        reportError('Cannot match response to application', {
+          request: request?.url,
+        })
+        return undefined
+      }
 
       if (!Array.isArray(body.activeAgencies)) {
         console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
