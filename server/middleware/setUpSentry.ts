@@ -13,6 +13,7 @@ export function setUpSentry() {
     // https://docs.sentry.io/platforms/javascript/data-management/sensitive-data#examples
     const anonymousId = Math.random().toString()
     Sentry.setUser({ id: anonymousId })
+    Sentry.setTag('DPS.service', 'hmpps-micro-frontend-components')
 
     Sentry.init({
       dsn: config.sentry.dsn,

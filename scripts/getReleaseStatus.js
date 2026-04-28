@@ -1,4 +1,27 @@
 /* eslint-disable no-console */
+
+const Sentry = require('@sentry/node')
+
+let reportError = () => {}
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.SENTRY_ENVIRONMENT,
+    release: process.env.GIT_REF,
+    sendDefaultPii: false,
+  })
+  Sentry.setTag('DPS.service', 'hmpps-micro-frontend-components-services')
+
+  reportError = (message, context) => {
+    Sentry.captureMessage(message, {
+      level: 'error',
+      contexts: {
+        DPS: context,
+      },
+    })
+  }
+}
+
 const superagent = require('superagent')
 const redis = require('redis')
 
@@ -129,6 +152,9 @@ const getData = async () => {
     .map(response => {
       if (response.status !== 'fulfilled') {
         console.error('Failed to get application info', response.reason)
+        reportError('Failed to get application info', {
+          error: typeof response.reason === 'string' ? response.reason : JSON.stringify(response.reason),
+        })
         return undefined
       }
       const { body, request } = response.value
@@ -140,6 +166,9 @@ const getData = async () => {
 
       if (!Array.isArray(body.activeAgencies)) {
         console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        reportError('Invalid activeAgencies value', {
+          activeAgencies: JSON.stringify(body.activeAgencies),
+        })
         return undefined
       }
 
