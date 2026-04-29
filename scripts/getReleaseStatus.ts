@@ -35,6 +35,7 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * Add definitions here:
  * - provide `urlEnv` to look up info url from environment variable
  * - or provide an environment-to-url map in `infoUrl`
+ * - keep list sorted by service name
  *
  * When using environment variables, also:
  * - Add urls to
@@ -44,6 +45,7 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
  */
 export const endpoints: Endpoint[] = [
+  { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
@@ -52,24 +54,23 @@ export const endpoints: Endpoint[] = [
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
     },
   },
-  { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
-  { application: ServiceName.CAS2, urlEnv: 'CAS2_URL' },
   { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
-  { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
-  { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
-  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
-  { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
-  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
-  { application: ServiceName.INCIDENT_REPORTING, urlEnv: 'INCIDENT_REPORTING_URL' },
-  { application: ServiceName.CASE_NOTES, urlEnv: 'CASE_NOTES_API_URL' },
-  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
-  { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
-  { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
   { application: ServiceName.ALLOCATE_KEY_WORKERS, urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
   { application: ServiceName.ALLOCATE_PERSONAL_OFFICERS, urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
-  { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
-  { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: ServiceName.CAS2, urlEnv: 'CAS2_URL' },
+  { application: ServiceName.CASE_NOTES, urlEnv: 'CASE_NOTES_API_URL' },
+  { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
   { application: ServiceName.COURT_APPEARANCE_SCHEDULER, urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
+  { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
+  { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
+  { application: ServiceName.INCIDENT_REPORTING, urlEnv: 'INCIDENT_REPORTING_URL' },
+  { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
+  { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
+  { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
+  { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
+  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
+  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
 ]
 
 function getApplicationInfo(appLabel: string, url: string): superagent.Request {
