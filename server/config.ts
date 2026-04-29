@@ -276,17 +276,29 @@ export default {
       enabledPrisons: get('WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS', '', requiredInProduction),
     },
     whereabouts: {
-      apiUrl: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
+      url: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
     // NB: keep service list sorted
-  },
+  } satisfies ServiceUrls,
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
   },
+}
+
+interface ServiceUrls {
+  /** Internal service name; should match a ServiceName if corresponding one exists */
+  [serviceName: string]: {
+    /** Main landing page */
+    url: string
+    /** Feature flag: true when the service has been enabled */
+    enabled?: boolean
+    /** Feature flag: comma-separated list of agency codes */
+    enabledPrisons?: string
+  }
 }
