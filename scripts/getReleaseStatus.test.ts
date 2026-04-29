@@ -1,7 +1,10 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import nock from 'nock'
 import redis from 'redis'
+import yaml from 'yaml'
 
-import { getData } from './getReleaseStatus'
+import { getData, endpoints } from './getReleaseStatus'
 
 const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
@@ -296,5 +299,24 @@ describe('Get release status script', () => {
         ]),
       )
     })
+  })
+
+  it('should be set up correctly in helm chart', async () => {
+    const helmChartPath = path.join(
+      __dirname,
+      '../helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml',
+    )
+    const helmChart = await fs.readFile(helmChartPath, { encoding: 'utf8' }).then(data => {
+      // replace quotes in go templates so the file parses as plain yaml
+      const filteredData = data.replaceAll(/{{(?<goTpl>[^}]*)}}/g, goTpl => goTpl.replaceAll('"', "'"))
+      return yaml.parse(filteredData)
+    })
+    const { env } = helmChart.spec.jobTemplate.spec.template.spec.containers[0]
+    const helmEnvVars = new Set(env.map((item: { name: string }) => item.name))
+
+    const scriptEnvVars = new Set(endpoints.filter(endpoint => 'urlEnv' in endpoint).map(endpoint => endpoint.urlEnv))
+
+    const missingEnvVars = scriptEnvVars.difference(helmEnvVars)
+    expect(missingEnvVars).toEqual(new Set())
   })
 })

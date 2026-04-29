@@ -43,7 +43,7 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  *   - `/helm_deploy/values-prod.yaml`
  * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
  */
-const endpoints: Endpoint[] = [
+export const endpoints: Endpoint[] = [
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
@@ -76,7 +76,7 @@ function getApplicationInfo(appLabel: string, url: string): superagent.Request {
   return superagent
     .get(url)
     .set('Accept', 'application/json')
-    .retry(2, (err, res) => {
+    .retry(2, (_err, res) => {
       console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
     })
 }
