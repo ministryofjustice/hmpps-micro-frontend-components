@@ -621,8 +621,8 @@ export default (
       id: 'court-appearance-scheduler',
       heading: 'Court appearances',
       description: userHasRoles([Role.CourtAppearanceSchedulerManage], roles)
-        ? 'Add, edit and manage court appearances.'
-        : 'View court appearances for prisoners in your establishment.',
+        ? 'Add and edit court appearances'
+        : 'View court appearance for people at this establishment',
       href: config.serviceUrls.courtAppearanceScheduler.url,
       navEnabled: true,
       enabled: () =>
