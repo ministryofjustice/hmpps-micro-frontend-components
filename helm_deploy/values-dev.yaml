@@ -85,6 +85,8 @@ generic-service:
     CONTACTS_UI_URL: https://contacts-dev.hmpps.service.justice.gov.uk
     OFFICIAL_VISITS_UI_URL: https://official-visits-ui-dev.hmpps.service.justice.gov.uk
     OFFICIAL_VISITS_API_URL: https://official-visits-api-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_API_URL: https://court-appearance-scheduler-api-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_UI_URL: https://court-appearance-scheduler-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

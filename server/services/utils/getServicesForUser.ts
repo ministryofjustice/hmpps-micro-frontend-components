@@ -617,6 +617,18 @@ export default (
       navEnabled: true,
       enabled: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
     },
+    {
+      id: 'court-appearance-scheduler',
+      heading: 'Court appearances',
+      description: userHasRoles([Role.CourtAppearanceSchedulerManage], roles)
+        ? 'Add and edit court appearances.'
+        : 'View court appearance for people at this establishment.',
+      href: config.serviceUrls.courtAppearanceScheduler.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
+    },
   ]
     .filter(service => service.enabled())
     .map(service => {
