@@ -3,7 +3,7 @@
 $cdps-header-height: 70px;
 $cdps-header-collapse-width: 985px;
 $cdps-header-minimal-width: 400px;
-$cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #aaa9a9 close to design #a8abad
+$cdps-header-hover-colour: govuk-colour("black", $variant: "tint-95");
 
 @property --cdps-header-bg-colour {
   syntax: '<color>';
@@ -20,7 +20,7 @@ $cdps-header-hover-colour: govuk-shade(govuk-colour('light-grey'), 30%); // is #
 .cdps-header {
   position: relative;
   forced-color-adjust: none;
-  background: govuk-colour('light-grey');
+  background: govuk-colour("black", $variant: "tint-95");
   @include govuk-font($size: 19);
 
   @include cdps-utils.forced-dark-colours {
@@ -294,12 +294,12 @@ a.cdps-header__link {
 }
 
 .cdps-header__item--with-open-menu {
-  --cdps-header-bg-colour: #{govuk-colour('light-grey')};
+  --cdps-header-bg-colour: #{govuk-colour("black", $variant: "tint-95")};
   --cdps-header-fg-colour: #{govuk-colour('blue')};
 
   .cdps-header__link {
     &:hover {
-      --cdps-header-fg-colour: #{govuk-colour('dark-grey')};
+      --cdps-header-fg-colour: #{govuk-colour("black", $variant: "tint-25")};
     }
   }
 
@@ -341,7 +341,7 @@ a.cdps-header__link {
 }
 
 .cdps-header__menu {
-  background: govuk-colour('light-grey');
+  background: govuk-colour("black", $variant: "tint-95");
   color: govuk-colour('black');
 
   @include cdps-utils.forced-dark-colours {
