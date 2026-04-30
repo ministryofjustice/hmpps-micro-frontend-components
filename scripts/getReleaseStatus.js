@@ -1,4 +1,27 @@
 /* eslint-disable no-console */
+
+const Sentry = require('@sentry/node')
+
+let reportError = () => {}
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.SENTRY_ENVIRONMENT,
+    release: process.env.GIT_REF,
+    sendDefaultPii: false,
+  })
+  Sentry.setTag('DPS.service', 'hmpps-micro-frontend-components-services')
+
+  reportError = (message, context) => {
+    Sentry.captureMessage(message, {
+      level: 'error',
+      contexts: {
+        DPS: context,
+      },
+    })
+  }
+}
+
 const superagent = require('superagent')
 const redis = require('redis')
 
@@ -69,7 +92,7 @@ async function getRedisClient() {
       console.log('Redis client connection closed')
     })
     .on('error', err => {
-      console.log(`Redis Error`, err)
+      console.error('Redis Error', err)
     })
 }
 
@@ -82,7 +105,7 @@ async function ensureConnected(redisClient) {
 async function cacheResponses(body, redisClient) {
   const resp = await redisClient.set('applicationInfo', JSON.stringify(body))
 
-  console.log(`Successfully cached application info`, body)
+  console.log('Successfully cached application info', body)
   return resp
 }
 
@@ -117,7 +140,8 @@ const getData = async () => {
         const url = getUrlForApp(app)
 
         if (!url) {
-          console.log(`No url found for app: ${app.application}`)
+          console.error(`No url found for app: ${app.application}`)
+          reportError('No url found for app', { application: app.application })
           return undefined
         }
 
@@ -129,7 +153,10 @@ const getData = async () => {
   const newData = responses
     .map(response => {
       if (response.status !== 'fulfilled') {
-        console.log(`Failed to get application info`, response.reason)
+        console.error('Failed to get application info', response.reason)
+        reportError('Failed to get application info', {
+          error: typeof response.reason === 'string' ? response.reason : JSON.stringify(response.reason),
+        })
         return undefined
       }
       const { body, request } = response.value
@@ -137,10 +164,19 @@ const getData = async () => {
       const applicationName = endpoints.find(
         app => request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT]),
       )?.application
-      if (!applicationName) return undefined
+      if (!applicationName) {
+        console.error('Cannot match response to application')
+        reportError('Cannot match response to application', {
+          request: request?.url,
+        })
+        return undefined
+      }
 
       if (!Array.isArray(body.activeAgencies)) {
-        console.log(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        reportError('Invalid activeAgencies value', {
+          activeAgencies: JSON.stringify(body.activeAgencies),
+        })
         return undefined
       }
 

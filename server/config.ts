@@ -108,6 +108,10 @@ export default {
   environment: get('ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
   /** Phase banner tag label (blank in prod namespace) */
   environmentName: get('ENVIRONMENT_NAME', ''),
+  sentry: {
+    dsn: get('SENTRY_DSN', null, requiredInProduction),
+    environment: get('SENTRY_ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
+  },
   serviceUrls: {
     oldDps: { url: get('OLD_DPS_URL', 'http://localhost:3001', requiredInProduction) },
     newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },

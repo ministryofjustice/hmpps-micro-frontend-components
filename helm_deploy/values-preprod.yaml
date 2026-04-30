@@ -18,6 +18,7 @@ generic-service:
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT: preprod             # k8s namespace suffix & github environment
     ENVIRONMENT_NAME: PRE-PRODUCTION # Phase banner tag label
+    SENTRY_ENVIRONMENT: preprod
     CACHE_TIMOUT: 600
 
     # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
