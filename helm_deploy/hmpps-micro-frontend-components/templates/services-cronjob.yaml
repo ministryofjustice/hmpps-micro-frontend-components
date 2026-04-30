@@ -45,7 +45,7 @@ spec:
               - name: INFO_DISABLED_APPS
                 value: "{{ index .Values "generic-service" "env" "INFO_DISABLED_APPS" }}"
 
-              # service urls:
+              # service urls for caching info by `/scripts/getReleaseStatus.js`:
 
               - name: ACTIVITIES_URL
                 value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
@@ -85,8 +85,6 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}"
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
-              - name: SUPPORT_ADDITIONAL_NEEDS_URL
-                value: "{{ index .Values "generic-service" "env" "SUPPORT_ADDITIONAL_NEEDS_URL" }}"
 
               command: ["npm", "run", "getAppsStatus", "--loglevel", "verbose"]
           restartPolicy: Never
