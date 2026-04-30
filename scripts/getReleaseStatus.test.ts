@@ -12,7 +12,6 @@ const alertsUrl = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 const caseNotesApiUrl = 'https://dev.offender-case-notes.service.justice.gov.uk'
 const cemoUrl = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
 const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
-const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 const manageApplicationsUrl = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
 const officialVisitsApi = 'https://official-visits-api-dev.hmpps.service.justice.gov.uk'
 const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
@@ -26,7 +25,6 @@ const allUrls = [
   caseNotesApiUrl,
   cemoUrl,
   csipApiUrl,
-  learningAndWorkProgressUrl,
   manageApplicationsUrl,
   officialVisitsApi,
   prepareSomeoneForReleaseUrl,
@@ -99,7 +97,6 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
@@ -136,7 +133,6 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
@@ -160,7 +156,6 @@ describe('Get release status script', () => {
         { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
@@ -287,7 +282,6 @@ describe('Get release status script', () => {
           { app: 'caseNotesApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },

@@ -73,8 +73,6 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "EXTERNAL_MOVEMENTS_API_URL" }}"
               - name: INCIDENT_REPORTING_URL
                 value: "{{ index .Values "generic-service" "env" "INCIDENT_REPORTING_URL" }}"
-              - name: LEARNING_AND_WORK_PROGRESS_URL
-                value: "{{ index .Values "generic-service" "env" "LEARNING_AND_WORK_PROGRESS_URL" }}"
               - name: MANAGE_APPLICATIONS_URL
                 value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
               - name: OFFICIAL_VISITS_API_URL

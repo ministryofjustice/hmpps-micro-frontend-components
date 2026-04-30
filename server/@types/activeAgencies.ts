@@ -15,7 +15,6 @@ export enum ServiceName {
   CSIP = 'csipApi',
   EXTERNAL_MOVEMENTS = 'externalMovements',
   INCIDENT_REPORTING = 'incidentReporting',
-  LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   MANAGE_APPLICATIONS = 'manageApplications',
   OFFICIAL_VISITS_API = 'officialVisitsApi',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
