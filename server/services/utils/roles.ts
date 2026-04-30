@@ -94,6 +94,8 @@ export enum Role {
   ExternalMovementsTapManage = 'EXTERNAL_MOVEMENTS_TAP_RW',
   ContactsAdministrator = 'CONTACTS_ADMINISTRATOR',
   ContactsAuthoriser = 'CONTACTS_AUTHORISER',
+  CourtAppearanceSchedulerView = 'COURT_APPEARANCE_SCHEDULER_RO',
+  CourtAppearanceSchedulerManage = 'COURT_APPEARANCE_SCHEDULER_RW',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))

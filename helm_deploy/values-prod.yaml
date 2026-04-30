@@ -16,6 +16,7 @@ generic-service:
     CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT: prod # k8s namespace suffix & github environment
+    SENTRY_ENVIRONMENT: prod
     CACHE_TIMOUT: 600
 
     # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
@@ -80,6 +81,8 @@ generic-service:
     CONTACTS_UI_URL: https://contacts.hmpps.service.justice.gov.uk
     OFFICIAL_VISITS_UI_URL: https://official-visits-ui.hmpps.service.justice.gov.uk
     OFFICIAL_VISITS_API_URL: https://official-visits-api.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_API_URL: https://court-appearance-scheduler-api.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_UI_URL: https://court-appearance-scheduler.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

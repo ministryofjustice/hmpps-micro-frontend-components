@@ -20,6 +20,33 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "ENVIRONMENT" }}"
               - name: ENVIRONMENT_NAME
                 value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
+              - name: SENTRY_ENVIRONMENT
+                value: "{{ index .Values "generic-service" "env" "SENTRY_ENVIRONMENT" }}"
+              - name: SENTRY_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: hmpps-micro-frontend-components
+                    key: SENTRY_DSN
+              - name: REDIS_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: primary_endpoint_address
+              - name: REDIS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: elasticache-redis
+                    key: auth_token
+              - name: REDIS_TLS_ENABLED
+                value: "{{ index .Values "generic-service" "env" "REDIS_TLS_ENABLED" }}"
+
+              # service settings:
+
+              - name: INFO_DISABLED_APPS
+                value: "{{ index .Values "generic-service" "env" "INFO_DISABLED_APPS" }}"
+
+              # service urls for caching info by `/scripts/getReleaseStatus.js`:
+
               - name: ACTIVITIES_URL
                 value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
               - name: CAS2_URL
@@ -52,24 +79,13 @@ spec:
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
               - name: EXTERNAL_MOVEMENTS_API_URL
                 value: "{{ index .Values "generic-service" "env" "EXTERNAL_MOVEMENTS_API_URL" }}"
+              - name: COURT_APPEARANCE_SCHEDULER_API_URL
+                value: "{{ index .Values "generic-service" "env" "COURT_APPEARANCE_SCHEDULER_API_URL" }}"
               - name: OFFICIAL_VISITS_API_URL
                 value: "{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}"
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
-              - name: SUPPORT_ADDITIONAL_NEEDS_URL
-                value: "{{ index .Values "generic-service" "env" "SUPPORT_ADDITIONAL_NEEDS_URL" }}"
-              - name: REDIS_HOST
-                valueFrom:
-                  secretKeyRef:
-                    name: elasticache-redis
-                    key: primary_endpoint_address
-              - name: REDIS_AUTH_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    name: elasticache-redis
-                    key: auth_token
-              - name: REDIS_TLS_ENABLED
-                value: "{{ index .Values "generic-service" "env" "REDIS_TLS_ENABLED" }}"
+
               command: ["npm", "run", "getAppsStatus", "--loglevel", "verbose"]
           restartPolicy: Never
           activeDeadlineSeconds: 300

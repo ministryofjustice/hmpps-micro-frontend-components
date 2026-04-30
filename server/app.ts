@@ -1,6 +1,6 @@
 import express from 'express'
 
-import createError from 'http-errors'
+import { NotFound } from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -20,6 +20,7 @@ import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 import setUpSwagger from './middleware/setUpSwagger'
 import applicationInfo from './applicationInfo'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
+import { setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -28,6 +29,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
+  setUpSentry()
   app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(applicationInfo()))
   app.use(setUpWebSecurity())
@@ -43,7 +45,9 @@ export default function createApp(services: Services): express.Application {
   app.use('/develop', developRoutes(services))
   app.use('/', componentRoutes(services))
 
-  app.use((req, res, next) => next(createError(404, 'Not found')))
+  setUpSentryErrorHandler(app)
+
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app

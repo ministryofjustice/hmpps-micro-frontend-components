@@ -41,6 +41,7 @@ generic-service:
     hmpps-micro-frontend-components:
       CONTENTFUL_SPACE_ID: "CONTENTFUL_SPACE_ID"
       CONTENTFUL_ACCESS_TOKEN: "CONTENTFUL_ACCESS_TOKEN"
+      SENTRY_DSN: "SENTRY_DSN"
     hmpps-micro-frontend-components-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
     hmpps-micro-frontend-components-auth-code:
