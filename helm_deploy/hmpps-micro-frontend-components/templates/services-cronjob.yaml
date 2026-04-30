@@ -4,6 +4,7 @@ metadata:
   name: hmpps-micro-frontend-components-services
 spec:
   schedule: "{{ .Values.services_cronjob_schedule }}"
+  timeZone: Europe/London
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   successfulJobsHistoryLimit: 5
