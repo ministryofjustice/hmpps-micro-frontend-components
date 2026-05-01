@@ -106,7 +106,7 @@ The following code should be used in the `layout.njk` file within your applicati
 **Note**: the `header.njk` and `footer.njk` templates used in the following code fragments are fallback HTML in case the component service is unavailable or the API call fails for some reason. These templates should be copied from the `_fallbacks` directory in this repo, and configuration added as described in the Fallbacks section at the end of this document.
 
 ```nunjucks
-{% block header %}
+{% block govukHeader %}
   {% if feComponents.header %}
     {{ feComponents.header | safe }}
   {% else %}
@@ -115,7 +115,7 @@ The following code should be used in the `layout.njk` file within your applicati
 {% endblock %}
 ```
 ```nunjucks
-{% block footer %}
+{% block govukFooter %}
   {% if feComponents.footer %}
     {{ feComponents.footer | safe }}
   {% else %}

@@ -20,7 +20,7 @@ $cdps-header-hover-colour: govuk-colour("black", $variant: "tint-95");
 .cdps-header {
   position: relative;
   forced-color-adjust: none;
-  background: govuk-colour("black", $variant: "tint-95");
+  background: govuk-functional-colour(template-background);
   @include govuk-font($size: 19);
 
   @include cdps-utils.forced-dark-colours {
@@ -341,7 +341,7 @@ a.cdps-header__link {
 }
 
 .cdps-header__menu {
-  background: govuk-colour("black", $variant: "tint-95");
+  background: govuk-functional-colour(template-background);
   color: govuk-colour('black');
 
   @include cdps-utils.forced-dark-colours {
@@ -452,7 +452,7 @@ a.cdps-header__link {
   }
 
   &:hover {
-    background-color: govuk-shade(govuk-colour('blue'), 20%);
+    background-color: govuk-colour('blue', $variant: 'shade-25');
 
     @include cdps-utils.forced-dark-colours {
       background-color: #444;
