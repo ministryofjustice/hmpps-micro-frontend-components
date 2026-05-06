@@ -1,9 +1,8 @@
 import config from '../config'
+import type { AvailableComponent, SharedData, CaseLoad } from '../interfaces/externalContract'
+import { type HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import { ManagedPageLink } from '../interfaces/managedPage'
-import { AvailableComponent } from '../@types/AvailableComponent'
-import { HmppsUser, isPrisonUser } from '../interfaces/hmppsUser'
 import ContentfulService from '../services/contentfulService'
-import { Service } from '../interfaces/Service'
 
 export interface ViewModel {
   component: string
@@ -44,29 +43,14 @@ const defaultFooterLinks: ManagedPageLink[] = [
   },
 ]
 
-// This interface is assumed by other services - do not change without care
-export interface PrisonUserAccessMeta {
-  caseLoads: CaseLoad[]
-  activeCaseLoad: CaseLoad | null
-  services: Service[]
-  allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
-}
-
-// This interface is assumed by other services - do not change without care
-export interface CaseLoad {
-  caseLoadId: string
-  description: string
-  type: string
-  caseloadFunction: string
-  currentlyActive: boolean
-}
-
-const DEFAULT_USER_ACCESS: PrisonUserAccessMeta = {
+/** Empty meta information for non-prison users */
+const defaultUserAccess = (): SharedData => ({
   caseLoads: [],
   activeCaseLoad: null,
   services: [],
   allocationJobResponsibilities: [],
-}
+  cspDirectives: {},
+})
 
 export default class {
   constructor(private readonly contentfulService: ContentfulService) {}
@@ -76,7 +60,7 @@ export default class {
       isPrisonUser: isPrisonUser(user),
       ingressUrl: config.ingressUrl,
       changeCaseLoadLink: `${config.serviceUrls.newDps.url}/change-caseload`,
-      dpsSearchLink: `${config.serviceUrls.newDps.url}/prisoner-search`,
+      dpsSearchLink: `${config.serviceUrls.oldDps.url}/prisoner-search`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.newDps.url}#homepage-services`,
       component: 'header',
@@ -134,13 +118,14 @@ export default class {
                   : null) satisfies CaseLoad | null,
                 services: user.services,
                 allocationJobResponsibilities: user.allocationJobResponsibilities,
+                cspDirectives: {},
               }
-            : DEFAULT_USER_ACCESS,
+            : defaultUserAccess(),
       },
     )
   }
 }
 
 export type ComponentsData = Partial<Record<AvailableComponent, HeaderViewModel | FooterViewModel>> & {
-  meta: PrisonUserAccessMeta
+  meta: SharedData
 }

@@ -24,6 +24,8 @@ jest.mock('../../config', () => ({
     pinPhones: { url: 'url' },
     manageAdjudications: { url: 'url', enabledPrisons: 'LEI,LIV' },
     managePrisonVisits: { url: 'url' },
+    officialVisitsUi: { url: 'url', enabledPrisons: 'LEI,LIV' },
+    officialVisitsApi: { url: 'url' },
     legacyPrisonVisits: { url: 'url' },
     secureSocialVideoCalls: { url: 'url' },
     sendLegalMail: { url: 'url' },
@@ -55,6 +57,7 @@ jest.mock('../../config', () => ({
     supportAdditionalNeeds: { url: 'url', enabled: true },
     externalMovements: { url: 'url' },
     contacts: { url: 'url' },
+    courtAppearanceScheduler: { url: 'url' },
   },
 }))
 
@@ -310,6 +313,19 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Manage prison visits')).toEqual(visible)
+    })
+  })
+
+  describe('Official visits', () => {
+    test.each`
+      roles                | activeCaseLoad      | activeServices                                                                    | visible
+      ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
+      ${[Role.PrisonUser]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[]}                | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[]}                | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
     })
   })
 
@@ -867,6 +883,21 @@ describe('getServicesForUser', () => {
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
         const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'External movements')).toEqual(visible)
+      },
+    )
+  })
+
+  describe('Court appearances', () => {
+    test.each`
+      roles                                  | activeServices                                                                | activeCaseLoadId | visible
+      ${[Role.CourtAppearanceSchedulerView]} | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                                  | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.CourtAppearanceSchedulerView]} | ${[{ app: ServiceName.COURT_APPEARANCE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Court appearances')).toEqual(visible)
       },
     )
   })

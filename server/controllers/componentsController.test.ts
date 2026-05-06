@@ -1,15 +1,15 @@
-import ComponentsController, { FooterViewModel, HeaderViewModel, PrisonUserAccessMeta } from './componentsController'
+import ComponentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
+import type { SharedData } from '../interfaces/externalContract'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
-import { DEFAULT_USER_ACCESS } from '../services/userService'
 
 const contentfulServiceMock = {
   getManagedPages: () => [
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
 const controller = new ComponentsController(contentfulServiceMock)
 
@@ -19,7 +19,7 @@ const expectedHeaderViewModel: HeaderViewModel = {
   isPrisonUser: true,
   ingressUrl: 'http://localhost:3000',
   changeCaseLoadLink: 'http://localhost:3002/change-caseload',
-  dpsSearchLink: 'http://localhost:3002/prisoner-search',
+  dpsSearchLink: 'http://localhost:3001/prisoner-search',
   manageDetailsLink: 'http://localhost:9090/auth/account-details',
   menuLink: 'http://localhost:3002#homepage-services',
 }
@@ -48,11 +48,12 @@ const expectedFooterViewModel: FooterViewModel = {
   hasJavascript: false,
 }
 
-const expectedMeta: PrisonUserAccessMeta = {
+const expectedMeta: SharedData = {
   activeCaseLoad: activeCaseLoadMock,
   caseLoads: [activeCaseLoadMock],
   services: servicesMock,
   allocationJobResponsibilities: [],
+  cspDirectives: {},
 }
 
 describe('componentsController', () => {
@@ -117,7 +118,13 @@ describe('componentsController', () => {
       expect(output).toEqual({
         header: { ...expectedHeaderViewModel, isPrisonUser: false },
         footer: { ...expectedFooterViewModel, isPrisonUser: false },
-        meta: DEFAULT_USER_ACCESS,
+        meta: {
+          activeCaseLoad: null,
+          caseLoads: [],
+          services: [],
+          allocationJobResponsibilities: [],
+          cspDirectives: {},
+        } satisfies SharedData,
       })
     })
 

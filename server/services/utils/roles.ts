@@ -50,6 +50,9 @@ export enum Role {
   PcmsGlobalAdmin = 'PCMS_GLOBAL_ADMIN',
   PcmsAudit = 'PCMS_AUDIT',
   ManagePrisonVisits = 'MANAGE_PRISON_VISITS',
+  OfficialVisitsViewOnly = 'OFFVIS_VIEW_ONLY',
+  OfficialVisitsManage = 'OFFVIS_MANAGE',
+  OfficialVisitsAdmin = 'OFFVIS_ADMIN_USER',
   PvbRequests = 'PVB_REQUESTS',
   SocialVideoCalls = 'SOCIAL_VIDEO_CALLS',
   SlmScanBarcode = 'SLM_SCAN_BARCODE',
@@ -91,6 +94,8 @@ export enum Role {
   ExternalMovementsTapManage = 'EXTERNAL_MOVEMENTS_TAP_RW',
   ContactsAdministrator = 'CONTACTS_ADMINISTRATOR',
   ContactsAuthoriser = 'CONTACTS_AUTHORISER',
+  CourtAppearanceSchedulerView = 'COURT_APPEARANCE_SCHEDULER_RO',
+  CourtAppearanceSchedulerManage = 'COURT_APPEARANCE_SCHEDULER_RW',
 }
 export const userHasRoles = (rolesToCheck: string[], userRoles: string[]): boolean => {
   return rolesToCheck.some(role => userRoles.includes(role))

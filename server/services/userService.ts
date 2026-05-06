@@ -3,9 +3,9 @@ import getServicesForUser from './utils/getServicesForUser'
 import CacheService from './cacheService'
 import { ServiceActiveAgencies } from '../@types/activeAgencies'
 import config from '../config'
-import { PrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
-import { Service } from '../interfaces/Service'
-import { PrisonCaseload } from '../interfaces/caseLoad'
+import type { PrisonCaseload } from '../interfaces/caseLoad'
+import type { Service } from '../interfaces/externalContract'
+import type { PrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
@@ -44,6 +44,14 @@ export default class UserService {
 
     try {
       const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
+
+      if (userCaseloadDetail.activeCaseload && !userCaseloadDetail.caseloads.length) {
+        logger.warn(
+          `User ${user.username} has an active caseload but no caseloads assigned, returning default access. Occurs due to NOMIS behaviour.`,
+        )
+        return DEFAULT_USER_ACCESS
+      }
+
       if (!userCaseloadDetail.activeCaseload) {
         const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
 

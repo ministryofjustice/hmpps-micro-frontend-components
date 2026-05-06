@@ -1,7 +1,7 @@
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
+import type { Service } from '../../interfaces/externalContract'
 import { PrisonHierarchyDto } from '../../interfaces/location'
-import { Service } from '../../interfaces/Service'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
 
@@ -252,6 +252,16 @@ export default (
       href: config.serviceUrls.managePrisonVisits.url,
       navEnabled: true,
       enabled: () => userHasRoles([Role.ManagePrisonVisits], roles),
+    },
+    {
+      id: 'official-visits',
+      heading: 'Official visits',
+      description: 'Book, update, cancel and confirm when an official visit has taken place.',
+      href: config.serviceUrls.officialVisitsUi.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.PrisonUser], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
     },
     {
       id: 'legacy-prison-visit',
@@ -572,9 +582,9 @@ export default (
     },
     {
       id: 'match-learner-record',
-      heading: "Match someone's learning record",
+      heading: 'Match someone’s learner record',
       description:
-        "Search the Learning Records Service (LRS) to match someone's learning record or unique learner number (ULN), or identify if they do not have a ULN.",
+        'Search the Learning Records Service (LRS) to match someone to their learner record or unique learner number (ULN).',
       href: config.serviceUrls.matchLearnerRecord.url,
       navEnabled: true,
       enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
@@ -606,6 +616,18 @@ export default (
       href: config.serviceUrls.contacts.url,
       navEnabled: true,
       enabled: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
+    },
+    {
+      id: 'court-appearance-scheduler',
+      heading: 'Court appearances',
+      description: userHasRoles([Role.CourtAppearanceSchedulerManage], roles)
+        ? 'Add and edit court appearances.'
+        : 'View court appearance for people at this establishment.',
+      href: config.serviceUrls.courtAppearanceScheduler.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
     },
   ]
     .filter(service => service.enabled())

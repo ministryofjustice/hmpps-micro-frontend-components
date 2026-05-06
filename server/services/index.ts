@@ -2,6 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import { dataAccess } from '../data'
 import UserService from './userService'
 import ContentfulService from './contentfulService'
+import { ContentSecurityPolicyService } from './contentSecurityPolicyService'
 import config from '../config'
 import { createRedisClient } from '../data/redisClient'
 import CacheService from './cacheService'
@@ -34,11 +35,13 @@ export const services = () => {
     manageUsersApiClient,
     prisonApiClient,
   )
+  const contentSecurityPoliciesService = new ContentSecurityPolicyService()
 
   return {
     userService,
     contentfulService,
     cacheService,
+    contentSecurityPoliciesService,
   }
 }
 

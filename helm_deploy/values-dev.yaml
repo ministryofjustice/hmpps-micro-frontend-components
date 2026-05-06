@@ -1,7 +1,4 @@
----
-# Per environment values which override defaults in hmpps-micro-frontend-components/values.yaml
-
-services_cronjob_schedule: "0 * * * *"
+services_cronjob_schedule: "0 7-18 * * 1-5"
 
 generic-service:
   replicaCount: 2
@@ -20,6 +17,7 @@ generic-service:
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT: dev      # k8s namespace suffix & github environment
     ENVIRONMENT_NAME: DEV # Phase banner tag label
+    SENTRY_ENVIRONMENT: dev
     CACHE_TIMOUT: 3
 
     # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
@@ -82,6 +80,10 @@ generic-service:
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api-dev.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements-dev.hmpps.service.justice.gov.uk
     CONTACTS_UI_URL: https://contacts-dev.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_UI_URL: https://official-visits-ui-dev.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_API_URL: https://official-visits-api-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_API_URL: https://court-appearance-scheduler-api-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_UI_URL: https://court-appearance-scheduler-dev.hmpps.service.justice.gov.uk
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

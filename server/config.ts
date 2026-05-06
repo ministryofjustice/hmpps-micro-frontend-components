@@ -108,6 +108,10 @@ export default {
   environment: get('ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
   /** Phase banner tag label (blank in prod namespace) */
   environmentName: get('ENVIRONMENT_NAME', ''),
+  sentry: {
+    dsn: get('SENTRY_DSN', null, requiredInProduction),
+    environment: get('SENTRY_ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
+  },
   serviceUrls: {
     oldDps: { url: get('OLD_DPS_URL', 'http://localhost:3001', requiredInProduction) },
     newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },
@@ -159,6 +163,12 @@ export default {
     },
     managePrisonVisits: {
       url: get('MANAGE_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    officialVisitsUi: {
+      url: get('OFFICIAL_VISITS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    officialVisitsApi: {
+      url: get('OFFICIAL_VISITS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
     legacyPrisonVisits: {
       url: get('LEGACY_PRISON_VISITS_URL', 'http://localhost:3001', requiredInProduction),
@@ -266,6 +276,9 @@ export default {
     },
     contacts: {
       url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    courtAppearanceScheduler: {
+      url: get('COURT_APPEARANCE_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
   },
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),

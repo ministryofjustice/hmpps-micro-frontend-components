@@ -1,9 +1,10 @@
 import { Router } from 'express'
 import { Services } from '../services'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
-import { AVAILABLE_COMPONENTS, type AvailableComponent } from '../@types/AvailableComponent'
 import auth from '../authentication/auth'
+import { AVAILABLE_COMPONENTS } from '../data/availableComponent'
 import tokenVerifier from '../data/tokenVerification'
+import type { AvailableComponent } from '../interfaces/externalContract'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import { ComponentRenderer } from '../services/componentRenderer'
@@ -19,6 +20,7 @@ export default function developRoutes(services: Services): Router {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
+  // all developer preview routes require a user
   router.use(populateCurrentUser(services.userService))
 
   router.get('/all', async (_req, res) => {

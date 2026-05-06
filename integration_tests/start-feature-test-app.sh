@@ -13,7 +13,13 @@ info_msg Cloning the latest hmpps-template-typescript
 git clone https://github.com/ministryofjustice/hmpps-template-typescript.git
 
 info_msg Installing the latest @ministryofjustice/hmpps-connect-dps-components
+
 cd hmpps-template-typescript
+
+# Remove min-release-age from .npmrc to ensure we get the latest version of @ministryofjustice/hmpps-connect-dps-components
+# May cause issues if there's version mismatches
+grep -v 'min-release-age' .npmrc > .npmrc.tmp && mv .npmrc.tmp .npmrc
+
 npx @ministryofjustice/hmpps-connect-dps-components
 
 info_msg Building template project

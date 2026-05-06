@@ -1,8 +1,7 @@
-import { HmppsUser, PrisonUser } from '../../server/interfaces/hmppsUser'
+import type { PrisonCaseload } from '../../server/interfaces/caseLoad'
+import type { CaseLoad, Service } from '../../server/interfaces/externalContract'
+import type { HmppsUser, PrisonUser } from '../../server/interfaces/hmppsUser'
 import { Role } from '../../server/services/utils/roles'
-import { PrisonCaseload } from '../../server/interfaces/caseLoad'
-import { Service } from '../../server/interfaces/Service'
-import { CaseLoad } from '../../server/controllers/componentsController'
 
 export const servicesMock: Service[] = [
   {
