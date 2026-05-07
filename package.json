@@ -24,7 +24,7 @@
     "int-test-ui": "cypress open --e2e --browser chrome",
     "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm run setup && npm run build",
-    "getAppsStatus": "node -e 'require(\"./scripts/getReleaseStatus\").getData()'",
+    "getAppsStatus": "node -e 'require(\"./dist/scripts/getReleaseStatus\").getData()'",
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml --gitleaks-ignore-path .gitleaks/.gitleaksignore",
     "precommit:lint": "lint-staged",
     "precommit:verify": "npm run typecheck && npm test",
@@ -117,7 +117,8 @@
     "prettier-plugin-jinja-template": "^2.1.0",
     "supertest": "^7.1.4",
     "ts-jest": "29.4.9",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "yaml": "2.8.3"
   },
   "overrides": {
     "diff": "^8.0.3",
