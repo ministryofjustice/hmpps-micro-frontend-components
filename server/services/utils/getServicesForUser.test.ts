@@ -678,6 +678,12 @@ describe('getServicesForUser', () => {
     activeAgencies: ['***'],
   },
 ]}
+      ${['NONRESI__MAINTAIN_LOCATION']} | ${true} | ${[
+  {
+    app: 'residentialLocations' as ServiceName,
+    activeAgencies: ['LEI'],
+  },
+]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Locations')).toEqual(visible)
