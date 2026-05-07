@@ -3,13 +3,11 @@
 
 ## Building and Running
 
-
-
 To use the same version of NodeJS locally as is used in CI and production, follow [these notes](nvm.md).
 
 First, build the project by running:
 
-`npm install` and then `npm run build`
+`npm run setup` and then `npm run build`
 
 The front-end components service has a number of dependencies:
 
@@ -25,7 +23,7 @@ Here's the process.
 
 1/ Run redis locally using Docker:
 ```
-docker-compose pull && docker-compose up
+docker compose pull && docker compose up
 ```
 
 2/ Create a .env file with environment variables pointing to the development environment
@@ -44,16 +42,18 @@ SYSTEM_CLIENT_ID=
 SYSTEM_CLIENT_SECRET=
 TOKEN_VERIFICATION_ENABLED=true
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-PRISON_API_URL=https://prison-api-dev.prison.service.justice.gov.uk
 TOKEN_VERIFICATION_API_URL=https://token-verification-api-dev.prison.service.justice.gov.uk
 CONTENTFUL_HOST=https://graphql.eu.contentful.com
 CONTENTFUL_ENVIRONMENT=master
 CONTENTFUL_ACCESS_TOKEN=
 CONTENTFUL_SPACE_ID=
+RESIDENTIAL_LOCATIONS_API_URL=https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+OFFICIAL_VISITS_API_URL=https://official-visits-api-dev.hmpps.service.justice.gov.uk
+MANAGE_USERS_API_URL=https://manage-users-api-dev.hmpps.service.justice.gov.uk
 ```
 </details>
 
-3/ And then, to build the assets and start the app with nodemon:
+3/ And then, to build the assets and start the app with esbuild:
 ```
 npm run start:dev
 ```
@@ -67,8 +67,5 @@ TODO
 
 ### Run linter
 
-After making code changes eslint can be used to ensure code style is maintained
-(although husky ensures this is run as part of the pre-commit hook too)
-```
-npm run lint
-```
+- `npm run lint` runs `eslint`.
+- `npm run typecheck` runs the TypeScript compiler `tsc`.

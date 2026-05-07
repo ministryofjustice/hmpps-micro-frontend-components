@@ -1,14 +1,18 @@
-import { RestClientBuilder } from '../data'
-import PrisonApiClient from '../data/prisonApiClient'
 import logger from '../../logger'
 import getServicesForUser from './utils/getServicesForUser'
 import CacheService from './cacheService'
 import { ServiceActiveAgencies } from '../@types/activeAgencies'
 import config from '../config'
-import { PrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
-import { Service } from '../interfaces/Service'
-import { CaseLoad } from '../interfaces/caseLoad'
+import type { PrisonCaseload } from '../interfaces/caseLoad'
+import type { Service } from '../interfaces/externalContract'
+import type { PrisonUser, PrisonUserAccess } from '../interfaces/hmppsUser'
 import AllocationsApiClient, { StaffAllocationPolicies } from '../data/AllocationsApiClient'
+import { Role } from './utils/roles'
+import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
+import ManageUsersApiClient from '../data/manageUsersApiClient'
+import PrisonApiClient from '../data/prisonApiClient'
+
+export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
 export const API_COOL_OFF_MINUTES = 5
 export const API_ERROR_LIMIT = 100
@@ -23,50 +27,78 @@ export default class UserService {
   private errorCount = 0
 
   constructor(
-    private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
-    private readonly allocationsApiClientBuilder: RestClientBuilder<AllocationsApiClient>,
+    private readonly allocationsApiClient: AllocationsApiClient,
     private readonly cacheService: CacheService,
+    private readonly locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
+    private readonly manageUsersApiClient: ManageUsersApiClient,
+    private readonly prisonApiClient: PrisonApiClient,
   ) {}
 
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
     if (this.errorCount >= API_ERROR_LIMIT) return DEFAULT_USER_ACCESS
 
-    const cache: PrisonUserAccess = await this.getCache(user)
-    if (cache?.caseLoads.length === 1) return cache
+    const cache = await this.getCache(user)
+    const { userRoles, ...cachedResponse } = cache || ({} as UserAccessCache)
+
+    if (cache?.caseLoads?.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
 
     try {
-      const prisonApiClient = this.prisonApiClientBuilder(user.token)
-      const allocationsApiClient = this.allocationsApiClientBuilder(user.token)
-      const caseLoads = await prisonApiClient.getUserCaseLoads()
-      const activeCaseLoad = caseLoads.find(caseLoad => caseLoad.currentlyActive)
+      const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
+
+      if (userCaseloadDetail.activeCaseload && !userCaseloadDetail.caseloads.length) {
+        logger.warn(
+          `User ${user.username} has an active caseload but no caseloads assigned, returning default access. Occurs due to NOMIS behaviour.`,
+        )
+        return DEFAULT_USER_ACCESS
+      }
+
+      if (!userCaseloadDetail.activeCaseload) {
+        const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
+
+        // if there's no potential caseload we should return the default access
+        if (!potentialCaseLoad) return DEFAULT_USER_ACCESS
+
+        await this.prisonApiClient.setActiveCaseload(user.token, {
+          caseLoadId: potentialCaseLoad.id,
+          description: potentialCaseLoad.name,
+          caseloadFunction: potentialCaseLoad.function,
+          currentlyActive: true,
+        })
+
+        userCaseloadDetail.activeCaseload = potentialCaseLoad
+      }
+
+      const { activeCaseload: activeCaseLoad, caseloads: caseLoads } = userCaseloadDetail
 
       if (!caseLoads.length) return DEFAULT_USER_ACCESS
+      this.sortCaseLoads(caseLoads)
+
       if (
         cache &&
         this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
-        this.caseLoadsHaveNotChanged(caseLoads, cache)
+        this.caseLoadsHaveNotChanged(caseLoads, cache) &&
+        this.rolesHaveNotChanged(user.userRoles, cache)
       ) {
-        return cache
+        return cachedResponse
       }
 
       const services = await this.getServicesForUser(
         user,
-        activeCaseLoad?.caseLoadId,
-        prisonApiClient,
-        allocationsApiClient,
+        activeCaseLoad,
+        this.locationsInsidePrisonApiClient,
+        this.allocationsApiClient,
       )
-      const allocationPolicies = await this.getAllocationPolicies(
-        user,
-        activeCaseLoad?.caseLoadId,
-        allocationsApiClient,
-      )
+
+      const allocationPolicies = await this.getAllocationPolicies(user, activeCaseLoad?.id, this.allocationsApiClient)
+
       const userAccess: PrisonUserAccess = {
         caseLoads,
         activeCaseLoad,
         services,
         allocationJobResponsibilities: allocationPolicies.policies,
       }
-      await this.setCache(user, userAccess)
+
+      await this.setCache(user, { ...userAccess, userRoles: user.userRoles })
 
       // successfully retrieved user access, reset error counter
       this.errorCount = 0
@@ -78,41 +110,42 @@ export default class UserService {
     }
   }
 
-  private getCache(user: PrisonUser): Promise<PrisonUserAccess> {
-    return this.cacheService.getData<PrisonUserAccess>(`${user.username}_meta_data`)
+  private getCache(user: PrisonUser): Promise<UserAccessCache | null> {
+    return this.cacheService.getData<UserAccessCache>(`${user.username}_meta_data`)
   }
 
-  private async setCache(user: PrisonUser, access: PrisonUserAccess): Promise<string> {
+  private async setCache(user: PrisonUser, access: UserAccessCache): Promise<string> {
     return (await this.cacheService.setData(`${user.username}_meta_data`, access))?.toString()
   }
 
-  private activeCaseLoadHasNotChanged(activeCaseLoad: CaseLoad, cache: PrisonUserAccess): boolean {
-    return cache?.activeCaseLoad?.caseLoadId === activeCaseLoad?.caseLoadId
+  private activeCaseLoadHasNotChanged(activeCaseLoad: PrisonCaseload, cache: PrisonUserAccess): boolean {
+    return cache?.activeCaseLoad?.id === activeCaseLoad?.id
   }
 
-  private caseLoadsHaveNotChanged(caseLoads: CaseLoad[], cache: PrisonUserAccess): boolean {
-    return (
-      cache?.caseLoads
-        ?.map(c => c.caseLoadId)
-        .sort()
-        .join(',') ===
-      caseLoads
-        ?.map(c => c.caseLoadId)
-        .sort()
-        .join(',')
-    )
+  private caseLoadsHaveNotChanged(caseLoads: PrisonCaseload[], cache: PrisonUserAccess): boolean {
+    return cache?.caseLoads?.map(c => c.id)?.join(',') === caseLoads?.map(c => c.id)?.join(',')
+  }
+
+  private sortCaseLoads(caseLoads: PrisonCaseload[]): void {
+    caseLoads?.sort(({ name: name1 }, { name: name2 }) => name1?.localeCompare(name2))
+  }
+
+  private rolesHaveNotChanged(userRoles: Role[], cache: UserAccessCache): boolean {
+    // Prevent Prison API traffic spike upon initial deployment:
+    if (!cache?.userRoles) return true
+
+    return cache?.userRoles?.sort()?.join(',') === userRoles?.sort()?.join(',')
   }
 
   private async getServicesForUser(
     user: PrisonUser,
-    caseLoadId: string,
-    prisonApiClient: PrisonApiClient,
+    activeCaseLoad: PrisonCaseload,
+    locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
-    const [locations, isKeyworker, allocationPolicies] = await Promise.all([
-      prisonApiClient.getUserLocations(),
-      prisonApiClient.getIsKeyworker(caseLoadId, user.staffId),
-      this.getAllocationPolicies(user, caseLoadId, allocationsApiClient),
+    const [locations, allocationPolicies] = await Promise.all([
+      locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad),
+      this.getAllocationPolicies(user, activeCaseLoad.id, allocationsApiClient),
     ])
 
     const activeServices = config.features.servicesStore.enabled
@@ -121,9 +154,8 @@ export default class UserService {
 
     return getServicesForUser(
       user.userRoles,
-      isKeyworker,
       allocationPolicies,
-      caseLoadId ?? null,
+      activeCaseLoad.id ?? null,
       user.staffId,
       locations,
       activeServices,

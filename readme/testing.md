@@ -9,24 +9,34 @@
 
 ### Run tests
 
+Some of the unit tests currently depend on Redis. Start a redis container:
+
+`docker compose -f docker-compose-test.yml up redis`
+
+Then run the unit tests:
+
 `npm run test`
 
 ### Running integration tests
 
-For local running, start a test db and wiremock instance and build the components application by:
+#### Setup redis and wiremock using Docker:
 
-`docker compose -f docker-compose-test.yml up --build`
+`docker compose -f docker-compose-test.yml up`
 
-To recreate the client use of the components, there is a separate application in the integration_tests folder that calls the components endpoint running in docker and implements the response.
+#### Start the Micro Frontend Components service in integration test mode:
 
-Run this server in test mode by:
+`npm run start-feature:dev`
+
+#### Build and run the test service:
+
+To recreate the client use of the components, there is a separate application in the integration_tests folder that
+calls the components endpoint and implements the response.
+
+Build and run the test application:
 
 `npm run start-feature-test-app`
 
-And then either, run tests in headless mode with:
+#### Run the integration test suite:
 
-`npm run int-test`
-
-Or run tests with the cypress UI:
-
-`npm run int-test-ui`
+In headless mode: `npm run int-test`
+or with the cypress UI: `npm run int-test-ui`

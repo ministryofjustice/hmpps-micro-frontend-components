@@ -22,7 +22,7 @@ jest.mock('../applicationInfo', () => () => ({
 const token = jwt.sign(getTokenDataMock(), 'secret')
 
 jest.mock('express-jwt', () => ({
-  expressjwt: () => (req: Request, res: Response, next: NextFunction) => {
+  expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
     if (req.headers['x-user-token'] !== token) {
       const error = new Error()
       error.name = 'UnauthorizedError'
@@ -38,11 +38,11 @@ const contentfulServiceMock = {
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
 let app: App
-let authApi: nock.Scope
-let prisonApi: nock.Scope
+let locationsApi: nock.Scope
+let manageUsersApi: nock.Scope
 
 const redisClient = createRedisClient()
 
@@ -52,11 +52,17 @@ async function ensureConnected() {
   }
 }
 beforeEach(async () => {
-  authApi = nock(config.apis.hmppsAuth.url)
-  prisonApi = nock(config.apis.prisonApi.url)
+  manageUsersApi = nock(config.apis.manageUsersApi.url)
+  locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
+
+  nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
+    access_token: 'system-token',
+    token_type: 'Bearer',
+    expires_in: 5000,
+  })
 
   await ensureConnected()
-  redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('TOKEN_USER_meta_data')
 
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })
@@ -67,8 +73,6 @@ afterEach(() => {
 
 describe('GET /footer', () => {
   it('should render a link to the feedback survey', () => {
-    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -82,8 +86,6 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to accessibility guidelines', () => {
-    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -97,8 +99,6 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Terms and conditions', () => {
-    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -112,8 +112,6 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Privacy policy', () => {
-    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -127,8 +125,6 @@ describe('GET /footer', () => {
   })
 
   it('should render a link to Cookies policy', () => {
-    authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
     return request(app)
       .get('/footer')
       .set('x-user-token', token)
@@ -143,22 +139,18 @@ describe('GET /footer', () => {
 
   describe('services links', () => {
     beforeEach(() => {
-      prisonApi.get('/api/users/me/caseLoads').reply(200, [
-        {
-          caseLoadId: 'LEI',
-          description: 'Leeds',
-          type: '',
-          caseloadFunction: '',
-          currentlyActive: true,
-        },
-      ])
-      prisonApi.get('/api/staff/11111/LEI/roles/KW').reply(200, 'true')
-      prisonApi.get('/api/users/me/locations').reply(200, [])
+      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+        username: 'TOKEN_USER',
+        active: true,
+        accountType: '',
+        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+      })
+
+      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
     })
 
     it('should display a list of services', () => {
-      authApi.get('/api/user/me').reply(200, { name: 'Test User', activeCaseLoadId: 'LEI' })
-
       return request(app)
         .get('/footer')
         .set('x-user-token', token)
@@ -168,7 +160,7 @@ describe('GET /footer', () => {
         .expect(res => {
           const $ = cheerio.load(JSON.parse(res.text).html)
           const serviceLinks = $('.connect-dps-common-footer__services-menu').find('a')
-          expect(serviceLinks.length).toEqual(6)
+          expect(serviceLinks.length).toEqual(5)
         })
     })
   })

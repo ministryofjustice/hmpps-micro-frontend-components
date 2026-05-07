@@ -1,0 +1,113 @@
+# Adapted from
+# https://github.com/ministryofjustice/hmpps-github-actions/blob/v2.6.0/.github/workflows/node_integration_tests.yml
+
+# ** It will need to be manually updated when upstream changes **
+
+name: Integration tests
+
+on:
+  workflow_call:
+    inputs:
+      npm_script:
+        description: 'The main test script to execute with `npm run`'
+        required: false
+        type: string
+        default: 'int-test'
+      test_results_artifact_name:
+        description: 'Name of uploaded test results artifact; must be unqiue across pipeline (eg. in matrix strategies for parallelised tests)'
+        required: false
+        type: string
+        default: 'npm_integration_test_artifacts'
+      node_version_file:
+        description: "Passed to setup-node action to specify where to source the version of node from"
+        required: false
+        type: string
+        default: ".nvmrc"
+      redis_tag:
+        description: 'Optionally, start a redis service with this tag'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  integration_test:
+    name: ${{ inputs.npm_script == 'int-test' && 'Run the integration tests' || format('Run the integration tests – {0}', inputs.npm_script) }}
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: ${{ inputs.redis_tag && format('redis:{0}', inputs.redis_tag) || '' }}
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      wiremock:
+        image: wiremock/wiremock:3x
+        ports:
+          - 9091:8080
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Use Node.js ${{ inputs.node_version_file }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: ${{ inputs.node_version_file }}
+      - name: download artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: npm_build_artifacts
+      - name: restore cache
+        id: restore-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        env:
+          cache-name: node-modules
+        with:
+          path: |
+            ./node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json', '!**/node_modules/**') }}
+      - name: Init testing framework if necessary
+        run: npm run int-test-init:ci --if-present
+      - name: Prepare and run integration tests
+        id: integration-tests
+        shell: bash
+        run: |
+          nohup npm run start-feature &
+          nohup npm run start-feature-test-app &
+          # wait for test app, since it takes longer (includes build step) than MFE app
+          while ! nc -z localhost 3007; do
+            sleep 1
+          done
+          npm run ${{ inputs.npm_script }}
+      - name: upload results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ inputs.test_results_artifact_name }}
+          path: |
+            integration_tests/videos/
+            integration_tests/screenshots/
+            coverage/
+            test_results/
+            ctrf/
+      - name: publish test report
+        if: ${{ !cancelled() && github.event.repository.visibility == 'public' }}
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
+        with:
+          artifact: ${{ inputs.test_results_artifact_name }}
+          name: Test Report
+          path: 'test_results/**/*.xml'
+          reporter: java-junit
+          fail-on-empty: false
+          fail-on-error: false
+          list-suites: 'failed'
+          list-tests: 'failed'
+      - name: fail the action if the tests failed
+        if: ${{ steps.integration-tests.outcome == 'failure' }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            core.setFailed('Integration tests failed')

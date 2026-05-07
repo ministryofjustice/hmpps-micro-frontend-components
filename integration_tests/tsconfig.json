@@ -1,20 +1,14 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json",
-  "compileOnSave": true,
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "noEmit": false,
-    "allowJs": false,
     "strict": false,
-    "resolveJsonModule": true,
+    "noEmit": true,
+    "target": "es2021",
+    "lib": ["dom", "es2021"],
+    "types": ["cypress", "express", "express-session"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "assets/**/*.js", "integration_tests", "dist", "cypress.config.ts"],
-  "include": ["**/*.js", "**/*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["hmpps-template-typescript"],
 }

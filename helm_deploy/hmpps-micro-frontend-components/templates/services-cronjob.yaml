@@ -4,6 +4,7 @@ metadata:
   name: hmpps-micro-frontend-components-services
 spec:
   schedule: "{{ .Values.services_cronjob_schedule }}"
+  timeZone: Europe/London
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
   successfulJobsHistoryLimit: 5
@@ -16,40 +17,17 @@ spec:
             - name: hmpps-micro-frontend-components-services-cronjob
               image: "{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}"
               env:
+              - name: ENVIRONMENT
+                value: "{{ index .Values "generic-service" "env" "ENVIRONMENT" }}"
               - name: ENVIRONMENT_NAME
                 value: "{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}"
-              - name: ACTIVITIES_URL
-                value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
-              - name: CAS2_URL
-                value: "{{ index .Values "generic-service" "env" "CAS2_URL" }}"
-              - name: CAS2_BAIL_URL
-                value: "{{ index .Values "generic-service" "env" "CAS2_BAIL_URL" }}"
-              - name: ALERTS_API_URL
-                value: "{{ index .Values "generic-service" "env" "ALERTS_API_URL" }}"
-              - name: REPORTING_URL
-                value: "{{ index .Values "generic-service" "env" "REPORTING_URL" }}"
-              - name: RESIDENTIAL_LOCATIONS_API_URL
-                value: "{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}"
-              - name: LEARNING_AND_WORK_PROGRESS_URL
-                value: "{{ index .Values "generic-service" "env" "LEARNING_AND_WORK_PROGRESS_URL" }}"
-              - name: WHEREABOUTS_API_URL
-                value: "{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}"
-              - name: CSIP_API_URL
-                value: "{{ index .Values "generic-service" "env" "CSIP_API_URL" }}"
-              - name: INCIDENT_REPORTING_URL
-                value: "{{ index .Values "generic-service" "env" "INCIDENT_REPORTING_URL" }}"
-              - name: CASE_NOTES_API_URL
-                value: "{{ index .Values "generic-service" "env" "CASE_NOTES_API_URL" }}"
-              - name: PREPARE_SOMEONE_FOR_RELEASE_URL
-                value: "{{ index .Values "generic-service" "env" "PREPARE_SOMEONE_FOR_RELEASE_URL" }}"
-              - name: CEMO_URL
-                value: "{{ index .Values "generic-service" "env" "CEMO_URL" }}"
-              - name: MANAGE_APPLICATIONS_URL
-                value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
-              - name: ALLOCATE_KEY_WORKERS_API_URL
-                value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
-              - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
-                value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
+              - name: SENTRY_ENVIRONMENT
+                value: "{{ index .Values "generic-service" "env" "SENTRY_ENVIRONMENT" }}"
+              - name: SENTRY_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: hmpps-micro-frontend-components
+                    key: SENTRY_DSN
               - name: REDIS_HOST
                 valueFrom:
                   secretKeyRef:
@@ -60,6 +38,55 @@ spec:
                   secretKeyRef:
                     name: elasticache-redis
                     key: auth_token
-              command: ["npm", "run", "getAppsStatus"]
+              - name: REDIS_TLS_ENABLED
+                value: "{{ index .Values "generic-service" "env" "REDIS_TLS_ENABLED" }}"
+
+              # service settings:
+
+              - name: INFO_DISABLED_APPS
+                value: "{{ index .Values "generic-service" "env" "INFO_DISABLED_APPS" }}"
+
+              # service urls for caching info by `/scripts/getReleaseStatus.js`:
+              # keep list sorted
+
+              - name: ACTIVITIES_URL
+                value: "{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}"
+              - name: ALERTS_API_URL
+                value: "{{ index .Values "generic-service" "env" "ALERTS_API_URL" }}"
+              - name: ALLOCATE_KEY_WORKERS_API_URL
+                value: "{{ index .Values "generic-service" "env" "ALLOCATE_KEY_WORKERS_API_URL" }}"
+              - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
+                value: "{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}"
+              - name: CAS2_BAIL_URL
+                value: "{{ index .Values "generic-service" "env" "CAS2_BAIL_URL" }}"
+              - name: CAS2_URL
+                value: "{{ index .Values "generic-service" "env" "CAS2_URL" }}"
+              - name: CASE_NOTES_API_URL
+                value: "{{ index .Values "generic-service" "env" "CASE_NOTES_API_URL" }}"
+              - name: CEMO_URL
+                value: "{{ index .Values "generic-service" "env" "CEMO_URL" }}"
+              - name: COURT_APPEARANCE_SCHEDULER_API_URL
+                value: "{{ index .Values "generic-service" "env" "COURT_APPEARANCE_SCHEDULER_API_URL" }}"
+              - name: CSIP_API_URL
+                value: "{{ index .Values "generic-service" "env" "CSIP_API_URL" }}"
+              - name: EXTERNAL_MOVEMENTS_API_URL
+                value: "{{ index .Values "generic-service" "env" "EXTERNAL_MOVEMENTS_API_URL" }}"
+              - name: INCIDENT_REPORTING_URL
+                value: "{{ index .Values "generic-service" "env" "INCIDENT_REPORTING_URL" }}"
+              - name: MANAGE_APPLICATIONS_URL
+                value: "{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}"
+              - name: OFFICIAL_VISITS_API_URL
+                value: "{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}"
+              - name: PREPARE_SOMEONE_FOR_RELEASE_URL
+                value: "{{ index .Values "generic-service" "env" "PREPARE_SOMEONE_FOR_RELEASE_URL" }}"
+              - name: REPORTING_URL
+                value: "{{ index .Values "generic-service" "env" "REPORTING_URL" }}"
+              - name: RESIDENTIAL_LOCATIONS_API_URL
+                value: "{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}"
+              - name: WHEREABOUTS_API_URL
+                value: "{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}"
+              # keep list sorted
+
+              command: ["npm", "run", "getAppsStatus", "--loglevel", "verbose"]
           restartPolicy: Never
           activeDeadlineSeconds: 300

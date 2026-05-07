@@ -45,3 +45,5 @@ export const systemTokenBuilder =
 
     return newToken.body.access_token
   }
+
+export default { systemTokenBuilder }

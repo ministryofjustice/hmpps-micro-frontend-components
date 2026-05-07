@@ -1,7 +1,4 @@
----
-# Per environment values which override defaults in hmpps-micro-frontend-components/values.yaml
-
-services_cronjob_schedule: "0 * * * *"
+services_cronjob_schedule: "0 7-18 * * 1-5"
 
 generic-service:
   replicaCount: 2
@@ -18,63 +15,77 @@ generic-service:
     CONTENTFUL_HOST: https://graphql.eu.contentful.com
     CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
-    ENVIRONMENT_NAME: DEV
+    ENVIRONMENT: dev      # k8s namespace suffix & github environment
+    ENVIRONMENT_NAME: DEV # Phase banner tag label
+    SENTRY_ENVIRONMENT: dev
     CACHE_TIMOUT: 3
 
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    INFO_DISABLED_APPS: ""
 
-    DPS_URL: https://digital-dev.prison.service.justice.gov.uk
-    NEW_DPS_URL: https://dps-dev.prison.service.justice.gov.uk
-    OMIC_URL: https://dev.manage-key-workers.service.justice.gov.uk
-    ACTIVITIES_URL: https://activities-dev.prison.service.justice.gov.uk
-    APPOINTMENTS_URL: https://activities-dev.prison.service.justice.gov.uk
-    CHECK_MY_DIARY_URL: https://check-my-diary-dev.prison.service.justice.gov.uk?fromDPS=true
-    INCENTIVES_URL: https://incentives-ui-dev.hmpps.service.justice.gov.uk
-    USE_OF_FORCE_URL: https://dev.use-of-force.service.justice.gov.uk
-    PATHFINDER_URL: https://dev.pathfinder.service.justice.gov.uk
-    LICENCES_URL: https://licences-dev.prison.service.justice.gov.uk
-    MOIC_URL: https://dev.moic.service.justice.gov.uk
-    MANAGE_AUTH_ACCOUNTS_URL: https://manage-users-dev.hmpps.service.justice.gov.uk
-    CATEGORISATION_URL: https://dev.offender-categorisation.service.justice.gov.uk
-    PECS_URL: https://hmpps-book-secure-move-frontend-staging.apps.cloud-platform.service.justice.gov.uk
-    SOC_URL: https://manage-soc-cases-dev.hmpps.service.justice.gov.uk
-    PIN_PHONES_URL: https://pcms-dev.prison.service.justice.gov.uk
-    MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-dev.hmpps.service.justice.gov.uk
-    MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-dev.prison.service.justice.gov.uk
-    LEGACY_PRISON_VISITS_URL: https://staff.dev.prisonvisits.prison.service.justice.gov.uk/
-    SECURE_SOCIAL_VIDEO_CALLS_URL: https://auth.dev.prisonvideo.com/accounts/login/oauth/redirect
-    SEND_LEGAL_MAIL_URL: https://check-rule39-mail-dev.prison.service.justice.gov.uk
-    WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-dev.prison.service.justice.gov.uk
-    MERCURY_SUBMIT_URL: https://submit-a-mercury-report-dev.hmpps.service.justice.gov.uk
-    MANAGE_INTELLIGENCE_URL: https://manage-intelligence-dev.prison.service.justice.gov.uk
-    MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-dev.hmpps.service.justice.gov.uk
-    CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
-    HISTORICAL_PRISONER_APPLICATION_URL: https://historical-prisoner-dev.prison.service.justice.gov.uk
-    WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work-dev.hmpps.service.justice.gov.uk
-    MATCH_LEARNER_RECORD_URL: https://match-learner-record-dev.hmpps.service.justice.gov.uk
-    MANAGE_OFFENCES_URL: https://manage-offences-dev.hmpps.service.justice.gov.uk
-    LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
-    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
-    CAS2_URL: https://community-accommodation-tier-2-dev.hmpps.service.justice.gov.uk
-    CAS2_BAIL_URL: https://community-accommodation-tier-2-bail-dev.hmpps.service.justice.gov.uk
-    CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-dev.prison.service.justice.gov.uk
+    # Services URLs:
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-dev.hmpps.service.justice.gov.uk
+    ACTIVITIES_URL: https://activities-dev.prison.service.justice.gov.uk
     ALERTS_API_URL: https://alerts-api-dev.hmpps.service.justice.gov.uk
-    REPORTING_URL: https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk
-    RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-dev.hmpps.service.justice.gov.uk
-    RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
-    WHEREABOUTS_API_URL: https://whereabouts-api-dev.service.justice.gov.uk
-    CSIP_API_URL: https://csip-api-dev.hmpps.service.justice.gov.uk
-    CSIP_UI_URL: https://csip-dev.hmpps.service.justice.gov.uk
-    INCIDENT_REPORTING_URL: https://incident-reporting-dev.hmpps.service.justice.gov.uk
-    CASE_NOTES_API_URL: https://dev.offender-case-notes.service.justice.gov.uk
-    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk
-    ESTABLISHMENT_ROLL_URL: https://prison-roll-count-dev.hmpps.service.justice.gov.uk
-    CEMO_URL: https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk
-    ALLOCATIONS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk
     ALLOCATE_KEY_WORKERS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk/KEY_WORKER
     ALLOCATE_KEY_WORKERS_UI_URL: https://allocate-key-workers-dev.hmpps.service.justice.gov.uk/key-worker
     ALLOCATE_PERSONAL_OFFICERS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk/PERSONAL_OFFICER
     ALLOCATE_PERSONAL_OFFICERS_UI_URL: https://allocate-key-workers-dev.hmpps.service.justice.gov.uk/personal-officer
+    ALLOCATIONS_API_URL: https://keyworker-api-dev.prison.service.justice.gov.uk
+    APPOINTMENTS_URL: https://activities-dev.prison.service.justice.gov.uk
+    CAS2_BAIL_URL: https://community-accommodation-tier-2-bail-dev.hmpps.service.justice.gov.uk
+    CAS2_URL: https://community-accommodation-tier-2-dev.hmpps.service.justice.gov.uk
+    CASE_NOTES_API_URL: https://dev.offender-case-notes.service.justice.gov.uk
+    CATEGORISATION_URL: https://dev.offender-categorisation.service.justice.gov.uk
+    CEMO_URL: https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk
+    CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-dev.prison.service.justice.gov.uk
+    CHECK_MY_DIARY_URL: https://check-my-diary-dev.prison.service.justice.gov.uk?fromDPS=true
+    CONTACTS_UI_URL: https://contacts-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_API_URL: https://court-appearance-scheduler-api-dev.hmpps.service.justice.gov.uk
+    COURT_APPEARANCE_SCHEDULER_UI_URL: https://court-appearance-scheduler-dev.hmpps.service.justice.gov.uk
+    CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
+    CSIP_API_URL: https://csip-api-dev.hmpps.service.justice.gov.uk
+    CSIP_UI_URL: https://csip-dev.hmpps.service.justice.gov.uk
+    ESTABLISHMENT_ROLL_URL: https://prison-roll-count-dev.hmpps.service.justice.gov.uk
+    EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api-dev.hmpps.service.justice.gov.uk
+    EXTERNAL_MOVEMENTS_UI_URL: https://external-movements-dev.hmpps.service.justice.gov.uk
+    HISTORICAL_PRISONER_APPLICATION_URL: https://historical-prisoner-dev.prison.service.justice.gov.uk
+    INCENTIVES_URL: https://incentives-ui-dev.hmpps.service.justice.gov.uk
+    INCIDENT_REPORTING_URL: https://incident-reporting-dev.hmpps.service.justice.gov.uk
+    LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
+    LEGACY_PRISON_VISITS_URL: https://staff.dev.prisonvisits.prison.service.justice.gov.uk/
+    LICENCES_URL: https://licences-dev.prison.service.justice.gov.uk
+    MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-dev.hmpps.service.justice.gov.uk
+    MANAGE_APPLICATIONS_URL: https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk
+    MANAGE_AUTH_ACCOUNTS_URL: https://manage-users-dev.hmpps.service.justice.gov.uk
+    MANAGE_INTELLIGENCE_URL: https://manage-intelligence-dev.prison.service.justice.gov.uk
+    MANAGE_OFFENCES_URL: https://manage-offences-dev.hmpps.service.justice.gov.uk
+    MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-dev.prison.service.justice.gov.uk
+    MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-dev.hmpps.service.justice.gov.uk
+    MANAGE_USERS_API_URL: https://manage-users-api-dev.hmpps.service.justice.gov.uk
+    MATCH_LEARNER_RECORD_URL: https://match-learner-record-dev.hmpps.service.justice.gov.uk
+    MOIC_URL: https://dev.moic.service.justice.gov.uk
+    NEW_DPS_URL: https://dps-dev.prison.service.justice.gov.uk
+    OFFICIAL_VISITS_API_URL: https://official-visits-api-dev.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_UI_URL: https://official-visits-ui-dev.hmpps.service.justice.gov.uk
+    OLD_DPS_URL: https://digital-dev.prison.service.justice.gov.uk
+    PATHFINDER_URL: https://dev.pathfinder.service.justice.gov.uk
+    PECS_URL: https://hmpps-book-secure-move-frontend-staging.apps.cloud-platform.service.justice.gov.uk
+    PIN_PHONES_URL: https://pcms-dev.prison.service.justice.gov.uk
+    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
+    REPORTING_URL: https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk
+    RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+    RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison-dev.hmpps.service.justice.gov.uk
+    SECURE_SOCIAL_VIDEO_CALLS_URL: https://auth.dev.prisonvideo.com/accounts/login/oauth/redirect
+    SEND_LEGAL_MAIL_URL: https://check-rule39-mail-dev.prison.service.justice.gov.uk
+    SOC_URL: https://manage-soc-cases-dev.hmpps.service.justice.gov.uk
+    SUBMIT_INTELLIGENCE_REPORT_URL: https://submit-information-report-dev.hmpps.service.justice.gov.uk
+    SUPPORT_ADDITIONAL_NEEDS_URL: https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk
+    USE_OF_FORCE_URL: https://dev.use-of-force.service.justice.gov.uk
+    WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-dev.prison.service.justice.gov.uk
+    WHEREABOUTS_API_URL: https://whereabouts-api-dev.service.justice.gov.uk
+    WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work-dev.hmpps.service.justice.gov.uk
+    # NB: keep service list sorted
 
     # Feature
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"
@@ -86,9 +97,10 @@ generic-service:
     FEATURE_SERVICES_STORE_ENABLED: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     REPORTING_ENABLED_PRISONS: "***"
+    CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS: "KMI"
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-micro-frontend-components-non-prod
+  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
 
   elastiCacheAlertsClusterIds:
     cp-98b777d6bc652977-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"

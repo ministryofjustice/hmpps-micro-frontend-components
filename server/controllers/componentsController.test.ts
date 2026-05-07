@@ -1,27 +1,27 @@
-import componentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
+import ComponentsController, { FooterViewModel, HeaderViewModel } from './componentsController'
+import type { SharedData } from '../interfaces/externalContract'
 import ContentfulService from '../services/contentfulService'
 import config from '../config'
 import { activeCaseLoadMock, hmppsUserMock, prisonUserMock, servicesMock } from '../../tests/mocks/hmppsUserMock'
-import { DEFAULT_USER_ACCESS } from '../services/userService'
-import { PrisonUserAccess } from '../interfaces/hmppsUser'
 
 const contentfulServiceMock = {
   getManagedPages: () => [
     { href: 'url1', text: 'text1' },
     { href: 'url2', text: 'text2' },
   ],
-} as undefined as ContentfulService
+} as unknown as ContentfulService
 
-const controller = componentsController(contentfulServiceMock)
+const controller = new ComponentsController(contentfulServiceMock)
 
 const expectedHeaderViewModel: HeaderViewModel = {
   component: 'header',
-  ingressUrl: 'localhost',
+  hasJavascript: true,
   isPrisonUser: true,
-  changeCaseLoadLink: 'http://localhost:3001/change-caseload',
-  manageDetailsLink: 'http://localhost:9090/auth/account-details',
+  ingressUrl: 'http://localhost:3000',
+  changeCaseLoadLink: 'http://localhost:3002/change-caseload',
   dpsSearchLink: 'http://localhost:3001/prisoner-search',
-  menuLink: 'http://localhost:3001#homepage-services',
+  manageDetailsLink: 'http://localhost:9090/auth/account-details',
+  menuLink: 'http://localhost:3002#homepage-services',
 }
 
 const expectedFooterViewModel: FooterViewModel = {
@@ -45,13 +45,15 @@ const expectedFooterViewModel: FooterViewModel = {
   ],
   isPrisonUser: true,
   component: 'footer',
+  hasJavascript: false,
 }
 
-const expectedMeta: PrisonUserAccess = {
+const expectedMeta: SharedData = {
   activeCaseLoad: activeCaseLoadMock,
   caseLoads: [activeCaseLoadMock],
   services: servicesMock,
   allocationJobResponsibilities: [],
+  cspDirectives: {},
 }
 
 describe('componentsController', () => {
@@ -82,6 +84,7 @@ describe('componentsController', () => {
         ],
         isPrisonUser: true,
         component: 'footer',
+        hasJavascript: false,
       })
     })
 
@@ -115,7 +118,13 @@ describe('componentsController', () => {
       expect(output).toEqual({
         header: { ...expectedHeaderViewModel, isPrisonUser: false },
         footer: { ...expectedFooterViewModel, isPrisonUser: false },
-        meta: DEFAULT_USER_ACCESS,
+        meta: {
+          activeCaseLoad: null,
+          caseLoads: [],
+          services: [],
+          allocationJobResponsibilities: [],
+          cspDirectives: {},
+        } satisfies SharedData,
       })
     })
 

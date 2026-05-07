@@ -1,7 +1,7 @@
 import config from '../../config'
 import { Role, userHasRoles } from './roles'
-import { Location } from '../../interfaces/location'
-import { Service } from '../../interfaces/Service'
+import type { Service } from '../../interfaces/externalContract'
+import { PrisonHierarchyDto } from '../../interfaces/location'
 import { ServiceActiveAgencies, ServiceName } from '../../@types/activeAgencies'
 import { StaffAllocationPolicies } from '../../data/AllocationsApiClient'
 
@@ -24,6 +24,27 @@ function isActiveInEstablishment(
   )
 }
 
+function hasAnyActiveAgency(service: ServiceName, activeServices: ServiceActiveAgencies[] | null): boolean | undefined {
+  if (!activeServices) return false // no stored data
+  const applicationAgencyConfig = activeServices.find(activeService => activeService.app === service)
+  if (!applicationAgencyConfig) return false // no stored data for this service
+
+  return Array.isArray(applicationAgencyConfig.activeAgencies) && applicationAgencyConfig.activeAgencies.length > 0
+}
+
+function isActiveInAgencies(
+  agencies: string[],
+  service: ServiceName,
+  activeServices: ServiceActiveAgencies[] | null,
+): boolean | undefined {
+  for (const agency of agencies) {
+    if (isActiveInEstablishment(agency, service, activeServices, false)) {
+      return true
+    }
+  }
+  return false
+}
+
 function isActiveInEstablishmentWithLegacyFallback(
   activeCaseLoadId: string,
   service: ServiceName,
@@ -35,13 +56,13 @@ function isActiveInEstablishmentWithLegacyFallback(
 
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
+
 export default (
   roles: string[],
-  isKeyworker: boolean,
   allocationPolicies: StaffAllocationPolicies,
   activeCaseLoadId: string,
   staffId: number,
-  locations: Location[],
+  locations: PrisonHierarchyDto[],
   activeServices: ServiceActiveAgencies[] | null,
 ): Service[] => {
   const isActivitiesEnabled = isActiveInEstablishmentWithLegacyFallback(
@@ -50,31 +71,20 @@ export default (
     activeServices,
     config.serviceUrls.activities.enabledPrisons,
   )
-
   return [
     {
       id: 'global-search',
       heading: 'Global search',
       description: 'Search for someone in any establishment, or who has been released.',
-      href: `${config.serviceUrls.dps.url}/global-search`,
+      href: `${config.serviceUrls.newDps.url}/global-search`,
       navEnabled: true,
       enabled: () => userHasRoles([Role.GlobalSearch], roles),
-    },
-    {
-      id: 'key-worker-allocations',
-      heading: 'My key worker allocation',
-      description: 'View your key worker cases.',
-      href: `${config.serviceUrls.omic.url}/key-worker/${staffId}`,
-      navEnabled: true,
-      enabled: () =>
-        isKeyworker &&
-        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'manage-prisoner-whereabouts',
       heading: 'Prisoner whereabouts',
       description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
-      href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts`,
+      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts`,
       navEnabled: true,
       enabled: () =>
         isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, !isActivitiesEnabled),
@@ -156,16 +166,6 @@ export default (
       href: config.serviceUrls.establishmentRoll.url,
       navEnabled: true,
       enabled: () => locations?.length > 0,
-    },
-    {
-      id: 'manage-key-workers',
-      heading: 'Key workers',
-      description: 'Add and remove key workers from prisoners and manage individuals.',
-      href: config.serviceUrls.omic.url,
-      navEnabled: true,
-      enabled: () =>
-        userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles) &&
-        !isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
     {
       id: 'pom',
@@ -254,6 +254,16 @@ export default (
       enabled: () => userHasRoles([Role.ManagePrisonVisits], roles),
     },
     {
+      id: 'official-visits',
+      heading: 'Official visits',
+      description: 'Book, update, cancel and confirm when an official visit has taken place.',
+      href: config.serviceUrls.officialVisitsUi.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.PrisonUser], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
+    },
+    {
       id: 'legacy-prison-visit',
       heading: 'Online visit requests',
       description: 'Respond to online social visit requests.',
@@ -289,9 +299,9 @@ export default (
     },
     {
       id: 'submit-an-intelligence-report',
-      heading: 'Submit an Intelligence Report',
-      description: 'Access to the new Mercury submission form',
-      href: config.serviceUrls.mercurySubmit.url,
+      heading: 'Submit an intelligence report',
+      description: 'Access to the intelligence submission form',
+      href: config.serviceUrls.submitIntelligenceReport.url,
       navEnabled: true,
       enabled: () => true,
     },
@@ -341,7 +351,7 @@ export default (
     },
     {
       id: 'appointments',
-      heading: 'Appointments scheduling and attendance',
+      heading: 'Appointments',
       description: 'Create, manage and edit appointments. Print movement slips. Record appointment attendance.',
       href: `${config.serviceUrls.appointments.url}/appointments`,
       navEnabled: true,
@@ -351,7 +361,7 @@ export default (
       id: 'view-people-due-to-leave',
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
-      href: `${config.serviceUrls.dps.url}/manage-prisoner-whereabouts/scheduled-moves`,
+      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
       navEnabled: true,
       enabled: () => isActivitiesEnabled,
     },
@@ -359,7 +369,7 @@ export default (
       id: 'view-covid-units',
       heading: 'View COVID units',
       description: 'View who is in each COVID unit in your establishment.',
-      href: `${config.serviceUrls.dps.url}/current-covid-units`,
+      href: `${config.serviceUrls.newDps.url}/current-covid-units`,
       navEnabled: true,
       enabled: () => config.app.covidUnitsEnabled && userHasRoles([Role.PrisonUser], roles) && isActivitiesEnabled,
     },
@@ -458,13 +468,22 @@ export default (
     },
     {
       id: 'residential-locations',
-      heading: 'Residential locations',
-      description: 'View and manage residential locations in the establishment.',
+      heading: 'Locations',
+      description: 'View or manage residential and non-residential locations.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.ViewLocation, Role.ChangeLocation, Role.ManageResidentialLocations], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+        userHasRoles(
+          [
+            Role.ResiLocationViewer,
+            Role.ResiCellStatusManager,
+            Role.ResiCertificateViewer,
+            Role.ResiCertificateReviewer,
+            Role.ResiCertificateAdmin,
+            Role.NonResiLocationManager,
+          ],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
     },
     {
       id: 'reporting',
@@ -487,8 +506,12 @@ export default (
       href: config.serviceUrls.incidentReporting.url,
       navEnabled: true,
       enabled: () =>
-        userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false),
+        (userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
+          isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false)) ||
+        (userHasRoles([Role.IncidentReportingPECS, Role.IncidentReportingApprove], roles) &&
+          isActiveInAgencies(['NORTH', 'SOUTH'], ServiceName.INCIDENT_REPORTING, activeServices)) ||
+        (userHasRoles([Role.IncidentReportingApprove], roles) &&
+          hasAnyActiveAgency(ServiceName.INCIDENT_REPORTING, activeServices)),
     },
     {
       id: 'manage-applications',
@@ -560,12 +583,52 @@ export default (
     },
     {
       id: 'match-learner-record',
-      heading: "Match someone's learning record",
+      heading: 'Match someone’s learner record',
       description:
-        "Search the Learning Records Service (LRS) to match someone's learning record or unique learner number (ULN), or identify if they do not have a ULN.",
+        'Search the Learning Records Service (LRS) to match someone to their learner record or unique learner number (ULN).',
       href: config.serviceUrls.matchLearnerRecord.url,
       navEnabled: true,
       enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
+    },
+    {
+      id: 'support-additional-needs',
+      heading: 'Support for additional needs',
+      description: 'View and manage support planning for education and life across prison.',
+      href: config.serviceUrls.supportAdditionalNeeds.url,
+      navEnabled: true,
+      enabled: () => config.serviceUrls.supportAdditionalNeeds.enabled,
+    },
+    {
+      id: 'external-movements',
+      heading: 'External movements',
+      description: userHasRoles([Role.ExternalMovementsTapManage], roles)
+        ? 'Add, edit and manage temporary absences.'
+        : 'View temporary absences for prisoners in your establishment.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
+    },
+    {
+      id: 'contacts',
+      heading: 'Contacts',
+      description: 'Search for prisoner contacts.',
+      href: config.serviceUrls.contacts.url,
+      navEnabled: true,
+      enabled: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
+    },
+    {
+      id: 'court-appearance-scheduler',
+      heading: 'Court appearances',
+      description: userHasRoles([Role.CourtAppearanceSchedulerManage], roles)
+        ? 'Add and edit court appearances.'
+        : 'View court appearance for people at this establishment.',
+      href: config.serviceUrls.courtAppearanceScheduler.url,
+      navEnabled: true,
+      enabled: () =>
+        userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
     },
   ]
     .filter(service => service.enabled())

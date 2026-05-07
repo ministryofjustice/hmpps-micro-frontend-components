@@ -5,7 +5,14 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         versions:
-          - ">=23"
+          - ">=25"
+      - dependency-name: "applicationinsights"
+        versions:
+          - ">=3"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "@ministryofjustice/*"
     schedule:
       interval: weekly
       day: wednesday
@@ -14,6 +21,18 @@ updates:
         dependency-type: "development"
 
   - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: wednesday
+    cooldown:
+      default-days: 7
+      exclude:
+        - "ministryofjustice/*"
+
+  - package-ecosystem: pre-commit
+    cooldown:
+      default-days: 7
     directory: /
     schedule:
       interval: weekly

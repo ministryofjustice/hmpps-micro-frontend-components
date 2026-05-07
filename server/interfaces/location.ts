@@ -1,13 +1,10 @@
-export interface Location {
-  agencyId: string
-  currentOccupancy?: number
-  description: string
-  internalLocationCode?: string
-  locationId: number
-  locationPrefix?: string
+export interface PrisonHierarchyDto {
+  locationId: string
   locationType: string
-  locationUsage?: string
-  operationalCapacity?: number
-  parentLocationId?: number
-  userDescription?: string
+  locationCode: string
+  fullLocationPath: string
+  localName?: string
+  level: number
+  status: string
+  subLocations?: object[]
 }

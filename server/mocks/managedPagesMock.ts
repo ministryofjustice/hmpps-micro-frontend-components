@@ -1,9 +1,9 @@
 import { ManagedPage, ManagedPageLink } from '../interfaces/managedPage'
 import config from '../config'
 
-export const managadPageLinksMock: ManagedPageLink[] = [
-  { href: `${config.serviceUrls.dps.url}/title-one`, text: 'Title 1' },
-  { href: `${config.serviceUrls.dps.url}/title-two`, text: 'Title 2' },
+export const managedPageLinksMock: ManagedPageLink[] = [
+  { href: `${config.serviceUrls.newDps.url}/title-one`, text: 'Title 1' },
+  { href: `${config.serviceUrls.newDps.url}/title-two`, text: 'Title 2' },
 ]
 
 export const managedPagesMock: ManagedPage[] = [

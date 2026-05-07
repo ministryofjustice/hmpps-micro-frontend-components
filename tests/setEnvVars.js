@@ -1,8 +1,10 @@
+process.env.ENVIRONMENT = 'dev'
 process.env.ENVIRONMENT_NAME = 'DEV'
 process.env.ACTIVITIES_URL = 'https://activities-test.hmpps.service.justice.gov.uk'
 process.env.ALERTS_API_URL = 'https://alerts-api-dev.hmpps.service.justice.gov.uk'
 process.env.REPORTING_URL = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 process.env.RESIDENTIAL_LOCATIONS_API_URL = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
+process.env.OFFICIAL_VISITS_API_URL = 'https://official-visits-api-dev.hmpps.service.justice.gov.uk'
 process.env.LEARNING_AND_WORK_PROGRESS_URL = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 process.env.WHEREABOUTS_API_URL = 'https://whereabouts-api-dev.service.justice.gov.uk'
 process.env.CSIP_API_URL = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
@@ -10,3 +12,5 @@ process.env.CASE_NOTES_API_URL = 'https://dev.offender-case-notes.service.justic
 process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 process.env.CEMO_URL = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.service.justice.gov.uk'
 process.env.MANAGE_APPLICATIONS_URL = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
+process.env.SUPPORT_ADDITIONAL_NEEDS_URL =
+  'https://https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk'

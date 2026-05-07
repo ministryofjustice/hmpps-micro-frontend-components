@@ -5,7 +5,7 @@ import { dataAccess } from '../data'
 export default function populateSystemToken(): RequestHandler {
   return async (req, res, next) => {
     try {
-      const { getSystemToken } = dataAccess
+      const { getSystemToken } = dataAccess()
       if (res.locals.user) {
         const systemToken = await getSystemToken(res.locals.user.username)
         if (systemToken) {

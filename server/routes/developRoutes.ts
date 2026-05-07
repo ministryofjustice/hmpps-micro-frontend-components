@@ -1,41 +1,53 @@
 import { Router } from 'express'
 import { Services } from '../services'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
-import { AVAILABLE_COMPONENTS } from '../@types/AvailableComponent'
 import auth from '../authentication/auth'
+import { AVAILABLE_COMPONENTS } from '../data/availableComponent'
 import tokenVerifier from '../data/tokenVerification'
-import componentsController from '../controllers/componentsController'
+import type { AvailableComponent } from '../interfaces/externalContract'
+import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
+import { ComponentRenderer } from '../services/componentRenderer'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
-  const controller = componentsController(services.contentfulService)
+  const controller = new ComponentsController(services.contentfulService)
 
   router.use(authorisationMiddleware())
   router.use(auth.authenticationMiddleware(tokenVerifier))
 
-  router.get('/', (req, res, next) => {
+  router.get('/', (_req, res) => {
     res.render('pages/index', { components: AVAILABLE_COMPONENTS })
   })
 
-  router.get(
-    '/header',
-    populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getHeaderViewModel(res.locals.user)
-      return res.render('pages/componentPreview', viewModel)
-    }),
-  )
+  // all developer preview routes require a user
+  router.use(populateCurrentUser(services.userService))
 
-  router.get(
-    '/footer',
-    populateCurrentUser(services.userService),
-    asyncMiddleware(async (req, res, next) => {
-      const viewModel = await controller.getFooterViewModel(res.locals.user)
-      return res.render('pages/componentPreview', viewModel)
-    }),
-  )
+  router.get('/all', async (_req, res) => {
+    const renderer = new ComponentRenderer(res)
+    const viewModels = await controller.getViewModels(AVAILABLE_COMPONENTS, res.locals.user)
+    const renderedComponents: Record<AvailableComponent, string> = Object.fromEntries(
+      await Promise.all(
+        AVAILABLE_COMPONENTS.map(componentName =>
+          renderer
+            .renderComponent(viewModels[componentName])
+            .then(renderedComponent => [componentName, renderedComponent.html]),
+        ),
+      ),
+    )
+
+    return res.render('pages/previewAll', renderedComponents)
+  })
+
+  router.get('/header', async (_req, res) => {
+    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+    return res.render('pages/componentPreview', viewModel)
+  })
+
+  router.get('/footer', async (_req, res) => {
+    const viewModel = await controller.getFooterViewModel(res.locals.user)
+    return res.render('pages/componentPreview', viewModel)
+  })
 
   return router
 }

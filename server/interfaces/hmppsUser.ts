@@ -1,6 +1,6 @@
-import { Role } from '../services/utils/roles'
-import { CaseLoad } from './caseLoad'
-import { Service } from './Service'
+import type { Role } from '../services/utils/roles'
+import type { PrisonCaseload } from './caseLoad'
+import type { Service } from './externalContract'
 
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 
@@ -10,6 +10,7 @@ export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 export interface BaseUser {
   authSource: AuthSource
   username: string
+  clientId?: string
   userId: string
   name: string
   displayName: string
@@ -17,9 +18,10 @@ export interface BaseUser {
   token: string
 }
 
+// for internal use as opposed to SharedData
 export interface PrisonUserAccess {
-  caseLoads: CaseLoad[]
-  activeCaseLoad: CaseLoad | null
+  caseLoads: PrisonCaseload[]
+  activeCaseLoad: PrisonCaseload | null
   services: Service[]
   allocationJobResponsibilities: ('KEY_WORKER' | 'PERSONAL_OFFICER')[]
 }
@@ -69,6 +71,6 @@ export interface AzureADUser extends BaseUser {
 
 export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
 
-export const isPrisonUser = (user: HmppsUser): boolean => {
-  return user.authSource === 'nomis'
+export const isPrisonUser = (user: HmppsUser): user is PrisonUser => {
+  return user?.authSource === 'nomis'
 }

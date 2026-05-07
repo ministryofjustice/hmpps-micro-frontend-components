@@ -1,31 +1,21 @@
-import RestClient from './restClient'
-import { CaseLoad } from '../interfaces/caseLoad'
-import { Location } from '../interfaces/location'
+import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
+import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import config from '../config'
+import logger, { warnLevelLogger } from '../../logger'
 
-export default class PrisonApiClient {
-  constructor(private restClient: RestClient) {}
+type PrisonApiCaseload = {
+  caseLoadId: string
+  description: string
+  caseloadFunction?: string
+  currentlyActive: boolean
+}
 
-  private async get<T>(args: object): Promise<T> {
-    return this.restClient.get<T>(args)
+export default class PrisonApiClient extends RestClient {
+  constructor(authenticationClient: AuthenticationClient) {
+    super('Prison API', config.apis.prisonApi, config.production ? warnLevelLogger : logger, authenticationClient)
   }
 
-  async getUserCaseLoads(): Promise<CaseLoad[]> {
-    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads' })
-  }
-
-  async getIsKeyworker(activeCaseloadId: string, staffId: number): Promise<boolean> {
-    try {
-      return await this.get<boolean>({ path: `/api/staff/${staffId}/${activeCaseloadId}/roles/KW` })
-    } catch (error) {
-      if (error.status === 403 || error.status === 404) {
-        // can happen for CADM (central admin) users
-        return false
-      }
-      throw error
-    }
-  }
-
-  async getUserLocations(): Promise<Location[]> {
-    return this.get<Location[]>({ path: '/api/users/me/locations' })
+  async setActiveCaseload(userToken: string, caseLoad: PrisonApiCaseload): Promise<void> {
+    await this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad }, asUser(userToken))
   }
 }
