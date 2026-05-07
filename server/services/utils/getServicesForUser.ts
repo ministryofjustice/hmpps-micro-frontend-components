@@ -480,6 +480,7 @@ export default (
             Role.ResiCertificateViewer,
             Role.ResiCertificateReviewer,
             Role.ResiCertificateAdmin,
+            Role.NonResiLocationManager,
           ],
           roles,
         ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
