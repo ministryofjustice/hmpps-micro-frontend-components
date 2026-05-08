@@ -1,8 +1,8 @@
 export default {
   transform: {
-    '^.+\\.tsx?$': ['ts-jest'],
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.(t|j)sx?$': ['ts-jest'],
   },
+  transformIgnorePatterns: ['node_modules/(?!(jose)/)'],
   collectCoverageFrom: ['server/**/*.{ts,js,jsx,mjs}'],
   testMatch: ['<rootDir>/(server|job|scripts)/**/?(*.)(cy|test).{ts,js,jsx,mjs}'],
   setupFiles: ['<rootDir>/tests/setEnvVars.js'],
