@@ -40,7 +40,8 @@ export default class UserService {
     const cache = await this.getCache(user)
     const { userRoles, ...cachedResponse } = cache || ({} as UserAccessCache)
 
-    if (cache?.caseLoads?.length === 1 && this.rolesHaveNotChanged(user.userRoles, cache)) return cachedResponse
+    if (cache?.caseLoads?.length === 1 && cache?.activeCaseLoad && this.rolesHaveNotChanged(user.userRoles, cache))
+      return cachedResponse
 
     try {
       const userCaseloadDetail = await this.manageUsersApiClient.getUserCaseLoads(user.username)
@@ -55,7 +56,7 @@ export default class UserService {
       if (!userCaseloadDetail.activeCaseload) {
         const potentialCaseLoad = userCaseloadDetail.caseloads.find(cl => cl.id !== '___')
 
-        // if there's no potential caseload we should return the default access
+        // if there's no potential caseload we should return the default access.
         if (!potentialCaseLoad) return DEFAULT_USER_ACCESS
 
         await this.prisonApiClient.setActiveCaseload(user.token, {
@@ -75,6 +76,8 @@ export default class UserService {
 
       if (
         cache &&
+        cache.activeCaseLoad &&
+        cache.caseLoads?.length &&
         this.activeCaseLoadHasNotChanged(activeCaseLoad, cache) &&
         this.caseLoadsHaveNotChanged(caseLoads, cache) &&
         this.rolesHaveNotChanged(user.userRoles, cache)
