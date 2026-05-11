@@ -14,7 +14,6 @@ export enum ServiceName {
   COURT_APPEARANCE_SCHEDULER = 'courtAppearanceScheduler',
   CSIP = 'csipApi',
   EXTERNAL_MOVEMENTS = 'externalMovements',
-  INCIDENT_REPORTING = 'incidentReporting',
   MANAGE_APPLICATIONS = 'manageApplications',
   OFFICIAL_VISITS_API = 'officialVisitsApi',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
