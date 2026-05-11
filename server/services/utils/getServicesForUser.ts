@@ -506,12 +506,7 @@ export default (
       href: config.serviceUrls.incidentReporting.url,
       navEnabled: true,
       enabled: () =>
-        (userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles) &&
-          isActiveInEstablishment(activeCaseLoadId, ServiceName.INCIDENT_REPORTING, activeServices, false)) ||
-        (userHasRoles([Role.IncidentReportingPECS, Role.IncidentReportingApprove], roles) &&
-          isActiveInAgencies(['NORTH', 'SOUTH'], ServiceName.INCIDENT_REPORTING, activeServices)) ||
-        (userHasRoles([Role.IncidentReportingApprove], roles) &&
-          hasAnyActiveAgency(ServiceName.INCIDENT_REPORTING, activeServices)),
+        userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles),
     },
     {
       id: 'manage-applications',
