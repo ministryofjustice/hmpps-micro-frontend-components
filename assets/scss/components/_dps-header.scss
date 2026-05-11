@@ -293,12 +293,12 @@ a.cdps-header__link {
 }
 
 .cdps-header__item--with-open-menu {
-  --cdps-header-bg-colour: #{govuk-colour("black", $variant: "tint-95")};
+  --cdps-header-bg-colour: #{govuk-colour('black', $variant: 'tint-95')};
   --cdps-header-fg-colour: #{govuk-colour('blue')};
 
   .cdps-header__link {
     &:hover {
-      --cdps-header-fg-colour: #{govuk-colour("black", $variant: "tint-25")};
+      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-25')};
     }
   }
 

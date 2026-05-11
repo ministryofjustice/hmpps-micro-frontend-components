@@ -13,7 +13,7 @@
     font-size: 24px;
     margin-top: 0;
     padding-bottom: 25px;
-    border-bottom: 1px solid govuk-colour("black", $variant: "tint-25");
+    border-bottom: 1px solid govuk-colour('black', $variant: 'tint-25');
   }
 
   &__help {
@@ -25,7 +25,7 @@
   }
 
   &__support-links {
-    border-top: 1px solid govuk-colour("black", $variant: "tint-25");
+    border-top: 1px solid govuk-colour('black', $variant: 'tint-25');
     padding-top: 30px;
   }
 
