@@ -709,31 +709,21 @@ describe('getServicesForUser', () => {
       ${[]} | ${false} | ${[
   {
     app: 'incidentReporting' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
   },
 ]}
       ${['INCIDENT_REPORTS__RO']} | ${true} | ${[
   {
     app: 'incidentReporting' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
-      ${['INCIDENT_REPORTS__RO']} | ${false} | ${[
-  {
-    app: 'incidentReporting' as ServiceName,
-    activeAgencies: ['PVI'],
   },
 ]}
       ${['INCIDENT_REPORTS__RW']} | ${true} | ${[
   {
     app: 'incidentReporting' as ServiceName,
-    activeAgencies: ['***'],
   },
 ]}
       ${['INCIDENT_REPORTS__APPROVE']} | ${true} | ${[
   {
     app: 'incidentReporting' as ServiceName,
-    activeAgencies: ['***'],
   },
 ]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
