@@ -24,27 +24,6 @@ function isActiveInEstablishment(
   )
 }
 
-function hasAnyActiveAgency(service: ServiceName, activeServices: ServiceActiveAgencies[] | null): boolean | undefined {
-  if (!activeServices) return false // no stored data
-  const applicationAgencyConfig = activeServices.find(activeService => activeService.app === service)
-  if (!applicationAgencyConfig) return false // no stored data for this service
-
-  return Array.isArray(applicationAgencyConfig.activeAgencies) && applicationAgencyConfig.activeAgencies.length > 0
-}
-
-function isActiveInAgencies(
-  agencies: string[],
-  service: ServiceName,
-  activeServices: ServiceActiveAgencies[] | null,
-): boolean | undefined {
-  for (const agency of agencies) {
-    if (isActiveInEstablishment(agency, service, activeServices, false)) {
-      return true
-    }
-  }
-  return false
-}
-
 function isActiveInEstablishmentWithLegacyFallback(
   activeCaseLoadId: string,
   service: ServiceName,
