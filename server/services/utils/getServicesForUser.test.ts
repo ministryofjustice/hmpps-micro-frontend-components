@@ -306,14 +306,14 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Manage prison visits', () => {
+  describe('Social visits', () => {
     test.each`
       roles                        | visible
       ${[Role.ManagePrisonVisits]} | ${true}
       ${[]}                        | ${false}
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Manage prison visits')).toEqual(visible)
+      expect(!!output.find(service => service.heading === 'Social visits')).toEqual(visible)
     })
   })
 
