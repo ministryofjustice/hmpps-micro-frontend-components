@@ -226,8 +226,8 @@ export default (
     },
     {
       id: 'book-a-prison-visit',
-      heading: 'Manage prison visits',
-      description: 'Book, view and cancel a prisoner’s social visits.',
+      heading: 'Social visits',
+      description: 'Book and manage social visits.',
       href: config.serviceUrls.managePrisonVisits.url,
       navEnabled: true,
       enabled: () => userHasRoles([Role.ManagePrisonVisits], roles),
