@@ -1,11 +1,8 @@
 /* eslint-disable no-console */
 
-import * as Sentry from '@sentry/node'
-import superagent from 'superagent'
-import redis from 'redis'
-import { type ServiceActiveAgencies, ServiceName } from '../server/@types/activeAgencies'
+const Sentry = require('@sentry/node')
 
-let reportError: (message: string, context: Record<string, string>) => void = () => {}
+let reportError = () => {}
 if (process.env.SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
@@ -25,64 +22,47 @@ if (process.env.SENTRY_DSN) {
   }
 }
 
-type Environment = 'dev' | 'preprod' | 'prod'
-export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { infoUrl: Record<Environment, string> })
+const superagent = require('superagent')
+const redis = require('redis')
 
-/**
- * List of services whose /info endpoint is periodically loaded and cached
- * to get the agencies/prisons in which they are enabled.
- *
- * Add definitions here:
- * - provide `urlEnv` to look up info url from environment variable
- * - or provide an environment-to-url map in `infoUrl`
- * - keep list sorted by service name
- *
- * When using environment variables, also:
- * - Add urls to
- *   - `/helm_deploy/values-dev.yaml`
- *   - `/helm_deploy/values-preprod.yaml`
- *   - `/helm_deploy/values-prod.yaml`
- * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
- */
-export const endpoints: Endpoint[] = [
-  { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
+const endpoints = [
   {
-    application: ServiceName.ADJUDICATION,
+    application: 'adjudications',
     infoUrl: {
       prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
       preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
     },
   },
-  { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
-  { application: ServiceName.ALLOCATE_KEY_WORKERS, urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
-  { application: ServiceName.ALLOCATE_PERSONAL_OFFICERS, urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
-  { application: ServiceName.CAS2, urlEnv: 'CAS2_URL' },
-  { application: ServiceName.CASE_NOTES, urlEnv: 'CASE_NOTES_API_URL' },
-  { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
-  { application: ServiceName.COURT_APPEARANCE_SCHEDULER, urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
-  { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
-  { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
-  { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
-  { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
-  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
-  { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
-  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
-  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
+  { application: 'activities', urlEnv: 'ACTIVITIES_URL' },
+  { application: 'cas2', urlEnv: 'CAS2_URL' },
+  { application: 'alerts', urlEnv: 'ALERTS_API_URL' },
+  { application: 'csipApi', urlEnv: 'CSIP_API_URL' },
+  { application: 'reporting', urlEnv: 'REPORTING_URL' },
+  { application: 'residentialLocations', urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
+  { application: 'learningAndWorkProgress', urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
+  { application: 'whereabouts', urlEnv: 'WHEREABOUTS_API_URL' },
+  { application: 'caseNotesApi', urlEnv: 'CASE_NOTES_API_URL' },
+  { application: 'prepareSomeoneForReleaseUi', urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
+  { application: 'cemo', urlEnv: 'CEMO_URL' },
+  { application: 'manageApplications', urlEnv: 'MANAGE_APPLICATIONS_URL' },
+  { application: 'allocateKeyWorkers', urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
+  { application: 'allocatePersonalOfficers', urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
+  { application: 'externalMovements', urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
+  { application: 'officialVisitsApi', urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: 'courtAppearanceScheduler', urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
 ]
 
-function getApplicationInfo(appLabel: string, url: string): superagent.Request {
+function getApplicationInfo(appLabel, url) {
   return superagent
     .get(url)
     .set('Accept', 'application/json')
-    .retry(2, (_err, res) => {
+    .retry(2, (err, res) => {
       console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
     })
 }
 
-type RedisClient = ReturnType<typeof redis.createClient>
-
-function getRedisClient(): RedisClient {
+async function getRedisClient() {
   console.log('Creating redis client')
   const host = process.env.REDIS_HOST || 'localhost'
   const protocol = process.env.REDIS_TLS_ENABLED === 'true' ? 'rediss' : 'redis'
@@ -114,32 +94,34 @@ function getRedisClient(): RedisClient {
     })
 }
 
-async function ensureConnected(redisClient: RedisClient): Promise<void> {
+async function ensureConnected(redisClient) {
   if (!redisClient.isOpen) {
     await redisClient.connect()
   }
 }
 
-async function cacheResponses(body: ServiceActiveAgencies[], redisClient: RedisClient): Promise<void> {
-  await redisClient.set('applicationInfo', JSON.stringify(body))
+async function cacheResponses(body, redisClient) {
+  const resp = await redisClient.set('applicationInfo', JSON.stringify(body))
+
   console.log('Successfully cached application info', body)
+  return resp
 }
 
-async function getStoredData(redisClient: RedisClient): Promise<ServiceActiveAgencies[]> {
+async function getStoredData(redisClient) {
   const responseString = await redisClient.get('applicationInfo')
   console.log(`Previous stored application info: ${responseString}`)
-  return JSON.parse(responseString as string)
+  return JSON.parse(responseString)
 }
 
-function getUrlForApp(appData: Endpoint): string | undefined {
-  if ('urlEnv' in appData) {
+function getUrlForApp(appData) {
+  if (appData.urlEnv) {
     return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
   }
-  return appData.infoUrl[process.env.ENVIRONMENT as Environment]
+  return appData.infoUrl[process.env.ENVIRONMENT]
 }
 
-export async function getData(): Promise<void> {
-  const redisClient = getRedisClient()
+const getData = async () => {
+  const redisClient = await getRedisClient()
   await ensureConnected(redisClient)
 
   const storedData = await getStoredData(redisClient)
@@ -166,7 +148,7 @@ export async function getData(): Promise<void> {
       .filter(Boolean),
   )
 
-  const newData: ServiceActiveAgencies[] = responses
+  const newData = responses
     .map(response => {
       if (response.status !== 'fulfilled') {
         console.error('Failed to get application info', response.reason)
@@ -178,12 +160,10 @@ export async function getData(): Promise<void> {
       const { body, request } = response.value
 
       const applicationName = endpoints.find(
-        app =>
-          request?.url ===
-          ('urlEnv' in app ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT as Environment]),
+        app => request?.url === (app.urlEnv ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT]),
       )?.application
       if (!applicationName) {
-        console.error(`Cannot match response to application (${request?.url})`)
+        console.error('Cannot match response to application')
         reportError('Cannot match response to application', {
           request: request?.url,
         })
@@ -223,4 +203,4 @@ export async function getData(): Promise<void> {
   redisClient.destroy()
 }
 
-export default { getData }
+module.exports = { getData }
