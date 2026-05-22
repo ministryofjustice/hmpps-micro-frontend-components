@@ -87,6 +87,6 @@ spec:
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: '{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}'
 
-              command: ["node", "-e", "'require(\"./scripts/getReleaseStatus\").getData()'"]
+              command: ["node", "-e", "require(\"./scripts/getReleaseStatus\").getData()"]
           restartPolicy: Never
           activeDeadlineSeconds: 300

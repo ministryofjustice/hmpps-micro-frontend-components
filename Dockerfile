@@ -44,6 +44,9 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
+COPY --from=build --chown=appuser:appgroup \
+        /app/scripts ./scripts
+
 EXPOSE 3000
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 ENV GIT_REF=${GIT_REF}
