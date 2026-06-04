@@ -20,7 +20,7 @@ cd hmpps-template-typescript
 # May cause issues if there's version mismatches
 grep -v 'min-release-age' .npmrc > .npmrc.tmp && mv .npmrc.tmp .npmrc
 
-npx @ministryofjustice/hmpps-connect-dps-components
+npx @ministryofjustice/hmpps-connect-dps-components@latest
 
 info_msg Building template project
 npm run build
