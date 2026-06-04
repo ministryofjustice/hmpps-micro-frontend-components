@@ -69,7 +69,7 @@
     "passport-oauth2": "^1.8.0",
     "redis": "5.12.1",
     "superagent": "^10.3.0",
-    "swagger-jsdoc": "^6.2.8",
+    "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "url-value-parser": "^2.2.0"
   },
