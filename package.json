@@ -41,7 +41,7 @@
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "2.0.0",
     "@ministryofjustice/hmpps-rest-client": "2.1.0",
-    "@sentry/node": "10.54.0",
+    "@sentry/node": "10.55.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.2",
