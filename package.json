@@ -39,7 +39,7 @@
     "@contentful/rich-text-html-renderer": "17.2.2",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "9.0.0",
-    "@ministryofjustice/hmpps-auth-clients": "2.0.0",
+    "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-rest-client": "2.1.0",
     "@sentry/node": "10.55.0",
     "agentkeepalive": "^4.6.0",
