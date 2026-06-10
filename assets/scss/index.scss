@@ -1,8 +1,4 @@
-$govuk-global-styles: true;
-$path: '/assets/images/';
-
-$moj-page-width: 1170px;
-$govuk-page-width: $moj-page-width;
+@import './overrides/settings';
 
 @import 'govuk-frontend/dist/govuk/index';
 @import '@ministryofjustice/frontend/moj/all';
