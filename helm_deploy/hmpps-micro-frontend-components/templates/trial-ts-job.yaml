@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: trial-ts-job
+spec:
+  schedule: "*/15 9-18 * * 1-5"
+  timeZone: Europe/London
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  suspend: {{ index .Values "suspend-trial-ts-job" }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: trial-ts-job
+              image: '{{ index .Values "generic-service" "image" "repository" }}:{{ index .Values "generic-service" "image" "tag" | default .Chart.AppVersion }}'
+              env:
+                - name: ENVIRONMENT
+                  value: '{{ index .Values "generic-service" "env" "ENVIRONMENT" }}'
+                - name: ENVIRONMENT_NAME
+                  value: '{{ index .Values "generic-service" "env" "ENVIRONMENT_NAME" }}'
+                - name: SENTRY_ENVIRONMENT
+                  value: '{{ index .Values "generic-service" "env" "SENTRY_ENVIRONMENT" }}'
+
+                - name: REDIS_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: elasticache-redis
+                      key: primary_endpoint_address
+                - name: REDIS_AUTH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: elasticache-redis
+                      key: auth_token
+                - name: REDIS_TLS_ENABLED
+                  value: '{{ index .Values "generic-service" "env" "REDIS_TLS_ENABLED" }}'
+
+              command: ["node", "-e", "require(\"./dist/scripts/trialTsJob\").main()"]
+
+          restartPolicy: Never
+          activeDeadlineSeconds: 300
