@@ -2,7 +2,7 @@
 
 import * as Sentry from '@sentry/node'
 import superagent from 'superagent'
-import redis, { type RedisClientType } from 'redis'
+import { createClient, type RedisClientType } from 'redis'
 import { type ServiceActiveAgencies, ServiceName } from '../server/@types/activeAgencies'
 
 let reportError: (message: string, context: Record<string, string>) => void = () => {}
@@ -85,19 +85,18 @@ function getRedisClient(): RedisClientType {
   const host = process.env.REDIS_HOST || 'localhost'
   const protocol = process.env.REDIS_TLS_ENABLED === 'true' ? 'rediss' : 'redis'
   const port = parseInt(process.env.REDIS_PORT, 10) || 6379
-  return redis
-    .createClient({
-      url: `${protocol}://${host}:${port}`,
-      password: process.env.REDIS_AUTH_TOKEN,
-      socket: {
-        reconnectStrategy: attempts => {
-          // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
-          const nextDelay = Math.min(2 ** attempts * 20, 30000)
-          console.log(`Retry Redis connection attempt: ${attempts}, next attempt in: ${nextDelay}ms`)
-          return nextDelay
-        },
+  return createClient({
+    url: `${protocol}://${host}:${port}`,
+    password: process.env.REDIS_AUTH_TOKEN,
+    socket: {
+      reconnectStrategy: attempts => {
+        // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
+        const nextDelay = Math.min(2 ** attempts * 20, 30000)
+        console.log(`Retry Redis connection attempt: ${attempts}, next attempt in: ${nextDelay}ms`)
+        return nextDelay
       },
-    })
+    },
+  })
     .on('connect', () => {
       console.log('Redis client is connecting')
     })
