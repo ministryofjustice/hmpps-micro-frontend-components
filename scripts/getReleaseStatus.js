@@ -200,6 +200,8 @@ const getData = async () => {
     : newData
 
   await cacheResponses(body, redisClient)
+
+  await redisClient.close()
   redisClient.destroy()
 }
 
