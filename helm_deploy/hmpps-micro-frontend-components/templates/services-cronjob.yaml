@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: hmpps-micro-frontend-components-services
 spec:
-  schedule: "{{ .Values.services_cronjob_schedule }}"
+  schedule: '{{ .Values.services_cronjob_schedule }}'
   timeZone: Europe/London
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 5
@@ -46,7 +46,7 @@ spec:
               - name: INFO_DISABLED_APPS
                 value: '{{ index .Values "generic-service" "env" "INFO_DISABLED_APPS" }}'
 
-              # service urls for caching info by `/scripts/getReleaseStatus.js`:
+              # service urls for caching info by `/scripts/getReleaseStatus.ts`:
 
               - name: ACTIVITIES_URL
                 value: '{{ index .Values "generic-service" "env" "ACTIVITIES_URL" }}'
@@ -87,6 +87,6 @@ spec:
               - name: ALLOCATE_PERSONAL_OFFICERS_API_URL
                 value: '{{ index .Values "generic-service" "env" "ALLOCATE_PERSONAL_OFFICERS_API_URL" }}'
 
-              command: ["node", "-e", "require(\"./scripts/getReleaseStatus\").getData()"]
+              command: ["node", "-e", "require(\"./dist/scripts/getReleaseStatus\").getData()"]
           restartPolicy: Never
           activeDeadlineSeconds: 300

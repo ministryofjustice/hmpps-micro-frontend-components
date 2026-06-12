@@ -1,7 +1,10 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import nock from 'nock'
-import redis from 'redis'
+import redis, { type RedisClientType } from 'redis'
+import yaml from 'yaml'
 
-import { getData } from './getReleaseStatus'
+import { endpoints, getData } from './getReleaseStatus'
 
 const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
@@ -64,14 +67,13 @@ jest.mock('redis', () => {
   }
 })
 
-type RedisClient = ReturnType<(typeof redis)['createClient']>
-let mockRedisClientMock: jest.Mocked<RedisClient>
+let mockRedisClientMock: jest.MockedObjectDeep<RedisClientType>
 
 beforeAll(() => {
   jest.spyOn(console, 'log').mockImplementation(() => undefined)
   jest.spyOn(console, 'error').mockImplementation(() => undefined)
 
-  mockRedisClientMock = redis.createClient() as unknown as jest.Mocked<RedisClient>
+  mockRedisClientMock = jest.mocked(redis.createClient())
 })
 
 describe('Get release status script', () => {
@@ -297,5 +299,20 @@ describe('Get release status script', () => {
         ]),
       )
     })
+  })
+
+  it('should be set up correctly in helm chart', async () => {
+    const helmChartPath = path.join(
+      __dirname,
+      '../helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml',
+    )
+    const helmChart = await fs.readFile(helmChartPath, { encoding: 'utf8' }).then(yaml.parse)
+    const { env }: { env: { name: string }[] } = helmChart.spec.jobTemplate.spec.template.spec.containers[0]
+    const helmEnvVars = new Set(env.map(item => item.name))
+
+    const scriptEnvVars = new Set(endpoints.filter(endpoint => 'urlEnv' in endpoint).map(endpoint => endpoint.urlEnv))
+
+    const missingEnvVars = scriptEnvVars.difference(helmEnvVars)
+    expect(missingEnvVars).toEqual(new Set())
   })
 })
