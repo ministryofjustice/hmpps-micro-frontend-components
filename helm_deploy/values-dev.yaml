@@ -1,5 +1,4 @@
 services_cronjob_schedule: "0 7-18 * * 1-5"
-suspend-trial-ts-job: false
 
 generic-service:
   replicaCount: 2
