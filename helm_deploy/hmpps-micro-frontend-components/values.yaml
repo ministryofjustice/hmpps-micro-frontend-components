@@ -1,4 +1,5 @@
----
+suspend-trial-ts-job: true
+
 generic-service:
   nameOverride: hmpps-micro-frontend-components
   productId: DPS019
