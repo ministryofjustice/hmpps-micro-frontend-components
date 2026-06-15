@@ -219,7 +219,6 @@ export async function getData(): Promise<void> {
   await cacheResponses(body, redisClient)
 
   await redisClient.close()
-  redisClient.destroy()
 }
 
 export function main() {
