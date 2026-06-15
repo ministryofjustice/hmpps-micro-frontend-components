@@ -247,7 +247,7 @@ export default {
       enabledPrisons: get('REPORTING_ENABLED_PRISONS', '', requiredInProduction),
     },
     whereabouts: {
-      apiUrl: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
+      url: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
     incidentReporting: {
       url: get('INCIDENT_REPORTING_URL', 'http://localhost:3001', requiredInProduction),
@@ -280,11 +280,23 @@ export default {
     courtAppearanceScheduler: {
       url: get('COURT_APPEARANCE_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
-  },
+  } satisfies ServiceUrls,
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),
   features: {
     servicesStore: {
       enabled: get('FEATURE_SERVICES_STORE_ENABLED', 'false', requiredInProduction) === 'true',
     },
   },
+}
+
+interface ServiceUrls {
+  /** Internal service name; should match a ServiceName if corresponding one exists */
+  [serviceName: string]: {
+    /** Main landing page */
+    url: string
+    /** Feature flag: true when the service has been enabled */
+    enabled?: boolean
+    /** Feature flag: comma-separated list of agency codes */
+    enabledPrisons?: string
+  }
 }
