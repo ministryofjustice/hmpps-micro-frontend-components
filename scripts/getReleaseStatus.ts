@@ -74,12 +74,12 @@ export const endpoints: Endpoint[] = [
   // NB: keep list sorted
 ]
 
-function getApplicationInfo(appLabel: ServiceName, url: string): superagent.Request {
+function getApplicationInfo(application: ServiceName, url: string): superagent.Request {
   return superagent
     .get(url)
     .set('Accept', 'application/json')
     .retry(2, (_err, res) => {
-      console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
+      console.log(`Received status ${res?.status} from application info request for ${application}`)
     })
 }
 
@@ -131,11 +131,11 @@ async function getStoredData(redisClient: RedisClientType): Promise<ServiceActiv
   return JSON.parse(responseString as string)
 }
 
-function getUrlForApp(appData: Endpoint): string | undefined {
-  if ('urlEnv' in appData) {
-    return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
+function getUrlForEndpoint(endpoint: Endpoint): string | undefined {
+  if ('urlEnv' in endpoint) {
+    return process.env[endpoint.urlEnv] ? `${process.env[endpoint.urlEnv]}/info` : undefined
   }
-  return appData.infoUrl[process.env.ENVIRONMENT as Environment]
+  return endpoint.infoUrl[process.env.ENVIRONMENT as Environment]
 }
 
 export async function getData(): Promise<void> {
@@ -147,21 +147,21 @@ export async function getData(): Promise<void> {
 
   const responses = await Promise.allSettled(
     endpoints
-      .map(app => {
-        if (disabledApps.includes(app.application)) {
-          console.log(`Application info check disabled for ${app.application}`)
+      .map(endpoint => {
+        if (disabledApps.includes(endpoint.application)) {
+          console.log(`Application info check disabled for ${endpoint.application}`)
           return undefined
         }
 
-        const url = getUrlForApp(app)
+        const url = getUrlForEndpoint(endpoint)
 
         if (!url) {
-          console.error(`No url found for app: ${app.application}`)
-          reportError('No url found for app', { application: app.application })
+          console.error(`No url found for app: ${endpoint.application}`)
+          reportError('No url found for app', { application: endpoint.application })
           return undefined
         }
 
-        return getApplicationInfo(app.application, url)
+        return getApplicationInfo(endpoint.application, url)
       })
       .filter(Boolean),
   )
@@ -177,12 +177,14 @@ export async function getData(): Promise<void> {
       }
       const { body, request } = response.value
 
-      const applicationName = endpoints.find(
-        app =>
+      const application = endpoints.find(
+        endpoint =>
           request?.url ===
-          ('urlEnv' in app ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT as Environment]),
+          ('urlEnv' in endpoint
+            ? `${process.env[endpoint.urlEnv]}/info`
+            : endpoint.infoUrl[process.env.ENVIRONMENT as Environment]),
       )?.application
-      if (!applicationName) {
+      if (!application) {
         console.error(`Cannot match response to application (${request?.url})`)
         reportError('Cannot match response to application', {
           request: request?.url,
@@ -191,7 +193,7 @@ export async function getData(): Promise<void> {
       }
 
       if (!Array.isArray(body.activeAgencies)) {
-        console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        console.error(`Invalid activeAgencies value for ${application}`, body.activeAgencies)
         reportError('Invalid activeAgencies value', {
           activeAgencies: JSON.stringify(body.activeAgencies),
         })
@@ -199,7 +201,7 @@ export async function getData(): Promise<void> {
       }
 
       return {
-        app: applicationName,
+        app: application,
         activeAgencies: body.activeAgencies,
       }
     })
@@ -224,7 +226,7 @@ export async function getData(): Promise<void> {
   await redisClient.close()
 }
 
-export function main() {
+export function main(): void {
   getData()
     .then(() => {
       console.info('Successfully updated active agencies')
