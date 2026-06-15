@@ -221,3 +221,17 @@ export async function getData(): Promise<void> {
   await redisClient.close()
   redisClient.destroy()
 }
+
+export function main() {
+  getData()
+    .then(() => {
+      console.info('Successfully updated active agencies')
+    })
+    .catch((error: Error) => {
+      process.exitCode = 1
+      console.error('Uncaught error', error)
+      reportError('Uncaught error', {
+        error: JSON.stringify(error),
+      })
+    })
+}
