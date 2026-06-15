@@ -34,6 +34,7 @@ const allUrls = [
   manageApplicationsUrl,
   officialVisitsApi,
 ]
+const allUrlsExcludingResidentialLocation = allUrls.filter(url => url !== residentialLocationUrl)
 
 function setMockSuccess(
   urls: string[],
@@ -109,9 +110,8 @@ describe('Get release status script', () => {
   })
 
   it('should store the data it gets if others fail', async () => {
-    const [firstUrl, ...restUrls] = allUrls
-    setMockSuccess([firstUrl])
-    setMockError(restUrls, 404)
+    setMockSuccess([residentialLocationUrl])
+    setMockError(allUrlsExcludingResidentialLocation, 404)
 
     await getData()
 
@@ -122,9 +122,8 @@ describe('Get release status script', () => {
   })
 
   it('should not fail if it cant find the data in response', async () => {
-    const [firstUrl, ...restUrls] = allUrls
-    setMockSuccess([firstUrl], { some: 'stuff' })
-    setMockSuccess(restUrls)
+    setMockSuccess([residentialLocationUrl], { some: 'stuff' })
+    setMockSuccess(allUrlsExcludingResidentialLocation)
 
     await getData()
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
@@ -198,9 +197,8 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      const [firstUrl, ...restUrls] = allUrls
-      setMockSuccess([firstUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
-      setMockError(restUrls, 404)
+      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      setMockError(allUrlsExcludingResidentialLocation, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -242,9 +240,8 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      const [firstUrl, ...restUrls] = allUrls
-      setMockSuccess([firstUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
-      setMockError(restUrls, 404)
+      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      setMockError(allUrlsExcludingResidentialLocation, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -272,9 +269,8 @@ describe('Get release status script', () => {
     it('should use new app data if it does not exist on stored data', async () => {
       const storedData = [{ app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] }]
 
-      const [firstUrl, ...restUrls] = allUrls
-      setMockError([firstUrl], 500)
-      setMockSuccess(restUrls)
+      setMockError([residentialLocationUrl], 500)
+      setMockSuccess(allUrlsExcludingResidentialLocation)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
