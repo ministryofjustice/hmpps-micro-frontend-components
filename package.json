@@ -70,7 +70,8 @@
     "superagent": "^10.3.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
-    "url-value-parser": "^2.2.0"
+    "url-value-parser": "^2.2.0",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",

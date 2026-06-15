@@ -1,3 +1,7 @@
+/**
+ * List of services
+ * Mainly for mapping in a cache which agencies/prisons they are active in
+ */
 export enum ServiceName {
   ADJUDICATION = 'adjudications',
   ACTIVITIES = 'activities',
@@ -20,6 +24,10 @@ export enum ServiceName {
   COURT_APPEARANCE_SCHEDULER = 'courtAppearanceScheduler',
 }
 
+/**
+ * Used to map services to agencies/prisons where they are active
+ * NB: `***` is a special value indicating *everywhere*
+ */
 export interface ServiceActiveAgencies {
   app: ServiceName
   activeAgencies: string[]

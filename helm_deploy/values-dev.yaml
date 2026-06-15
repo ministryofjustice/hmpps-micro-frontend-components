@@ -1,4 +1,4 @@
-services_cronjob_schedule: "0 7-18 * * 1-5"
+services_cronjob_schedule: "0 8-18 * * 1-5"
 
 generic-service:
   replicaCount: 2
