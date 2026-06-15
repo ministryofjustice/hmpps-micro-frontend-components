@@ -57,7 +57,6 @@ jest.mock('redis', () => {
     disconnect: jest.fn().mockResolvedValue('OK'),
     connect: jest.fn().mockResolvedValue('OK'),
     close: jest.fn(),
-    destroy: jest.fn(),
     isOpen: false,
     on: jest.fn().mockReturnThis(),
   }
