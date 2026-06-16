@@ -1,4 +1,4 @@
-[< Back](../README.md)
+[← Back](../README.md)
 ---
 
 ## Using the NPM package.
@@ -7,7 +7,9 @@ The easiest way to incorporate the components into your application is to use th
 
 Instructions can be found in the readme of that project.
 
-If you have bespoke requirements that mean you cannot use the NPM package, you can incorporate the components manually. This guide will show you how to do that. However, please discuss your requirements in the #connect-dps slack channel as it may be something we would look to incorporate into the NPM package.
+If you have bespoke requirements that mean you cannot use the NPM package, you can incorporate the components manually.
+This guide will show you how to do that.
+However, please discuss your requirements in the #connect-dps slack channel as it may be something we would look to incorporate into the NPM package.
 
 ## Incorporating components manually
 
@@ -42,7 +44,8 @@ Add a block for the component library in the `apis` section of `config.ts`, for 
 
 Make sure that you also have access to the Digital Prison Services url to enable global search form submission.
 
-Add a Component model, API client and service, and include methods to call the components library. The API call requires the user token to be passed in on the `x-user-token` header.
+Add a Component model, API client and service, and include methods to call the components library.
+The API call requires the user token to be passed in on the `x-user-token` header.
 
 Components can be requested individually via e.g. `{api}/header` or multiple can be requested at once using e.g. `{api}/components?component=header&component=footer`
 
@@ -95,7 +98,7 @@ export default function getFrontendComponents({ componentService }: Services): R
 Then enable this middleware for all GET routes in your `app.ts` config, just before `app.use(routes(services))` using:
 
 ```typescript
-app.get('*', getFrontendComponents(services))
+app.get('*allPaths', getFrontendComponents(services))
 ```
 
 (If required, you could instead only call the middleware for specific routes)
@@ -103,7 +106,8 @@ app.get('*', getFrontendComponents(services))
 
 The following code should be used in the `layout.njk` file within your application.
 
-**Note**: the `header.njk` and `footer.njk` templates used in the following code fragments are fallback HTML in case the component service is unavailable or the API call fails for some reason. These templates should be copied from the `_fallbacks` directory in this repo, and configuration added as described in the Fallbacks section at the end of this document.
+**Note**: the `header.njk` and `footer.njk` templates used in the following code fragments are fallback HTML in case the component service is unavailable or the API call fails for some reason.
+These templates should be copied from the `_fallbacks` directory in this repo, and configuration added as described in the Fallbacks section at the end of this document.
 
 ```nunjucks
 {% block govukHeader %}
@@ -197,7 +201,8 @@ export default function setUpWebSecurity(): Router {
 
 ### Header sign out link
 
-The header sign out link direct to  '{your-application}/sign-out'. This works on the assumption that the application has followed the redirect pattern that the hmpps-template-typescript project has.
+The header sign out link direct to  '{your-application}/sign-out'.
+This works on the assumption that the application has followed the redirect pattern that the hmpps-template-typescript project has.
 See [setUpAuthentication.ts#L34](https://github.com/ministryofjustice/hmpps-template-typescript/blob/main/server/middleware/setUpAuthentication.ts#L34).
 
 **Note**: If your application was copied from the typescript template before August 2021 then it is entirely likely
@@ -209,7 +214,8 @@ also need to be changed to include the new callback url.
 
 ### Fallbacks (services with prison only users)
 
-Appropriate fallback components should be included within your application. For the header and footer, templates are provided in the `_fallbacks` directory of this repo to copy and paste into your application, along with `scss` stylesheets.
+Appropriate fallback components should be included within your application.
+For the header and footer, templates are provided in the `_fallbacks` directory of this repo to copy and paste into your application, along with `scss` stylesheets.
 
 Place the `header.njk` and `footer.njk` files into your `/server/views/partials` directory, overwriting the existing `header.njk` file if applicable.
 
