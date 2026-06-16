@@ -36,6 +36,11 @@ function isActiveInEstablishmentWithLegacyFallback(
   return isActiveInEstablishment(activeCaseLoadId, service, activeServices, legacyFallbackEnabled)
 }
 
+interface ConditionalService extends Service {
+  /** Whether this service is accessible by the current user */
+  enabledForCurrentUser: () => boolean
+}
+
 export default (
   roles: string[],
   allocationPolicies: StaffAllocationPolicies,
@@ -50,14 +55,15 @@ export default (
     activeServices,
     config.serviceUrls.activities.enabledPrisons,
   )
-  return [
+
+  const allServices: ConditionalService[] = [
     {
       id: 'global-search',
       heading: 'Global search',
       description: 'Search for someone in any establishment, or who has been released.',
       href: `${config.serviceUrls.newDps.url}/global-search`,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.GlobalSearch], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.GlobalSearch], roles),
     },
     {
       id: 'manage-prisoner-whereabouts',
@@ -65,7 +71,7 @@ export default (
       description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts`,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, !isActivitiesEnabled),
     },
     {
@@ -74,7 +80,7 @@ export default (
       description: 'Complete a cell move and view the 7 day history of all cell moves completed in your establishment.',
       href: config.serviceUrls.changeSomeonesCell.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.CellMove], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.CellMove], roles),
     },
     {
       id: 'check-my-diary',
@@ -82,7 +88,7 @@ export default (
       description: 'View your prison staff detail (staff rota) from home.',
       href: config.serviceUrls.checkMyDiary.url,
       navEnabled: true,
-      enabled: () => true,
+      enabledForCurrentUser: () => true,
     },
     {
       id: 'incentives',
@@ -90,7 +96,7 @@ export default (
       description: 'Manage incentive level reviews by residential location and view incentives data charts.',
       href: config.serviceUrls.incentives.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.MaintainIncentiveLevels], roles) || locations?.length > 0,
+      enabledForCurrentUser: () => userHasRoles([Role.MaintainIncentiveLevels], roles) || locations?.length > 0,
     },
     {
       id: 'use-of-force',
@@ -98,7 +104,7 @@ export default (
       description: 'Manage and view incident reports and statements.',
       href: config.serviceUrls.useOfForce.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.useOfForce.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabledForCurrentUser: () => config.serviceUrls.useOfForce.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'pathfinder',
@@ -106,7 +112,7 @@ export default (
       description: 'Manage your Pathfinder caseloads.',
       href: config.serviceUrls.pathfinder.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         config.serviceUrls.pathfinder.url &&
         userHasRoles(
           [
@@ -132,7 +138,7 @@ export default (
       description: 'Create and manage Home Detention Curfew.',
       href: config.serviceUrls.licences.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles(
           [Role.NomisBatchload, Role.LicenceCa, Role.LicenceDm, Role.LicenceRo, Role.LicenceVary, Role.LicenceReadOnly],
           roles,
@@ -144,7 +150,7 @@ export default (
       description: 'View the roll broken down by residential unit and see who is arriving and leaving.',
       href: config.serviceUrls.establishmentRoll.url,
       navEnabled: true,
-      enabled: () => locations?.length > 0,
+      enabledForCurrentUser: () => locations?.length > 0,
     },
     {
       id: 'pom',
@@ -152,7 +158,7 @@ export default (
       description: 'Keep track of your allocations. If you allocate cases, you also can do that here.',
       href: config.serviceUrls.moic.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.AllocationsManager, Role.AllocationsCaseManager], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.AllocationsManager, Role.AllocationsCaseManager], roles),
     },
     {
       id: 'manage-users',
@@ -161,7 +167,7 @@ export default (
         'As a Local System Administrator (LSA) or administrator, manage accounts and groups for service users.',
       href: config.serviceUrls.manageAccounts.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles(
           [Role.MaintainAccessRoles, Role.MaintainAccessRolesAdmin, Role.MaintainOauthUsers, Role.AuthGroupManager],
           roles,
@@ -173,7 +179,7 @@ export default (
       description: 'View a prisoner’s category and complete either a first time categorisation or a recategorisation.',
       href: config.serviceUrls.categorisation.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles(
           [
             Role.CreateCategorisation,
@@ -191,7 +197,7 @@ export default (
         'Schedule secure movement for prisoners in custody, via approved transport suppliers, between locations across England and Wales.',
       href: config.serviceUrls.pecs.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.PecsOca, Role.PecsPrison], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.PecsOca, Role.PecsPrison], roles),
     },
     {
       id: 'soc',
@@ -199,7 +205,7 @@ export default (
       description: 'Manage your Serious and Organised Crime (SOC) caseload.',
       href: config.serviceUrls.soc.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.SocCustody, Role.SocCommunity, Role.SocHq], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.SocCustody, Role.SocCommunity, Role.SocHq], roles),
     },
     {
       id: 'pin-phones',
@@ -207,7 +213,7 @@ export default (
       description: 'Access to the Prisoner communication monitoring service.',
       href: config.serviceUrls.pinPhones.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.PcmsAnalyst, Role.PcmsAuthorisingOfficer, Role.PcmsGlobalAdmin, Role.PcmsAudit], roles),
     },
     {
@@ -216,7 +222,7 @@ export default (
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.serviceUrls.manageAdjudications.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         isActiveInEstablishmentWithLegacyFallback(
           activeCaseLoadId,
           ServiceName.ADJUDICATION,
@@ -230,7 +236,7 @@ export default (
       description: 'Book and manage social visits.',
       href: config.serviceUrls.managePrisonVisits.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ManagePrisonVisits], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.ManagePrisonVisits], roles),
     },
     {
       id: 'official-visits',
@@ -238,7 +244,7 @@ export default (
       description: 'Book, update, cancel and confirm when an official visit has taken place.',
       href: config.serviceUrls.officialVisitsUi.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.PrisonUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
     },
@@ -248,7 +254,7 @@ export default (
       description: 'Respond to online social visit requests.',
       href: config.serviceUrls.legacyPrisonVisits.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.PvbRequests], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.PvbRequests], roles),
     },
     {
       id: 'secure-social-video-calls',
@@ -257,7 +263,7 @@ export default (
         'Manage and monitor secure social video calls with prisoners. Opens the Prison Video Calls application.',
       href: config.serviceUrls.secureSocialVideoCalls.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.SocialVideoCalls], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.SocialVideoCalls], roles),
     },
     {
       id: 'check-rule39-mail',
@@ -265,7 +271,7 @@ export default (
       description: 'Scan barcodes on mail from law firms and other approved senders.',
       href: config.serviceUrls.sendLegalMail.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.SlmScanBarcode, Role.SlmAdmin], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.SlmScanBarcode, Role.SlmAdmin], roles),
     },
     {
       id: 'welcome-people-into-prison',
@@ -274,7 +280,8 @@ export default (
         'View prisoners booked to arrive today, add them to the establishment roll, and manage reception tasks for recent arrivals.',
       href: config.serviceUrls.welcomePeopleIntoPrison.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.welcomePeopleIntoPrison.enabledPrisons.split(',').includes(activeCaseLoadId),
+      enabledForCurrentUser: () =>
+        config.serviceUrls.welcomePeopleIntoPrison.enabledPrisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'submit-an-intelligence-report',
@@ -282,7 +289,7 @@ export default (
       description: 'Access to the intelligence submission form',
       href: config.serviceUrls.submitIntelligenceReport.url,
       navEnabled: true,
-      enabled: () => true,
+      enabledForCurrentUser: () => true,
     },
     {
       id: 'intelligence-management-service',
@@ -290,7 +297,8 @@ export default (
       description: 'Manage and view intelligence reports',
       href: config.serviceUrls.manageIntelligence.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.manageIntelligence.url && userHasRoles([Role.ManageIntelligenceUser], roles),
+      enabledForCurrentUser: () =>
+        config.serviceUrls.manageIntelligence.url && userHasRoles([Role.ManageIntelligenceUser], roles),
     },
     {
       id: 'manage-restricted-patients',
@@ -299,7 +307,7 @@ export default (
         'View your restricted patients, move someone to a secure hospital, or remove someone from the restricted patients service.',
       href: config.serviceUrls.manageRestrictedPatients.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles(
           [
             Role.SearchRestrictedPatient,
@@ -316,7 +324,7 @@ export default (
       description: 'Create and vary standard determinate licences and post sentence supervision orders.',
       href: config.serviceUrls.createAndVaryALicence.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.LicenceCa, Role.LicenceDm, Role.LicenceRo, Role.LicenceAco, Role.LicenceAdmin], roles),
     },
     {
@@ -326,7 +334,7 @@ export default (
         'Create and edit activities. Allocate people and edit allocations. Log applications and manage waitlists. Print unlock lists and record activity attendance.',
       href: `${config.serviceUrls.activities.url}/activities`,
       navEnabled: true,
-      enabled: () => isActivitiesEnabled,
+      enabledForCurrentUser: () => isActivitiesEnabled,
     },
     {
       id: 'appointments',
@@ -334,7 +342,7 @@ export default (
       description: 'Create, manage and edit appointments. Print movement slips. Record appointment attendance.',
       href: `${config.serviceUrls.appointments.url}/appointments`,
       navEnabled: true,
-      enabled: () => isActivitiesEnabled,
+      enabledForCurrentUser: () => isActivitiesEnabled,
     },
     {
       id: 'view-people-due-to-leave',
@@ -342,7 +350,7 @@ export default (
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts/scheduled-moves`,
       navEnabled: true,
-      enabled: () => isActivitiesEnabled,
+      enabledForCurrentUser: () => isActivitiesEnabled,
     },
     {
       id: 'view-covid-units',
@@ -350,7 +358,8 @@ export default (
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.newDps.url}/current-covid-units`,
       navEnabled: true,
-      enabled: () => config.app.covidUnitsEnabled && userHasRoles([Role.PrisonUser], roles) && isActivitiesEnabled,
+      enabledForCurrentUser: () =>
+        config.app.covidUnitsEnabled && userHasRoles([Role.PrisonUser], roles) && isActivitiesEnabled,
     },
     {
       id: 'historical-prisoner-application',
@@ -358,7 +367,7 @@ export default (
       description: 'This service allows users to view historical prisoner information.',
       href: config.serviceUrls.historicalPrisonerApplication.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.HpaUser], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.HpaUser], roles),
     },
     {
       id: 'work-after-leaving-prison',
@@ -366,7 +375,7 @@ export default (
       description: 'Manage progress in preparing people for work. Match people to jobs and manage applications.',
       href: `${config.serviceUrls.workAfterLeavingPrison?.url || ''}?sort=releaseDate&order=descending`,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.WorkReadinessView, Role.WorkReadinessEdit], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.WorkReadinessView, Role.WorkReadinessEdit], roles),
     },
     {
       id: 'manage-offences',
@@ -374,7 +383,7 @@ export default (
       description: 'This service allows you to maintain offence reference data.',
       href: config.serviceUrls.manageOffences.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.ManageOffencesAdmin, Role.UpdateOffenceSchedules, Role.NomisOffenceActivator], roles),
     },
     {
@@ -383,7 +392,7 @@ export default (
       description: 'View and manage learning and work history, support needs, goals and progress.',
       href: config.serviceUrls.learningAndWorkProgress.url,
       navEnabled: true,
-      enabled: () => true,
+      enabledForCurrentUser: () => true,
     },
     {
       id: 'prepare-someone-for-release',
@@ -391,7 +400,7 @@ export default (
       description: 'Search for people with resettlement needs. View and manage their information and support.',
       href: config.serviceUrls.prepareSomeoneForReleaseUi.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.ResettlementPassportEdit], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.PREPARE_SOMEONE_FOR_RELEASE, activeServices, false),
     },
@@ -401,7 +410,7 @@ export default (
       description: 'Apply for accommodation for someone leaving prison on home detention curfew.',
       href: config.serviceUrls.cas2.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.PomUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CAS2, activeServices, false),
     },
@@ -411,7 +420,7 @@ export default (
       description: 'Apply for accommodation and support for someone being bailed from Court or Prison.',
       href: config.serviceUrls.cas2Bail.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.Cas2PrisonBailReferrer], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.Cas2PrisonBailReferrer], roles),
     },
     {
       id: 'accredited-programmes',
@@ -419,7 +428,7 @@ export default (
       description: 'Search for Accredited Programmes, make referrals and view their progress.',
       href: config.serviceUrls.accreditedProgrammes.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.accreditedProgrammes.enabled,
+      enabledForCurrentUser: () => config.serviceUrls.accreditedProgrammes.enabled,
     },
     {
       id: 'alerts',
@@ -427,7 +436,7 @@ export default (
       description: 'Alerts API Service',
       href: config.serviceUrls.alerts.url,
       navEnabled: false,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
+      enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.ALERTS, activeServices, false),
     },
     {
       id: 'caseNotesApi',
@@ -435,7 +444,8 @@ export default (
       description: 'Case Notes API Service',
       href: config.serviceUrls.caseNotesApi.url,
       navEnabled: false,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CASE_NOTES, activeServices, false),
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.CASE_NOTES, activeServices, false),
     },
     {
       id: 'csipUI',
@@ -443,7 +453,7 @@ export default (
       description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload.',
       href: config.serviceUrls.csipUI.url,
       navEnabled: true,
-      enabled: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
+      enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSIP, activeServices, false),
     },
     {
       id: 'residential-locations',
@@ -451,7 +461,7 @@ export default (
       description: 'View or manage residential and non-residential locations.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles(
           [
             Role.ResiLocationViewer,
@@ -470,7 +480,7 @@ export default (
       description: 'Digital Prison Reporting - Find and view reports.',
       href: config.serviceUrls.reporting.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         isActiveInEstablishmentWithLegacyFallback(
           activeCaseLoadId,
           ServiceName.REPORTING,
@@ -484,7 +494,7 @@ export default (
       description: 'Create, update and search reports for incidents that happen in prison.',
       href: config.serviceUrls.incidentReporting.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.IncidentReportingRO, Role.IncidentReportingRW, Role.IncidentReportingApprove], roles),
     },
     {
@@ -493,7 +503,7 @@ export default (
       description: 'Log, action and reply to prisoner applications.',
       href: config.serviceUrls.manageApplications.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.PrisonUser], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.MANAGE_APPLICATIONS, activeServices, false),
     },
@@ -503,7 +513,7 @@ export default (
       description: 'View prisoner food allergies, medical dietary requirements, and personal dietary needs.',
       href: `${config.serviceUrls.newDps.url}/dietary-requirements`,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.DietAndAllergiesReport], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.DietAndAllergiesReport], roles),
     },
     {
       id: 'create-an-electronic-monitoring-order',
@@ -511,7 +521,7 @@ export default (
       description: '',
       href: config.serviceUrls.createAnEMOrder.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.CreateAnEMOrder], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CEMO, activeServices, false),
     },
@@ -521,7 +531,7 @@ export default (
       description: 'Allocate key workers to prisoners and manage key work in your establishment.',
       href: config.serviceUrls.allocateKeyWorkers.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.OmicAdmin, Role.KeyworkerMonitor], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
@@ -531,7 +541,7 @@ export default (
       description: 'View your key worker allocations and personal statistics.',
       href: `${config.serviceUrls.allocateKeyWorkers.url}/staff-profile/${staffId}`,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         allocationPolicies.policies.includes('KEY_WORKER') &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_KEY_WORKERS, activeServices, false),
     },
@@ -541,7 +551,7 @@ export default (
       description: 'Allocate personal officers to prisoners and manage officer work in your establishment.',
       href: config.serviceUrls.allocatePersonalOfficers.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.PersonalOfficerView, Role.PersonalOfficerAllocate], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
     },
@@ -551,7 +561,7 @@ export default (
       description: 'View your personal officer allocations and personal statistics.',
       href: `${config.serviceUrls.allocatePersonalOfficers.url}/staff-profile/${staffId}`,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         allocationPolicies.policies.includes('PERSONAL_OFFICER') &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.ALLOCATE_PERSONAL_OFFICERS, activeServices, false),
     },
@@ -562,7 +572,8 @@ export default (
         'Search the Learning Records Service (LRS) to match someone to their learner record or unique learner number (ULN).',
       href: config.serviceUrls.matchLearnerRecord.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
+      enabledForCurrentUser: () =>
+        config.serviceUrls.matchLearnerRecord.enabled && userHasRoles([Role.MatchLearnerRecord], roles),
     },
     {
       id: 'support-additional-needs',
@@ -570,7 +581,7 @@ export default (
       description: 'View and manage support planning for education and life across prison.',
       href: config.serviceUrls.supportAdditionalNeeds.url,
       navEnabled: true,
-      enabled: () => config.serviceUrls.supportAdditionalNeeds.enabled,
+      enabledForCurrentUser: () => config.serviceUrls.supportAdditionalNeeds.enabled,
     },
     {
       id: 'external-movements',
@@ -580,7 +591,7 @@ export default (
         : 'View temporary absences for prisoners in your establishment.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
     },
@@ -590,7 +601,7 @@ export default (
       description: 'Search for prisoner contacts.',
       href: config.serviceUrls.contacts.url,
       navEnabled: true,
-      enabled: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
+      enabledForCurrentUser: () => userHasRoles([Role.ContactsAuthoriser, Role.ContactsAdministrator], roles),
     },
     {
       id: 'court-appearance-scheduler',
@@ -600,15 +611,18 @@ export default (
         : 'View court appearance for people at this establishment.',
       href: config.serviceUrls.courtAppearanceScheduler.url,
       navEnabled: true,
-      enabled: () =>
+      enabledForCurrentUser: () =>
         userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
     },
   ]
-    .filter(service => service.enabled())
+  // ↑ add new services here ↑
+
+  return allServices
+    .filter(service => service.enabledForCurrentUser())
     .map(service => {
-      const { id, heading, description, href, navEnabled } = service
-      return { id, heading, description, href, navEnabled }
+      const { id, heading, description, href, navEnabled = true } = service
+      return { id, heading, description, href, navEnabled } satisfies Service
     })
     .sort((a, b) => (a.heading.toLowerCase() < b.heading.toLowerCase() ? -1 : 1))
 }

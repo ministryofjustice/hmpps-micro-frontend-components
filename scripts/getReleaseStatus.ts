@@ -35,6 +35,7 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * Add definitions here:
  * - provide `urlEnv` to look up info url via site’s base url environment variable
  * - or provide an environment-to-info-url map in `infoUrl`
+ * - keep list sorted
  *
  * When using environment variables, also:
  * - Add urls to
@@ -44,6 +45,8 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
  */
 export const endpoints: Endpoint[] = [
+  // NB: keep list sorted
+  { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
@@ -52,31 +55,31 @@ export const endpoints: Endpoint[] = [
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
     },
   },
-  { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
-  { application: ServiceName.CAS2, urlEnv: 'CAS2_URL' },
   { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
-  { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
-  { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
-  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
-  { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
-  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
-  { application: ServiceName.CASE_NOTES, urlEnv: 'CASE_NOTES_API_URL' },
-  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
-  { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
-  { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
   { application: ServiceName.ALLOCATE_KEY_WORKERS, urlEnv: 'ALLOCATE_KEY_WORKERS_API_URL' },
   { application: ServiceName.ALLOCATE_PERSONAL_OFFICERS, urlEnv: 'ALLOCATE_PERSONAL_OFFICERS_API_URL' },
-  { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
-  { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: ServiceName.CAS2, urlEnv: 'CAS2_URL' },
+  { application: ServiceName.CASE_NOTES, urlEnv: 'CASE_NOTES_API_URL' },
+  { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
   { application: ServiceName.COURT_APPEARANCE_SCHEDULER, urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
+  { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
+  { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
+  { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
+  { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
+  { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
+  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
+  { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
+  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
+  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
+  // NB: keep list sorted
 ]
 
-function getApplicationInfo(appLabel: ServiceName, url: string): superagent.Request {
+function getApplicationInfo(application: ServiceName, url: string): superagent.Request {
   return superagent
     .get(url)
     .set('Accept', 'application/json')
     .retry(2, (_err, res) => {
-      console.log(`Received status ${res?.status} from application info request for ${appLabel}`)
+      console.log(`Received status ${res?.status} from application info request for ${application}`)
     })
 }
 
@@ -128,11 +131,11 @@ async function getStoredData(redisClient: RedisClientType): Promise<ServiceActiv
   return JSON.parse(responseString as string)
 }
 
-function getUrlForApp(appData: Endpoint): string | undefined {
-  if ('urlEnv' in appData) {
-    return process.env[appData.urlEnv] ? `${process.env[appData.urlEnv]}/info` : undefined
+function getUrlForEndpoint(endpoint: Endpoint): string | undefined {
+  if ('urlEnv' in endpoint) {
+    return process.env[endpoint.urlEnv] ? `${process.env[endpoint.urlEnv]}/info` : undefined
   }
-  return appData.infoUrl[process.env.ENVIRONMENT as Environment]
+  return endpoint.infoUrl[process.env.ENVIRONMENT as Environment]
 }
 
 export async function getData(): Promise<void> {
@@ -144,21 +147,21 @@ export async function getData(): Promise<void> {
 
   const responses = await Promise.allSettled(
     endpoints
-      .map(app => {
-        if (disabledApps.includes(app.application)) {
-          console.log(`Application info check disabled for ${app.application}`)
+      .map(endpoint => {
+        if (disabledApps.includes(endpoint.application)) {
+          console.log(`Application info check disabled for ${endpoint.application}`)
           return undefined
         }
 
-        const url = getUrlForApp(app)
+        const url = getUrlForEndpoint(endpoint)
 
         if (!url) {
-          console.error(`No url found for app: ${app.application}`)
-          reportError('No url found for app', { application: app.application })
+          console.error(`No url found for app: ${endpoint.application}`)
+          reportError('No url found for app', { application: endpoint.application })
           return undefined
         }
 
-        return getApplicationInfo(app.application, url)
+        return getApplicationInfo(endpoint.application, url)
       })
       .filter(Boolean),
   )
@@ -174,12 +177,14 @@ export async function getData(): Promise<void> {
       }
       const { body, request } = response.value
 
-      const applicationName = endpoints.find(
-        app =>
+      const application = endpoints.find(
+        endpoint =>
           request?.url ===
-          ('urlEnv' in app ? `${process.env[app.urlEnv]}/info` : app.infoUrl[process.env.ENVIRONMENT as Environment]),
+          ('urlEnv' in endpoint
+            ? `${process.env[endpoint.urlEnv]}/info`
+            : endpoint.infoUrl[process.env.ENVIRONMENT as Environment]),
       )?.application
-      if (!applicationName) {
+      if (!application) {
         console.error(`Cannot match response to application (${request?.url})`)
         reportError('Cannot match response to application', {
           request: request?.url,
@@ -188,7 +193,7 @@ export async function getData(): Promise<void> {
       }
 
       if (!Array.isArray(body.activeAgencies)) {
-        console.error(`Invalid activeAgencies value for ${applicationName}`, body.activeAgencies)
+        console.error(`Invalid activeAgencies value for ${application}`, body.activeAgencies)
         reportError('Invalid activeAgencies value', {
           activeAgencies: JSON.stringify(body.activeAgencies),
         })
@@ -196,7 +201,7 @@ export async function getData(): Promise<void> {
       }
 
       return {
-        app: applicationName,
+        app: application,
         activeAgencies: body.activeAgencies,
       }
     })
@@ -221,7 +226,7 @@ export async function getData(): Promise<void> {
   await redisClient.close()
 }
 
-export function main() {
+export function main(): void {
   getData()
     .then(() => {
       console.info('Successfully updated active agencies')

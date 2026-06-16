@@ -51,9 +51,13 @@ export type CspDirectives = Record<string, string[]>
  */
 export interface Service {
   id: string
+  /** Service’s title */
   heading: string
+  /** Service’s description */
   description: string
+  /** User-facing link */
   href: string
+  /** Shows in navigation lists */
   navEnabled: boolean
 }
 

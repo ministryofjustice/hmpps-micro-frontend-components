@@ -1,7 +1,7 @@
 import logger from '../../logger'
 import getServicesForUser from './utils/getServicesForUser'
 import CacheService from './cacheService'
-import { ServiceActiveAgencies } from '../@types/activeAgencies'
+import type { ServiceActiveAgencies } from '../@types/activeAgencies'
 import config from '../config'
 import type { PrisonCaseload } from '../interfaces/caseLoad'
 import type { Service } from '../interfaces/externalContract'

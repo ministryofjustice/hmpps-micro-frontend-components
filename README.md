@@ -17,7 +17,8 @@ The `/develop/` path displays the component in an HTML page including the requir
 
 ## Contents
 
-1. [Incorporating components](readme/incorporating.md)
-2. [Building and Running](readme/building_and_running.md)
-3. [Testing](readme/testing.md)
-4. [Maintenance](readme/maintenance.md)
+- [Incorporating components](readme/incorporating.md)
+- [Configuring services](readme/configuring-services.md)
+- [Building and running](readme/building-and-running.md)
+- [Testing](readme/testing.md)
+- [Maintenance](readme/maintenance.md)
