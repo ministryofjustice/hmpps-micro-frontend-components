@@ -19,7 +19,6 @@ import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 import setUpSwagger from './middleware/setUpSwagger'
 import applicationInfo from './applicationInfo'
-import { appInsightsMiddleware } from './utils/azureAppInsights'
 import { setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
 
 export default function createApp(services: Services): express.Application {
@@ -30,7 +29,6 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   setUpSentry()
-  app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(applicationInfo()))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
