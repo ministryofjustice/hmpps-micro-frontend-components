@@ -121,6 +121,7 @@
   },
   "overrides": {
     "diff": "^8.0.3",
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.3",
+    "js-yaml": ">=4.1.2"
   }
 }
