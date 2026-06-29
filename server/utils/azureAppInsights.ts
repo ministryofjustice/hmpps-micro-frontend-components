@@ -1,7 +1,7 @@
-import { initialiseTelemetry, flushTelemetry, telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
+import { flushTelemetry, initialiseTelemetry, telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
 
 initialiseTelemetry({
-  serviceName: 'hmpps-template-typescript',
+  serviceName: 'hmpps-micro-frontend-components',
   serviceVersion: process.env.BUILD_NUMBER || 'unknown',
   connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
   debug: process.env.DEBUG_TELEMETRY === 'true',

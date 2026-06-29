@@ -8,6 +8,7 @@ import type { AvailableComponent } from '../interfaces/externalContract'
 import ComponentsController from '../controllers/componentsController'
 import populateCurrentUser from '../middleware/populateCurrentUser'
 import { ComponentRenderer } from '../services/componentRenderer'
+import addUserMetadataToLogs from '../middleware/addUserMetadataToLogs'
 
 export default function developRoutes(services: Services): Router {
   const router = Router()
@@ -22,6 +23,7 @@ export default function developRoutes(services: Services): Router {
 
   // all developer preview routes require a user
   router.use(populateCurrentUser(services.userService))
+  router.use(addUserMetadataToLogs())
 
   router.get('/all', async (_req, res) => {
     const renderer = new ComponentRenderer(res)
