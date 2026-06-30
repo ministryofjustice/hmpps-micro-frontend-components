@@ -1,0 +1,20 @@
+import type { RequestHandler } from 'express'
+import { trace } from '@ministryofjustice/hmpps-azure-telemetry'
+import { HmppsUser } from '../interfaces/hmppsUser'
+
+export default function addUserMetadataToLogs(): RequestHandler {
+  return async (_req, res, next) => {
+    const span = trace.getActiveSpan()
+    if (!span) return next()
+
+    const user = (res.locals?.user ?? {}) as HmppsUser
+
+    if (user.username) {
+      span.setAttribute('username', user.username)
+      if ('activeCaseLoad' in user && user.activeCaseLoad?.id) {
+        span.setAttribute('activeCaseLoadId', user.activeCaseLoad.id)
+      }
+    }
+    return next()
+  }
+}
