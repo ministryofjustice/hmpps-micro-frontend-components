@@ -50,6 +50,7 @@ jest.mock('../../config', () => ({
     pecs: { url: 'url' },
     pinPhones: { url: 'url' },
     prepareSomeoneForReleaseUi: { url: 'url' },
+    prisonerProperty: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
     secureSocialVideoCalls: { url: 'url' },
@@ -632,6 +633,19 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'CSIP')).toEqual(visible)
+    })
+  })
+
+  describe('Prisoner property', () => {
+    test.each`
+      roles | activeServices                                                       | visible
+      ${[]} | ${[{ app: ServiceName.PRISONER_PROPERTY, activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: ServiceName.PRISONER_PROPERTY, activeAgencies: ['***'] }]} | ${true}
+      ${[]} | ${[{ app: ServiceName.PRISONER_PROPERTY, activeAgencies: ['MOR'] }]} | ${false}
+      ${[]} | ${[]}                                                                | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Prisoner property')).toEqual(visible)
     })
   })
 
