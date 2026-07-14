@@ -84,6 +84,8 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "REPORTING_URL" }}'
               - name: RESIDENTIAL_LOCATIONS_API_URL
                 value: '{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}'
+              - name: TRANSFER_SCHEDULER_API_URL
+                value: '{{ index .Values "generic-service" "env" "TRANSFER_SCHEDULER_API_URL" }}'
               - name: WHEREABOUTS_API_URL
                 value: '{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}'
               # NB: keep list sorted

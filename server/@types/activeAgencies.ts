@@ -23,6 +23,7 @@ export enum ServiceName {
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
+  TRANSFER_SCHEDULER = 'transferScheduler',
   WHEREABOUTS = 'whereabouts',
   // NB: keep service list sorted
 }
