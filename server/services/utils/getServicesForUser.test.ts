@@ -262,41 +262,41 @@ describe('getServicesForUser', () => {
     test.each`
       desc                                            | activeCaseLoad      | visible  | activeServices
       ${'In cache and env var'} | ${'LEI'} | ${true} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: ['LEI', 'ANOTHER'],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: ['LEI', 'ANOTHER'],
+        },
+      ]}
       ${'Not in cache, in env var'} | ${'LEI'} | ${false} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: ['ANOTHER'],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: ['ANOTHER'],
+        },
+      ]}
       ${'In cache, not env var'} | ${'NOT_IN_ENV_VAR'} | ${true} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: ['NOT_IN_ENV_VAR'],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: ['NOT_IN_ENV_VAR'],
+        },
+      ]}
       ${'Empty array cache'} | ${'LEI'} | ${false} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: [],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: [],
+        },
+      ]}
       ${'all prsions cache'} | ${'ANYTHING'} | ${true} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: ['***'],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: ['***'],
+        },
+      ]}
       ${'Not in cache, not in env var'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[
-  {
-    app: 'adjudications' as ServiceName,
-    activeAgencies: ['LEI'],
-  },
-]}
+        {
+          app: 'adjudications' as ServiceName,
+          activeAgencies: ['LEI'],
+        },
+      ]}
       ${'No application data cached, in env var'}     | ${'LEI'}            | ${true}  | ${[]}
       ${'No application data cached, not in env var'} | ${'NOT_IN_ENV_VAR'} | ${false} | ${[]}
       ${'No cache, in env var'}                       | ${'LEI'}            | ${true}  | ${null}
@@ -431,19 +431,19 @@ describe('getServicesForUser', () => {
     test.each`
       desc                                            | activeCaseLoad      | visible  | activeServices
       ${'In cache and env var'} | ${'LEI'} | ${true} | ${[
-  {
-    app: 'appointments' as ServiceName,
-    activeAgencies: ['LEI', 'FSI'],
-  },
-  { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] },
-]}
+        {
+          app: 'appointments' as ServiceName,
+          activeAgencies: ['LEI', 'FSI'],
+        },
+        { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] },
+      ]}
       ${'In cache, not env var'} | ${'CACHE'} | ${true} | ${[
-  {
-    app: 'appointments' as ServiceName,
-    activeAgencies: ['LEI', 'FSI'],
-  },
-  { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] },
-]}
+        {
+          app: 'appointments' as ServiceName,
+          activeAgencies: ['LEI', 'FSI'],
+        },
+        { app: 'activities' as ServiceName, activeAgencies: ['LEI', 'CACHE'] },
+      ]}
       ${'Not in cache, env var not enabled'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
       ${'Not in cache, env var enabled'}              | ${'LEI'}            | ${true}  | ${null}
       ${'No application data cached, in env var'}     | ${'LEI'}            | ${true}  | ${[]}
@@ -458,11 +458,11 @@ describe('getServicesForUser', () => {
     test.each`
       desc                                                         | activeCaseLoad      | visible  | activeServices
       ${'In cache, not env var (activities)'} | ${'CACHE'} | ${true} | ${[
-  {
-    app: 'activities' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
+        {
+          app: 'activities' as ServiceName,
+          activeAgencies: ['LEI', 'CACHE'],
+        },
+      ]}
       ${'Not in cache, env var not enabled (activities)'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
       ${'Not in cache, env var enabled (activities)'}              | ${'LEI'}            | ${true}  | ${null}
       ${'No application data cached, in env var (activities)'}     | ${'LEI'}            | ${true}  | ${[]}
@@ -477,11 +477,11 @@ describe('getServicesForUser', () => {
     test.each`
       desc                                                         | activeCaseLoad      | visible  | activeServices
       ${'In cache, not env var (activities)'} | ${'CACHE'} | ${true} | ${[
-  {
-    app: 'activities' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
+        {
+          app: 'activities' as ServiceName,
+          activeAgencies: ['LEI', 'CACHE'],
+        },
+      ]}
       ${'Not in cache, env var not enabled (activities)'}          | ${'NOT_IN_ENV_VAR'} | ${false} | ${null}
       ${'Not in cache, env var enabled (activities)'}              | ${'LEI'}            | ${true}  | ${null}
       ${'No application data cached, in env var (activities)'}     | ${'LEI'}            | ${true}  | ${[]}
@@ -650,41 +650,41 @@ describe('getServicesForUser', () => {
     test.each`
       roles | visible | activeServices
       ${[]} | ${false} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['LEI', 'CACHE'],
+        },
+      ]}
       ${['VIEW_INTERNAL_LOCATION']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['LEI', 'CACHE'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['LEI', 'CACHE'],
+        },
+      ]}
       ${['VIEW_INTERNAL_LOCATION']} | ${false} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['PVI'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['PVI'],
+        },
+      ]}
       ${['MANAGE_RESIDENTIAL_LOCATIONS']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['***'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['***'],
+        },
+      ]}
       ${['MANAGE_RES_LOCATIONS_OP_CAP']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['***'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['***'],
+        },
+      ]}
       ${['NONRESI__MAINTAIN_LOCATION']} | ${true} | ${[
-  {
-    app: 'residentialLocations' as ServiceName,
-    activeAgencies: ['LEI'],
-  },
-]}
+        {
+          app: 'residentialLocations' as ServiceName,
+          activeAgencies: ['LEI'],
+        },
+      ]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Locations')).toEqual(visible)
@@ -708,25 +708,25 @@ describe('getServicesForUser', () => {
     test.each`
       roles | visible | activeServices
       ${[]} | ${false} | ${[
-  {
-    app: 'incidentReporting' as ServiceName,
-  },
-]}
+        {
+          app: 'incidentReporting' as ServiceName,
+        },
+      ]}
       ${['INCIDENT_REPORTS__RO']} | ${true} | ${[
-  {
-    app: 'incidentReporting' as ServiceName,
-  },
-]}
+        {
+          app: 'incidentReporting' as ServiceName,
+        },
+      ]}
       ${['INCIDENT_REPORTS__RW']} | ${true} | ${[
-  {
-    app: 'incidentReporting' as ServiceName,
-  },
-]}
+        {
+          app: 'incidentReporting' as ServiceName,
+        },
+      ]}
       ${['INCIDENT_REPORTS__APPROVE']} | ${true} | ${[
-  {
-    app: 'incidentReporting' as ServiceName,
-  },
-]}
+        {
+          app: 'incidentReporting' as ServiceName,
+        },
+      ]}
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Incident reporting')).toEqual(visible)
