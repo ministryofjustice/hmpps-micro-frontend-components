@@ -321,7 +321,7 @@ export default (
     {
       id: 'create-and-vary-a-licence',
       heading: 'Create and vary a licence',
-      description: 'Create and vary standard determinate licences and post sentence supervision orders.',
+      description: 'Prepare licences for people leaving prison and view licences for people on probation.',
       href: config.serviceUrls.createAndVaryALicence.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
