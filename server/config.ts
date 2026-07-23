@@ -185,6 +185,7 @@ export default {
     prepareSomeoneForReleaseUi: {
       url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
     },
+    prisonerProperty: { url: get('PRISONER_PROPERTY_URL', 'http://localhost:3001', requiredInProduction) },
     reporting: {
       url: get('REPORTING_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('REPORTING_ENABLED_PRISONS', '', requiredInProduction),

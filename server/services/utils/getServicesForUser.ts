@@ -615,6 +615,15 @@ export default (
         userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
     },
+    {
+      id: 'prisoner-property',
+      heading: 'Prisoner property',
+      description: 'Find, track and update prisoner property.',
+      href: config.serviceUrls.prisonerProperty.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.PRISONER_PROPERTY, activeServices, false),
+    },
   ]
   // ↑ add new services here ↑
 

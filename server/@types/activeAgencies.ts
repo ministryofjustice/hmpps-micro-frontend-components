@@ -21,6 +21,7 @@ export enum ServiceName {
   MANAGE_APPLICATIONS = 'manageApplications',
   OFFICIAL_VISITS_API = 'officialVisitsApi',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
+  PRISONER_PROPERTY = 'prisonerProperty',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
   WHEREABOUTS = 'whereabouts',
