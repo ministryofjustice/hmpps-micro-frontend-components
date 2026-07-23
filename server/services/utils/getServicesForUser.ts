@@ -618,7 +618,7 @@ export default (
     {
       id: 'prisoner-property',
       heading: 'Prisoner property',
-      description: 'Locate prisoner property held in storage and manage property container details.',
+      description: 'Find, track and update prisoner property.',
       href: config.serviceUrls.prisonerProperty.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
