@@ -5,13 +5,6 @@
  */
 const MAX_BACK_URL_LENGTH = 2000
 
-/**
- * Events after which the user may navigate via the caseload link. `pointerdown` covers left, middle
- * and modified clicks; `contextmenu` covers “open in new tab”; `focus` and `keydown` cover keyboard use.
- * All fire before navigation begins.
- */
-const NAVIGATION_INTENT_EVENTS = ['pointerdown', 'keydown', 'focus', 'contextmenu']
-
 class DPSHeader {
   static init(): void {
     const $header = document.querySelector<HTMLElement>('[data-module="cdps-header"]')
@@ -55,9 +48,10 @@ class DPSHeader {
       this.setBackUrl($caseloadAnchor)
     }
     setBackUrl()
-    NAVIGATION_INTENT_EVENTS.forEach(eventName => {
-      $caseloadAnchor.addEventListener(eventName, setBackUrl)
-    })
+    // pointerdown covers the middle and modified clicks a click listener would miss,
+    // focus covers keyboard use; both fire before the browser reads the href
+    $caseloadAnchor.addEventListener('pointerdown', setBackUrl)
+    $caseloadAnchor.addEventListener('focus', setBackUrl)
   }
 
   private setBackUrl($caseloadAnchor: HTMLAnchorElement): void {
