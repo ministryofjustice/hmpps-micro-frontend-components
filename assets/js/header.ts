@@ -1,3 +1,17 @@
+/**
+ * Cap on the `backUrl` we hand to the caseload switcher. A pathological page url could otherwise
+ * produce a request line that an ingress rejects; dropping the parameter degrades to DPS’ referer
+ * fallback, which still gets the user back to the service they came from.
+ */
+const MAX_BACK_URL_LENGTH = 2000
+
+/**
+ * Events after which the user may navigate via the caseload link. `pointerdown` covers left, middle
+ * and modified clicks; `contextmenu` covers “open in new tab”; `focus` and `keydown` cover keyboard use.
+ * All fire before navigation begins.
+ */
+const NAVIGATION_INTENT_EVENTS = ['pointerdown', 'keydown', 'focus', 'contextmenu']
+
 class DPSHeader {
   static init(): void {
     const $header = document.querySelector<HTMLElement>('[data-module="cdps-header"]')
@@ -22,7 +36,7 @@ class DPSHeader {
 
     const $caseloadAnchor = $header.querySelector<HTMLAnchorElement>('.cdps-header__item--caseload .cdps-header__link')
     if ($caseloadAnchor) {
-      this.setBackUrl($caseloadAnchor)
+      this.initBackUrl($caseloadAnchor)
     }
   }
 
@@ -30,10 +44,32 @@ class DPSHeader {
     this.menuItems.filter(menuItem => menuItem.name !== except).forEach(menuItem => menuItem.close())
   }
 
+  /**
+   * Tells the caseload switcher where to send the user back to. Set once up front so the link is
+   * always usable, then refreshed just before navigation: the page url may have moved on since load
+   * (e.g. filters applied via `history.pushState`) and we want where the user actually is, not where
+   * they landed.
+   */
+  private initBackUrl($caseloadAnchor: HTMLAnchorElement): void {
+    const setBackUrl = () => {
+      this.setBackUrl($caseloadAnchor)
+    }
+    setBackUrl()
+    NAVIGATION_INTENT_EVENTS.forEach(eventName => {
+      $caseloadAnchor.addEventListener(eventName, setBackUrl)
+    })
+  }
+
   private setBackUrl($caseloadAnchor: HTMLAnchorElement): void {
     try {
       const url = new URL($caseloadAnchor.href)
-      url.searchParams.set('backUrl', window.location.href)
+      const backUrl = window.location.href
+      if (backUrl.length > MAX_BACK_URL_LENGTH) {
+        // Drop rather than leave behind a stale value set before the url grew
+        url.searchParams.delete('backUrl')
+      } else {
+        url.searchParams.set('backUrl', backUrl)
+      }
       $caseloadAnchor.href = url.href
     } catch {}
   }
