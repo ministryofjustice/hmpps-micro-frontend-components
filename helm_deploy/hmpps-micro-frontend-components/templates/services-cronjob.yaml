@@ -80,6 +80,8 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}'
               - name: PREPARE_SOMEONE_FOR_RELEASE_URL
                 value: '{{ index .Values "generic-service" "env" "PREPARE_SOMEONE_FOR_RELEASE_URL" }}'
+              - name: PRISONER_PROPERTY_API_URL
+                value: '{{ index .Values "generic-service" "env" "PRISONER_PROPERTY_API_URL" }}'
               - name: REPORTING_URL
                 value: '{{ index .Values "generic-service" "env" "REPORTING_URL" }}'
               - name: RESIDENTIAL_LOCATIONS_API_URL

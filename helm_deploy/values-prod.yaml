@@ -73,6 +73,8 @@ generic-service:
     PECS_URL: https://bookasecuremove.service.justice.gov.uk
     PIN_PHONES_URL: https://pcms.prison.service.justice.gov.uk
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
+    PRISONER_PROPERTY_API_URL: https://prisoner-property-api.hmpps.service.justice.gov.uk
+    PRISONER_PROPERTY_URL: https://prisoner-property.hmpps.service.justice.gov.uk
     REPORTING_URL: https://digital-prison-reporting-mi-ui.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison.hmpps.service.justice.gov.uk
