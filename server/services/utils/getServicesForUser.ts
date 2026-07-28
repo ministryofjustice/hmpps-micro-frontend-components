@@ -635,6 +635,15 @@ export default (
         isActiveInEstablishment(activeCaseLoadId, ServiceName.TRANSFER_SCHEDULER, activeServices, false) &&
         userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles),
     },
+    {
+      id: 'prisoner-property',
+      heading: 'Prisoner property',
+      description: 'Find, track and update prisoner property.',
+      href: config.serviceUrls.prisonerProperty.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.PRISONER_PROPERTY, activeServices, false),
+    },
   ]
   // ↑ add new services here ↑
 

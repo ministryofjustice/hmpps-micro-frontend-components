@@ -68,6 +68,7 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
   { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
   { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
+  { application: ServiceName.PRISONER_PROPERTY, urlEnv: 'PRISONER_PROPERTY_API_URL' },
   { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
   { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
   { application: ServiceName.TRANSFER_SCHEDULER, urlEnv: 'TRANSFER_SCHEDULER_API_URL' },
