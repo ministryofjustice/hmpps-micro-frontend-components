@@ -92,6 +92,8 @@ export enum Role {
   SocHq = 'SOC_HQ',
   SocialVideoCalls = 'SOCIAL_VIDEO_CALLS',
   TransferRestrictedPatient = 'TRANSFER_RESTRICTED_PATIENT',
+  TransferSchedulerReadOnly = 'TRANSFER_SCHEDULER_RO',
+  TransferSchedulerReadWrite = 'TRANSFER_SCHEDULER_RW',
   UpdateAlert = 'UPDATE_ALERT',
   UpdateOffenceSchedules = 'UPDATE_OFFENCE_SCHEDULES',
   ViewProbationDocuments = 'VIEW_PROBATION_DOCUMENTS',

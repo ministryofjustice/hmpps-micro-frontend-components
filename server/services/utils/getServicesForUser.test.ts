@@ -886,10 +886,13 @@ describe('getServicesForUser', () => {
 
   describe('External movements', () => {
     test.each`
-      roles                              | activeServices                                                        | activeCaseLoadId | visible
-      ${[Role.ExternalMovementsTapView]} | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
-      ${[]}                              | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
-      ${[Role.ExternalMovementsTapView]} | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+      roles                               | activeServices                                                        | activeCaseLoadId | visible
+      ${[Role.ExternalMovementsTapView]}  | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[Role.TransferSchedulerReadOnly]} | ${[{ app: ServiceName.TRANSFER_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[Role.TransferSchedulerReadOnly]} | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.ExternalMovementsTapView]}  | ${[{ app: ServiceName.TRANSFER_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[]}                               | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.ExternalMovementsTapView]}  | ${[{ app: ServiceName.EXTERNAL_MOVEMENTS, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
     `(
       'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
@@ -910,6 +913,21 @@ describe('getServicesForUser', () => {
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
         const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'Court appearances')).toEqual(visible)
+      },
+    )
+  })
+
+  describe('Schedule a transfer for a prisoner', () => {
+    test.each`
+      roles                               | activeServices                                                        | activeCaseLoadId | visible
+      ${[Role.TransferSchedulerReadOnly]} | ${[{ app: ServiceName.TRANSFER_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                               | ${[{ app: ServiceName.TRANSFER_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.TransferSchedulerReadOnly]} | ${[{ app: ServiceName.TRANSFER_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Schedule a transfer for a prisoner')).toEqual(visible)
       },
     )
   })
