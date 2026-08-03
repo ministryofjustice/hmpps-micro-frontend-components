@@ -25,6 +25,7 @@ jest.mock('../../config', () => ({
     createAnEMOrder: { url: 'url' },
     createAndVaryALicence: { url: 'url' },
     csipUI: { url: 'url' },
+    csra: { url: 'url' },
     establishmentRoll: { url: 'url' },
     externalMovements: { url: 'url' },
     historicalPrisonerApplication: { url: 'url' },
@@ -646,6 +647,19 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Prisoner property')).toEqual(visible)
+    })
+  })
+
+  describe('CSRA', () => {
+    test.each`
+      roles | activeServices                                          | visible
+      ${[]} | ${[{ app: ServiceName.CSRA, activeAgencies: ['LEI'] }]} | ${true}
+      ${[]} | ${[{ app: ServiceName.CSRA, activeAgencies: ['***'] }]} | ${true}
+      ${[]} | ${[{ app: ServiceName.CSRA, activeAgencies: ['MOR'] }]} | ${false}
+      ${[]} | ${[]}                                                   | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
+      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'CSRA')).toEqual(visible)
     })
   })
 

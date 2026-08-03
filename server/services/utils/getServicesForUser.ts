@@ -624,6 +624,15 @@ export default (
       enabledForCurrentUser: () =>
         isActiveInEstablishment(activeCaseLoadId, ServiceName.PRISONER_PROPERTY, activeServices, false),
     },
+    {
+      id: 'csra',
+      heading: 'CSRA',
+      description:
+        'Complete or review a prisoner’s cell sharing risk assessment (CSRA) and view assessments and reviews in progress.',
+      href: config.serviceUrls.csra.url,
+      navEnabled: true,
+      enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSRA, activeServices, false),
+    },
   ]
   // ↑ add new services here ↑
 
