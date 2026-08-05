@@ -41,9 +41,11 @@ context('Header', () => {
 
     indexPage.header.caseload.button.click()
 
-    cy.wait('@caseloadNav').its('request.url').should(url => {
-      expect(new URL(url).searchParams.get('backUrl')).to.equal('http://localhost:3007/')
-    })
+    cy.wait('@caseloadNav')
+      .its('request.url')
+      .should(url => {
+        expect(new URL(url).searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+      })
 
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
