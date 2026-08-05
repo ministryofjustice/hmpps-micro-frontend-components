@@ -199,6 +199,60 @@ export default function setUpWebSecurity(): Router {
 }
 ```
 
+### Caseload switcher: returning the user to your service
+
+The establishment name in the header links to the change caseload page in DPS. Two things happen around that
+round trip that your service may need to know about.
+
+#### `backUrl` — where the user is sent back to
+
+`header.js` adds a `backUrl` query parameter to the switcher link containing the page the user is currently on,
+and DPS redirects there after the switch. It is refreshed immediately before the user navigates, so it reflects
+any client-side url changes your service has made (e.g. filters applied via `history.pushState`).
+
+This only works if your service includes the `javascript` urls returned alongside the header html — see
+[Calling the component library API](#calling-the-component-library-api). Without them there is no `backUrl`, and
+because browsers default to `Referrer-Policy: strict-origin-when-cross-origin` the referer DPS receives carries
+only your origin, so the user lands on your service root rather than the page they were on.
+
+`backUrl` is validated by DPS before use: it must be an absolute https url on a `.service.justice.gov.uk` host.
+Note that it is sent to DPS and appears in its logs, so bear that in mind if your urls carry sensitive values.
+
+#### `caseloadChanged` — telling your service the prison changed
+
+After a successful switch, DPS appends `caseloadChanged=true` to the return url:
+
+```
+https://your-service.hmpps.service.justice.gov.uk/prison/BFI?status=ACTIVE&caseloadChanged=true
+```
+
+This matters if your urls contain a prison id. Without it your service cannot tell "the user just switched
+prison" from "the user deliberately followed a link to a prison that isn't their active caseload" — both arrive
+as the same request — so it would re-render the old prison's data under the new prison's header.
+
+Handle it by redirecting to the corrected url with the parameter removed:
+
+```typescript
+export default function handleCaseloadChange(): RequestHandler {
+  return (req, res, next) => {
+    if (!req.query.caseloadChanged) return next()
+
+    const activeCaseLoadId = res.locals.user.activeCaseLoad?.caseLoadId
+    return res.redirect(`/prison/${activeCaseLoadId}`)
+  }
+}
+```
+
+**Never trust the parameter's value.** Anyone can type it into an address bar. It is only a hint that your url may
+be stale — the prison you render must come from your own active caseload lookup, and your existing authorisation
+must still run on the redirected request.
+
+If your service uses
+[@ministryofjustice/hmpps-connect-dps-components](https://www.npmjs.com/package/@ministryofjustice/hmpps-connect-dps-components),
+use the `handleCaseloadChange` middleware it provides rather than writing your own.
+
+Services that ignore the parameter are unaffected — it is one unused query parameter on one request.
+
 ### Header sign out link
 
 The header sign out link direct to  '{your-application}/sign-out'.

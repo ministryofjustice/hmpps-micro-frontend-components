@@ -1,10 +1,19 @@
 # Change log
 
+**July 27th 2026** - Caseload switcher back url now captured at click time
+
+The `backUrl` handed to the change caseload page was captured on page load, so it went stale if the consuming
+service changed the url client-side. It is now refreshed immediately before the user navigates. Documented
+`backUrl` and the new `caseloadChanged` return marker in
+[incorporating components](readme/incorporating.md#caseload-switcher-returning-the-user-to-your-service).
+
+---
+
 **June 9th 2023** - Do not retry POST requests by default
 
 It's not safe to retry idempotent calls as this introduces the risk of creating multiple resources. This fix changes the default to not carry out any retries but allows switching on retrying if desired.
 
-PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/197) 
+PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/197)
 
 ---
 
@@ -12,7 +21,7 @@ PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/
 
 Asset caching was only set to 20 seconds. This fix changes the default to 1 hour which has a profound effect on the number of requests the application serves.
 
-PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/178) 
+PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/178)
 
 ---
 
@@ -20,7 +29,7 @@ PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/
 
 There was an additional unnecessary build step as part of start:dev npm task. This more than doubled the start time on the initial run.
 
-PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/172) 
+PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/172)
 
 ---
 
@@ -28,12 +37,12 @@ PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/
 
 Updates the Content Security Policy to fix issues when users would be stuck on pages after submitting a form after their session times out. (Lots more detail in the PR)
 
-PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/170) 
+PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/170)
 
 ---
 
 **February 3rd 2023** - Revert multi build docker image
 
-Multibuild docker images ended up taking a very long time after the upgrade to node 18 (1hr+). Some work needs to be done to move to support multi host builds in our circle orb, in the meantime we’ve removed this and are just building images solely for deployment. 
- 
+Multibuild docker images ended up taking a very long time after the upgrade to node 18 (1hr+). Some work needs to be done to move to support multi host builds in our circle orb, in the meantime we’ve removed this and are just building images solely for deployment.
+
 PR: [here](https://github.com/ministryofjustice/hmpps-micro-frontend-components/pull/149)

@@ -40,6 +40,22 @@ context('Header', () => {
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
 
+  it('Caseload switcher back url follows client-side navigation', () => {
+    cy.task('stubCaseloadSwitcherPage')
+
+    // Consuming services change the url without a page load, e.g. when applying filters
+    cy.window().then($window => {
+      $window.history.pushState({}, '', '/?status=ACTIVE#results')
+    })
+
+    indexPage.header.caseload.button.trigger('pointerdown')
+
+    indexPage.header.caseload.button.then($button => {
+      const url = new URL($button.attr('href'))
+      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/?status=ACTIVE#results')
+    })
+  })
+
   it('Services menu visible in header', () => {
     indexPage.header.services.menu.should('not.be.visible')
     indexPage.header.services.button.should('contain.text', 'Menu')
