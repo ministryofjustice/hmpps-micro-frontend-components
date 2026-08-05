@@ -33,10 +33,17 @@ context('Header', () => {
       const url = new URL($button.attr('href'))
       expect(url.host).to.equal('localhost:9091')
       expect(url.pathname).to.equal('/new-dps/change-caseload')
-      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+      expect(url.searchParams.has('backUrl')).to.equal(false)
     })
 
     indexPage.header.caseload.button.click()
+
+    // backUrl set after click
+    indexPage.header.caseload.button.then($button => {
+      const url = new URL($button.attr('href'))
+      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+    })
+
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
 
