@@ -60,6 +60,7 @@ jest.mock('../../config', () => ({
     supportAdditionalNeeds: { url: 'url', enabled: true },
     useOfForce: { url: 'url', enabledPrisons: 'LEI,LIV' },
     welcomePeopleIntoPrison: { url: 'url', enabledPrisons: 'LEI,LIV' },
+    xrayBodyScans: { url: 'url' },
     // NB: keep service list sorted
   },
 }))

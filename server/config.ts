@@ -215,6 +215,9 @@ export default {
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
+    xrayBodyScans: {
+      url: get('XRAY_BODY_SCANS_API_URL', 'http://localhost:3001', requiredInProduction),
+    },
     // NB: keep service list sorted
   } satisfies ServiceUrls,
   clientsideAppInsightsEnabledCaseloads: get('CLIENTSIDE_APPINSIGHTS_ENABLED_CASELOADS', ''),

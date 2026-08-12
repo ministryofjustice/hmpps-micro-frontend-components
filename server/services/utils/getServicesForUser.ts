@@ -448,6 +448,15 @@ export default (
         isActiveInEstablishment(activeCaseLoadId, ServiceName.CASE_NOTES, activeServices, false),
     },
     {
+      id: 'x-ray-body-scans',
+      heading: 'X-ray body scans',
+      description: 'X-ray body scans API',
+      href: config.serviceUrls.xrayBodyScans.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.XRAY_BODY_SCANS, activeServices, false),
+    },
+    {
       id: 'csipUI',
       heading: 'CSIP',
       description: 'View and manage the Challenge, Support and Intervention Plan (CSIP) caseload.',
@@ -629,9 +638,9 @@ export default (
 
   return allServices
     .filter(service => service.enabledForCurrentUser())
-    .map(service => {
+    .map<Service>(service => {
       const { id, heading, description, href, navEnabled = true } = service
-      return { id, heading, description, href, navEnabled } satisfies Service
+      return { id, heading, description, href, navEnabled }
     })
     .sort((a, b) => (a.heading.toLowerCase() < b.heading.toLowerCase() ? -1 : 1))
 }

@@ -25,6 +25,7 @@ export enum ServiceName {
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
   WHEREABOUTS = 'whereabouts',
+  XRAY_BODY_SCANS = 'xrayBodyScans',
   // NB: keep service list sorted
 }
 
@@ -34,5 +35,5 @@ export enum ServiceName {
  */
 export interface ServiceActiveAgencies {
   app: ServiceName
-  activeAgencies: string[]
+  activeAgencies: ('***' | string)[]
 }
