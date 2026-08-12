@@ -586,7 +586,7 @@ export default (
     {
       id: 'external-movements',
       heading: 'External movements',
-      description: 'Add, edit and manage temporary absences and transfers',
+      description: 'Add, edit and manage temporary absences and transfers.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
@@ -618,7 +618,7 @@ export default (
     {
       id: 'tap-scheduler',
       heading: 'Schedule a temporary absence for a prisoner',
-      description: 'Add, edit and manage temporary absences',
+      description: 'Add, edit and manage temporary absences.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: false,
       enabledForCurrentUser: () =>
@@ -628,7 +628,7 @@ export default (
     {
       id: 'transfer-scheduler',
       heading: 'Schedule a transfer for a prisoner',
-      description: 'Add, edit and manage transfers',
+      description: 'Add, edit and manage transfers.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: false,
       enabledForCurrentUser: () =>
