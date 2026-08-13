@@ -33,10 +33,20 @@ context('Header', () => {
       const url = new URL($button.attr('href'))
       expect(url.host).to.equal('localhost:9091')
       expect(url.pathname).to.equal('/new-dps/change-caseload')
-      expect(url.searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+      expect(url.searchParams.has('backUrl')).to.equal(false)
     })
 
+    // Intercept click to check backUrl before navigating
+    cy.intercept('GET', '**/new-dps/change-caseload*').as('caseloadNav')
+
     indexPage.header.caseload.button.click()
+
+    cy.wait('@caseloadNav')
+      .its('request.url')
+      .should(url => {
+        expect(new URL(url).searchParams.get('backUrl')).to.equal('http://localhost:3007/')
+      })
+
     Page.verifyOnPage(DpsCaseloadSwitcherPage)
   })
 

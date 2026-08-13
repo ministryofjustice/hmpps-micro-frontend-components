@@ -90,6 +90,8 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}'
               - name: WHEREABOUTS_API_URL
                 value: '{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}'
+              - name: XRAY_BODY_SCANS_API_URL
+                value: '{{ index .Values "generic-service" "env" "XRAY_BODY_SCANS_API_URL" }}'
               # NB: keep list sorted
 
               command: ["node", "-e", "require(\"./dist/scripts/getReleaseStatus\").main()"]
