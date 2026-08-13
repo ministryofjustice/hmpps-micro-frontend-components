@@ -626,9 +626,8 @@ export default (
     },
     {
       id: 'csra',
-      heading: 'CSRA',
-      description:
-        'Complete or review a prisoner’s cell sharing risk assessment (CSRA) and view assessments and reviews in progress.',
+      heading: 'Cell sharing risk assessment (CSRA)',
+      description: 'Complete or review a prisoner’s CSRA and view assessments or reviews in progress.',
       href: config.serviceUrls.csra.url,
       navEnabled: true,
       enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSRA, activeServices, false),
