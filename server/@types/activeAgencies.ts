@@ -15,6 +15,7 @@ export enum ServiceName {
   CEMO = 'cemo',
   COURT_APPEARANCE_SCHEDULER = 'courtAppearanceScheduler',
   CSIP = 'csipApi',
+  CSRA = 'csra',
   EXTERNAL_MOVEMENTS = 'externalMovements',
   INCIDENT_REPORTING = 'incidentReporting',
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',

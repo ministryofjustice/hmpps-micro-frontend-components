@@ -63,6 +63,7 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.CEMO, urlEnv: 'CEMO_URL' },
   { application: ServiceName.COURT_APPEARANCE_SCHEDULER, urlEnv: 'COURT_APPEARANCE_SCHEDULER_API_URL' },
   { application: ServiceName.CSIP, urlEnv: 'CSIP_API_URL' },
+  { application: ServiceName.CSRA, urlEnv: 'CSRA_API_URL' },
   { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
   { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
   { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },

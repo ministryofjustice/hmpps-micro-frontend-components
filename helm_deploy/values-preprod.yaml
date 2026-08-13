@@ -47,6 +47,8 @@ generic-service:
     CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence-preprod.hmpps.service.justice.gov.uk
     CSIP_API_URL: https://csip-api-preprod.hmpps.service.justice.gov.uk
     CSIP_UI_URL: https://csip-preprod.hmpps.service.justice.gov.uk
+    CSRA_API_URL: https://cell-sharing-risk-assessment-api-preprod.hmpps.service.justice.gov.uk
+    CSRA_URL: https://cell-sharing-risk-assessment-preprod.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count-preprod.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api-preprod.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements-preprod.hmpps.service.justice.gov.uk
