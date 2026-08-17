@@ -146,6 +146,7 @@ export default {
     createAndVaryALicence: { url: get('CREATE_AND_VARY_A_LICENCE_URL', 'http://localhost:3001', requiredInProduction) },
     csipApi: { url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction) },
     csipUI: { url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction) },
+    csra: { url: get('CSRA_URL', 'http://localhost:3001', requiredInProduction) },
     establishmentRoll: { url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction) },
     externalMovements: { url: get('EXTERNAL_MOVEMENTS_UI_URL', 'http://localhost:3001', requiredInProduction) },
     historicalPrisonerApplication: {
@@ -214,6 +215,9 @@ export default {
     whereabouts: { url: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction) },
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
+    },
+    xrayBodyScans: {
+      url: get('XRAY_BODY_SCANS_API_URL', 'http://localhost:3001', requiredInProduction),
     },
     // NB: keep service list sorted
   } satisfies ServiceUrls,

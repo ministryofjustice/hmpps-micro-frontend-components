@@ -22,7 +22,7 @@ class DPSHeader {
 
     const $caseloadAnchor = $header.querySelector<HTMLAnchorElement>('.cdps-header__item--caseload .cdps-header__link')
     if ($caseloadAnchor) {
-      this.setBackUrl($caseloadAnchor)
+      $caseloadAnchor.addEventListener('click', () => this.setBackUrl($caseloadAnchor))
     }
   }
 
