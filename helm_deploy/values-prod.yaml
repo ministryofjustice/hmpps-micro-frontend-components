@@ -85,6 +85,7 @@ generic-service:
     SOC_URL: https://manage-soc-cases.hmpps.service.justice.gov.uk
     SUBMIT_INTELLIGENCE_REPORT_URL: https://submit-information-report.hmpps.service.justice.gov.uk
     SUPPORT_ADDITIONAL_NEEDS_URL: https://support-for-additional-needs.hmpps.service.justice.gov.uk
+    TRANSFER_SCHEDULER_API_URL: https://transfer-scheduler-api.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
     WHEREABOUTS_API_URL: https://whereabouts-api.service.justice.gov.uk
