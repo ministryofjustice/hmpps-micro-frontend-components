@@ -46,6 +46,8 @@ generic-service:
     CREATE_AND_VARY_A_LICENCE_URL: https://create-and-vary-a-licence.hmpps.service.justice.gov.uk
     CSIP_API_URL: https://csip-api.hmpps.service.justice.gov.uk
     CSIP_UI_URL: https://csip.hmpps.service.justice.gov.uk
+    CSRA_API_URL: https://cell-sharing-risk-assessment-api.hmpps.service.justice.gov.uk
+    CSRA_URL: https://cell-sharing-risk-assessment.hmpps.service.justice.gov.uk
     ESTABLISHMENT_ROLL_URL: https://prison-roll-count.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_API_URL: https://external-movements-api.hmpps.service.justice.gov.uk
     EXTERNAL_MOVEMENTS_UI_URL: https://external-movements.hmpps.service.justice.gov.uk
@@ -88,6 +90,7 @@ generic-service:
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
     WHEREABOUTS_API_URL: https://whereabouts-api.service.justice.gov.uk
     WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work.hmpps.service.justice.gov.uk
+    XRAY_BODY_SCANS_API_URL: https://x-ray-body-scans-api.hmpps.service.justice.gov.uk
     # NB: keep service url list sorted
 
     # Feature flags
