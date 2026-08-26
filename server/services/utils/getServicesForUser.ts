@@ -595,14 +595,14 @@ export default (
     {
       id: 'external-movements',
       heading: 'External movements',
-      description: userHasRoles([Role.ExternalMovementsTapManage], roles)
-        ? 'Add, edit and manage temporary absences.'
-        : 'View temporary absences for prisoners in your establishment.',
+      description: 'Add, edit and manage temporary absences and transfers.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
-        userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false),
+        (userHasRoles([Role.ExternalMovementsTapView, Role.ExternalMovementsTapManage], roles) &&
+          isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false)) ||
+        (userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles) &&
+          isActiveInEstablishment(activeCaseLoadId, ServiceName.TRANSFER_SCHEDULER, activeServices, false)),
     },
     {
       id: 'contacts',
@@ -623,6 +623,26 @@ export default (
       enabledForCurrentUser: () =>
         userHasRoles([Role.CourtAppearanceSchedulerView, Role.CourtAppearanceSchedulerManage], roles) &&
         isActiveInEstablishment(activeCaseLoadId, ServiceName.COURT_APPEARANCE_SCHEDULER, activeServices, false),
+    },
+    {
+      id: 'tap-scheduler',
+      heading: 'Schedule a temporary absence for a prisoner',
+      description: 'Add, edit and manage temporary absences.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.EXTERNAL_MOVEMENTS, activeServices, false) &&
+        userHasRoles([Role.ExternalMovementsTapManage, Role.ExternalMovementsTapView], roles),
+    },
+    {
+      id: 'transfer-scheduler',
+      heading: 'Schedule a transfer for a prisoner',
+      description: 'Add, edit and manage transfers.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.TRANSFER_SCHEDULER, activeServices, false) &&
+        userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles),
     },
     {
       id: 'prisoner-property',

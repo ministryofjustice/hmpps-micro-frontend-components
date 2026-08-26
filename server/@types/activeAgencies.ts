@@ -25,6 +25,7 @@ export enum ServiceName {
   PRISONER_PROPERTY = 'prisonerProperty',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
+  TRANSFER_SCHEDULER = 'transferScheduler',
   WHEREABOUTS = 'whereabouts',
   XRAY_BODY_SCANS = 'xrayBodyScans',
   // NB: keep service list sorted
