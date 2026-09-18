@@ -1,3 +1,4 @@
+import type { UUID } from 'crypto'
 import type { Role } from '../services/utils/roles'
 import type { PrisonCaseload } from './caseLoad'
 import type { Service } from './externalContract'
@@ -11,8 +12,9 @@ export interface BaseUser {
   authSource: AuthSource
   username: string
   clientId?: string
-  userId: string
-  name: string
+  userId: string | undefined // This is an id specific to the authSource, for example for NOMIS users this is the staffId
+  userUuid: UUID | undefined // This is a UUID created by HMPPS Auth upon first user login that is unique to the user across all authSources
+  name: string | undefined
   displayName: string
   userRoles: Role[]
   token: string
