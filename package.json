@@ -128,6 +128,8 @@
     "brace-expansion": "5.0.9",
     "diff": "^9.0.0",
     "serialize-javascript": "^7.0.3",
-    "fast-uri": "^3.1.7"
+    "fast-uri": "^3.1.7",
+    "proxy-addr": "2.0.8",
+    "moment": "2.31.0"
   }
 }
