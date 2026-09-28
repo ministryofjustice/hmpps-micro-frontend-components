@@ -1,8 +1,8 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 set -eu
 
 info_msg() {
-  printf '\x1b[36m%s\x1b[0m\n' "$*"
+  echo -e "\x1b[36m$*\x1b[0m\n"
 }
 
 # make integration_tests current working directory
@@ -15,10 +15,17 @@ git clone https://github.com/ministryofjustice/hmpps-template-typescript.git
 info_msg Installing the latest @ministryofjustice/hmpps-connect-dps-components
 
 cd hmpps-template-typescript
+npm run setup
 
-# Remove min-release-age from .npmrc to ensure we get the latest version of @ministryofjustice/hmpps-connect-dps-components
-# May cause issues if there's version mismatches
-grep -v 'min-release-age' .npmrc > .npmrc.tmp && mv .npmrc.tmp .npmrc
+# Relax npm restrictions to ensure we get the latest version of @ministryofjustice/hmpps-connect-dps-components
+# because it must match the latest template project
+rm .npmrc
+cat > .npmrc <<EOT
+engine-strict = false
+foreground-scripts = true
+ignore-scripts = true
+strict-allow-scripts = false
+EOT
 
 npx @ministryofjustice/hmpps-connect-dps-components@latest
 
