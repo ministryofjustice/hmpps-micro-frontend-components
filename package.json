@@ -133,12 +133,12 @@
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "dtrace-provider@0.8.8": false,
-    "fsevents@2.3.3": true,
-    "fsevents@2.3.2": true,
-    "unrs-resolver@1.12.2": true,
+    "@scarf/scarf": false,
     "cypress@16.1.0": true,
+    "dtrace-provider@0.8.8": false,
     "esbuild@0.28.2": true,
-    "@scarf/scarf": false
+    "fsevents@2.3.2": true,
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }
