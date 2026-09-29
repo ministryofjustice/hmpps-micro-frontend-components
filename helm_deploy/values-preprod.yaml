@@ -66,6 +66,8 @@ generic-service:
     MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-preprod.prison.service.justice.gov.uk
     MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-preprod.hmpps.service.justice.gov.uk
     MANAGE_USERS_API_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_API_URL: https://mandatory-drug-testing-api-preprod.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_UI_URL: https://mandatory-drug-testing-preprod.hmpps.service.justice.gov.uk
     MATCH_LEARNER_RECORD_URL: https://match-learner-record-preprod.hmpps.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk

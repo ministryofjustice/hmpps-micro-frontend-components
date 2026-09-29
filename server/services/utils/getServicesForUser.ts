@@ -661,6 +661,20 @@ export default (
       navEnabled: true,
       enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSRA, activeServices, false),
     },
+    {
+      id: 'mandatory-drug-testing',
+      heading: 'Mandatory drug testing',
+      description: userHasRoles([Role.MandatoryDrugTestingTester], roles)
+        ? 'Record and view tests for prisoners in list.'
+        : 'View mandatory drug tests lists for prisoners at this establishment.',
+      href: config.serviceUrls.mandatoryDrugTesting.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        userHasRoles(
+          [Role.MandatoryDrugTestingReadOnly, Role.MandatoryDrugTestingTester, Role.MandatoryDrugTestingCooridinator],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.MANDATORY_DRUG_TESTING, activeServices, false),
+    },
   ]
   // ↑ add new services here ↑
 
