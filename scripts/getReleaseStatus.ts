@@ -11,7 +11,17 @@ if (process.env.SENTRY_DSN) {
     dsn: process.env.SENTRY_DSN,
     environment: process.env.SENTRY_ENVIRONMENT,
     release: process.env.GIT_REF,
-    sendDefaultPii: false,
+
+    dataCollection: {
+      cookies: false,
+      userInfo: false,
+      urlQueryParams: { deny: ['user', 'username', 'prisoner', 'prisonerNumber'] },
+      httpHeaders: false,
+      httpBodies: [],
+      databaseQueryData: false,
+      genAI: { inputs: false, outputs: false },
+      graphQL: { document: false, variables: false },
+    },
   })
   Sentry.setTag('DPS.service', 'hmpps-micro-frontend-components-services')
 
