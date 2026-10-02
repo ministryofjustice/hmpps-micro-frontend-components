@@ -1,5 +1,7 @@
-@import './overrides/settings';
+@use 'govuk-frontend/dist/govuk/base' with (
+  $govuk-output-custom-properties: false,
+  $govuk-global-styles: true,
+  $govuk-page-width: 1170px,
+);
 
-@import 'govuk-frontend/dist/govuk/base';
-
-@import './components/footer';
+@use './components/footer';
