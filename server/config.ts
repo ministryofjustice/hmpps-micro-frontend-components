@@ -114,6 +114,7 @@ export default {
   },
   serviceUrls: {
     // services urls and availability are configured using environment variables
+    // see notes in `ServiceUrls` below
     // NB: keep list sorted
     accreditedProgrammes: {
       url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3001', requiredInProduction),
@@ -230,13 +231,13 @@ export default {
 }
 
 interface ServiceUrls {
-  /** Internal service name; should match a ServiceName if corresponding one exists */
+  /** Internal service name; should match a `ServiceName` enum value if a corresponding one exists */
   [serviceName: string]: {
     /** Main landing page */
     url: string
     /** Feature flag: true when the service has been enabled */
     enabled?: boolean
-    /** Feature flag: comma-separated list of agency codes */
+    /** Feature flag (legacy method): comma-separated list of agency codes */
     enabledPrisons?: string
   }
 }
