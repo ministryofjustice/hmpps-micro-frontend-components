@@ -145,7 +145,6 @@ export default {
       url: get('COURT_APPEARANCE_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
     createAndVaryALicence: { url: get('CREATE_AND_VARY_A_LICENCE_URL', 'http://localhost:3001', requiredInProduction) },
-    csipApi: { url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction) },
     csipUI: { url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction) },
     csra: { url: get('CSRA_URL', 'http://localhost:3001', requiredInProduction) },
     establishmentRoll: { url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction) },
@@ -213,7 +212,6 @@ export default {
       url: get('WELCOME_PEOPLE_INTO_PRISON_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS', '', requiredInProduction),
     },
-    whereabouts: { url: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction) },
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
