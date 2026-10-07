@@ -134,7 +134,7 @@
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
     "@scarf/scarf": false,
-    "cypress@16.1.0": true,
+    "cypress@16.1.1": true,
     "dtrace-provider@0.8.8": false,
     "esbuild@0.28.2": true,
     "fsevents@2.3.2": true,
