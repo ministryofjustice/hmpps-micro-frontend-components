@@ -5,7 +5,6 @@ export default {
   transformIgnorePatterns: ['node_modules/(?!(jose)/)'],
   collectCoverageFrom: ['server/**/*.{ts,js,jsx,mjs}'],
   testMatch: ['<rootDir>/(server|job|scripts)/**/?(*.)(cy|test).{ts,js,jsx,mjs}'],
-  setupFiles: ['<rootDir>/tests/setEnvVars.js'],
   testEnvironment: 'node',
   reporters: [
     'default',

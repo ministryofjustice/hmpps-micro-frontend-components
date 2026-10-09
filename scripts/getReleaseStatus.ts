@@ -60,9 +60,9 @@ export const endpoints: Endpoint[] = [
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
-      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
-      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
+      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
+      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
     },
   },
   { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
