@@ -946,4 +946,19 @@ describe('getServicesForUser', () => {
       },
     )
   })
+
+  describe('Schedule a release for a prisoner', () => {
+    test.each`
+      roles                              | activeServices                                                       | activeCaseLoadId | visible
+      ${[Role.ReleaseSchedulerReadOnly]} | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                              | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.ReleaseSchedulerReadOnly]} | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Schedule a release for a prisoner')).toEqual(visible)
+      },
+    )
+  })
 })
