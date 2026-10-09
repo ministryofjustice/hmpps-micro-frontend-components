@@ -595,7 +595,9 @@ export default (
     {
       id: 'external-movements',
       heading: 'External movements',
-      description: 'Add, edit and manage temporary absences and transfers.',
+      description: isActiveInEstablishment(activeCaseLoadId, ServiceName.RELEASE_SCHEDULER, activeServices, false)
+        ? 'Add, edit and manage temporary absences and transfers. Confirm release dates and schedule and verify releases.'
+        : 'Add, edit and manage temporary absences and transfers.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
@@ -643,6 +645,16 @@ export default (
       enabledForCurrentUser: () =>
         isActiveInEstablishment(activeCaseLoadId, ServiceName.TRANSFER_SCHEDULER, activeServices, false) &&
         userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles),
+    },
+    {
+      id: 'release-scheduler',
+      heading: 'Schedule a release for a prisoner',
+      description: 'Confirm release dates and schedule and verify releases.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.RELEASE_SCHEDULER, activeServices, false) &&
+        userHasRoles([Role.ReleaseSchedulerReadOnly, Role.ReleaseSchedulerReadWrite], roles),
     },
     {
       id: 'prisoner-property',
