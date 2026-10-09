@@ -48,21 +48,21 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * - keep list sorted
  *
  * When using environment variables, also:
- * - Add urls to
+ * 1) Add urls to
  *   - `/helm_deploy/values-dev.yaml`
  *   - `/helm_deploy/values-preprod.yaml`
  *   - `/helm_deploy/values-prod.yaml`
- * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
+ * 2) Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
  */
 export const endpoints: Endpoint[] = [
-  // NB: keep list sorted
+  // NB: keep list sorted by service name
   { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
-      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
-      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
+      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
+      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
     },
   },
   { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
@@ -85,7 +85,7 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.TRANSFER_SCHEDULER, urlEnv: 'TRANSFER_SCHEDULER_API_URL' },
   { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
   { application: ServiceName.XRAY_BODY_SCANS, urlEnv: 'XRAY_BODY_SCANS_API_URL' },
-  // NB: keep list sorted
+  // NB: keep list sorted by service name
 ]
 
 function getApplicationInfo(application: ServiceName, url: string): superagent.Request {
