@@ -114,6 +114,7 @@ export default {
   },
   serviceUrls: {
     // services urls and availability are configured using environment variables
+    // see notes in `ServiceUrls` below
     // NB: keep list sorted
     accreditedProgrammes: {
       url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3001', requiredInProduction),
@@ -136,15 +137,14 @@ export default {
     cas2Bail: { url: get('CAS2_BAIL_URL', 'http://localhost:3001', requiredInProduction) },
     caseNotesApi: { url: get('CASE_NOTES_API_URL', 'http://localhost:3001', requiredInProduction) },
     categorisation: { url: get('CATEGORISATION_URL', 'http://localhost:3001', requiredInProduction) },
+    cemo: { url: get('CEMO_URL', 'http://localhost:3001', requiredInProduction) },
     changeSomeonesCell: { url: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3001', requiredInProduction) },
     checkMyDiary: { url: get('CHECK_MY_DIARY_URL', 'http://localhost:3001', requiredInProduction) },
     contacts: { url: get('CONTACTS_UI_URL', 'http://localhost:3001', requiredInProduction) },
     courtAppearanceScheduler: {
       url: get('COURT_APPEARANCE_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
     },
-    createAnEMOrder: { url: get('CEMO_URL', 'http://localhost:3001', requiredInProduction) },
     createAndVaryALicence: { url: get('CREATE_AND_VARY_A_LICENCE_URL', 'http://localhost:3001', requiredInProduction) },
-    csipApi: { url: get('CSIP_API_URL', 'http://localhost:3001', requiredInProduction) },
     csipUI: { url: get('CSIP_UI_URL', 'http://localhost:3001', requiredInProduction) },
     csra: { url: get('CSRA_URL', 'http://localhost:3001', requiredInProduction) },
     establishmentRoll: { url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:3001', requiredInProduction) },
@@ -212,7 +212,6 @@ export default {
       url: get('WELCOME_PEOPLE_INTO_PRISON_URL', 'http://localhost:3001', requiredInProduction),
       enabledPrisons: get('WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS', '', requiredInProduction),
     },
-    whereabouts: { url: get('WHEREABOUTS_API_URL', 'http://localhost:3001', requiredInProduction) },
     workAfterLeavingPrison: {
       url: get('WORK_AFTER_LEAVING_PRISON_URL', 'http://localhost:3001', requiredInProduction),
     },
@@ -230,13 +229,13 @@ export default {
 }
 
 interface ServiceUrls {
-  /** Internal service name; should match a ServiceName if corresponding one exists */
+  /** Internal service name; should match a `ServiceName` enum value if a corresponding one exists */
   [serviceName: string]: {
     /** Main landing page */
     url: string
     /** Feature flag: true when the service has been enabled */
     enabled?: boolean
-    /** Feature flag: comma-separated list of agency codes */
+    /** Feature flag (legacy method): comma-separated list of agency codes */
     enabledPrisons?: string
   }
 }

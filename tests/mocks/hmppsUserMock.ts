@@ -15,7 +15,7 @@ export const servicesMock: Service[] = [
     id: 'learning-and-work-progress',
     heading: 'Learning and work progress',
     description: 'View and manage learning and work history, support needs, goals and progress.',
-    href: 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk',
+    href: 'http://localhost:3001',
     navEnabled: true,
   },
   {
@@ -39,6 +39,8 @@ export const servicesMock: Service[] = [
     href: 'http://localhost:3001',
     navEnabled: true,
   },
+  // NB: it’s not necessary to add new services to this mock
+  // unless their behaviour is complex and needs additional testing
 ]
 
 export const prisonCaseloadMock: PrisonCaseload = {

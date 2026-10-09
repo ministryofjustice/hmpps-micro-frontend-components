@@ -50,6 +50,7 @@ export type CspDirectives = Record<string, string[]>
  * Details of a service accessible by a prison user
  */
 export interface Service {
+  /** Service’s public ID that can be used to uniquely refer to it and check permissions or show conditional content */
   id: string
   /** Service’s title */
   heading: string

@@ -528,7 +528,7 @@ export default (
       id: 'create-an-electronic-monitoring-order',
       heading: 'Apply, change or end an Electronic Monitoring Order (EMO)',
       description: '',
-      href: config.serviceUrls.createAnEMOrder.url,
+      href: config.serviceUrls.cemo.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
         userHasRoles([Role.CreateAnEMOrder], roles) &&

@@ -20,6 +20,27 @@ const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
+// NB: it’s not necessary to add new services to this mock
+// unless their behaviour is complex and needs additional testing
+
+beforeAll(() => {
+  process.env.ENVIRONMENT = 'dev'
+
+  process.env.ACTIVITIES_URL = activitiesUrl
+  process.env.ALERTS_API_URL = alertsUrl
+  process.env.CASE_NOTES_API_URL = caseNotesApiUrl
+  process.env.CEMO_URL = cemoUrl
+  process.env.CSIP_API_URL = csipApiUrl
+  process.env.LEARNING_AND_WORK_PROGRESS_URL = learningAndWorkProgressUrl
+  process.env.MANAGE_ADJUDICATIONS_URL = adjudicationsUrl
+  process.env.MANAGE_APPLICATIONS_URL = manageApplicationsUrl
+  process.env.OFFICIAL_VISITS_API_URL = officialVisitsApi
+  process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = prepareSomeoneForReleaseUrl
+  process.env.REPORTING_URL = reportingUrl
+  process.env.RESIDENTIAL_LOCATIONS_API_URL = residentialLocationUrl
+  process.env.WHEREABOUTS_API_URL = whereaboutsApiUrl
+})
+
 const allUrls = [
   activitiesUrl,
   adjudicationsUrl,

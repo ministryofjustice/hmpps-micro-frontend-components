@@ -8,9 +8,11 @@ This project provides front-end components to be injected into HMPPS application
 
 The application allows access to the components via two paths. The `/{component}` level and `/develop/{component}`.
 
-The root level component contains the minimum requirements of the component to be incorporated into other applications. It is authed via a user token sent through on the `x-user-token` header and returns a json payload containing a stringified html block.
+The root level component contains the minimum requirements of the component to be incorporated into other applications.
+It is authed via a user token sent through on the `x-user-token` header and returns a json payload containing a stringified html block.
 
-The `/develop/` path displays the component in an HTML page including the required blocks and assets for display. This is to be used for development of components and is authed via `hmpps-auth` as the other applications are.
+The `/develop/` path displays the component in an HTML page including the required blocks and assets for display.
+This is to be used for development of components and is authed via `hmpps-auth` as the other applications are.
 
 ## Available components
 * Header

@@ -13,10 +13,11 @@ To add a DPS service:
 
 1) Agree with the Connect DPS team the name of the service and description that will be used throughout DPS.
 
-2) Configure the user-facing URLs for `dev`, `preprod` and `prod` environments
-   in `helm_deploy/values-[environment].yaml` files,
-   for example `YOUR_SERVICE_URL=https://your-service-dev.hmpps.service.justice.gov.uk`.
-   Enter a dummy value in `feature.env`.
+2) Configure the user-facing URLs
+   1) … for `dev`, `preprod` and `prod` environments in `helm_deploy/values-[environment].yaml` files,
+      for example `YOUR_SERVICE_URL=https://your-service-dev.hmpps.service.justice.gov.uk`.
+   2) Enter a dummy value in `feature.env` (following the existing pattern),
+      for example `YOUR_SERVICE_URL=https://external/your-service`.
 
 3) Map this environment variable for access in code by adding service URL configuration in `server/config.ts`,
    under `serviceUrls`.
