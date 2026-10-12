@@ -77,6 +77,7 @@ generic-service:
     PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_API_URL: https://prisoner-property-api.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_URL: https://prisoner-property.hmpps.service.justice.gov.uk
+    RELEASE_SCHEDULER_API_URL: https://release-scheduler-api.hmpps.service.justice.gov.uk
     REPORTING_URL: https://digital-prison-reporting-mi-ui.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api.hmpps.service.justice.gov.uk
     RESIDENTIAL_LOCATIONS_URL: https://locations-inside-prison.hmpps.service.justice.gov.uk

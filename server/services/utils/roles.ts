@@ -76,6 +76,8 @@ export enum Role {
   PrisonUser = 'PRISON',
   PvbRequests = 'PVB_REQUESTS',
   ReceptionUser = 'PRISON_RECEPTION',
+  ReleaseSchedulerReadOnly = 'RELEASE_SCHEDULER_RO',
+  ReleaseSchedulerReadWrite = 'RELEASE_SCHEDULER_RW',
   RemoveRestrictedPatient = 'REMOVE_RESTRICTED_PATIENT',
   ResettlementPassportEdit = 'RESETTLEMENT_PASSPORT_EDIT',
   ResiCellStatusManager = 'MANAGE_RESIDENTIAL_LOCATIONS',

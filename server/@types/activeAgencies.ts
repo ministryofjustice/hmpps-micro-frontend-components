@@ -23,6 +23,7 @@ export enum ServiceName {
   OFFICIAL_VISITS_API = 'officialVisitsApi',
   PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
   PRISONER_PROPERTY = 'prisonerProperty',
+  RELEASE_SCHEDULER = 'releaseScheduler',
   REPORTING = 'reporting',
   RESIDENTIAL_LOCATIONS = 'residentialLocations',
   TRANSFER_SCHEDULER = 'transferScheduler',

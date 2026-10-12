@@ -645,6 +645,16 @@ export default (
         userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles),
     },
     {
+      id: 'release-scheduler',
+      heading: 'Schedule a release for a prisoner',
+      description: 'Confirm release dates and schedule and verify releases.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.RELEASE_SCHEDULER, activeServices, false) &&
+        userHasRoles([Role.ReleaseSchedulerReadOnly, Role.ReleaseSchedulerReadWrite], roles),
+    },
+    {
       id: 'prisoner-property',
       heading: 'Prisoner property',
       description: 'Find, track and update prisoner property.',
