@@ -18,11 +18,11 @@ jest.mock('../../config', () => ({
     cas2Bail: { url: 'url' },
     caseNotesApi: { url: 'url' },
     categorisation: { url: 'url' },
+    cemo: { url: 'url' },
     changeSomeonesCell: { url: 'url' },
     checkMyDiary: { url: 'url' },
     contacts: { url: 'url' },
     courtAppearanceScheduler: { url: 'url' },
-    createAnEMOrder: { url: 'url' },
     createAndVaryALicence: { url: 'url' },
     csipUI: { url: 'url' },
     csra: { url: 'url' },
@@ -944,6 +944,21 @@ describe('getServicesForUser', () => {
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
         const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'Schedule a transfer for a prisoner')).toEqual(visible)
+      },
+    )
+  })
+
+  describe('Schedule a release for a prisoner', () => {
+    test.each`
+      roles                              | activeServices                                                       | activeCaseLoadId | visible
+      ${[Role.ReleaseSchedulerReadOnly]} | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                              | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.ReleaseSchedulerReadOnly]} | ${[{ app: ServiceName.RELEASE_SCHEDULER, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Schedule a release for a prisoner')).toEqual(visible)
       },
     )
   })

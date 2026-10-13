@@ -11,7 +11,17 @@ if (process.env.SENTRY_DSN) {
     dsn: process.env.SENTRY_DSN,
     environment: process.env.SENTRY_ENVIRONMENT,
     release: process.env.GIT_REF,
-    sendDefaultPii: false,
+
+    dataCollection: {
+      cookies: false,
+      userInfo: false,
+      urlQueryParams: { deny: ['user', 'username', 'prisoner', 'prisonerNumber'] },
+      httpHeaders: false,
+      httpBodies: [],
+      databaseQueryData: false,
+      genAI: { inputs: false, outputs: false },
+      graphQL: { document: false, variables: false },
+    },
   })
   Sentry.setTag('DPS.service', 'hmpps-micro-frontend-components-services')
 
@@ -38,21 +48,21 @@ export type Endpoint = { application: ServiceName } & ({ urlEnv: string } | { in
  * - keep list sorted
  *
  * When using environment variables, also:
- * - Add urls to
+ * 1) Add urls to
  *   - `/helm_deploy/values-dev.yaml`
  *   - `/helm_deploy/values-preprod.yaml`
  *   - `/helm_deploy/values-prod.yaml`
- * - Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
+ * 2) Add mapping to `/helm_deploy/hmpps-micro-frontend-components/templates/services-cronjob.yaml`
  */
 export const endpoints: Endpoint[] = [
-  // NB: keep list sorted
+  // NB: keep list sorted by service name
   { application: ServiceName.ACTIVITIES, urlEnv: 'ACTIVITIES_URL' },
   {
     application: ServiceName.ADJUDICATION,
     infoUrl: {
-      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
-      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
       dev: 'https://manage-adjudications-api-dev.hmpps.service.justice.gov.uk/info',
+      preprod: 'https://manage-adjudications-api-preprod.hmpps.service.justice.gov.uk/info',
+      prod: 'https://manage-adjudications-api.hmpps.service.justice.gov.uk/info',
     },
   },
   { application: ServiceName.ALERTS, urlEnv: 'ALERTS_API_URL' },
@@ -71,12 +81,13 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
   { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
   { application: ServiceName.PRISONER_PROPERTY, urlEnv: 'PRISONER_PROPERTY_API_URL' },
+  { application: ServiceName.RELEASE_SCHEDULER, urlEnv: 'RELEASE_SCHEDULER_API_URL' },
   { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
   { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
   { application: ServiceName.TRANSFER_SCHEDULER, urlEnv: 'TRANSFER_SCHEDULER_API_URL' },
   { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
   { application: ServiceName.XRAY_BODY_SCANS, urlEnv: 'XRAY_BODY_SCANS_API_URL' },
-  // NB: keep list sorted
+  // NB: keep list sorted by service name
 ]
 
 function getApplicationInfo(application: ServiceName, url: string): superagent.Request {

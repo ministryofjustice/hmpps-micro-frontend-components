@@ -528,7 +528,7 @@ export default (
       id: 'create-an-electronic-monitoring-order',
       heading: 'Apply, change or end an Electronic Monitoring Order (EMO)',
       description: '',
-      href: config.serviceUrls.createAnEMOrder.url,
+      href: config.serviceUrls.cemo.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
         userHasRoles([Role.CreateAnEMOrder], roles) &&
@@ -643,6 +643,16 @@ export default (
       enabledForCurrentUser: () =>
         isActiveInEstablishment(activeCaseLoadId, ServiceName.TRANSFER_SCHEDULER, activeServices, false) &&
         userHasRoles([Role.TransferSchedulerReadOnly, Role.TransferSchedulerReadWrite], roles),
+    },
+    {
+      id: 'release-scheduler',
+      heading: 'Schedule a release for a prisoner',
+      description: 'Confirm release dates and schedule and verify releases.',
+      href: config.serviceUrls.externalMovements.url,
+      navEnabled: false,
+      enabledForCurrentUser: () =>
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.RELEASE_SCHEDULER, activeServices, false) &&
+        userHasRoles([Role.ReleaseSchedulerReadOnly, Role.ReleaseSchedulerReadWrite], roles),
     },
     {
       id: 'prisoner-property',
