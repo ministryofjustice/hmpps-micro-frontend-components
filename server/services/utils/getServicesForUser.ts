@@ -673,10 +673,13 @@ export default (
     },
     {
       id: 'mandatory-drug-testing',
-      heading: 'Mandatory drug testing',
-      description: userHasRoles([Role.MandatoryDrugTestingTester], roles)
-        ? 'Record and view tests for prisoners in list.'
-        : 'View mandatory drug tests lists for prisoners at this establishment.',
+      heading: 'Randomised mandatory drug testing',
+      description:
+        (userHasRoles([Role.MandatoryDrugTestingCooridinator], roles) &&
+          'Generate testing lists and record samples.') ||
+        (userHasRoles([Role.MandatoryDrugTestingTester], roles) && 'Record samples and view testing lists.') ||
+        (userHasRoles([Role.MandatoryDrugTestingReadOnly], roles) &&
+          'View testing lists and check whether samples have been collected.'),
       href: config.serviceUrls.mandatoryDrugTesting.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
