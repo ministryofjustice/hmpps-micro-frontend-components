@@ -671,6 +671,23 @@ export default (
       navEnabled: true,
       enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSRA, activeServices, false),
     },
+    {
+      id: 'mandatory-drug-testing',
+      heading: 'Randomised mandatory drug testing',
+      description:
+        (userHasRoles([Role.MandatoryDrugTestingCooridinator], roles) &&
+          'Generate testing lists and record samples.') ||
+        (userHasRoles([Role.MandatoryDrugTestingTester], roles) && 'Record sample collections from drug testing.') ||
+        (userHasRoles([Role.MandatoryDrugTestingReadOnly], roles) &&
+          'View testing lists and check whether samples have been collected.'),
+      href: config.serviceUrls.mandatoryDrugTesting.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        userHasRoles(
+          [Role.MandatoryDrugTestingReadOnly, Role.MandatoryDrugTestingTester, Role.MandatoryDrugTestingCooridinator],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.MANDATORY_DRUG_TESTING, activeServices, false),
+    },
   ]
   // ↑ add new services here ↑
 

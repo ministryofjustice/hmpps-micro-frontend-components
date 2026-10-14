@@ -41,6 +41,7 @@ jest.mock('../../config', () => ({
     manageOffences: { url: 'url' },
     managePrisonVisits: { url: 'url' },
     manageRestrictedPatients: { url: 'url' },
+    mandatoryDrugTesting: { url: 'url' },
     matchLearnerRecord: { url: 'url', enabled: true },
     moic: { url: 'url' },
     newDps: { url: 'http://localhost/new-dps' },
@@ -958,6 +959,21 @@ describe('getServicesForUser', () => {
       ({ roles, activeCaseLoadId, visible, activeServices }) => {
         const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
         expect(!!output.find(service => service.heading === 'Schedule a release for a prisoner')).toEqual(visible)
+      },
+    )
+  })
+
+  describe('Mandatory drug testing', () => {
+    test.each`
+      roles                                  | activeServices                                                            | activeCaseLoadId | visible
+      ${[Role.MandatoryDrugTestingReadOnly]} | ${[{ app: ServiceName.MANDATORY_DRUG_TESTING, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${true}
+      ${[]}                                  | ${[{ app: ServiceName.MANDATORY_DRUG_TESTING, activeAgencies: ['LEI'] }]} | ${'LEI'}         | ${false}
+      ${[Role.MandatoryDrugTestingReadOnly]} | ${[{ app: ServiceName.MANDATORY_DRUG_TESTING, activeAgencies: ['LEI'] }]} | ${'MOR'}         | ${false}
+    `(
+      'user with roles: $roles, activeCaseLoadId: $activeCaseLoadId, can see: $visible',
+      ({ roles, activeCaseLoadId, visible, activeServices }) => {
+        const output = getServicesForUser(roles, { policies: [] }, activeCaseLoadId, 12345, [], activeServices)
+        expect(!!output.find(service => service.heading === 'Randomised mandatory drug testing')).toEqual(visible)
       },
     )
   })

@@ -171,6 +171,9 @@ export default {
     manageRestrictedPatients: {
       url: get('MANAGE_RESTRICTED_PATIENTS_URL', 'http://localhost:3001', requiredInProduction),
     },
+    mandatoryDrugTesting: {
+      url: get('MANDATORY_DRUG_TESTING_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
     matchLearnerRecord: {
       url: get('MATCH_LEARNER_RECORD_URL', 'http://localhost:3001', requiredInProduction),
       enabled: get('MATCH_LEARNER_RECORD_ENABLED', 'false') === 'true',
