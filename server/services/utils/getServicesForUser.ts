@@ -677,7 +677,7 @@ export default (
       description:
         (userHasRoles([Role.MandatoryDrugTestingCooridinator], roles) &&
           'Generate testing lists and record samples.') ||
-        (userHasRoles([Role.MandatoryDrugTestingTester], roles) && 'Record samples and view testing lists.') ||
+        (userHasRoles([Role.MandatoryDrugTestingTester], roles) && 'Record sample collections from drug testing.') ||
         (userHasRoles([Role.MandatoryDrugTestingReadOnly], roles) &&
           'View testing lists and check whether samples have been collected.'),
       href: config.serviceUrls.mandatoryDrugTesting.url,
