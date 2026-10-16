@@ -595,7 +595,9 @@ export default (
     {
       id: 'external-movements',
       heading: 'External movements',
-      description: 'Add, edit and manage temporary absences and transfers.',
+      description: isActiveInEstablishment(activeCaseLoadId, ServiceName.RELEASE_SCHEDULER, activeServices, false)
+        ? 'Add, edit and manage temporary absences and transfers. Confirm release dates and schedule and verify releases.'
+        : 'Add, edit and manage temporary absences and transfers.',
       href: config.serviceUrls.externalMovements.url,
       navEnabled: true,
       enabledForCurrentUser: () =>
