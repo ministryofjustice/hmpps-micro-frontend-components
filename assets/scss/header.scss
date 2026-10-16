@@ -1,6 +1,8 @@
-@import './overrides/settings';
+@use 'govuk-frontend/dist/govuk/base' with (
+  $govuk-output-custom-properties: false,
+  $govuk-global-styles: true,
+  $govuk-page-width: 1170px,
+);
 
-@import 'govuk-frontend/dist/govuk/base';
-
-@import './components/external-header';
-@import './components/dps-header';
+@use './components/external-header';
+@use './components/dps-header';
