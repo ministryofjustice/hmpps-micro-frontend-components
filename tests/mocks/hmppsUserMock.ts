@@ -19,6 +19,13 @@ export const servicesMock: Service[] = [
     navEnabled: true,
   },
   {
+    id: 'residential-locations',
+    heading: 'Locations',
+    description: 'View or manage residential and non-residential locations.',
+    href: 'http://localhost:3001',
+    navEnabled: true,
+  },
+  {
     id: 'pathfinder',
     heading: 'Pathfinder',
     description: 'Manage your Pathfinder caseloads.',

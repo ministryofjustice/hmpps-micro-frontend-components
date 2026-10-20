@@ -87,7 +87,6 @@ export enum Role {
   ResiCertificateAdmin = 'MANAGE_RES_LOCATIONS_OP_CAP',
   ResiCertificateReviewer = 'RESI__CERT_REVIEWER',
   ResiCertificateViewer = 'RESI__CERT_VIEWER',
-  ResiLocationViewer = 'VIEW_INTERNAL_LOCATION',
   RestrictedPatientMigration = 'RESTRICTED_PATIENT_MIGRATION',
   SearchRestrictedPatient = 'SEARCH_RESTRICTED_PATIENT',
   SlmAdmin = 'SLM_ADMIN',
