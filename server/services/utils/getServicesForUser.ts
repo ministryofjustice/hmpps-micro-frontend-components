@@ -481,7 +481,7 @@ export default (
             Role.NonResiLocationManager,
           ],
           roles,
-        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+        ),
     },
     {
       id: 'reporting',
