@@ -58,7 +58,7 @@ context('Header', () => {
     indexPage.header.user.menu.should('not.be.visible')
     indexPage.header.services.menu.should('be.visible')
     indexPage.header.search.menu.should('not.be.visible')
-    indexPage.header.services.list.should('have.length', 8)
+    indexPage.header.services.list.should('have.length', 9)
 
     indexPage.header.services.button.click()
     indexPage.header.services.menu.should('not.be.visible')

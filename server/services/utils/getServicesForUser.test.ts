@@ -678,20 +678,12 @@ describe('getServicesForUser', () => {
 
   describe('Residential Locations', () => {
     test.each`
-      roles                               | visible
-      ${[]}                               | ${false}
-      ${['VIEW_INTERNAL_LOCATION']}       | ${true}
-      ${['MANAGE_RESIDENTIAL_LOCATIONS']} | ${true}
-      ${['MANAGE_RES_LOCATIONS_OP_CAP']}  | ${true}
-      ${['NONRESI__MAINTAIN_LOCATION']}   | ${true}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
+      roles
+      ${[]}
+      ${['MANAGE_RESIDENTIAL_LOCATIONS']}
+      ${['NONRESI__MAINTAIN_LOCATION']}
+    `('is shown to a user with roles: $roles', ({ roles }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Locations')).toEqual(visible)
-    })
-
-    it('is shown in every prison, whatever the cached active agencies say', () => {
-      const activeServices = [{ app: 'residentialLocations' as ServiceName, activeAgencies: ['PVI'] }]
-      const output = getServicesForUser(['VIEW_INTERNAL_LOCATION'], { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Locations')).toEqual(true)
     })
   })

@@ -470,18 +470,7 @@ export default (
       description: 'View or manage residential and non-residential locations.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles(
-          [
-            Role.ResiLocationViewer,
-            Role.ResiCellStatusManager,
-            Role.ResiCertificateViewer,
-            Role.ResiCertificateReviewer,
-            Role.ResiCertificateAdmin,
-            Role.NonResiLocationManager,
-          ],
-          roles,
-        ),
+      enabledForCurrentUser: () => true,
     },
     {
       id: 'reporting',
