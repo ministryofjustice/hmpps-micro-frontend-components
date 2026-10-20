@@ -83,7 +83,6 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.PRISONER_PROPERTY, urlEnv: 'PRISONER_PROPERTY_API_URL' },
   { application: ServiceName.RELEASE_SCHEDULER, urlEnv: 'RELEASE_SCHEDULER_API_URL' },
   { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
-  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
   { application: ServiceName.TRANSFER_SCHEDULER, urlEnv: 'TRANSFER_SCHEDULER_API_URL' },
   { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
   { application: ServiceName.XRAY_BODY_SCANS, urlEnv: 'XRAY_BODY_SCANS_API_URL' },

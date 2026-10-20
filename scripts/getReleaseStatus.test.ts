@@ -18,7 +18,6 @@ const manageApplicationsUrl = 'https://managing-prisoner-apps-staff-dev.hmpps.se
 const officialVisitsApi = 'https://official-visits-api-dev.hmpps.service.justice.gov.uk'
 const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
-const residentialLocationUrl = 'https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk'
 const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
 // NB: it’s not necessary to add new services to this mock
 // unless their behaviour is complex and needs additional testing
@@ -37,7 +36,6 @@ beforeAll(() => {
   process.env.OFFICIAL_VISITS_API_URL = officialVisitsApi
   process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = prepareSomeoneForReleaseUrl
   process.env.REPORTING_URL = reportingUrl
-  process.env.RESIDENTIAL_LOCATIONS_API_URL = residentialLocationUrl
   process.env.WHEREABOUTS_API_URL = whereaboutsApiUrl
 })
 
@@ -53,11 +51,10 @@ const allUrls = [
   officialVisitsApi,
   prepareSomeoneForReleaseUrl,
   reportingUrl,
-  residentialLocationUrl,
   whereaboutsApiUrl,
   // NB: keep service list sorted
 ]
-const allUrlsExcludingResidentialLocation = allUrls.filter(url => url !== residentialLocationUrl)
+const allUrlsExcludingReporting = allUrls.filter(url => url !== reportingUrl)
 
 function setMockSuccess(
   urls: string[],
@@ -125,27 +122,26 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
 
   it('should store the data it gets if others fail', async () => {
-    setMockSuccess([residentialLocationUrl])
-    setMockError(allUrlsExcludingResidentialLocation, 404)
+    setMockSuccess([reportingUrl])
+    setMockError(allUrlsExcludingReporting, 404)
 
     await getData()
 
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
       'applicationInfo',
-      JSON.stringify([{ app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] }]),
+      JSON.stringify([{ app: 'reporting', activeAgencies: ['agency1', 'agency2'] }]),
     )
   })
 
   it('should not fail if it can’t find the data in response', async () => {
-    setMockSuccess([residentialLocationUrl], { some: 'stuff' })
-    setMockSuccess(allUrlsExcludingResidentialLocation)
+    setMockSuccess([reportingUrl], { some: 'stuff' })
+    setMockSuccess(allUrlsExcludingReporting)
 
     await getData()
     expect(mockRedisClientMock.set).toHaveBeenCalledWith(
@@ -161,7 +157,6 @@ describe('Get release status script', () => {
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
@@ -186,7 +181,6 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -215,12 +209,11 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
-      setMockError(allUrlsExcludingResidentialLocation, 404)
+      setMockSuccess([reportingUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      setMockError(allUrlsExcludingReporting, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -238,8 +231,7 @@ describe('Get release status script', () => {
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
+          { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
@@ -258,12 +250,11 @@ describe('Get release status script', () => {
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]
 
-      setMockSuccess([residentialLocationUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
-      setMockError(allUrlsExcludingResidentialLocation, 404)
+      setMockSuccess([reportingUrl], { some: 'stuff', activeAgencies: ['agency1', 'agency2', 'agency3'] })
+      setMockError(allUrlsExcludingReporting, 404)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -281,18 +272,17 @@ describe('Get release status script', () => {
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2', 'agency3'] },
+          { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
 
     it('should use new app data if it does not exist on stored data', async () => {
-      const storedData = [{ app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] }]
+      const storedData = [{ app: 'reporting', activeAgencies: ['agency1', 'agency2'] }]
 
-      setMockError([residentialLocationUrl], 500)
-      setMockSuccess(allUrlsExcludingResidentialLocation)
+      setMockError([reportingUrl], 500)
+      setMockSuccess(allUrlsExcludingReporting)
 
       mockRedisClientMock.get.mockResolvedValue(JSON.stringify(storedData))
 
@@ -301,7 +291,7 @@ describe('Get release status script', () => {
       expect(mockRedisClientMock.set).toHaveBeenCalledWith(
         'applicationInfo',
         JSON.stringify([
-          { app: 'residentialLocations', activeAgencies: ['agency1', 'agency2'] },
+          { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'activities', activeAgencies: ['agency1', 'agency2'] },
           { app: 'adjudications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'alerts', activeAgencies: ['agency1', 'agency2'] },
@@ -312,7 +302,6 @@ describe('Get release status script', () => {
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
