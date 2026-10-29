@@ -79,17 +79,6 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Prisoner whereabouts', () => {
-    test.each`
-      roles | activeServices                                       | visible
-      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prisoner whereabouts')).toEqual(visible)
-    })
-  })
-
   describe('Change someone’s cell', () => {
     test.each`
       roles              | visible

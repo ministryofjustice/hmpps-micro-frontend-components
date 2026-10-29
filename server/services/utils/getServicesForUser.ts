@@ -66,15 +66,6 @@ export default (
       enabledForCurrentUser: () => userHasRoles([Role.GlobalSearch], roles),
     },
     {
-      id: 'manage-prisoner-whereabouts',
-      heading: 'Prisoner whereabouts',
-      description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
-      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts`,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, !isActivitiesEnabled),
-    },
-    {
       id: 'change-someones-cell',
       heading: 'Change someone’s cell',
       description: 'Complete a cell move and view the 7 day history of all cell moves completed in your establishment.',
