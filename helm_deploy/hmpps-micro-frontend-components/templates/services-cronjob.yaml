@@ -80,6 +80,8 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}'
               - name: MANDATORY_DRUG_TESTING_API_URL
                 value: '{{ index .Values "generic-service" "env" "MANDATORY_DRUG_TESTING_API_URL" }}'
+              - name: OFFICIAL_VISITS_API_URL
+                value: '{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}'
               - name: PRISONER_PROPERTY_API_URL
                 value: '{{ index .Values "generic-service" "env" "PRISONER_PROPERTY_API_URL" }}'
               - name: RELEASE_SCHEDULER_API_URL

@@ -71,6 +71,8 @@ generic-service:
     MATCH_LEARNER_RECORD_URL: https://match-learner-record-preprod.hmpps.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
+    OFFICIAL_VISITS_API_URL: https://official-visits-api-preprod.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_UI_URL: https://official-visits-ui-preprod.hmpps.service.justice.gov.uk
     OLD_DPS_URL: https://digital-preprod.prison.service.justice.gov.uk
     PATHFINDER_URL: https://preprod.pathfinder.service.justice.gov.uk
     PECS_URL: https://hmpps-book-secure-move-frontend-preprod.apps.cloud-platform.service.justice.gov.uk

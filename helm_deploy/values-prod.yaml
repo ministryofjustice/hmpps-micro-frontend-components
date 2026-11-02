@@ -70,6 +70,8 @@ generic-service:
     MATCH_LEARNER_RECORD_URL: https://match-learner-record.hmpps.service.justice.gov.uk
     MOIC_URL: https://moic.service.justice.gov.uk
     NEW_DPS_URL: https://dps.prison.service.justice.gov.uk
+    OFFICIAL_VISITS_API_URL: https://official-visits-api.hmpps.service.justice.gov.uk
+    OFFICIAL_VISITS_UI_URL: https://official-visits-ui.hmpps.service.justice.gov.uk
     OLD_DPS_URL: https://digital.prison.service.justice.gov.uk
     PATHFINDER_URL: https://pathfinder.service.justice.gov.uk
     PECS_URL: https://bookasecuremove.service.justice.gov.uk

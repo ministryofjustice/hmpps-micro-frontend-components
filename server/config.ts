@@ -180,6 +180,8 @@ export default {
     },
     moic: { url: get('MOIC_URL', 'http://localhost:3001', requiredInProduction) },
     newDps: { url: get('NEW_DPS_URL', 'http://localhost:3002', requiredInProduction) },
+    officialVisitsApi: { url: get('OFFICIAL_VISITS_API_URL', 'http://localhost:3001', requiredInProduction) },
+    officialVisitsUi: { url: get('OFFICIAL_VISITS_UI_URL', 'http://localhost:3001', requiredInProduction) },
     oldDps: { url: get('OLD_DPS_URL', 'http://localhost:3001', requiredInProduction) },
     pathfinder: { url: get('PATHFINDER_URL', 'http://localhost:3001', requiredInProduction) },
     pecs: { url: get('PECS_URL', 'http://localhost:3001', requiredInProduction) },

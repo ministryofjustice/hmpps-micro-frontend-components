@@ -239,6 +239,16 @@ export default (
       enabledForCurrentUser: () => userHasRoles([Role.ManagePrisonVisits], roles),
     },
     {
+      id: 'official-visits',
+      heading: 'Official visits',
+      description: 'Book, update, cancel and confirm when an official visit has taken place.',
+      href: config.serviceUrls.officialVisitsUi.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        userHasRoles([Role.PrisonUser], roles) &&
+        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
+    },
+    {
       id: 'legacy-prison-visit',
       heading: 'Online visit requests',
       description: 'Respond to online social visit requests.',

@@ -21,6 +21,7 @@ export enum ServiceName {
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   MANAGE_APPLICATIONS = 'manageApplications',
   MANDATORY_DRUG_TESTING = 'mandatoryDrugTesting',
+  OFFICIAL_VISITS_API = 'officialVisitsApi',
   PRISONER_PROPERTY = 'prisonerProperty',
   RELEASE_SCHEDULER = 'releaseScheduler',
   REPORTING = 'reporting',

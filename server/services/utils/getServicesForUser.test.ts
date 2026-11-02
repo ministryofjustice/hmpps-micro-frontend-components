@@ -322,6 +322,19 @@ describe('getServicesForUser', () => {
     })
   })
 
+  describe('Official visits', () => {
+    test.each`
+      roles                | activeCaseLoad      | activeServices                                                                    | visible
+      ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
+      ${[Role.PrisonUser]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[]}                | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+      ${[]}                | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
+    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
+      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], activeServices)
+      expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
+    })
+  })
+
   describe('Online visit requests', () => {
     test.each`
       roles                 | visible
