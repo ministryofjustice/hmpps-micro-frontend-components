@@ -239,16 +239,6 @@ export default (
       enabledForCurrentUser: () => userHasRoles([Role.ManagePrisonVisits], roles),
     },
     {
-      id: 'official-visits',
-      heading: 'Official visits',
-      description: 'Book, update, cancel and confirm when an official visit has taken place.',
-      href: config.serviceUrls.officialVisitsUi.url,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles([Role.PrisonUser], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.OFFICIAL_VISITS_API, activeServices, false),
-    },
-    {
       id: 'legacy-prison-visit',
       heading: 'Online visit requests',
       description: 'Respond to online social visit requests.',
@@ -393,16 +383,6 @@ export default (
       href: config.serviceUrls.learningAndWorkProgress.url,
       navEnabled: true,
       enabledForCurrentUser: () => true,
-    },
-    {
-      id: 'prepare-someone-for-release',
-      heading: 'Prepare someone for release',
-      description: 'Search for people with resettlement needs. View and manage their information and support.',
-      href: config.serviceUrls.prepareSomeoneForReleaseUi.url,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles([Role.ResettlementPassportEdit], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.PREPARE_SOMEONE_FOR_RELEASE, activeServices, false),
     },
     {
       id: 'cas2',

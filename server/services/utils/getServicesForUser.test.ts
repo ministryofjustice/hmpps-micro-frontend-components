@@ -322,19 +322,6 @@ describe('getServicesForUser', () => {
     })
   })
 
-  describe('Official visits', () => {
-    test.each`
-      roles                | activeCaseLoad      | activeServices                                                                    | visible
-      ${[Role.PrisonUser]} | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${true}
-      ${[Role.PrisonUser]} | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
-      ${[]}                | ${'LEI'}            | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
-      ${[]}                | ${'NOT_IN_ENV_VAR'} | ${[{ app: ServiceName.OFFICIAL_VISITS_API, activeAgencies: ['LEI', 'ANOTHER'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, activeCaseLoad, visible, activeServices }) => {
-      const output = getServicesForUser(roles, { policies: [] }, activeCaseLoad, 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Official visits')).toEqual(visible)
-    })
-  })
-
   describe('Online visit requests', () => {
     test.each`
       roles                 | visible
@@ -572,28 +559,6 @@ describe('getServicesForUser', () => {
     )
   })
 
-  describe('Prepare someone for release', () => {
-    test.each`
-      activeServices                                                                     | roles                              | visible
-      ${[{ app: 'prepareSomeoneForReleaseUi' as ServiceName, activeAgencies: ['LEI'] }]} | ${[Role.ResettlementPassportEdit]} | ${true}
-      ${[{ app: 'prepareSomeoneForReleaseUi' as ServiceName, activeAgencies: ['LEI'] }]} | ${[]}                              | ${false}
-    `('user with roles: $roles, can see: $visible', ({ activeServices, roles, visible }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
-    })
-  })
-
-  describe('Prepare someone for release not displayed for non-eligible establishment', () => {
-    test.each`
-      roles                              | visible
-      ${[Role.ResettlementPassportEdit]} | ${false}
-      ${[]}                              | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'MOR', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
-    })
-  })
-
   describe('CAS2', () => {
     test.each`
       roles             | activeServices                                | visible
@@ -662,17 +627,6 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Cell sharing risk assessment (CSRA)')).toEqual(visible)
-    })
-  })
-
-  describe('prepareSomeoneForRelease api', () => {
-    test.each`
-      roles                              | activeServices                                                      | visible
-      ${[Role.ResettlementPassportEdit]} | ${[{ app: 'prepareSomeoneForReleaseUi', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]}                              | ${[{ app: 'prepareSomeoneForReleaseUi', activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
     })
   })
 

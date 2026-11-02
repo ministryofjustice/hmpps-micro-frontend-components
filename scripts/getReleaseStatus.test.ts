@@ -15,8 +15,6 @@ const cemoUrl = 'https://hmpps-electronic-monitoring-create-an-order-dev.hmpps.s
 const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 const manageApplicationsUrl = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
-const officialVisitsApi = 'https://official-visits-api-dev.hmpps.service.justice.gov.uk'
-const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 const whereaboutsApiUrl = 'https://whereabouts-api-dev.service.justice.gov.uk'
 // NB: it’s not necessary to add new services to this mock
@@ -33,8 +31,6 @@ beforeAll(() => {
   process.env.LEARNING_AND_WORK_PROGRESS_URL = learningAndWorkProgressUrl
   process.env.MANAGE_ADJUDICATIONS_URL = adjudicationsUrl
   process.env.MANAGE_APPLICATIONS_URL = manageApplicationsUrl
-  process.env.OFFICIAL_VISITS_API_URL = officialVisitsApi
-  process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = prepareSomeoneForReleaseUrl
   process.env.REPORTING_URL = reportingUrl
   process.env.WHEREABOUTS_API_URL = whereaboutsApiUrl
 })
@@ -48,8 +44,6 @@ const allUrls = [
   csipApiUrl,
   learningAndWorkProgressUrl,
   manageApplicationsUrl,
-  officialVisitsApi,
-  prepareSomeoneForReleaseUrl,
   reportingUrl,
   whereaboutsApiUrl,
   // NB: keep service list sorted
@@ -119,8 +113,6 @@ describe('Get release status script', () => {
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
@@ -155,8 +147,6 @@ describe('Get release status script', () => {
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
@@ -178,8 +168,6 @@ describe('Get release status script', () => {
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
@@ -206,8 +194,6 @@ describe('Get release status script', () => {
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]
@@ -229,8 +215,6 @@ describe('Get release status script', () => {
           { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
@@ -247,8 +231,6 @@ describe('Get release status script', () => {
         { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
         { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
       ]
@@ -270,8 +252,6 @@ describe('Get release status script', () => {
           { app: 'cemo', activeAgencies: ['agency1', 'agency2'] },
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
@@ -300,8 +280,6 @@ describe('Get release status script', () => {
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'whereabouts', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
