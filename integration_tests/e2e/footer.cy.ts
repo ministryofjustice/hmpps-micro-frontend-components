@@ -19,7 +19,7 @@ context('Footer', () => {
   })
 
   it('Services menu visible in footer', () => {
-    indexPage.footer.services.list.should('have.length', 9)
+    indexPage.footer.services.list.should('have.length', 8)
   })
 
   it('Links should be displayed', () => {

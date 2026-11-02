@@ -20,7 +20,7 @@ generic-service:
     SENTRY_ENVIRONMENT: preprod
     CACHE_TIMOUT: 600
 
-    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts"
     INFO_DISABLED_APPS: ""
 
     # service urls
@@ -91,7 +91,6 @@ generic-service:
     TRANSFER_SCHEDULER_API_URL: https://transfer-scheduler-api-preprod.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://preprod.use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-preprod.prison.service.justice.gov.uk
-    WHEREABOUTS_API_URL: https://whereabouts-api-preprod.service.justice.gov.uk
     WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work-preprod.hmpps.service.justice.gov.uk
     XRAY_BODY_SCANS_API_URL: https://x-ray-body-scans-api-preprod.hmpps.service.justice.gov.uk
     # NB: keep service url list sorted

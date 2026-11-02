@@ -51,7 +51,6 @@ jest.mock('../../config', () => ({
     pathfinder: { url: 'url' },
     pecs: { url: 'url' },
     pinPhones: { url: 'url' },
-    prepareSomeoneForReleaseUi: { url: 'url' },
     prisonerProperty: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
@@ -76,17 +75,6 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], null)
       expect(!!output.find(service => service.heading === 'Global search')).toEqual(visible)
-    })
-  })
-
-  describe('Prisoner whereabouts', () => {
-    test.each`
-      roles | activeServices                                       | visible
-      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]} | ${[{ app: 'whereabouts', activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prisoner whereabouts')).toEqual(visible)
     })
   })
 
