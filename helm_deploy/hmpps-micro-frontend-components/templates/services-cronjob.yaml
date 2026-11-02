@@ -92,8 +92,6 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "REPORTING_URL" }}'
               - name: TRANSFER_SCHEDULER_API_URL
                 value: '{{ index .Values "generic-service" "env" "TRANSFER_SCHEDULER_API_URL" }}'
-              - name: WHEREABOUTS_API_URL
-                value: '{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}'
               - name: XRAY_BODY_SCANS_API_URL
                 value: '{{ index .Values "generic-service" "env" "XRAY_BODY_SCANS_API_URL" }}'
               # NB: keep list sorted
