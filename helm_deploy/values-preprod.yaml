@@ -117,8 +117,6 @@ generic-service:
       - sscl
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
-
   elastiCacheAlertsClusterIds:
     cp-e050515d3e466664-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"
     cp-e050515d3e466664-002: "HMPPS Micro Frontend Components ElastiCache Cluster Node 2"
