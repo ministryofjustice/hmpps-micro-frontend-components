@@ -386,16 +386,6 @@ export default (
       enabledForCurrentUser: () => true,
     },
     {
-      id: 'prepare-someone-for-release',
-      heading: 'Prepare someone for release',
-      description: 'Search for people with resettlement needs. View and manage their information and support.',
-      href: config.serviceUrls.prepareSomeoneForReleaseUi.url,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles([Role.ResettlementPassportEdit], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.PREPARE_SOMEONE_FOR_RELEASE, activeServices, false),
-    },
-    {
       id: 'cas2',
       heading: 'CAS2 for HDC - short-term accommodation',
       description: 'Apply for accommodation for someone leaving prison on home detention curfew.',

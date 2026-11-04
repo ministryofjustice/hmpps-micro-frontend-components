@@ -82,7 +82,6 @@ export enum Role {
   ReleaseSchedulerReadOnly = 'RELEASE_SCHEDULER_RO',
   ReleaseSchedulerReadWrite = 'RELEASE_SCHEDULER_RW',
   RemoveRestrictedPatient = 'REMOVE_RESTRICTED_PATIENT',
-  ResettlementPassportEdit = 'RESETTLEMENT_PASSPORT_EDIT',
   ResiCellStatusManager = 'MANAGE_RESIDENTIAL_LOCATIONS',
   ResiCertificateAdmin = 'MANAGE_RES_LOCATIONS_OP_CAP',
   ResiCertificateReviewer = 'RESI__CERT_REVIEWER',

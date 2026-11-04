@@ -51,7 +51,6 @@ jest.mock('../../config', () => ({
     pathfinder: { url: 'url' },
     pecs: { url: 'url' },
     pinPhones: { url: 'url' },
-    prepareSomeoneForReleaseUi: { url: 'url' },
     prisonerProperty: { url: 'url' },
     reporting: { url: 'url', enabledPrisons: 'AAA' },
     residentialLocations: { url: 'url' },
@@ -561,28 +560,6 @@ describe('getServicesForUser', () => {
     )
   })
 
-  describe('Prepare someone for release', () => {
-    test.each`
-      activeServices                                                                     | roles                              | visible
-      ${[{ app: 'prepareSomeoneForReleaseUi' as ServiceName, activeAgencies: ['LEI'] }]} | ${[Role.ResettlementPassportEdit]} | ${true}
-      ${[{ app: 'prepareSomeoneForReleaseUi' as ServiceName, activeAgencies: ['LEI'] }]} | ${[]}                              | ${false}
-    `('user with roles: $roles, can see: $visible', ({ activeServices, roles, visible }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
-    })
-  })
-
-  describe('Prepare someone for release not displayed for non-eligible establishment', () => {
-    test.each`
-      roles                              | visible
-      ${[Role.ResettlementPassportEdit]} | ${false}
-      ${[]}                              | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'MOR', 12345, [], null)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
-    })
-  })
-
   describe('CAS2', () => {
     test.each`
       roles             | activeServices                                | visible
@@ -651,17 +628,6 @@ describe('getServicesForUser', () => {
     `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
       const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
       expect(!!output.find(service => service.heading === 'Cell sharing risk assessment (CSRA)')).toEqual(visible)
-    })
-  })
-
-  describe('prepareSomeoneForRelease api', () => {
-    test.each`
-      roles                              | activeServices                                                      | visible
-      ${[Role.ResettlementPassportEdit]} | ${[{ app: 'prepareSomeoneForReleaseUi', activeAgencies: ['LEI'] }]} | ${true}
-      ${[]}                              | ${[{ app: 'prepareSomeoneForReleaseUi', activeAgencies: ['MOR'] }]} | ${false}
-    `('user with roles: $roles, can see: $visible', ({ roles, visible, activeServices }) => {
-      const output = getServicesForUser(roles, { policies: [] }, 'LEI', 12345, [], activeServices)
-      expect(!!output.find(service => service.heading === 'Prepare someone for release')).toEqual(visible)
     })
   })
 

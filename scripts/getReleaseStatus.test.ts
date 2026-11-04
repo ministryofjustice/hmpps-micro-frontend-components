@@ -16,7 +16,6 @@ const csipApiUrl = 'https://csip-api-dev.hmpps.service.justice.gov.uk'
 const learningAndWorkProgressUrl = 'https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk'
 const manageApplicationsUrl = 'https://managing-prisoner-apps-staff-dev.hmpps.service.justice.gov.uk'
 const officialVisitsApi = 'https://official-visits-api-dev.hmpps.service.justice.gov.uk'
-const prepareSomeoneForReleaseUrl = 'https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk'
 const reportingUrl = 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk'
 // NB: it’s not necessary to add new services to this mock
 // unless their behaviour is complex and needs additional testing
@@ -33,7 +32,6 @@ beforeAll(() => {
   process.env.MANAGE_ADJUDICATIONS_URL = adjudicationsUrl
   process.env.MANAGE_APPLICATIONS_URL = manageApplicationsUrl
   process.env.OFFICIAL_VISITS_API_URL = officialVisitsApi
-  process.env.PREPARE_SOMEONE_FOR_RELEASE_URL = prepareSomeoneForReleaseUrl
   process.env.REPORTING_URL = reportingUrl
 })
 
@@ -47,7 +45,6 @@ const allUrls = [
   learningAndWorkProgressUrl,
   manageApplicationsUrl,
   officialVisitsApi,
-  prepareSomeoneForReleaseUrl,
   reportingUrl,
   // NB: keep service list sorted
 ]
@@ -117,7 +114,6 @@ describe('Get release status script', () => {
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
@@ -152,7 +148,6 @@ describe('Get release status script', () => {
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
   })
@@ -174,7 +169,6 @@ describe('Get release status script', () => {
         { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
       ]),
     )
@@ -202,7 +196,6 @@ describe('Get release status script', () => {
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
       ]
 
@@ -224,7 +217,6 @@ describe('Get release status script', () => {
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
         ]),
       )
@@ -241,7 +233,6 @@ describe('Get release status script', () => {
         { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
         { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-        { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         { app: 'reporting', activeAgencies: ['agency1', 'agency2'] },
       ]
 
@@ -263,7 +254,6 @@ describe('Get release status script', () => {
           { app: 'csipApi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
           { app: 'reporting', activeAgencies: ['agency1', 'agency2', 'agency3'] },
         ]),
       )
@@ -292,7 +282,6 @@ describe('Get release status script', () => {
           { app: 'learningAndWorkProgress', activeAgencies: ['agency1', 'agency2'] },
           { app: 'manageApplications', activeAgencies: ['agency1', 'agency2'] },
           { app: 'officialVisitsApi', activeAgencies: ['agency1', 'agency2'] },
-          { app: 'prepareSomeoneForReleaseUi', activeAgencies: ['agency1', 'agency2'] },
         ]),
       )
     })
