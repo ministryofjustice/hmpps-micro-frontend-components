@@ -31,7 +31,7 @@ generic-service:
     MATCH_LEARNER_RECORD_ENABLED: "true"
     SUPPORT_ADDITIONAL_NEEDS_ENABLED: "true"
 
-    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts"
     INFO_DISABLED_APPS: ""
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.

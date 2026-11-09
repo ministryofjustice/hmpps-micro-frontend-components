@@ -66,15 +66,6 @@ export default (
       enabledForCurrentUser: () => userHasRoles([Role.GlobalSearch], roles),
     },
     {
-      id: 'manage-prisoner-whereabouts',
-      heading: 'Prisoner whereabouts',
-      description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
-      href: `${config.serviceUrls.oldDps.url}/manage-prisoner-whereabouts`,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.WHEREABOUTS, activeServices, !isActivitiesEnabled),
-    },
-    {
       id: 'change-someones-cell',
       heading: 'Change someone’s cell',
       description: 'Complete a cell move and view the 7 day history of all cell moves completed in your establishment.',
@@ -395,16 +386,6 @@ export default (
       enabledForCurrentUser: () => true,
     },
     {
-      id: 'prepare-someone-for-release',
-      heading: 'Prepare someone for release',
-      description: 'Search for people with resettlement needs. View and manage their information and support.',
-      href: config.serviceUrls.prepareSomeoneForReleaseUi.url,
-      navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles([Role.ResettlementPassportEdit], roles) &&
-        isActiveInEstablishment(activeCaseLoadId, ServiceName.PREPARE_SOMEONE_FOR_RELEASE, activeServices, false),
-    },
-    {
       id: 'cas2',
       heading: 'CAS2 for HDC - short-term accommodation',
       description: 'Apply for accommodation for someone leaving prison on home detention curfew.',
@@ -470,18 +451,7 @@ export default (
       description: 'View or manage residential and non-residential locations.',
       href: config.serviceUrls.residentialLocations.url,
       navEnabled: true,
-      enabledForCurrentUser: () =>
-        userHasRoles(
-          [
-            Role.ResiLocationViewer,
-            Role.ResiCellStatusManager,
-            Role.ResiCertificateViewer,
-            Role.ResiCertificateReviewer,
-            Role.ResiCertificateAdmin,
-            Role.NonResiLocationManager,
-          ],
-          roles,
-        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.RESIDENTIAL_LOCATIONS, activeServices, false),
+      enabledForCurrentUser: () => true,
     },
     {
       id: 'reporting',
@@ -672,6 +642,23 @@ export default (
       href: config.serviceUrls.csra.url,
       navEnabled: true,
       enabledForCurrentUser: () => isActiveInEstablishment(activeCaseLoadId, ServiceName.CSRA, activeServices, false),
+    },
+    {
+      id: 'mandatory-drug-testing',
+      heading: 'Randomised mandatory drug testing',
+      description:
+        (userHasRoles([Role.MandatoryDrugTestingCooridinator], roles) &&
+          'Generate testing lists and record samples.') ||
+        (userHasRoles([Role.MandatoryDrugTestingTester], roles) && 'Record sample collections from drug testing.') ||
+        (userHasRoles([Role.MandatoryDrugTestingReadOnly], roles) &&
+          'View testing lists and check whether samples have been collected.'),
+      href: config.serviceUrls.mandatoryDrugTesting.url,
+      navEnabled: true,
+      enabledForCurrentUser: () =>
+        userHasRoles(
+          [Role.MandatoryDrugTestingReadOnly, Role.MandatoryDrugTestingTester, Role.MandatoryDrugTestingCooridinator],
+          roles,
+        ) && isActiveInEstablishment(activeCaseLoadId, ServiceName.MANDATORY_DRUG_TESTING, activeServices, false),
     },
   ]
   // ↑ add new services here ↑

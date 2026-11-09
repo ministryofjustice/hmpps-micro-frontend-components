@@ -20,14 +20,12 @@ export enum ServiceName {
   INCIDENT_REPORTING = 'incidentReporting',
   LEARNING_AND_WORK_PROGRESS = 'learningAndWorkProgress',
   MANAGE_APPLICATIONS = 'manageApplications',
+  MANDATORY_DRUG_TESTING = 'mandatoryDrugTesting',
   OFFICIAL_VISITS_API = 'officialVisitsApi',
-  PREPARE_SOMEONE_FOR_RELEASE = 'prepareSomeoneForReleaseUi',
   PRISONER_PROPERTY = 'prisonerProperty',
   RELEASE_SCHEDULER = 'releaseScheduler',
   REPORTING = 'reporting',
-  RESIDENTIAL_LOCATIONS = 'residentialLocations',
   TRANSFER_SCHEDULER = 'transferScheduler',
-  WHEREABOUTS = 'whereabouts',
   XRAY_BODY_SCANS = 'xrayBodyScans',
   // NB: keep service list sorted
 }

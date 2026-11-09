@@ -77,14 +77,12 @@ export const endpoints: Endpoint[] = [
   { application: ServiceName.EXTERNAL_MOVEMENTS, urlEnv: 'EXTERNAL_MOVEMENTS_API_URL' },
   { application: ServiceName.LEARNING_AND_WORK_PROGRESS, urlEnv: 'LEARNING_AND_WORK_PROGRESS_URL' },
   { application: ServiceName.MANAGE_APPLICATIONS, urlEnv: 'MANAGE_APPLICATIONS_URL' },
+  { application: ServiceName.MANDATORY_DRUG_TESTING, urlEnv: 'MANDATORY_DRUG_TESTING_API_URL' },
   { application: ServiceName.OFFICIAL_VISITS_API, urlEnv: 'OFFICIAL_VISITS_API_URL' },
-  { application: ServiceName.PREPARE_SOMEONE_FOR_RELEASE, urlEnv: 'PREPARE_SOMEONE_FOR_RELEASE_URL' },
   { application: ServiceName.PRISONER_PROPERTY, urlEnv: 'PRISONER_PROPERTY_API_URL' },
   { application: ServiceName.RELEASE_SCHEDULER, urlEnv: 'RELEASE_SCHEDULER_API_URL' },
   { application: ServiceName.REPORTING, urlEnv: 'REPORTING_URL' },
-  { application: ServiceName.RESIDENTIAL_LOCATIONS, urlEnv: 'RESIDENTIAL_LOCATIONS_API_URL' },
   { application: ServiceName.TRANSFER_SCHEDULER, urlEnv: 'TRANSFER_SCHEDULER_API_URL' },
-  { application: ServiceName.WHEREABOUTS, urlEnv: 'WHEREABOUTS_API_URL' },
   { application: ServiceName.XRAY_BODY_SCANS, urlEnv: 'XRAY_BODY_SCANS_API_URL' },
   // NB: keep list sorted by service name
 ]

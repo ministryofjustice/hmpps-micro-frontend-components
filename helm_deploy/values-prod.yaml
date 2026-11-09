@@ -19,7 +19,7 @@ generic-service:
     SENTRY_ENVIRONMENT: prod
     CACHE_TIMOUT: 600
 
-    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts"
     INFO_DISABLED_APPS: ""
 
     # service urls
@@ -65,6 +65,8 @@ generic-service:
     MANAGE_PRISON_VISITS_URL: https://manage-prison-visits.prison.service.justice.gov.uk
     MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients.hmpps.service.justice.gov.uk
     MANAGE_USERS_API_URL: https://manage-users-api.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_API_URL: https://mandatory-drug-testing-api.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_UI_URL: https://mandatory-drug-testing.hmpps.service.justice.gov.uk
     MATCH_LEARNER_RECORD_URL: https://match-learner-record.hmpps.service.justice.gov.uk
     MOIC_URL: https://moic.service.justice.gov.uk
     NEW_DPS_URL: https://dps.prison.service.justice.gov.uk
@@ -74,7 +76,6 @@ generic-service:
     PATHFINDER_URL: https://pathfinder.service.justice.gov.uk
     PECS_URL: https://bookasecuremove.service.justice.gov.uk
     PIN_PHONES_URL: https://pcms.prison.service.justice.gov.uk
-    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_API_URL: https://prisoner-property-api.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_URL: https://prisoner-property.hmpps.service.justice.gov.uk
     RELEASE_SCHEDULER_API_URL: https://release-scheduler-api.hmpps.service.justice.gov.uk
@@ -89,7 +90,6 @@ generic-service:
     TRANSFER_SCHEDULER_API_URL: https://transfer-scheduler-api.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
-    WHEREABOUTS_API_URL: https://whereabouts-api.service.justice.gov.uk
     WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work.hmpps.service.justice.gov.uk
     XRAY_BODY_SCANS_API_URL: https://x-ray-body-scans-api.hmpps.service.justice.gov.uk
     # NB: keep service url list sorted
@@ -116,8 +116,6 @@ generic-service:
       - sscl
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-connect-dps-prod # sent to #connect-dps-prod-alerts
-
   elastiCacheAlertsClusterIds:
     cp-f4589ecbb0cf0715-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"
     cp-f4589ecbb0cf0715-002: "HMPPS Micro Frontend Components ElastiCache Cluster Node 2"

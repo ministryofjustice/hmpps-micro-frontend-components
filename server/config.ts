@@ -171,6 +171,9 @@ export default {
     manageRestrictedPatients: {
       url: get('MANAGE_RESTRICTED_PATIENTS_URL', 'http://localhost:3001', requiredInProduction),
     },
+    mandatoryDrugTesting: {
+      url: get('MANDATORY_DRUG_TESTING_UI_URL', 'http://localhost:3001', requiredInProduction),
+    },
     matchLearnerRecord: {
       url: get('MATCH_LEARNER_RECORD_URL', 'http://localhost:3001', requiredInProduction),
       enabled: get('MATCH_LEARNER_RECORD_ENABLED', 'false') === 'true',
@@ -183,9 +186,6 @@ export default {
     pathfinder: { url: get('PATHFINDER_URL', 'http://localhost:3001', requiredInProduction) },
     pecs: { url: get('PECS_URL', 'http://localhost:3001', requiredInProduction) },
     pinPhones: { url: get('PIN_PHONES_URL', 'http://localhost:3001', requiredInProduction) },
-    prepareSomeoneForReleaseUi: {
-      url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3001', requiredInProduction),
-    },
     prisonerProperty: { url: get('PRISONER_PROPERTY_URL', 'http://localhost:3001', requiredInProduction) },
     reporting: {
       url: get('REPORTING_URL', 'http://localhost:3001', requiredInProduction),

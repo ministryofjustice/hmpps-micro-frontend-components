@@ -78,22 +78,18 @@ spec:
                 value: '{{ index .Values "generic-service" "env" "LEARNING_AND_WORK_PROGRESS_URL" }}'
               - name: MANAGE_APPLICATIONS_URL
                 value: '{{ index .Values "generic-service" "env" "MANAGE_APPLICATIONS_URL" }}'
+              - name: MANDATORY_DRUG_TESTING_API_URL
+                value: '{{ index .Values "generic-service" "env" "MANDATORY_DRUG_TESTING_API_URL" }}'
               - name: OFFICIAL_VISITS_API_URL
                 value: '{{ index .Values "generic-service" "env" "OFFICIAL_VISITS_API_URL" }}'
-              - name: PREPARE_SOMEONE_FOR_RELEASE_URL
-                value: '{{ index .Values "generic-service" "env" "PREPARE_SOMEONE_FOR_RELEASE_URL" }}'
               - name: PRISONER_PROPERTY_API_URL
                 value: '{{ index .Values "generic-service" "env" "PRISONER_PROPERTY_API_URL" }}'
               - name: RELEASE_SCHEDULER_API_URL
                 value: '{{ index .Values "generic-service" "env" "RELEASE_SCHEDULER_API_URL" }}'
               - name: REPORTING_URL
                 value: '{{ index .Values "generic-service" "env" "REPORTING_URL" }}'
-              - name: RESIDENTIAL_LOCATIONS_API_URL
-                value: '{{ index .Values "generic-service" "env" "RESIDENTIAL_LOCATIONS_API_URL" }}'
               - name: TRANSFER_SCHEDULER_API_URL
                 value: '{{ index .Values "generic-service" "env" "TRANSFER_SCHEDULER_API_URL" }}'
-              - name: WHEREABOUTS_API_URL
-                value: '{{ index .Values "generic-service" "env" "WHEREABOUTS_API_URL" }}'
               - name: XRAY_BODY_SCANS_API_URL
                 value: '{{ index .Values "generic-service" "env" "XRAY_BODY_SCANS_API_URL" }}'
               # NB: keep list sorted

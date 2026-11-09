@@ -20,7 +20,7 @@ generic-service:
     SENTRY_ENVIRONMENT: preprod
     CACHE_TIMOUT: 600
 
-    # Comma separated list of apps to omit /info checks for, e.g. "alerts,whereabouts"
+    # Comma separated list of apps to omit /info checks for, e.g. "alerts"
     INFO_DISABLED_APPS: ""
 
     # service urls
@@ -66,6 +66,8 @@ generic-service:
     MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-preprod.prison.service.justice.gov.uk
     MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-preprod.hmpps.service.justice.gov.uk
     MANAGE_USERS_API_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_API_URL: https://mandatory-drug-testing-api-preprod.hmpps.service.justice.gov.uk
+    MANDATORY_DRUG_TESTING_UI_URL: https://mandatory-drug-testing-preprod.hmpps.service.justice.gov.uk
     MATCH_LEARNER_RECORD_URL: https://match-learner-record-preprod.hmpps.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     NEW_DPS_URL: https://dps-preprod.prison.service.justice.gov.uk
@@ -75,7 +77,6 @@ generic-service:
     PATHFINDER_URL: https://preprod.pathfinder.service.justice.gov.uk
     PECS_URL: https://hmpps-book-secure-move-frontend-preprod.apps.cloud-platform.service.justice.gov.uk
     PIN_PHONES_URL: https://pcms-preprod.prison.service.justice.gov.uk
-    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-preprod.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_API_URL: https://prisoner-property-api-preprod.hmpps.service.justice.gov.uk
     PRISONER_PROPERTY_URL: https://prisoner-property-preprod.hmpps.service.justice.gov.uk
     RELEASE_SCHEDULER_API_URL: https://release-scheduler-api-preprod.hmpps.service.justice.gov.uk
@@ -90,7 +91,6 @@ generic-service:
     TRANSFER_SCHEDULER_API_URL: https://transfer-scheduler-api-preprod.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://preprod.use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-preprod.prison.service.justice.gov.uk
-    WHEREABOUTS_API_URL: https://whereabouts-api-preprod.service.justice.gov.uk
     WORK_AFTER_LEAVING_PRISON_URL: https://get-ready-for-work-preprod.hmpps.service.justice.gov.uk
     XRAY_BODY_SCANS_API_URL: https://x-ray-body-scans-api-preprod.hmpps.service.justice.gov.uk
     # NB: keep service url list sorted
@@ -117,8 +117,6 @@ generic-service:
       - sscl
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
-
   elastiCacheAlertsClusterIds:
     cp-e050515d3e466664-001: "HMPPS Micro Frontend Components ElastiCache Cluster Node 1"
     cp-e050515d3e466664-002: "HMPPS Micro Frontend Components ElastiCache Cluster Node 2"
