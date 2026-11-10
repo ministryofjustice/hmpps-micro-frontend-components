@@ -6,119 +6,121 @@
   @include govuk.govuk-responsive-padding(3, 'top');
   @include govuk.govuk-responsive-padding(3, 'bottom');
 
-  &__container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    @include govuk.govuk-width-container;
-  }
-
-  &__logo {
-    position: relative;
-    top: -2px;
-    fill: govuk.govuk-colour('white');
-    @include govuk.govuk-responsive-margin(2, 'right');
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-    @include govuk.govuk-responsive-padding(3, 'right');
-
-    &__organisation-name {
-      display: flex;
-      align-items: center;
-      @include govuk.govuk-responsive-margin(2, 'right');
-      @include govuk.govuk-font($size: 24, $weight: 'bold');
-    }
-
-    &__service-name {
-      display: none;
-      @include govuk.govuk-responsive-margin(2, 'right');
-      @include govuk.govuk-font(24);
-
-      @include govuk.govuk-media-query($from: desktop) {
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-
-  &__link {
-    @include govuk.govuk-link-common;
-    @include govuk.govuk-link-style-default;
-    // this declaration should be below govuk-link includes so is wrapped to prevent mixed-decls sass warning
-    & {
-      text-underline-offset: 0.1em;
-    }
-
-    &:link,
-    &:visited,
-    &:active {
-      color: govuk.govuk-colour('white');
-      text-decoration: none;
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
-
-    &:focus {
-      color: govuk.govuk-colour('black');
-
-      svg {
-        fill: govuk.govuk-colour('black');
-      }
-    }
-
-    &__sub-text {
-      display: none;
-      @include govuk.govuk-font(16);
-
-      @include govuk.govuk-media-query($from: tablet) {
-        display: block;
-      }
-    }
-  }
-
-  &__navigation {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    @include govuk.govuk-media-query($from: tablet) {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    &__item {
-      text-align: right;
-      margin-bottom: govuk.govuk-spacing(1);
-      @include govuk.govuk-font(19);
-
-      @include govuk.govuk-media-query($from: tablet) {
-        margin-bottom: 0;
-        border-right: 1px solid govuk.govuk-colour('white');
-        @include govuk.govuk-responsive-margin(4, 'right');
-        @include govuk.govuk-responsive-padding(4, 'right');
-      }
-
-      a {
-        display: inline-block;
-      }
-
-      &:last-child {
-        margin-right: 0;
-        border-right: 0;
-        padding-right: 0;
-      }
-    }
-  }
-
   @media print {
     display: none;
+  }
+}
+
+.connect-dps-external-header__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  @include govuk.govuk-width-container;
+
+  @include govuk.govuk-media-query($until: tablet) {
+    flex-direction: column;
+
+    .connect-dps-external-header__title {
+      align-self: start;
+      padding-right: 0;
+    }
+
+    .connect-dps-external-header__nav-container {
+      align-self: end;
+    }
+  }
+}
+
+.connect-dps-external-header__logo {
+  position: relative;
+  top: -2px;
+  fill: govuk.govuk-colour('white');
+  @include govuk.govuk-responsive-margin(2, 'right');
+}
+
+.connect-dps-external-header__title {
+  display: flex;
+  align-items: center;
+  @include govuk.govuk-responsive-padding(3, 'right');
+
+  @include govuk.govuk-media-query($until: tablet) {
+    flex-wrap: wrap;
+
+    .govuk-tag {
+      margin: 0;
+    }
+  }
+}
+
+.connect-dps-external-header__title__organisation-name {
+  display: flex;
+  align-items: center;
+  @include govuk.govuk-responsive-margin(2, 'right');
+  @include govuk.govuk-font($size: 24, $weight: 'bold');
+}
+
+.connect-dps-external-header__title__service-name {
+  @include govuk.govuk-responsive-margin(2, 'right');
+  @include govuk.govuk-font(24);
+}
+
+.connect-dps-external-header__link {
+  @include govuk.govuk-link-common;
+  @include govuk.govuk-link-style-default;
+  // this declaration should be below govuk-link includes so is wrapped to prevent mixed-decls sass warning
+  & {
+    text-underline-offset: 0.1em;
+  }
+
+  &:link,
+  &:visited,
+  &:active {
+    color: govuk.govuk-colour('white');
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    color: govuk.govuk-colour('black');
+
+    svg {
+      fill: govuk.govuk-colour('black');
+    }
+  }
+}
+
+.connect-dps-external-header__link__sub-text {
+  display: block;
+  @include govuk.govuk-font(16);
+}
+
+.connect-dps-external-header__navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.connect-dps-external-header__navigation__item {
+  text-align: right;
+  border-right: 1px solid govuk.govuk-colour('white');
+  @include govuk.govuk-responsive-margin(4, 'right');
+  @include govuk.govuk-responsive-padding(4, 'right');
+  @include govuk.govuk-font(19);
+
+  a {
+    display: inline-block;
+  }
+
+  &:last-child {
+    margin-right: 0;
+    border-right: 0;
+    padding-right: 0;
   }
 }

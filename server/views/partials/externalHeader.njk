@@ -38,14 +38,14 @@
       <a class="connect-dps-external-header__link connect-dps-external-header__title__service-name" href="{{ config.apis.hmppsAuth.url }}">Digital Services</a>
 
       {% if environmentName %}
-          {{ govukTag({
-            text: environmentName,
-            classes: environmentNameColour
-          }) }}
+        {{ govukTag({
+          text: environmentName,
+          classes: environmentNameColour
+        }) }}
       {% endif %}
     </div>
 
-    <nav aria-label="Account navigation">
+    <nav aria-label="Account navigation" class="connect-dps-external-header__nav-container">
       <ul class="connect-dps-external-header__navigation">
         {% if user %}
           <li class="connect-dps-external-header__navigation__item">
