@@ -95,7 +95,7 @@ export default {
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 3000))),
     },
   },
-  supportUrl: get('SUPPORT_URL', 'http://localhost:3001', requiredInProduction),
+  supportUrl: get('SUPPORT_URL', 'https://www.smartsurvey.co.uk/s/43EWY0/'),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   contentful: {
     host: get('CONTENTFUL_HOST', ''),
