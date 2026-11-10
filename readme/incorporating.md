@@ -229,10 +229,10 @@ These templates currently need the following context variables which can be prov
 | environmentName | Indicates to users the current environment `DEV`, `PRE-PRODUCTION` or `PRODUCTION` (blank is treated as production) | PRODUCTION                                        |
 | user            | The user details object as provided by HMPPS Auth                                                                   | {authSource, username, displayName, etc}          |
 | isPrisonUser    | Whether user is a prison/NOMIS user and should see the DPS header (`user.authSource === 'nomis'`)                   | `true`                                            |
-| name            | The user’s name with initialised first name                                                                         | J. Smith                                          |
+| initialisedName | The user’s name with initialised first name                                                                         | J. Smith                                          |
 | authUrl         | URL of HMPPS Auth                                                                                                   | https://sign-in.hmpps.service.justice.gov.uk/auth |
 | dpsUrl          | URL of DPS home page                                                                                                | https://dps.prison.service.justice.gov.uk         |
-| supportUrl      | URL to feedback and support seen by external and non-prison users only                                              |                                                   |
+| supportUrl      | URL to feedback and support seen by external and non-prison users only                                              | https://www.smartsurvey.co.uk/s/43EWY0/           |
 
 ### Breadcrumbs
 
