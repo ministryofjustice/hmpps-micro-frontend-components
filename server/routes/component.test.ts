@@ -55,6 +55,7 @@ let app: App
 let hmppsAuth: nock.Scope
 let allocationsApi: nock.Scope
 let locationsApi: nock.Scope
+let prisonRegisterApi: nock.Scope
 let manageUsersApi: nock.Scope
 
 beforeEach(async () => {
@@ -62,6 +63,8 @@ beforeEach(async () => {
 
   allocationsApi = nock(config.apis.allocationsApi.url)
   allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
+  prisonRegisterApi = nock(config.apis.prisonRegisterApi.url)
+  prisonRegisterApi.get('/prisons').reply(200, [{ prisonId: 'LEI', active: true }])
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
   manageUsersApi = nock(config.apis.manageUsersApi.url)

@@ -12,12 +12,13 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
     SUPPORT_URL: "https://support.hmpps.service.justice.gov.uk/feedback-and-support"
     PRISON_API_URL: "https://prison-api.prison.service.justice.gov.uk"
+    PRISON_REGISTER_API_URL: "https://prison-register-api.prison.service.justice.gov.uk"
     CONTENTFUL_HOST: "https://graphql.eu.contentful.com"
     CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
     ENVIRONMENT: prod # k8s namespace suffix & github environment
     SENTRY_ENVIRONMENT: prod
-    CACHE_TIMOUT: 600
+    CACHE_TIMEOUT: 600
 
     # Comma separated list of apps to omit /info checks for, e.g. "alerts"
     INFO_DISABLED_APPS: ""

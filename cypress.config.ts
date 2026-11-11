@@ -8,6 +8,8 @@ import dps from './integration_tests/mockApis/dps'
 import newDps from './integration_tests/mockApis/newDps'
 import allocationsApi from './integration_tests/mockApis/allocationsApi'
 import locationsInsidePrisonApi from './integration_tests/mockApis/locationsInsidePrisonApi'
+import prisonRegisterApi from './integration_tests/mockApis/prisonRegisterApi'
+import { createRedisClient } from './server/data/redisClient'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -24,6 +26,16 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+        resetRedis: async () => {
+          const client = createRedisClient()
+          await client.connect()
+          try {
+            await client.flushDb()
+          } finally {
+            await client.quit()
+          }
+          return null
+        },
         ...auth,
         ...manageUsersApi,
         ...tokenVerification,
@@ -32,6 +44,7 @@ export default defineConfig({
         ...newDps,
         ...allocationsApi,
         ...locationsInsidePrisonApi,
+        ...prisonRegisterApi,
       })
     },
     baseUrl: 'http://localhost:3007',

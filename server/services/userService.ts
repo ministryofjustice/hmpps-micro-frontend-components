@@ -11,6 +11,8 @@ import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
 import ManageUsersApiClient from '../data/manageUsersApiClient'
 import PrisonApiClient from '../data/prisonApiClient'
+import PrisonRegisterApiClient from '../data/prisonRegisterApiClient'
+import PrisonRegisterStore from '../data/prisonRegisterStore'
 
 export type UserAccessCache = PrisonUserAccess & { userRoles?: string[] }
 
@@ -32,6 +34,8 @@ export default class UserService {
     private readonly locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     private readonly manageUsersApiClient: ManageUsersApiClient,
     private readonly prisonApiClient: PrisonApiClient,
+    private readonly prisonRegisterApiClient: PrisonRegisterApiClient,
+    private readonly prisonRegisterStore: PrisonRegisterStore,
   ) {}
 
   async getPrisonUserAccess(user: PrisonUser): Promise<PrisonUserAccess> {
@@ -143,8 +147,9 @@ export default class UserService {
     locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
+    const prisonIds = await this.getActivePrisonIds(user.token)
     const [locations, allocationPolicies] = await Promise.all([
-      locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad),
+      prisonIds.includes(activeCaseLoad.id) ? locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad) : [],
       this.getAllocationPolicies(user, activeCaseLoad.id, allocationsApiClient),
     ])
 
@@ -160,6 +165,32 @@ export default class UserService {
       locations,
       activeServices,
     )
+  }
+
+  private async getActivePrisonIds(userToken: string): Promise<string[]> {
+    try {
+      const cachedPrisonIds = await this.prisonRegisterStore.getActivePrisonIds()
+      if (cachedPrisonIds.length > 0) return cachedPrisonIds
+    } catch (error) {
+      logger.error('Error retrieving cached prison IDs', error)
+    }
+
+    try {
+      const activePrisonIds = (await this.prisonRegisterApiClient.getAllPrisons(userToken))
+        .filter(prison => prison.active)
+        .map(prison => prison.prisonId)
+
+      try {
+        await this.prisonRegisterStore.setActivePrisonIds(activePrisonIds)
+      } catch (error) {
+        logger.warn('Error caching active prison IDs', error)
+      }
+
+      return activePrisonIds
+    } catch (error) {
+      logger.error('Error retrieving prisons from Prison Register', error)
+      return []
+    }
   }
 
   private async getAllocationPolicies(
