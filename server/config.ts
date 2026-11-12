@@ -30,7 +30,7 @@ export default {
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_AUTH_TOKEN,
     tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
-    cacheTimeout: Number(get('CACHE_TIMOUT', 600)),
+    cacheTimeout: Number(get('CACHE_TIMEOUT', 600)),
   },
   session: {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
@@ -93,6 +93,14 @@ export default {
         deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 3000)),
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 3000))),
+    },
+    prisonRegisterApi: {
+      url: get('PRISON_REGISTER_API_URL', 'http://localhost:9091/prison-register', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 3000))),
     },
   },
   supportUrl: get('SUPPORT_URL', 'https://www.smartsurvey.co.uk/s/43EWY0/'),

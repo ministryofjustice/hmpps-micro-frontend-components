@@ -9,6 +9,8 @@ import AllocationsApiClient from '../data/AllocationsApiClient'
 import { Role } from './utils/roles'
 import LocationsInsidePrisonApiClient from '../data/locationsInsidePrisonApiClient'
 import PrisonApiClient from '../data/prisonApiClient'
+import PrisonRegisterApiClient from '../data/prisonRegisterApiClient'
+import PrisonRegisterStore from '../data/prisonRegisterStore'
 
 const expectedCaseLoads: PrisonCaseload[] = [
   { function: 'ADMIN', id: 'ADM_TEST', name: 'Admin Caseload' },
@@ -39,6 +41,8 @@ describe('User service', () => {
     let locationsInsidePrisonApiClient: jest.Mocked<LocationsInsidePrisonApiClient>
     let manageUsersApiClient: jest.Mocked<ManageUsersApiClient>
     let prisonApiClient: jest.Mocked<PrisonApiClient>
+    let prisonRegisterApiClient: jest.Mocked<PrisonRegisterApiClient>
+    let prisonRegisterStore: jest.Mocked<PrisonRegisterStore>
 
     beforeEach(() => {
       allocationsApiClient = {
@@ -57,6 +61,13 @@ describe('User service', () => {
       prisonApiClient = {
         setActiveCaseload: jest.fn(),
       } as unknown as jest.Mocked<PrisonApiClient>
+      prisonRegisterApiClient = {
+        getAllPrisons: jest.fn().mockResolvedValue([]),
+      } as unknown as jest.Mocked<PrisonRegisterApiClient>
+      prisonRegisterStore = {
+        getActivePrisonIds: jest.fn().mockResolvedValue(['ADM_TEST', 'GEN_TEST']),
+        setActivePrisonIds: jest.fn(),
+      } as unknown as jest.Mocked<PrisonRegisterStore>
 
       userService = new UserService(
         allocationsApiClient,
@@ -64,6 +75,8 @@ describe('User service', () => {
         locationsInsidePrisonApiClient,
         manageUsersApiClient,
         prisonApiClient,
+        prisonRegisterApiClient,
+        prisonRegisterStore,
       )
     })
 
@@ -79,6 +92,37 @@ describe('User service', () => {
         expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledTimes(1)
         expect(prisonApiClient.setActiveCaseload).not.toHaveBeenCalled()
         expect(userAccess).toEqual(expectedUserAccess)
+      })
+
+      it('does not request locations for an active caseload that is not a prison', async () => {
+        const nonPrisonCaseload: PrisonCaseload = { function: 'GENERAL', id: 'NWEB', name: 'Nomis-Web Application' }
+        manageUsersApiClient.getUserCaseLoads.mockResolvedValueOnce({
+          activeCaseload: nonPrisonCaseload,
+          caseloads: [nonPrisonCaseload],
+        } as UserCaseloadDetail)
+
+        const userAccess = await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(userAccess.activeCaseLoad).toEqual(nonPrisonCaseload)
+        expect(locationsInsidePrisonApiClient.getUserLocations).not.toHaveBeenCalled()
+      })
+
+      it('caches active prison IDs from Prison Register when the cache is empty', async () => {
+        const activeCaseLoad: PrisonCaseload = { function: 'GENERAL', id: 'MDI', name: 'Moorland' }
+        manageUsersApiClient.getUserCaseLoads.mockResolvedValueOnce({
+          activeCaseload: activeCaseLoad,
+          caseloads: [activeCaseLoad],
+        } as UserCaseloadDetail)
+        prisonRegisterStore.getActivePrisonIds.mockResolvedValueOnce([])
+        prisonRegisterApiClient.getAllPrisons.mockResolvedValueOnce([
+          { prisonId: 'MDI', active: true },
+          { prisonId: 'CLOSED', active: false },
+        ])
+
+        await userService.getPrisonUserAccess(prisonUserMock)
+
+        expect(prisonRegisterStore.setActivePrisonIds).toHaveBeenCalledWith(['MDI'])
+        expect(locationsInsidePrisonApiClient.getUserLocations).toHaveBeenCalledWith(activeCaseLoad)
       })
 
       it('sets cache', async () => {

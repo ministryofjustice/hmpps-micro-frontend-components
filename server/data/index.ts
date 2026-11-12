@@ -12,6 +12,8 @@ import logger from '../../logger'
 import LocationsInsidePrisonApiClient from './locationsInsidePrisonApiClient'
 import ManageUsersApiClient from './manageUsersApiClient'
 import PrisonApiClient from './prisonApiClient'
+import PrisonRegisterApiClient from './prisonRegisterApiClient'
+import PrisonRegisterStore from './prisonRegisterStore'
 import applicationInfoSupplier from '../applicationInfo'
 
 const applicationInfo = applicationInfoSupplier()
@@ -28,6 +30,8 @@ export const dataAccess = () => {
     manageUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
     locationsInsidePrisonApiClient: new LocationsInsidePrisonApiClient(hmppsAuthClient),
     prisonApiClient: new PrisonApiClient(hmppsAuthClient),
+    prisonRegisterApiClient: new PrisonRegisterApiClient(hmppsAuthClient),
+    prisonRegisterStore: new PrisonRegisterStore(createRedisClient()),
     getSystemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
     applicationInfo,
   }

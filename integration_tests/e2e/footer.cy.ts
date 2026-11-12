@@ -4,10 +4,12 @@ import Page from '../pages/page'
 context('Footer', () => {
   beforeEach(() => {
     cy.task('reset')
+    cy.task('resetRedis')
     cy.task('stubExampleTime')
     cy.task('stubSignIn')
     cy.task('stubManageUser')
     cy.task('stubCaseloads')
+    cy.task('stubPrisonRegister')
     cy.task('stubLocations')
     cy.task('stubGetStaffAllocationPolicies')
   })
