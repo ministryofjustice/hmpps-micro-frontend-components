@@ -147,7 +147,7 @@ export default class UserService {
     locationsInsidePrisonApiClient: LocationsInsidePrisonApiClient,
     allocationsApiClient: AllocationsApiClient,
   ): Promise<Service[]> {
-    const prisonIds = await this.getActivePrisonIds(user.token)
+    const prisonIds = await this.getActivePrisonIds()
     const [locations, allocationPolicies] = await Promise.all([
       prisonIds.includes(activeCaseLoad.id) ? locationsInsidePrisonApiClient.getUserLocations(activeCaseLoad) : [],
       this.getAllocationPolicies(user, activeCaseLoad.id, allocationsApiClient),
@@ -167,7 +167,7 @@ export default class UserService {
     )
   }
 
-  private async getActivePrisonIds(userToken: string): Promise<string[]> {
+  private async getActivePrisonIds(): Promise<string[]> {
     try {
       const cachedPrisonIds = await this.prisonRegisterStore.getActivePrisonIds()
       if (cachedPrisonIds.length > 0) return cachedPrisonIds
@@ -176,7 +176,7 @@ export default class UserService {
     }
 
     try {
-      const activePrisonIds = (await this.prisonRegisterApiClient.getAllPrisons(userToken))
+      const activePrisonIds = (await this.prisonRegisterApiClient.getAllPrisons())
         .filter(prison => prison.active)
         .map(prison => prison.prisonId)
 

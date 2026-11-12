@@ -1,4 +1,4 @@
-import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
+import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import logger, { warnLevelLogger } from '../../logger'
@@ -18,7 +18,7 @@ export default class PrisonRegisterApiClient extends RestClient {
     )
   }
 
-  async getAllPrisons(userToken: string): Promise<PrisonRegisterPrison[]> {
-    return this.get<PrisonRegisterPrison[]>({ path: '/prisons' }, asUser(userToken))
+  async getAllPrisons(): Promise<PrisonRegisterPrison[]> {
+    return this.get<PrisonRegisterPrison[]>({ path: '/prisons' }, asSystem())
   }
 }

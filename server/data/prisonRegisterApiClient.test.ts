@@ -20,13 +20,13 @@ describe('PrisonRegisterApiClient', () => {
     jest.resetAllMocks()
   })
 
-  it('gets all prisons using the user token', async () => {
+  it('gets all prisons using a system token', async () => {
     const prisons = [{ prisonId: 'MDI', active: true }]
-    api.get('/prisons').matchHeader('authorization', 'Bearer user-token').reply(200, prisons)
+    api.get('/prisons').matchHeader('authorization', 'Bearer system-token').reply(200, prisons)
 
-    const response = await new PrisonRegisterApiClient(hmppsAuthClient).getAllPrisons('user-token')
+    const response = await new PrisonRegisterApiClient(hmppsAuthClient).getAllPrisons()
 
     expect(response).toEqual(prisons)
-    expect(hmppsAuthClient.getToken).not.toHaveBeenCalled()
+    expect(hmppsAuthClient.getToken).toHaveBeenCalled()
   })
 })
