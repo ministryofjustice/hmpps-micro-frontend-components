@@ -55,6 +55,10 @@ beforeEach(async () => {
   manageUsersApi = nock(config.apis.manageUsersApi.url)
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
 
+  nock(config.apis.prisonRegisterApi.url)
+    .get('/prisons')
+    .reply(200, [{ prisonId: 'LEI', active: true }])
+
   nock(config.apis.hmppsAuth.url).post('/oauth/token').reply(200, {
     access_token: 'system-token',
     token_type: 'Bearer',
