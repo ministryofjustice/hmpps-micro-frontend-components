@@ -53,7 +53,15 @@ async function ensureConnected() {
 }
 beforeEach(async () => {
   manageUsersApi = nock(config.apis.manageUsersApi.url)
+  manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
+    username: 'TOKEN_USER',
+    active: true,
+    accountType: '',
+    activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
+    caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
+  })
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
+  locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
 
   nock(config.apis.prisonRegisterApi.url)
     .get('/prisons')
@@ -73,6 +81,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   jest.resetAllMocks()
+  nock.cleanAll()
 })
 
 describe('GET /footer', () => {
@@ -142,18 +151,6 @@ describe('GET /footer', () => {
   })
 
   describe('services links', () => {
-    beforeEach(() => {
-      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-        username: 'TOKEN_USER',
-        active: true,
-        accountType: '',
-        activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
-        caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
-      })
-
-      locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
-    })
-
     it('should display a list of services', () => {
       return request(app)
         .get('/footer')
