@@ -90,6 +90,10 @@ afterEach(() => {
   nock.cleanAll()
 })
 
+afterAll(() => {
+  nock.restore()
+})
+
 describe('GET /components', () => {
   it('should return multiple components if requested', () => {
     return request(app)

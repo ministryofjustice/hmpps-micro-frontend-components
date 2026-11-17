@@ -90,6 +90,10 @@ beforeAll(() => {
   mockRedisClientMock = jest.mocked(redis.createClient())
 })
 
+afterAll(() => {
+  nock.restore()
+})
+
 describe('Get release status script', () => {
   beforeEach(() => {
     jest.clearAllMocks()

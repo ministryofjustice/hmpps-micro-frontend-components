@@ -15,6 +15,10 @@ describe('token verification api tests', () => {
     nock.cleanAll()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('POST requests', () => {
     describe('Token verification disabled', () => {
       beforeAll(() => {

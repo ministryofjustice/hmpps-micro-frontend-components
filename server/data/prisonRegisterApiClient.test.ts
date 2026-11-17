@@ -20,6 +20,10 @@ describe('PrisonRegisterApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   it('gets all prisons using a system token', async () => {
     const prisons = [{ prisonId: 'MDI', active: true }]
     api.get('/prisons').matchHeader('authorization', 'Bearer system-token').reply(200, prisons)

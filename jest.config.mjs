@@ -1,6 +1,6 @@
 export default {
   transform: {
-    '^.+\\.(t|j)sx?$': ['ts-jest'],
+    '^.+\\.(t|j)sx?$': ['ts-jest', { useESM: true }],
   },
   transformIgnorePatterns: ['node_modules/(?!(jose)/)'],
   collectCoverageFrom: ['server/**/*.{ts,js,jsx,mjs}'],
