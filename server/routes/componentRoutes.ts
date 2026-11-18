@@ -16,13 +16,13 @@ export default function componentRoutes(services: Services): Router {
   const { contentSecurityPoliciesService } = services
   const controller = new ComponentsController(services.contentfulService)
 
-  const jwksIssuer = jwksRsa.expressJwtSecret({
+  const jwksIssuer: GetVerificationKey = jwksRsa.expressJwtSecret({
     cache: true,
     rateLimit: true,
     cacheMaxAge: 604800000, // a week
     jwksRequestsPerMinute: 2,
     jwksUri: `${config.apis.hmppsAuth.url}/.well-known/jwks.json`,
-  }) as GetVerificationKey
+  })
 
   router.use((req, res, next) => {
     if (process.env.NODE_ENV === 'inttest') {

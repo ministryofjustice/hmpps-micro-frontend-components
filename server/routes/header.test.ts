@@ -72,6 +72,10 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
+afterAll(() => {
+  nock.restore()
+})
+
 describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {

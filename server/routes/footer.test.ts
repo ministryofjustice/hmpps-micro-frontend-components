@@ -84,6 +84,10 @@ afterEach(() => {
   nock.cleanAll()
 })
 
+afterAll(() => {
+  nock.restore()
+})
+
 describe('GET /footer', () => {
   it('should render a link to the feedback survey', () => {
     return request(app)

@@ -21,6 +21,10 @@ describe('LocationsInsidePrisonApiClient', () => {
     jest.resetAllMocks()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('getUserLocations', () => {
     it('Returns empty array when caseload function is ADMIN', async () => {
       const caseLoad = { id: 'MDI', name: 'MDI', function: 'ADMIN' } as PrisonCaseload
