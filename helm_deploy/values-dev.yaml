@@ -11,7 +11,7 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
     PRISON_API_URL: https://prison-api-dev.prison.service.justice.gov.uk
-    PRISON_REGISTER_API_URL: https://prison-register-dev.prison.service.justice.gov.uk
+    PRISON_REGISTER_API_URL: https://prison-register-dev.hmpps.service.justice.gov.uk
     CONTENTFUL_HOST: https://graphql.eu.contentful.com
     CONTENTFUL_ENVIRONMENT: master
     CONTENTFUL_FOOTER_LINKS_ENABLED: false
