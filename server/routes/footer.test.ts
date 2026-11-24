@@ -19,7 +19,7 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
-const token = jwt.sign(getTokenDataMock(), 'secret')
+const token = jwt.sign(getTokenDataMock({ user_name: 'FOOTER_USER' }), 'secret')
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
@@ -28,7 +28,7 @@ jest.mock('express-jwt', () => ({
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = getTokenDataMock()
+    req.auth = getTokenDataMock({ user_name: 'FOOTER_USER' })
     return next()
   },
 }))
@@ -53,8 +53,8 @@ async function ensureConnected() {
 }
 beforeEach(async () => {
   manageUsersApi = nock(config.apis.manageUsersApi.url)
-  manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-    username: 'TOKEN_USER',
+  manageUsersApi.get('/prisonusers/FOOTER_USER/caseloads').reply(200, {
+    username: 'FOOTER_USER',
     active: true,
     accountType: '',
     activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -74,7 +74,7 @@ beforeEach(async () => {
   })
 
   await ensureConnected()
-  await redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('FOOTER_USER_meta_data')
 
   app = createApp({ ...services(), contentfulService: contentfulServiceMock })
 })

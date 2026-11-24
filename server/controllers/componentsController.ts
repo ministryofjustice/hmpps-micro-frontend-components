@@ -52,14 +52,21 @@ const defaultUserAccess = (): SharedData => ({
   cspDirectives: {},
 })
 
+/** Adds the `caseloadChanged` notice (when a consuming service asks for it) */
+const getChangeCaseLoadLink = (user: HmppsUser, notifyCaseloadChange: boolean): string => {
+  const changeCaseLoadLink = `${config.serviceUrls.newDps.url}/change-caseload`
+  const showCaseloadChange = notifyCaseloadChange && user.authSource === 'nomis' && !!user.activeCaseLoad
+  return showCaseloadChange ? `${changeCaseLoadLink}?caseloadChanged=true` : changeCaseLoadLink
+}
+
 export default class {
   constructor(private readonly contentfulService: ContentfulService) {}
 
-  async getHeaderViewModel(user: HmppsUser): Promise<HeaderViewModel> {
+  async getHeaderViewModel(user: HmppsUser, notifyCaseloadChange = false): Promise<HeaderViewModel> {
     return {
       isPrisonUser: isPrisonUser(user),
       ingressUrl: config.ingressUrl,
-      changeCaseLoadLink: `${config.serviceUrls.newDps.url}/change-caseload`,
+      changeCaseLoadLink: getChangeCaseLoadLink(user, notifyCaseloadChange),
       dpsSearchLink: `${config.serviceUrls.oldDps.url}/prisoner-search`,
       manageDetailsLink: `${config.apis.hmppsAuth.url}/account-details`,
       menuLink: `${config.serviceUrls.newDps.url}#homepage-services`,
@@ -81,13 +88,17 @@ export default class {
     }
   }
 
-  async getViewModels(components: readonly AvailableComponent[], user: HmppsUser): Promise<ComponentsData> {
+  async getViewModels(
+    components: readonly AvailableComponent[],
+    user: HmppsUser,
+    notifyCaseloadChange = false,
+  ): Promise<ComponentsData> {
     const accessMethods = {
-      header: this.getHeaderViewModel,
-      footer: this.getFooterViewModel,
+      header: () => this.getHeaderViewModel(user, notifyCaseloadChange),
+      footer: () => this.getFooterViewModel(user),
     }
 
-    const viewModels = await Promise.all(components.map(component => accessMethods[component](user)))
+    const viewModels = await Promise.all(components.map(component => accessMethods[component]()))
 
     return components.reduce(
       (output, componentName, index) => {

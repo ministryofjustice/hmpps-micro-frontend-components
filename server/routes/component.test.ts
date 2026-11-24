@@ -27,8 +27,8 @@ beforeAll(async () => {
   }
 })
 
-const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
-const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
+const prisonUserToken = jwt.sign(getTokenDataMock({ user_name: 'COMPONENT_USER' }), 'secret')
+const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external', user_name: 'COMPONENT_USER' }), 'secret')
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
@@ -38,7 +38,10 @@ jest.mock('express-jwt', () => ({
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = getTokenDataMock({ auth_source: token === prisonUserToken ? 'nomis' : 'external' })
+    req.auth = getTokenDataMock({
+      auth_source: token === prisonUserToken ? 'nomis' : 'external',
+      user_name: 'COMPONENT_USER',
+    })
     return next()
   },
 }))
@@ -59,7 +62,7 @@ let prisonRegisterApi: nock.Scope
 let manageUsersApi: nock.Scope
 
 beforeEach(async () => {
-  await redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('COMPONENT_USER_meta_data')
 
   allocationsApi = nock(config.apis.allocationsApi.url)
   allocationsApi.get('/prisons/LEI/staff/11111/job-classifications').reply(200, { policies: [] })
@@ -68,8 +71,8 @@ beforeEach(async () => {
   locationsApi = nock(config.apis.locationsInsidePrisonApi.url)
   locationsApi.get('/locations/prison/LEI/residential-first-level').reply(200, [])
   manageUsersApi = nock(config.apis.manageUsersApi.url)
-  manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-    username: 'TOKEN_USER',
+  manageUsersApi.get('/prisonusers/COMPONENT_USER/caseloads').reply(200, {
+    username: 'COMPONENT_USER',
     active: true,
     accountType: '',
     activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -174,8 +177,8 @@ describe('GET /components', () => {
   })
 
   it('should use cached caseloads for second call', async () => {
-    manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-      username: 'TOKEN_USER',
+    manageUsersApi.get('/prisonusers/COMPONENT_USER/caseloads').reply(200, {
+      username: 'COMPONENT_USER',
       active: true,
       accountType: '',
       activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },

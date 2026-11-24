@@ -47,7 +47,16 @@ Make sure that you also have access to the Digital Prison Services url to enable
 Add a Component model, API client and service, and include methods to call the components library.
 The API call requires the user token to be passed in on the `x-user-token` header.
 
-Components can be requested individually via e.g. `{api}/header` or multiple can be requested at once using e.g. `{api}/components?component=header&component=footer`
+Components can be requested individually via e.g. `{api}/header` or multiple can be requested at once using e.g.
+`{api}/components?component=header&component=footer`.
+
+To be told when the user changes caseload, services can opt-in by adding `caseloadChangeNotification=true` to a request,
+e.g. `{api}/header?caseloadChangeNotification=true`, `{api}/components?component=header&caseloadChangeNotification=true`.
+This is an optional parameter and `false` by default; existing callers are unchanged.
+
+When opted in, the header's change caseload link carries `caseloadChanged=true`. If the user then switches caseload, the
+change caseload page redirects back to the page they came from with `caseload-switched-from` and `caseload-switched-to`
+appended, e.g. `/prisoner/A1234AA?caseload-switched-from=KMI&caseload-switched-to=MDI`.
 
 Model:
 ```typescript
