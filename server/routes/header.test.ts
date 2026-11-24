@@ -18,8 +18,8 @@ jest.mock('../applicationInfo', () => () => ({
   branchName: 'main',
 }))
 
-const prisonUserToken = jwt.sign(getTokenDataMock(), 'secret')
-const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external' }), 'secret')
+const prisonUserToken = jwt.sign(getTokenDataMock({ user_name: 'HEADER_USER' }), 'secret')
+const externalUserToken = jwt.sign(getTokenDataMock({ auth_source: 'external', user_name: 'HEADER_USER' }), 'secret')
 
 jest.mock('express-jwt', () => ({
   expressjwt: () => (req: Request, _res: Response, next: NextFunction) => {
@@ -29,7 +29,10 @@ jest.mock('express-jwt', () => ({
       error.name = 'UnauthorizedError'
       return next(error)
     }
-    req.auth = getTokenDataMock({ auth_source: token === prisonUserToken ? 'nomis' : 'external' })
+    req.auth = getTokenDataMock({
+      auth_source: token === prisonUserToken ? 'nomis' : 'external',
+      user_name: 'HEADER_USER',
+    })
     return next()
   },
 }))
@@ -62,7 +65,7 @@ beforeEach(async () => {
   })
 
   await ensureConnected()
-  await redisClient.del('TOKEN_USER_meta_data')
+  await redisClient.del('HEADER_USER_meta_data')
 
   app = createApp(services())
 })
@@ -79,8 +82,8 @@ afterAll(() => {
 describe('GET /header', () => {
   describe('basic components', () => {
     beforeEach(() => {
-      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-        username: 'TOKEN_USER',
+      manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+        username: 'HEADER_USER',
         active: true,
         accountType: '',
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -134,8 +137,8 @@ describe('GET /header', () => {
     })
 
     it('should display case load link if user has multiple caseloads', () => {
-      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-        username: 'TOKEN_USER',
+      manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+        username: 'HEADER_USER',
         active: true,
         accountType: '',
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -156,8 +159,8 @@ describe('GET /header', () => {
     })
 
     it('should not display case load link if user has one caseload', () => {
-      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-        username: 'TOKEN_USER',
+      manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+        username: 'HEADER_USER',
         active: true,
         accountType: '',
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -176,15 +179,15 @@ describe('GET /header', () => {
 
     describe('caching', () => {
       it('should use cached caseloads the second time if 1 active caseload', async () => {
-        manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-          username: 'TOKEN_USER',
+        manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+          username: 'HEADER_USER',
           active: true,
           accountType: '',
           activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
           caseloads: [{ id: 'LEI', name: 'Leeds', function: 'GENERAL' }],
         })
-        manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-          username: 'TOKEN_USER',
+        manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+          username: 'HEADER_USER',
           active: true,
           accountType: '',
           activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },
@@ -216,8 +219,8 @@ describe('GET /header', () => {
 
   describe('non-prison user', () => {
     beforeEach(() => {
-      manageUsersApi.get('/prisonusers/TOKEN_USER/caseloads').reply(200, {
-        username: 'TOKEN_USER',
+      manageUsersApi.get('/prisonusers/HEADER_USER/caseloads').reply(200, {
+        username: 'HEADER_USER',
         active: true,
         accountType: '',
         activeCaseload: { id: 'LEI', name: 'Leeds', function: 'GENERAL' },

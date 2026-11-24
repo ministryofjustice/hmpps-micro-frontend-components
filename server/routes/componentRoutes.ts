@@ -48,6 +48,14 @@ export default function componentRoutes(services: Services): Router {
    *     summary: Retrieve the header component html with links to the required CSS and JS
    *     deprecated: true
    *     parameters:
+   *     - in: query
+   *       name: caseloadChangeNotification
+   *       schema:
+   *         type: string
+   *         enum:
+   *           - 'true'
+   *       required: false
+   *       description: Set to 'true' to have the change caseload link carry caseloadChanged=true so the service knows the user has changed caseload
    *     - in: header
    *       name: x-user-token
    *       schema:
@@ -62,8 +70,9 @@ export default function componentRoutes(services: Services): Router {
    *             schema:
    *                $ref: '#/components/schemas/Component'
    */
-  router.get('/header', async (_req, res) => {
-    const viewModel = await controller.getHeaderViewModel(res.locals.user)
+  router.get('/header', async (req, res) => {
+    const notifyCaseloadChange = req.query.caseloadChangeNotification === 'true'
+    const viewModel = await controller.getHeaderViewModel(res.locals.user, notifyCaseloadChange)
     const response = await new ComponentRenderer(res).renderComponent(viewModel)
     res.send(response)
   })
@@ -125,6 +134,14 @@ export default function componentRoutes(services: Services): Router {
    *           headerAndFooter:
    *             value: [header, footer]
    *             summary: Request both the header and footer components
+   *       - in: query
+   *         name: caseloadChangeNotification
+   *         schema:
+   *           type: string
+   *           enum:
+   *             - 'true'
+   *         required: false
+   *         description: Set to 'true' to have the header change caseload link carry caseloadChanged=true so the service knows the user has changed caseload
    *       - in: header
    *         name: x-user-token
    *         schema:
@@ -146,7 +163,8 @@ export default function componentRoutes(services: Services): Router {
     }
 
     const renderer = new ComponentRenderer(res)
-    const viewModels = await controller.getViewModels(componentsRequested, res.locals.user)
+    const notifyCaseloadChange = req.query.caseloadChangeNotification === 'true'
+    const viewModels = await controller.getViewModels(componentsRequested, res.locals.user, notifyCaseloadChange)
     const renderedComponents: Record<AvailableComponent, Component> = Object.fromEntries(
       await Promise.all(
         componentsRequested.map(componentName =>

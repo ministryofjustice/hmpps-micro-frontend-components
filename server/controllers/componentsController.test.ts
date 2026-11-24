@@ -71,6 +71,26 @@ describe('componentsController', () => {
       const output = await controller.getHeaderViewModel(hmppsUserMock)
       expect(output).toEqual({ ...expectedHeaderViewModel, isPrisonUser: false })
     })
+
+    it('should not add the caseloadChanged param to the change caseload link by default', async () => {
+      const output = await controller.getHeaderViewModel(prisonUserMock)
+      expect(output.changeCaseLoadLink).toEqual('http://localhost:3002/change-caseload')
+    })
+
+    it('should not add the caseloadChanged param when notifyCaseloadChange is false', async () => {
+      const output = await controller.getHeaderViewModel(prisonUserMock, false)
+      expect(output.changeCaseLoadLink).toEqual('http://localhost:3002/change-caseload')
+    })
+
+    it('should add the caseloadChanged param when notifyCaseloadChange is true', async () => {
+      const output = await controller.getHeaderViewModel(prisonUserMock, true)
+      expect(output.changeCaseLoadLink).toEqual('http://localhost:3002/change-caseload?caseloadChanged=true')
+    })
+
+    it('should not add the caseloadChanged param for a non-NOMIS user even when notifyCaseloadChange is true', async () => {
+      const output = await controller.getHeaderViewModel(hmppsUserMock, true)
+      expect(output.changeCaseLoadLink).toEqual('http://localhost:3002/change-caseload')
+    })
   })
 
   describe('getFooterViewModel', () => {
@@ -125,6 +145,19 @@ describe('componentsController', () => {
           allocationJobResponsibilities: [],
           cspDirectives: {},
         } satisfies SharedData,
+      })
+    })
+
+    it('should add the caseloadChanged param to the header link when notifyCaseloadChange is true', async () => {
+      const output = await controller.getViewModels(['header', 'footer'], prisonUserMock, true)
+
+      expect(output).toEqual({
+        header: {
+          ...expectedHeaderViewModel,
+          changeCaseLoadLink: 'http://localhost:3002/change-caseload?caseloadChanged=true',
+        },
+        footer: expectedFooterViewModel,
+        meta: expectedMeta,
       })
     })
 
